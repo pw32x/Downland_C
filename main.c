@@ -10,6 +10,7 @@ static SDL_Window *window = NULL;
 static SDL_Renderer *renderer = NULL;
 
 #define FB_WIDTH  256
+#define HALF_FB_WIDTH (FB_WIDTH / 2)
 #define FB_HEIGHT 192
 #define FB_PITCH  (FB_WIDTH / 8)
 
@@ -19,6 +20,10 @@ static SDL_Renderer *renderer = NULL;
 
 Uint8 framebuffer[FB_HEIGHT * FB_PITCH]; // 1-bit framebuffer
 SDL_Texture* framebufferTexture = NULL;
+
+// half frame buffer where we will generate CRT artifact effects
+uint32_t halfFramebuffer[HALF_FB_WIDTH * FB_HEIGHT];
+SDL_Texture* halfFramebufferTexture = NULL;
 
 // Set or clear a pixel in the 1-bit framebuffer
 void set_pixel(int x, int y, int value) 
@@ -58,6 +63,49 @@ void updateFramebufferTexture(SDL_Texture* framebufferTexture)
     SDL_UnlockTexture(framebufferTexture);
 }
 
+
+void updateHalfFrameBufferAndTexture(SDL_Renderer* renderer) 
+{
+    // Iterate over the source buffer and fill the texture data
+    for (int y = 0; y < FB_HEIGHT; ++y) 
+    {
+        for (int x = 0; x < HALF_FB_WIDTH; ++x) 
+        {
+            // Calculate the corresponding 1bpp source pixel
+            int srcX = x * 2;
+            int srcY = y;
+
+            uint8_t byte = framebuffer[srcY * 32 + (srcX / 8)];
+            uint8_t bit1 = (byte >> (7 - (srcX % 8))) & 1;
+            uint8_t bit2 = (byte >> (6 - (srcX % 8))) & 1;
+
+            uint32_t color = 0;
+            if (bit1 == 0 && bit2 == 0) 
+            {
+                color = 0x000000; // Black
+            } 
+            else if (bit1 == 0 && bit2 == 1) 
+            {
+                color = 0x0000FF; // Blue
+            } 
+            else if (bit1 == 1 && bit2 == 0) 
+            {
+                color = 0xFFA500; // Orange
+            } 
+            else if (bit1 == 1 && bit2 == 1) 
+            {
+                color = 0xFFFFFF; // White
+            }
+
+            // Set the pixel color in the texture data array
+            halfFramebuffer[y * HALF_FB_WIDTH + x] = color;
+        }
+    }
+
+    // Update the texture with the new data
+    SDL_UpdateTexture(halfFramebufferTexture, NULL, halfFramebuffer, HALF_FB_WIDTH * sizeof(uint32_t));
+}
+
 SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
 {
     SDL_SetAppMetadata("Downland_C", "1.0", "com.example.Downland_C");
@@ -79,10 +127,21 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
         return SDL_APP_FAILURE;
     }
 
-    framebufferTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_XRGB8888, SDL_TEXTUREACCESS_STREAMING, FB_WIDTH, FB_HEIGHT);
+    framebufferTexture = SDL_CreateTexture(renderer, 
+                                           SDL_PIXELFORMAT_XRGB8888, 
+                                           SDL_TEXTUREACCESS_STREAMING, 
+                                           FB_WIDTH, FB_HEIGHT);
     SDL_SetTextureScaleMode(framebufferTexture, SDL_SCALEMODE_NEAREST); // no smoothing
 
-    srand(time(NULL));
+    // Create the texture
+    halfFramebufferTexture = SDL_CreateTexture(renderer, 
+                                               SDL_PIXELFORMAT_XRGB8888, 
+                                               SDL_TEXTUREACCESS_STREAMING, 
+                                               HALF_FB_WIDTH, 
+                                               FB_HEIGHT);
+    SDL_SetTextureScaleMode(halfFramebufferTexture, SDL_SCALEMODE_NEAREST); // no smoothing
+
+    srand((unsigned int)time(NULL));
 
     memcpy(framebuffer, screenshot_data, 0x1800);
 
@@ -112,13 +171,17 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
 
 SDL_AppResult SDL_AppIterate(void *appstate)
 {
-    // Update texture from framebuffer
-    updateFramebufferTexture(framebufferTexture);
-
     // Render to screen
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
-    SDL_RenderTexture(renderer, framebufferTexture, NULL, NULL); // Scale to window
+
+    // Update texture from framebuffer
+    updateFramebufferTexture(framebufferTexture); 
+    //SDL_RenderTexture(renderer, framebufferTexture, NULL, NULL); // Scale to window
+
+    // Update texture from halfFramebuffer
+    updateHalfFrameBufferAndTexture(renderer);
+    SDL_RenderTexture(renderer, halfFramebufferTexture, NULL, NULL); // Scale to window
 
     /*
     // write debug text

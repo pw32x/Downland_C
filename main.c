@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <time.h>
 
+#include "screenshot_data.h"
+
 static SDL_Window *window = NULL;
 static SDL_Renderer *renderer = NULL;
 
@@ -15,7 +17,7 @@ static SDL_Renderer *renderer = NULL;
 #define SCREEN_WIDTH (FB_WIDTH * SCREEN_SCALE)
 #define SCREEN_HEIGHT (FB_HEIGHT * SCREEN_SCALE)
 
-Uint8 framebuffer[FB_HEIGHT][FB_PITCH]; // 1-bit framebuffer
+Uint8 framebuffer[FB_HEIGHT * FB_PITCH]; // 1-bit framebuffer
 SDL_Texture* framebufferTexture = NULL;
 
 // Set or clear a pixel in the 1-bit framebuffer
@@ -25,11 +27,12 @@ void set_pixel(int x, int y, int value)
         return;
 
     Uint8 pixel = 1 << (7 - (x % 8));
+    int index = (x / 8) + (y * FB_PITCH);
 
     if (value)
-        framebuffer[y][x / 8] |= pixel;  // Set bit (white pixel)
+        framebuffer[index] |= pixel;  // Set bit (white pixel)
     else
-        framebuffer[y][x / 8] &= ~pixel; // Clear bit (black pixel)
+        framebuffer[index] &= ~pixel; // Clear bit (black pixel)
 }
 
 // Convert the 1-bit framebuffer into a texture
@@ -47,7 +50,7 @@ void updateFramebufferTexture(SDL_Texture* framebufferTexture)
     {
         for (int x = 0; x < FB_WIDTH; x++) 
         {
-            Uint8 bit = (framebuffer[y][x / 8] >> (7 - (x % 8))) & 1;
+            Uint8 bit = (framebuffer[(x / 8) + (y * FB_PITCH)] >> (7 - (x % 8))) & 1;
             tex_pixels[y * (pitch / 4) + x] = bit ? 0xFFFFFFFF : 0xFF000000; // White or Black
         }
     }
@@ -81,14 +84,20 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
 
     srand(time(NULL));
 
+    memcpy(framebuffer, screenshot_data, 0x1800);
+
+    /*
     // clear framebuffer
     memset(framebuffer, 0, sizeof(framebuffer));
+
 
     // add random pixels
     for (int i = 0; i < 500; i++) 
     {
         set_pixel(rand() % FB_WIDTH, rand() % FB_HEIGHT, 1);
     }
+    */
+
 
     return SDL_APP_CONTINUE;
 }

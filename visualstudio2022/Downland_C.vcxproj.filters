@@ -16,13 +16,37 @@
     <Filter Include="Binaries">
       <UniqueIdentifier>{1c3c966b-7c14-4a9f-81c5-3964fc640ad3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="game">
+      <UniqueIdentifier>{25c68a46-0917-436b-ac04-5e469f1f0c0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="misc">
+      <UniqueIdentifier>{22d1770c-c66b-422f-92eb-d1cbb3cbcb06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils">
+      <UniqueIdentifier>{351c6aa1-d6d7-4bf4-b9de-ce2ad2004c50}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\screenshot_data.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="..\misc\screenshot_data.h">
+      <Filter>misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\game\game.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\game\base_types.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\game\base_defines.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\game\framebuffer_utils.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\utils\sdl_utils.h">
+      <Filter>utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -44,8 +68,17 @@
     <ClCompile Include="..\main.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\screenshot_data.c">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\misc\screenshot_data.c">
+      <Filter>misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\game\game.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\game\framebuffer_utils.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\utils\sdl_utils.c">
+      <Filter>utils</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

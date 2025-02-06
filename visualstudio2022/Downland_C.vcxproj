@@ -92,7 +92,8 @@
     <ClInclude Include="..\game\framebuffer_utils.h" />
     <ClInclude Include="..\game\game.h" />
     <ClInclude Include="..\misc\screenshot_data.h" />
-    <ClInclude Include="..\utils\sdl_utils.h" />
+    <ClInclude Include="..\resources\resources.h" />
+    <ClInclude Include="..\sdl_main\sdl_utils.h" />
     <ClInclude Include="Resource.h" />
   </ItemGroup>
   <ItemGroup>
@@ -109,9 +110,10 @@
   <ItemGroup>
     <ClCompile Include="..\game\framebuffer_utils.c" />
     <ClCompile Include="..\game\game.c" />
-    <ClCompile Include="..\main.c" />
     <ClCompile Include="..\misc\screenshot_data.c" />
-    <ClCompile Include="..\utils\sdl_utils.c" />
+    <ClCompile Include="..\resources\resources.c" />
+    <ClCompile Include="..\sdl_main\sdl_main.c" />
+    <ClCompile Include="..\sdl_main\sdl_utils.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

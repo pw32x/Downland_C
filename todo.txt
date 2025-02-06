@@ -1,0 +1,14 @@
+DONE list of hardcoded positions and sizes into rom
+DONE pass to gamedata
+DONE rom version detection 
+DONE struct with pointers/arrays to resources 
+DONE extract font from rom
+DONE extract strings from rom
+DONE extract sprites from rom
+
+extract title screen room data from rom
+extract shape draw data from rom
+draw title screen
+
+extract room data lookup table from rom
+extract each room data from rom

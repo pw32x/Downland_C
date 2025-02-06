@@ -2,12 +2,13 @@
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
 
-#include "game/base_defines.h"
-#include "game/base_types.h"
-#include "game/game.h"
-#include "game/framebuffer_utils.h"
-#include "misc/screenshot_data.h"
-#include "utils/sdl_utils.h"
+#include "../game/base_defines.h"
+#include "../game/base_types.h"
+#include "../game/game.h"
+#include "../game/framebuffer_utils.h"
+#include "../resources/resources.h"
+#include "../misc/screenshot_data.h"
+#include "sdl_utils.h"
 
 static SDL_Window *window = NULL;
 static SDL_Renderer *renderer = NULL;
@@ -19,7 +20,10 @@ static SDL_Renderer *renderer = NULL;
 SDL_Texture* framebufferTexture = NULL;
 SDL_Texture* crtFramebufferTexture = NULL;
 
+Resources resources;
 GameData gameData;
+
+const char* romFilePath = "downland.bin";
 
 SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
 {
@@ -59,7 +63,10 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
 
     SDL_SetTextureScaleMode(crtFramebufferTexture, SDL_SCALEMODE_NEAREST); // no smoothing
 
-    Game_Init(&gameData);
+    if (!Resources_Init(romFilePath, &resources))
+        return SDL_APP_FAILURE;
+
+    Game_Init(&gameData, &resources);
 
     // setup screenshot
     memcpy(gameData.framebuffer, screenshot_data, FRAMEBUFFER_SIZE);
@@ -77,6 +84,8 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
 
 SDL_AppResult SDL_AppIterate(void *appstate)
 {
+    Game_Update(&gameData);
+
     // Render to screen
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
@@ -103,8 +112,6 @@ SDL_AppResult SDL_AppIterate(void *appstate)
     SDL_SetRenderScale(renderer, 1.0f, 1.0f);
     */
 
-    Game_Update(&gameData);
-
     SDL_RenderPresent(renderer);
 
     return SDL_APP_CONTINUE;
@@ -118,4 +125,5 @@ void SDL_AppQuit(void *appstate, SDL_AppResult result)
     SDL_DestroyTexture(framebufferTexture);
 
     Game_Shutdown(&gameData);
+    Resources_Shutdown(&resources);
 }

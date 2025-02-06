@@ -1,10 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
     <Filter Include="Header Files">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
@@ -22,8 +18,11 @@
     <Filter Include="misc">
       <UniqueIdentifier>{22d1770c-c66b-422f-92eb-d1cbb3cbcb06}</UniqueIdentifier>
     </Filter>
-    <Filter Include="utils">
-      <UniqueIdentifier>{351c6aa1-d6d7-4bf4-b9de-ce2ad2004c50}</UniqueIdentifier>
+    <Filter Include="sdl_main">
+      <UniqueIdentifier>{534e03b9-7bde-413d-b0df-d4447204f737}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources">
+      <UniqueIdentifier>{897990da-61f3-45ca-8985-bd364e9868af}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -45,8 +44,11 @@
     <ClInclude Include="..\game\framebuffer_utils.h">
       <Filter>game</Filter>
     </ClInclude>
-    <ClInclude Include="..\utils\sdl_utils.h">
-      <Filter>utils</Filter>
+    <ClInclude Include="..\sdl_main\sdl_utils.h">
+      <Filter>sdl_main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\resources\resources.h">
+      <Filter>resources</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -65,9 +67,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\main.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\misc\screenshot_data.c">
       <Filter>misc</Filter>
     </ClCompile>
@@ -77,8 +76,14 @@
     <ClCompile Include="..\game\framebuffer_utils.c">
       <Filter>game</Filter>
     </ClCompile>
-    <ClCompile Include="..\utils\sdl_utils.c">
-      <Filter>utils</Filter>
+    <ClCompile Include="..\sdl_main\sdl_main.c">
+      <Filter>sdl_main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sdl_main\sdl_utils.c">
+      <Filter>sdl_main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\resources\resources.c">
+      <Filter>resources</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

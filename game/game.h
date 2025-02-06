@@ -3,6 +3,7 @@
 
 #include "base_types.h"
 #include "base_defines.h"
+#include "../resources/resources.h"
 
 typedef struct
 {
@@ -10,7 +11,7 @@ typedef struct
 	u32 crtFramebuffer[FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT]; // frame buffer for basic CRT artifact effects
 } GameData;
 
-void Game_Init(GameData* gameData);
+void Game_Init(GameData* gameData, Resources* resources);
 void Game_Update(GameData* gameData);
 void Game_Shutdown(GameData* gameData);
 

@@ -5,6 +5,31 @@
 
 typedef struct
 {
+    u8 subpixelCount;
+    u8 pixelCount;
+    u8 orientation;
+} ShapeSegment;
+
+typedef struct
+{
+    u8 segmentCount;
+    ShapeSegment* segments;
+} ShapeDrawData;
+
+typedef struct
+{
+    u8 shapeCode;
+    u8 drawCount;
+} BackgroundDrawCommand;
+
+typedef struct
+{
+    u8 drawCommandCount;
+    BackgroundDrawCommand* backgroundDrawCommands;
+} BackgroundDrawData;
+
+typedef struct
+{
     // font
     byte* characterFont;            // 0xd908
 
@@ -39,6 +64,33 @@ typedef struct
     byte* sprite_playerSplat;       // 0xdeef
     byte* sprite_door;              // 0xdf0a
     byte* sprites_drops;            // 0xdf2a
+
+    BackgroundDrawData backgroundDrawData_TitleScreen; // 0xcec4
+
+    ShapeDrawData shapeDrawData_00_Stalactite;	                        // 0xd5f7
+    ShapeDrawData shapeDrawData_01_WallGoingDown;	                    // 0xd60c
+    ShapeDrawData shapeDrawData_07_WallPieceGoingUp;	                // 0xd616
+    ShapeDrawData shapeDrawData_02_LeftHandCornerPiece;	                // 0xd625
+    ShapeDrawData shapeDrawData_08_CornerPieceGoingDownLeft;	        // 0xd635
+    ShapeDrawData shapeDrawData_03_TopRightHandCornerPiece;	            // 0xd644
+    ShapeDrawData shapeDrawData_04_TopRightHandCornerPiece2;	        // 0xd654
+    ShapeDrawData shapeDrawData_05_BottomRightSideOfFloatingPlatforms;	// 0xd663
+    ShapeDrawData shapeDrawData_14_HorizontalRopeStartGoingRight;	    // 0xd67b
+    ShapeDrawData shapeDrawData_15_HorizontalRopeEndGoingRight;	        // 0xd68d
+    ShapeDrawData shapeDrawData_17_BlankAreaGoingRight;	                // 0xd697
+    ShapeDrawData shapeDrawData_18_BlankAreaGoingLeft;	                // 0xd6a0
+    ShapeDrawData shapeDrawData_19_BlankAreaGoingDownRight;	            // 0xd6a9
+    ShapeDrawData shapeDrawData_0b_ShortLineGoingUp;	                // 0xd6b2
+    ShapeDrawData shapeDrawData_0c_VeryShortRope;	                    // 0xd6d9
+    ShapeDrawData shapeDrawData_0d_ShortRope;	                        // 0xd6e5
+    ShapeDrawData shapeDrawData_0e_MidLengthRope;	                    // 0xd6f1
+    ShapeDrawData shapeDrawData_0f_LongRope;	                        // 0xd6fd
+    ShapeDrawData shapeDrawData_10_VeryLongRope;	                    // 0xd709
+    ShapeDrawData shapeDrawData_11_SuperLongRope;	                    // 0xd715
+    ShapeDrawData shapeDrawData_12_ExcessivelyLongRope;	                // 0xd721
+    ShapeDrawData shapeDrawData_13_RediculouslyLongRope;	            // 0xd72d
+    ShapeDrawData shapeDrawData_PreRope_Maybe;	                        // 0xd74c
+    ShapeDrawData shapeDrawData_PostRope_Maybe;	                        // 0xd750  
 /*
 Sprites 0xdcd7
     PlayerSprite_Right_Stand 0xdcd6
@@ -62,22 +114,8 @@ Sprites 0xdcd7
     PlayerSplatSprite 0xdeef
     DoorSprite 0xdf0a
     DropSprites 0xdf2a
-    
-Room Data
 
-    RoomGraphicsAndDoorData 0xd25a
-        Room0_GraphcisAndDoorData   0xd25a
-        Room1_GraphcisAndDoorData   0xd27d
-        Room2_GraphcisAndDoorData   0xd298
-        Room3_GraphcisAndDoorData   0xd2bf
-        Room4_GraphcisAndDoorData   0xd2ec
-        Room5_GraphcisAndDoorData   0xd307
-        Room6_GraphcisAndDoorData   0xd31c
-        Room7_GraphcisAndDoorData   0xd32b
-        Room8_GraphcisAndDoorData   0xd33a
-        Room9_GraphcisAndDoorData   0xd349
-
-
+TitleScreenBackground_DrawCommands
 
 DrawData    
     DrawData_00_Stalactite	0xd5f7
@@ -104,6 +142,22 @@ DrawData
     DrawData_13_RediculouslyLongRope	0xd72d
     DrawData_PreRope_Maybe	0xd74c
     DrawData_PostRope_Maybe	0xd750  
+
+Room Data
+
+    RoomGraphicsAndDoorData 0xd25a
+        Room0_GraphcisAndDoorData   0xd25a
+        Room1_GraphcisAndDoorData   0xd27d
+        Room2_GraphcisAndDoorData   0xd298
+        Room3_GraphcisAndDoorData   0xd2bf
+        Room4_GraphcisAndDoorData   0xd2ec
+        Room5_GraphcisAndDoorData   0xd307
+        Room6_GraphcisAndDoorData   0xd31c
+        Room7_GraphcisAndDoorData   0xd32b
+        Room8_GraphcisAndDoorData   0xd33a
+        Room9_GraphcisAndDoorData   0xd349
+
+
 */
 } Resources;
 

@@ -94,6 +94,7 @@ SDL_AppResult SDL_AppIterate(void *appstate)
     SDLUtils_updateFramebufferTexture(gameData.framebuffer, framebufferTexture); 
     SDL_RenderTexture(renderer, framebufferTexture, NULL, NULL);
 
+
     // Update texture from crtFramebuffer
     SDLUtils_updateCrtFramebufferAndTexture(gameData.framebuffer,
                                             gameData.crtFramebuffer,
@@ -101,6 +102,7 @@ SDL_AppResult SDL_AppIterate(void *appstate)
                                             renderer);
 
     SDL_RenderTexture(renderer, crtFramebufferTexture, NULL, NULL);
+
 
     /*
     // write debug text

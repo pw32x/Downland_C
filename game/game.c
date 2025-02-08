@@ -2,6 +2,8 @@
 
 #include <string.h>
 
+#include "draw_background.h"
+
 Resources* g_resources;
 
 void Game_Init(GameData* gameData, Resources* resources)
@@ -12,7 +14,9 @@ void Game_Init(GameData* gameData, Resources* resources)
 
 void Game_Update(GameData* gameData)
 {
-
+	Draw_Background(&g_resources->backgroundDrawData_TitleScreen, 
+					g_resources,
+					gameData->framebuffer);
 }
 
 void Game_Shutdown(GameData* gameData)

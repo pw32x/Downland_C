@@ -93,8 +93,9 @@ void DrawPixel()
 	u8 maskIndex = x & 0x3;
 	u8 maskToUse = masks[maskIndex] & crtMasks[crtMaskIndexToUse]; // apply crt artificat mask
 
-	g_framebuffer[framebufferOffset] |= maskToUse;
+	// remove the pixel (the two bits) at the location and replace with the new two bits
 
+	g_framebuffer[framebufferOffset] = (g_framebuffer[framebufferOffset] & ~masks[maskIndex]) | maskToUse;
 }
 
 void DrawHorizontalSegment()
@@ -352,12 +353,16 @@ void DrawPiece_13_RediculouslyLongRope(const Resources* resources)
 
 void DrawPiece_14_HorizontalRopeStartGoingRight(const Resources* resources)
 {
+	crtMaskIndexToUse = 3;
 	DrawPiece(&resources->shapeDrawData_14_HorizontalRopeStartGoingRight);
+	crtMaskIndexToUse = 1;
 }
 
 void DrawPiece_15_HorizontalRopeEndGoingRight(const Resources* resources)
 {
+	crtMaskIndexToUse = 3;
 	DrawPiece(&resources->shapeDrawData_15_HorizontalRopeEndGoingRight);
+	crtMaskIndexToUse = 1;
 }
 
 void DrawPiece_16_HorizontalRopeGoingRight(const Resources* resources)

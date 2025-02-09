@@ -5,7 +5,7 @@
 
 typedef struct
 {
-    u8 subpixelCount;
+    u8 subpixelIncrement;
     u8 pixelCount;
     u8 orientation;
 } ShapeSegment;

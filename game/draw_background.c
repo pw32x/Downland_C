@@ -3,79 +3,70 @@
 #include "base_defines.h"
 #include <string.h>
 
-u8 DrawSegment_CurrentScreenX_0x22;
-u8 DrawSegment_CurrentScreenY_0x21;
-
-u16 DrawSegment_SecondaryAxisSubpixelInc_0x1e;
-
-u16 D;
-
-void (*g_moveFunction)();
-u8 DrawSegmentLine_SubPixelStartValue_Maybe_0x25;
-
-u8 subpixelCount;
-u8 pixelCount;
-
 byte* g_framebuffer;
 
-u8 crtMaskIndexToUse;
-u8 crtMasks[4] = 
-{
-	0x00,
-	0x55,
-	0xaa,
-	0xff
-};
+u8 g_plotterCurrentY;
+u8 g_plotterCurrentX;
+u16 g_plotterHiresPos;
 
-void DrawSegment_MovePosUpAndRight()
+u8 g_subpixelInitValue;
+u8 g_pixelCount;
+u16 g_subpixelIncrement;
+
+u8 g_crtMaskIndexToUse;
+
+void DrawSegment_MovePlotterUpAndRight()
 {
-	DrawSegment_CurrentScreenY_0x21--;
-	D += DrawSegment_SecondaryAxisSubpixelInc_0x1e;
+	g_plotterCurrentX--;
+	g_plotterHiresPos += g_subpixelIncrement;
 }
 
-void DrawSegment_MovePosRightAndUp()
+void DrawSegment_MovePlotterRightAndUp()
 {
-	DrawSegment_CurrentScreenX_0x22++;
-	D -= DrawSegment_SecondaryAxisSubpixelInc_0x1e;
+	g_plotterCurrentY++;
+	g_plotterHiresPos -= g_subpixelIncrement;
 }
 
-void DrawSegment_MovePosRightAndDown()
+void DrawSegment_MovePlotterRightAndDown()
 {
-	DrawSegment_CurrentScreenX_0x22++;
-	D += DrawSegment_SecondaryAxisSubpixelInc_0x1e;
+	g_plotterCurrentY++;
+	g_plotterHiresPos += g_subpixelIncrement;
 }
 
-void DrawSegment_MovePosDownAndRight()
+void DrawSegment_MovePlotterDownAndRight()
 {
-	DrawSegment_CurrentScreenY_0x21++;
-	D += DrawSegment_SecondaryAxisSubpixelInc_0x1e;
+	g_plotterCurrentX++;
+	g_plotterHiresPos += g_subpixelIncrement;
 }
 
-void DrawSegment_MovePosDownAndLeft()
+void DrawSegment_MovePlotterDownAndLeft()
 {
-	DrawSegment_CurrentScreenY_0x21++;
-	D -= DrawSegment_SecondaryAxisSubpixelInc_0x1e;
+	g_plotterCurrentX++;
+	g_plotterHiresPos -= g_subpixelIncrement;
 }
 
-void DrawSegment_MovePosLeftAndDown()
+void DrawSegment_MovePlotterLeftAndDown()
 {
-	DrawSegment_CurrentScreenX_0x22--;
-	D += DrawSegment_SecondaryAxisSubpixelInc_0x1e;
+	g_plotterCurrentY--;
+	g_plotterHiresPos += g_subpixelIncrement;
 }
 
-void DrawSegment_MovePosLeftAndUp()
+void DrawSegment_MovePlotterLeftAndUp()
 {
-	DrawSegment_CurrentScreenX_0x22--;
-	D -= DrawSegment_SecondaryAxisSubpixelInc_0x1e;
+	g_plotterCurrentY--;
+	g_plotterHiresPos -= g_subpixelIncrement;
 }
 
-void DrawSegment_MovePosUpAndLeft()
+void DrawSegment_MovePlotterUpAndLeft()
 {
-	DrawSegment_CurrentScreenY_0x21--;
-	D -= DrawSegment_SecondaryAxisSubpixelInc_0x1e;
+	g_plotterCurrentX--;
+	g_plotterHiresPos -= g_subpixelIncrement;
 }
 
-u8 masks[] = 
+// depending on the x position, chose 
+// of these to get at the corresponding
+// two bits you want to activate.
+u8 pixelMasks[4] = 
 {
 	0xc0, // 11000000b,
 	0x30, // 00110000b,
@@ -83,114 +74,119 @@ u8 masks[] =
 	0x03  // 00000011b,
 };
 
+// different pixel masks to acheive different pixel
+// colors using crt artifact effects.
+u8 crtMasks[4] = 
+{
+	0x00, // 00000000b
+	0x55, // 01010101b
+	0xaa, // 10101010b
+	0xff  // 11111111b
+};
+
+enum 
+{
+	CRT_MASK_INVISIBLE,
+	CRT_MASK_NORMAL,
+	CRT_MASK_REVERSE,
+	CRT_MASK_FULL
+} CRT_MASKS;
 
 void DrawPixel()
 {
-	u8 y = DrawSegment_CurrentScreenY_0x21;
-	u8 x = DrawSegment_CurrentScreenX_0x22;
-	u16 framebufferOffset = (y * FRAMEBUFFER_PITCH) + ((x << 1) / 8);
+	u8 y = g_plotterCurrentX;
+	u8 x = g_plotterCurrentY;
+	u8* framebufferPos = g_framebuffer + (y * FRAMEBUFFER_PITCH) + ((x << 1) / 8);
 
-	u8 maskIndex = x & 0x3;
-	u8 maskToUse = masks[maskIndex] & crtMasks[crtMaskIndexToUse]; // apply crt artificat mask
+	u8 pixelMaskIndex = x & 0x3;
+	u8 pixelMask = pixelMasks[pixelMaskIndex];
+	u8 pixelToDraw = pixelMask & crtMasks[g_crtMaskIndexToUse]; // apply crt artifact mask on top of the pixel
 
 	// remove the pixel (the two bits) at the location and replace with the new two bits
-
-	g_framebuffer[framebufferOffset] = (g_framebuffer[framebufferOffset] & ~masks[maskIndex]) | maskToUse;
+	*framebufferPos = (*framebufferPos & ~pixelMask) | pixelToDraw;
 }
 
-void DrawHorizontalSegment()
+void DrawHorizontalSegment(void (*movePlotterFunction)())
 {
-	D = (DrawSegment_CurrentScreenY_0x21 << 8) | DrawSegmentLine_SubPixelStartValue_Maybe_0x25;
+	g_plotterHiresPos = (g_plotterCurrentX << 8) | g_subpixelInitValue;
 
-	while (pixelCount--)
+	while (g_pixelCount--)
 	{
 		DrawPixel();
 
-		if (!pixelCount)
+		if (!g_pixelCount)
 			break;
 
-		g_moveFunction();
-		DrawSegment_CurrentScreenY_0x21 = D >> 8;
+		movePlotterFunction();
+		g_plotterCurrentX = g_plotterHiresPos >> 8;
 	}
 }
 
-void DrawVerticalSegment()
+void DrawVerticalSegment(void (*movePlotterFunction)())
 {
-	D = (DrawSegment_CurrentScreenX_0x22 << 8) | DrawSegmentLine_SubPixelStartValue_Maybe_0x25;
+	g_plotterHiresPos = (g_plotterCurrentY << 8) | g_subpixelInitValue;
 
-	while (pixelCount--)
+	while (g_pixelCount--)
 	{
 		DrawPixel();
 
-		if (!pixelCount)
+		if (!g_pixelCount)
 			break;
 
-		g_moveFunction();
-		DrawSegment_CurrentScreenX_0x22 = D >> 8;
+		movePlotterFunction();
+		g_plotterCurrentY = g_plotterHiresPos >> 8;
 	}
-
-	//DrawSegment_CurrentScreenY_0x21 += 10;
 }
 
-
-
-void DrawSegment_Orientation0_UpAndRight(u8 subpixelCount, u8 pixelCount)
+void DrawSegment_Orientation0_UpAndRight()
 {
-	g_moveFunction = DrawSegment_MovePosUpAndRight;
-	DrawSegmentLine_SubPixelStartValue_Maybe_0x25 = 0;
-	DrawVerticalSegment();
+	g_subpixelInitValue = 0;
+	DrawVerticalSegment(DrawSegment_MovePlotterUpAndRight);
 }
 
-void DrawSegment_Orientation1_RightAndUp(u8 subpixelCount, u8 pixelCount)
+void DrawSegment_Orientation1_RightAndUp()
 {
-	g_moveFunction = DrawSegment_MovePosRightAndUp;
-	DrawSegmentLine_SubPixelStartValue_Maybe_0x25 = 0xff;
-	DrawHorizontalSegment();
+	g_subpixelInitValue = 0xff;
+	DrawHorizontalSegment(DrawSegment_MovePlotterRightAndUp);
 }
 
-void DrawSegment_Orientation2_RightAndDown(u8 subpixelCount, u8 pixelCount)
+void DrawSegment_Orientation2_RightAndDown()
 {
-	g_moveFunction = DrawSegment_MovePosRightAndDown;
-	DrawSegmentLine_SubPixelStartValue_Maybe_0x25 = 0;
-	DrawHorizontalSegment();
+	g_subpixelInitValue = 0;
+	DrawHorizontalSegment(DrawSegment_MovePlotterRightAndDown);
 }
 
-void DrawSegment_Orientation3_DownAndRight(u8 subpixelCount, u8 pixelCount)
+void DrawSegment_Orientation3_DownAndRight()
 {
-	g_moveFunction = DrawSegment_MovePosDownAndRight;
-	DrawSegmentLine_SubPixelStartValue_Maybe_0x25 = 0;
-	DrawVerticalSegment();
+	g_subpixelInitValue = 0;
+	DrawVerticalSegment(DrawSegment_MovePlotterDownAndRight);
 }
 
-void DrawSegment_Orientation4_DownAndLeft(u8 subpixelCount, u8 pixelCount)
+void DrawSegment_Orientation4_DownAndLeft()
 {
-	g_moveFunction = DrawSegment_MovePosDownAndLeft;
-	DrawSegmentLine_SubPixelStartValue_Maybe_0x25 = 0xff;
-	DrawVerticalSegment();
+	g_subpixelInitValue = 0xff;
+	DrawVerticalSegment(DrawSegment_MovePlotterDownAndLeft);
 }
 
-void DrawSegment_Orientation5_LeftAndDown(u8 subpixelCount, u8 pixelCount)
+void DrawSegment_Orientation5_LeftAndDown()
 {
-	g_moveFunction = DrawSegment_MovePosLeftAndDown;
-	DrawSegmentLine_SubPixelStartValue_Maybe_0x25 = 0;
-	DrawHorizontalSegment();
+	g_subpixelInitValue = 0;
+	DrawHorizontalSegment(DrawSegment_MovePlotterLeftAndDown);
 }
 
-void DrawSegment_Orientation6_LeftAndUp(u8 subpixelCount, u8 pixelCount)
+void DrawSegment_Orientation6_LeftAndUp()
 {
-	g_moveFunction = DrawSegment_MovePosLeftAndUp;
-	DrawSegmentLine_SubPixelStartValue_Maybe_0x25 = 0xff;
-	DrawHorizontalSegment();
+	g_subpixelInitValue = 0xff;
+	DrawHorizontalSegment(DrawSegment_MovePlotterLeftAndUp);
 }
 
-void DrawSegment_Orientation7_UpAndLeft(u8 subpixelCount, u8 pixelCount)
+void DrawSegment_Orientation7_UpAndLeft()
 {
-	g_moveFunction = DrawSegment_MovePosUpAndLeft;
-	DrawSegmentLine_SubPixelStartValue_Maybe_0x25 = 0xff;
-	DrawVerticalSegment();
+	g_subpixelInitValue = 0xff;
+	DrawVerticalSegment(DrawSegment_MovePlotterUpAndLeft);
 }
 
-void (*drawSegmentFunctions[])(u8 subpixelCount, u8 pixelCount) = {
+void (*drawSegmentFunctions[])() = {
 	DrawSegment_Orientation0_UpAndRight,
 	DrawSegment_Orientation1_RightAndUp,
 	DrawSegment_Orientation2_RightAndDown,
@@ -210,11 +206,10 @@ void DrawPiece(const ShapeDrawData* shapeDrawData)
 
 	while (count--)
 	{
-		subpixelCount = shapeSegmentRunner->subpixelCount;
-		DrawSegment_SecondaryAxisSubpixelInc_0x1e = subpixelCount;
-		pixelCount = shapeSegmentRunner->pixelCount;
-		drawSegmentFunctions[shapeSegmentRunner->orientation](shapeSegmentRunner->subpixelCount,
-															  shapeSegmentRunner->pixelCount);
+		g_subpixelIncrement = shapeSegmentRunner->subpixelIncrement;
+		g_pixelCount = shapeSegmentRunner->pixelCount;
+
+		drawSegmentFunctions[shapeSegmentRunner->orientation]();
 		shapeSegmentRunner++;
 	}
 }
@@ -282,122 +277,122 @@ void DrawPiece_0b_ShortLineGoingUp(const Resources* resources)
 void DrawPiece_0c_VeryShortRope(const Resources* resources)
 {
 	DrawPiece(&resources->shapeDrawData_PreRope_Maybe);
-	crtMaskIndexToUse = 3;
+	g_crtMaskIndexToUse = CRT_MASK_FULL;
 	DrawPiece(&resources->shapeDrawData_0c_VeryShortRope);
-	crtMaskIndexToUse = 1;
+	g_crtMaskIndexToUse = CRT_MASK_NORMAL;
 	DrawPiece(&resources->shapeDrawData_PostRope_Maybe);
 }
 
 void DrawPiece_0d_ShortRope(const Resources* resources)
 {
 	DrawPiece(&resources->shapeDrawData_PreRope_Maybe);
-	crtMaskIndexToUse = 3;
+	g_crtMaskIndexToUse = CRT_MASK_FULL;
 	DrawPiece(&resources->shapeDrawData_0d_ShortRope);
-	crtMaskIndexToUse = 1;
+	g_crtMaskIndexToUse = CRT_MASK_NORMAL;
 	DrawPiece(&resources->shapeDrawData_PostRope_Maybe);
 }
 
 void DrawPiece_0e_MidLengthRope(const Resources* resources)
 {
 	DrawPiece(&resources->shapeDrawData_PreRope_Maybe);
-	crtMaskIndexToUse = 3;
+	g_crtMaskIndexToUse = CRT_MASK_FULL;
 	DrawPiece(&resources->shapeDrawData_0e_MidLengthRope);
-	crtMaskIndexToUse = 1;
+	g_crtMaskIndexToUse = CRT_MASK_NORMAL;
 	DrawPiece(&resources->shapeDrawData_PostRope_Maybe);
 }
 
 void DrawPiece_0f_LongRope(const Resources* resources)
 {
 	DrawPiece(&resources->shapeDrawData_PreRope_Maybe);
-	crtMaskIndexToUse = 3;
+	g_crtMaskIndexToUse = CRT_MASK_FULL;
 	DrawPiece(&resources->shapeDrawData_0f_LongRope);
-	crtMaskIndexToUse = 1;
+	g_crtMaskIndexToUse = CRT_MASK_NORMAL;
 	DrawPiece(&resources->shapeDrawData_PostRope_Maybe);
 }
 
 void DrawPiece_10_VeryLongRope(const Resources* resources)
 {
 	DrawPiece(&resources->shapeDrawData_PreRope_Maybe);
-	crtMaskIndexToUse = 3;
+	g_crtMaskIndexToUse = CRT_MASK_FULL;
 	DrawPiece(&resources->shapeDrawData_10_VeryLongRope);
-	crtMaskIndexToUse = 1;
+	g_crtMaskIndexToUse = CRT_MASK_NORMAL;
 	DrawPiece(&resources->shapeDrawData_PostRope_Maybe);
 }
 
 void DrawPiece_11_SuperLongRope(const Resources* resources)
 {
 	DrawPiece(&resources->shapeDrawData_PreRope_Maybe);
-	crtMaskIndexToUse = 3;
+	g_crtMaskIndexToUse = CRT_MASK_FULL;
 	DrawPiece(&resources->shapeDrawData_11_SuperLongRope);
-	crtMaskIndexToUse = 1;
+	g_crtMaskIndexToUse = CRT_MASK_NORMAL;
 	DrawPiece(&resources->shapeDrawData_PostRope_Maybe);
 }
 
 void DrawPiece_12_ExcessivelyLongRope(const Resources* resources)
 {
 	DrawPiece(&resources->shapeDrawData_PreRope_Maybe);
-	crtMaskIndexToUse = 3;
+	g_crtMaskIndexToUse = CRT_MASK_FULL;
 	DrawPiece(&resources->shapeDrawData_12_ExcessivelyLongRope);
-	crtMaskIndexToUse = 1;
+	g_crtMaskIndexToUse = CRT_MASK_NORMAL;
 	DrawPiece(&resources->shapeDrawData_PostRope_Maybe);
 }
 
 void DrawPiece_13_RediculouslyLongRope(const Resources* resources)
 {
 	DrawPiece(&resources->shapeDrawData_PreRope_Maybe);
-	crtMaskIndexToUse = 3;
+	g_crtMaskIndexToUse = CRT_MASK_FULL;
 	DrawPiece(&resources->shapeDrawData_13_RediculouslyLongRope);
-	crtMaskIndexToUse = 1;
+	g_crtMaskIndexToUse = CRT_MASK_NORMAL;
 	DrawPiece(&resources->shapeDrawData_PostRope_Maybe);
 }
 
 void DrawPiece_14_HorizontalRopeStartGoingRight(const Resources* resources)
 {
-	crtMaskIndexToUse = 3;
+	g_crtMaskIndexToUse = CRT_MASK_FULL;
 	DrawPiece(&resources->shapeDrawData_14_HorizontalRopeStartGoingRight);
-	crtMaskIndexToUse = 1;
+	g_crtMaskIndexToUse = CRT_MASK_NORMAL;
 }
 
 void DrawPiece_15_HorizontalRopeEndGoingRight(const Resources* resources)
 {
-	crtMaskIndexToUse = 3;
+	g_crtMaskIndexToUse = CRT_MASK_FULL;
 	DrawPiece(&resources->shapeDrawData_15_HorizontalRopeEndGoingRight);
-	crtMaskIndexToUse = 1;
+	g_crtMaskIndexToUse = CRT_MASK_NORMAL;
 }
 
 void DrawPiece_16_HorizontalRopeGoingRight(const Resources* resources)
 {
-	crtMaskIndexToUse = 3;
+	g_crtMaskIndexToUse = CRT_MASK_FULL;
 	DrawPiece(&resources->shapeDrawData_17_BlankAreaGoingRight);
-	crtMaskIndexToUse = 1;
+	g_crtMaskIndexToUse = CRT_MASK_NORMAL;
 }
 
 void DrawPiece_17_BlankAreaGoingRight(const Resources* resources)
 {
-	crtMaskIndexToUse = 0;
+	g_crtMaskIndexToUse = CRT_MASK_INVISIBLE;
 	DrawPiece(&resources->shapeDrawData_17_BlankAreaGoingRight);
-	crtMaskIndexToUse = 1;
+	g_crtMaskIndexToUse = CRT_MASK_NORMAL;
 }
 
 void DrawPiece_18_BlankAreaGoingLeft(const Resources* resources)
 {
-	crtMaskIndexToUse = 0;
+	g_crtMaskIndexToUse = CRT_MASK_INVISIBLE;
 	DrawPiece(&resources->shapeDrawData_18_BlankAreaGoingLeft);
-	crtMaskIndexToUse = 1;
+	g_crtMaskIndexToUse = CRT_MASK_NORMAL;
 }
 
 void DrawPiece_19_BlankAreaGoingDownRight(const Resources* resources)
 {
-	crtMaskIndexToUse = 0;
+	g_crtMaskIndexToUse = CRT_MASK_INVISIBLE;
 	DrawPiece(&resources->shapeDrawData_19_BlankAreaGoingDownRight);
-	crtMaskIndexToUse = 1;
+	g_crtMaskIndexToUse = CRT_MASK_NORMAL;
 }
 
 void DrawPiece_20_UnknownOrBuggy(const Resources* resources)
 {
-	crtMaskIndexToUse = 0;
+	g_crtMaskIndexToUse = CRT_MASK_INVISIBLE;
 	DrawPiece(&resources->shapeDrawData_07_WallPieceGoingUp);
-	crtMaskIndexToUse = 1;
+	g_crtMaskIndexToUse = CRT_MASK_NORMAL;
 }
 
 void (*drawPieceFunctions[])(const Resources* resources) = {
@@ -435,33 +430,27 @@ void Draw_Background(const BackgroundDrawData* backgroundDrawData,
 					 const Resources* resources,
 					 byte* framebuffer)
 {
-	memset(framebuffer, 0, FRAMEBUFFER_SIZE);
-	DrawSegment_CurrentScreenX_0x22 = 15;
-	DrawSegment_CurrentScreenY_0x21 = 16;
-
 	g_framebuffer = framebuffer;
 
-	u16 D = 0x100f;
+	// clear frame buffer
+	memset(g_framebuffer, 0, FRAMEBUFFER_SIZE);
 
-	crtMaskIndexToUse = 1;
+	// init plotter position
+	g_plotterCurrentY = 15;
+	g_plotterCurrentX = 16;
+	g_crtMaskIndexToUse = CRT_MASK_NORMAL;
 
 	int counter = backgroundDrawData->drawCommandCount;
 	BackgroundDrawCommand* backgroundDrawCommandRunner = backgroundDrawData->backgroundDrawCommands;
 
-	u8 drawCommandCount = backgroundDrawData->drawCommandCount;
-
-	for (int loop = 0; loop < drawCommandCount; loop++)
+	while (counter--)
 	{
-		u8 drawPieceCount = backgroundDrawCommandRunner->drawCount;
-
-		for (int shapeLoop = 0; shapeLoop < drawPieceCount; shapeLoop++)
+		for (int shapeLoop = 0; shapeLoop < backgroundDrawCommandRunner->drawCount; shapeLoop++)
 		{
 			u8 shapeCode = backgroundDrawCommandRunner->shapeCode;
 			drawPieceFunctions[shapeCode](resources);
 		}
 
-		counter--;
 		backgroundDrawCommandRunner++;
 	}
-
 }

@@ -66,6 +66,16 @@ typedef struct
     byte* sprites_drops;            // 0xdf2a
 
     BackgroundDrawData backgroundDrawData_TitleScreen; // 0xcec4
+    BackgroundDrawData backgroundDrawData_room0_drawCommands; // 0xd35e
+    BackgroundDrawData backgroundDrawData_room1_drawCommands; // 0xd3a0
+    BackgroundDrawData backgroundDrawData_room2_drawCommands; // 0xd3e4
+    BackgroundDrawData backgroundDrawData_room3_drawCommands; // 0xd426
+    BackgroundDrawData backgroundDrawData_room4_drawCommands; // 0xd467
+    BackgroundDrawData backgroundDrawData_room5_drawCommands; // 0xd4a2
+    BackgroundDrawData backgroundDrawData_room6_drawCommands; // 0xd4d9
+    BackgroundDrawData backgroundDrawData_room7_drawCommands; // 0xd4f6
+    BackgroundDrawData backgroundDrawData_room8_drawCommands; // 0xd52f
+    BackgroundDrawData backgroundDrawData_room9_drawCommands; // 0xd561
 
     ShapeDrawData shapeDrawData_00_Stalactite;	                        // 0xd5f7
     ShapeDrawData shapeDrawData_01_WallGoingDown;	                    // 0xd60c

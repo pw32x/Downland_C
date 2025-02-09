@@ -14,7 +14,7 @@ void Game_Init(GameData* gameData, Resources* resources)
 
 void Game_Update(GameData* gameData)
 {
-	Draw_Background(&g_resources->backgroundDrawData_TitleScreen, 
+	Draw_Background(&g_resources->backgroundDrawData_room0_drawCommands, 
 					g_resources,
 					gameData->framebuffer);
 }

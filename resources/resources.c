@@ -198,6 +198,16 @@ BOOL Resources_Init(const char* romPath, Resources* resources)
 
 	// title screen background
 	loadBackgroundDrawData(file, 0xcec4, &resources->backgroundDrawData_TitleScreen);
+	loadBackgroundDrawData(file, 0xd35e, &resources->backgroundDrawData_room0_drawCommands);
+	loadBackgroundDrawData(file, 0xd3a0, &resources->backgroundDrawData_room1_drawCommands);
+	loadBackgroundDrawData(file, 0xd3e4, &resources->backgroundDrawData_room2_drawCommands);
+	loadBackgroundDrawData(file, 0xd426, &resources->backgroundDrawData_room3_drawCommands);
+	loadBackgroundDrawData(file, 0xd467, &resources->backgroundDrawData_room4_drawCommands);
+	loadBackgroundDrawData(file, 0xd4a2, &resources->backgroundDrawData_room5_drawCommands);
+	loadBackgroundDrawData(file, 0xd4d9, &resources->backgroundDrawData_room6_drawCommands);
+	loadBackgroundDrawData(file, 0xd4f6, &resources->backgroundDrawData_room7_drawCommands);
+	loadBackgroundDrawData(file, 0xd52f, &resources->backgroundDrawData_room8_drawCommands);
+	loadBackgroundDrawData(file, 0xd561, &resources->backgroundDrawData_room9_drawCommands);
 
 	loadShapeDrawData(file, 0xd5f7, &resources->shapeDrawData_00_Stalactite);
 	loadShapeDrawData(file, 0xd60c, &resources->shapeDrawData_01_WallGoingDown);

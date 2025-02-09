@@ -18,6 +18,15 @@ u8 pixelCount;
 
 byte* g_framebuffer;
 
+u8 crtMaskIndexToUse;
+u8 crtMasks[4] = 
+{
+	0x00,
+	0x55,
+	0xaa,
+	0xff
+};
+
 void DrawSegment_MovePosUpAndRight()
 {
 	DrawSegment_CurrentScreenY_0x21--;
@@ -82,7 +91,7 @@ void DrawPixel()
 	u16 framebufferOffset = (y * FRAMEBUFFER_PITCH) + ((x << 1) / 8);
 
 	u8 maskIndex = x & 0x3;
-	u8 maskToUse = masks[maskIndex] & 0x55; // apply crt artificat mask
+	u8 maskToUse = masks[maskIndex] & crtMasks[crtMaskIndexToUse]; // apply crt artificat mask
 
 	g_framebuffer[framebufferOffset] |= maskToUse;
 
@@ -214,11 +223,6 @@ void DrawPiece_00_Stalactite(const Resources* resources)
 	DrawPiece(&resources->shapeDrawData_00_Stalactite);
 }
 
-void DrawPiece_07_WallPieceGoingUp(const Resources* resources)
-{
-	DrawPiece(&resources->shapeDrawData_07_WallPieceGoingUp);
-}
-
 void DrawPiece_01_WallGoingDown(const Resources* resources)
 {
 	DrawPiece(&resources->shapeDrawData_01_WallGoingDown);
@@ -227,11 +231,6 @@ void DrawPiece_01_WallGoingDown(const Resources* resources)
 void DrawPiece_02_LeftHandCornerPiece(const Resources* resources)
 {
 	DrawPiece(&resources->shapeDrawData_02_LeftHandCornerPiece);
-}
-
-void DrawPiece_08_CornerPieceGoingDownLeft(const Resources* resources)
-{
-	DrawPiece(&resources->shapeDrawData_08_CornerPieceGoingDownLeft);
 }
 
 void DrawPiece_03_TopRightHandCornerPiece(const Resources* resources)
@@ -249,19 +248,19 @@ void DrawPiece_05_BottomRightSideOfFloatingPlatforms(const Resources* resources)
 	DrawPiece(&resources->shapeDrawData_05_BottomRightSideOfFloatingPlatforms);
 }
 
-void DrawPiece_14_HorizontalRopeStartGoingRight(const Resources* resources)
-{
-	DrawPiece(&resources->shapeDrawData_14_HorizontalRopeStartGoingRight);
-}
-
-void DrawPiece_15_HorizontalRopeEndGoingRight(const Resources* resources)
-{
-	DrawPiece(&resources->shapeDrawData_15_HorizontalRopeEndGoingRight);
-}
-
 void DrawPiece_06_FloorPieceGoingRight(const Resources* resources)
 {
 	DrawPiece(&resources->shapeDrawData_17_BlankAreaGoingRight);
+}
+
+void DrawPiece_07_WallPieceGoingUp(const Resources* resources)
+{
+	DrawPiece(&resources->shapeDrawData_07_WallPieceGoingUp);
+}
+
+void DrawPiece_08_CornerPieceGoingDownLeft(const Resources* resources)
+{
+	DrawPiece(&resources->shapeDrawData_08_CornerPieceGoingDownLeft);
 }
 
 void DrawPiece_09_FloorPieceGoingLeft(const Resources* resources)
@@ -279,69 +278,121 @@ void DrawPiece_0b_ShortLineGoingUp(const Resources* resources)
 	DrawPiece(&resources->shapeDrawData_0b_ShortLineGoingUp);
 }
 
-void DrawPiece_17_BlankAreaGoingRight(const Resources* resources)
-{
-	DrawPiece(&resources->shapeDrawData_17_BlankAreaGoingRight);
-}
-
-void DrawPiece_18_BlankAreaGoingLeft(const Resources* resources)
-{
-	DrawPiece(&resources->shapeDrawData_18_BlankAreaGoingLeft);
-}
-
-void DrawPiece_19_BlankAreaGoingDownRight(const Resources* resources)
-{
-	DrawPiece(&resources->shapeDrawData_19_BlankAreaGoingDownRight);
-}
-
-void DrawPiece_20_UnknownOrBuggy(const Resources* resources)
-{
-	DrawPiece(&resources->shapeDrawData_07_WallPieceGoingUp);
-}
-
 void DrawPiece_0c_VeryShortRope(const Resources* resources)
 {
+	DrawPiece(&resources->shapeDrawData_PreRope_Maybe);
+	crtMaskIndexToUse = 3;
 	DrawPiece(&resources->shapeDrawData_0c_VeryShortRope);
+	crtMaskIndexToUse = 1;
+	DrawPiece(&resources->shapeDrawData_PostRope_Maybe);
 }
 
 void DrawPiece_0d_ShortRope(const Resources* resources)
 {
+	DrawPiece(&resources->shapeDrawData_PreRope_Maybe);
+	crtMaskIndexToUse = 3;
 	DrawPiece(&resources->shapeDrawData_0d_ShortRope);
+	crtMaskIndexToUse = 1;
+	DrawPiece(&resources->shapeDrawData_PostRope_Maybe);
 }
 
 void DrawPiece_0e_MidLengthRope(const Resources* resources)
 {
+	DrawPiece(&resources->shapeDrawData_PreRope_Maybe);
+	crtMaskIndexToUse = 3;
 	DrawPiece(&resources->shapeDrawData_0e_MidLengthRope);
+	crtMaskIndexToUse = 1;
+	DrawPiece(&resources->shapeDrawData_PostRope_Maybe);
 }
 
 void DrawPiece_0f_LongRope(const Resources* resources)
 {
+	DrawPiece(&resources->shapeDrawData_PreRope_Maybe);
+	crtMaskIndexToUse = 3;
 	DrawPiece(&resources->shapeDrawData_0f_LongRope);
+	crtMaskIndexToUse = 1;
+	DrawPiece(&resources->shapeDrawData_PostRope_Maybe);
 }
 
 void DrawPiece_10_VeryLongRope(const Resources* resources)
 {
+	DrawPiece(&resources->shapeDrawData_PreRope_Maybe);
+	crtMaskIndexToUse = 3;
 	DrawPiece(&resources->shapeDrawData_10_VeryLongRope);
+	crtMaskIndexToUse = 1;
+	DrawPiece(&resources->shapeDrawData_PostRope_Maybe);
 }
 
 void DrawPiece_11_SuperLongRope(const Resources* resources)
 {
+	DrawPiece(&resources->shapeDrawData_PreRope_Maybe);
+	crtMaskIndexToUse = 3;
 	DrawPiece(&resources->shapeDrawData_11_SuperLongRope);
+	crtMaskIndexToUse = 1;
+	DrawPiece(&resources->shapeDrawData_PostRope_Maybe);
 }
 
 void DrawPiece_12_ExcessivelyLongRope(const Resources* resources)
 {
+	DrawPiece(&resources->shapeDrawData_PreRope_Maybe);
+	crtMaskIndexToUse = 3;
 	DrawPiece(&resources->shapeDrawData_12_ExcessivelyLongRope);
+	crtMaskIndexToUse = 1;
+	DrawPiece(&resources->shapeDrawData_PostRope_Maybe);
 }
 
 void DrawPiece_13_RediculouslyLongRope(const Resources* resources)
 {
+	DrawPiece(&resources->shapeDrawData_PreRope_Maybe);
+	crtMaskIndexToUse = 3;
 	DrawPiece(&resources->shapeDrawData_13_RediculouslyLongRope);
+	crtMaskIndexToUse = 1;
+	DrawPiece(&resources->shapeDrawData_PostRope_Maybe);
+}
+
+void DrawPiece_14_HorizontalRopeStartGoingRight(const Resources* resources)
+{
+	DrawPiece(&resources->shapeDrawData_14_HorizontalRopeStartGoingRight);
+}
+
+void DrawPiece_15_HorizontalRopeEndGoingRight(const Resources* resources)
+{
+	DrawPiece(&resources->shapeDrawData_15_HorizontalRopeEndGoingRight);
 }
 
 void DrawPiece_16_HorizontalRopeGoingRight(const Resources* resources)
 {
+	crtMaskIndexToUse = 3;
 	DrawPiece(&resources->shapeDrawData_17_BlankAreaGoingRight);
+	crtMaskIndexToUse = 1;
+}
+
+void DrawPiece_17_BlankAreaGoingRight(const Resources* resources)
+{
+	crtMaskIndexToUse = 0;
+	DrawPiece(&resources->shapeDrawData_17_BlankAreaGoingRight);
+	crtMaskIndexToUse = 1;
+}
+
+void DrawPiece_18_BlankAreaGoingLeft(const Resources* resources)
+{
+	crtMaskIndexToUse = 0;
+	DrawPiece(&resources->shapeDrawData_18_BlankAreaGoingLeft);
+	crtMaskIndexToUse = 1;
+}
+
+void DrawPiece_19_BlankAreaGoingDownRight(const Resources* resources)
+{
+	crtMaskIndexToUse = 0;
+	DrawPiece(&resources->shapeDrawData_19_BlankAreaGoingDownRight);
+	crtMaskIndexToUse = 1;
+}
+
+void DrawPiece_20_UnknownOrBuggy(const Resources* resources)
+{
+	crtMaskIndexToUse = 0;
+	DrawPiece(&resources->shapeDrawData_07_WallPieceGoingUp);
+	crtMaskIndexToUse = 1;
 }
 
 void (*drawPieceFunctions[])(const Resources* resources) = {
@@ -387,7 +438,7 @@ void Draw_Background(const BackgroundDrawData* backgroundDrawData,
 
 	u16 D = 0x100f;
 
-
+	crtMaskIndexToUse = 1;
 
 	int counter = backgroundDrawData->drawCommandCount;
 	BackgroundDrawCommand* backgroundDrawCommandRunner = backgroundDrawData->backgroundDrawCommands;

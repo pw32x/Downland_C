@@ -15,13 +15,15 @@ DONE load room drawning commands for each room
 DONE test each room and fix bugs
 
 DONE DONE draw to offscreen "clean" buffer
-drawText function
-draw text for title screen
+DONE drawText function
+DONE draw text for title screen
 handle drops
 
 handle input
-
+draw scores on title screen
 
 extract room data lookup table from rom
 extract each room data from rom
+
+
 

@@ -5,7 +5,7 @@
 #include "../game/base_defines.h"
 #include "../game/base_types.h"
 #include "../game/game.h"
-#include "../game/framebuffer_utils.h"
+#include "../game/graphics_utils.h"
 #include "../resources/resources.h"
 #include "../misc/screenshot_data.h"
 #include "sdl_utils.h"

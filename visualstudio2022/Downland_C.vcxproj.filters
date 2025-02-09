@@ -41,7 +41,7 @@
     <ClInclude Include="..\game\base_defines.h">
       <Filter>game</Filter>
     </ClInclude>
-    <ClInclude Include="..\game\framebuffer_utils.h">
+    <ClInclude Include="..\game\graphics_utils.h">
       <Filter>game</Filter>
     </ClInclude>
     <ClInclude Include="..\sdl_main\sdl_utils.h">
@@ -76,7 +76,7 @@
     <ClCompile Include="..\game\game.c">
       <Filter>game</Filter>
     </ClCompile>
-    <ClCompile Include="..\game\framebuffer_utils.c">
+    <ClCompile Include="..\game\graphics_utils.c">
       <Filter>game</Filter>
     </ClCompile>
     <ClCompile Include="..\sdl_main\sdl_main.c">

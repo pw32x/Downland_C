@@ -11,10 +11,17 @@ DONE extract shape draw data from rom
 
 DONE draw title screen
 
+DONE load room drawning commands for each room
+DONE test each room and fix bugs
+
+DONE DONE draw to offscreen "clean" buffer
+drawText function
+draw text for title screen
+handle drops
+
+handle input
+
+
 extract room data lookup table from rom
 extract each room data from rom
 
-draw any screen
-draw to offscreen "clean" buffer
-draw text
-handle drops

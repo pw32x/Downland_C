@@ -1,0 +1,39 @@
+#ifndef DROPS_TYPES_INCLUDE_H
+#define DROPS_TYPES_INCLUDE_H
+
+#include "base_types.h"
+
+#define NUM_DROPS 10
+
+typedef struct
+{
+	u8 wiggleTimer;
+	u16 speedY;
+	u16 y;
+	u8 x;
+	u8* spriteData;
+	u16 framebufferDrawLocation;
+	u16 previousFramebufferDrawLocation;
+	u8 collisionMask;
+} Drop;
+
+typedef struct
+{
+	u8 dropSpawnPoints;
+	u8 y;
+	u8 x;
+} DropSpawnArea;
+
+typedef struct
+{
+	u8 spawnAreasCount;
+	DropSpawnArea* dropSpawnAreas;
+} DropSpawnPositions;
+
+typedef struct
+{
+	Drop drops[NUM_DROPS];
+	DropSpawnPositions* dropSpawnPositions;
+} DropData;
+
+#endif

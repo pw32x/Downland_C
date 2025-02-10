@@ -87,9 +87,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\game\background_types.h" />
     <ClInclude Include="..\game\base_defines.h" />
     <ClInclude Include="..\game\base_types.h" />
-    <ClInclude Include="..\game\draw_background.h" />
+    <ClInclude Include="..\game\background_draw.h" />
+    <ClInclude Include="..\game\drops_manager.h" />
+    <ClInclude Include="..\game\drops_types.h" />
     <ClInclude Include="..\game\graphics_utils.h" />
     <ClInclude Include="..\game\game.h" />
     <ClInclude Include="..\misc\screenshot_data.h" />
@@ -109,7 +112,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\game\draw_background.c" />
+    <ClCompile Include="..\game\background_draw.c" />
+    <ClCompile Include="..\game\drops_manager.c" />
     <ClCompile Include="..\game\graphics_utils.c" />
     <ClCompile Include="..\game\game.c" />
     <ClCompile Include="..\misc\screenshot_data.c" />

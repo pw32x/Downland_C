@@ -23,6 +23,14 @@ SDL_Texture* crtFramebufferTexture = NULL;
 Resources resources;
 GameData gameData;
 
+#define TARGET_FPS 60
+const double TARGET_FRAME_TIME = 1.0 / TARGET_FPS;
+
+Uint64 gameStartTime;
+Uint64 timeFrequency;
+Uint64 frameCount = 0;
+float fps;
+
 const char* romFilePath = "downland.bin";
 
 SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
@@ -38,7 +46,7 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
     if (!SDL_CreateWindowAndRenderer("Downland_C", 
                                      SCREEN_WIDTH, 
                                      SCREEN_HEIGHT, 
-                                     0, 
+                                     0 , 
                                      &window, 
                                      &renderer)) 
     {
@@ -69,7 +77,11 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
     Game_Init(&gameData, &resources);
 
     // setup screenshot
-    memcpy(gameData.framebuffer, screenshot_data, FRAMEBUFFER_SIZE);
+    //memcpy(gameData.framebuffer, screenshot_data, FRAMEBUFFER_SIZE);
+
+    gameStartTime = SDL_GetPerformanceCounter();
+    timeFrequency = SDL_GetPerformanceFrequency();
+
 
     return SDL_APP_CONTINUE;
 }
@@ -82,8 +94,10 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
     return SDL_APP_CONTINUE;
 }
 
+
 SDL_AppResult SDL_AppIterate(void *appstate)
 {
+    Uint64 frameStartTime = SDL_GetPerformanceCounter();
     Game_Update(&gameData);
 
     // Render to screen
@@ -103,18 +117,37 @@ SDL_AppResult SDL_AppIterate(void *appstate)
 
     SDL_RenderTexture(renderer, crtFramebufferTexture, NULL, NULL);
 
+    frameCount++;
+	Uint64 currentTime = SDL_GetPerformanceCounter();
+    float elapsedSeconds = (float)(currentTime - gameStartTime) / timeFrequency;
 
-    /*
+    if (elapsedSeconds >= 1.0f) // Every second
+    {  
+        fps = frameCount / elapsedSeconds;
+        frameCount = 0;
+        gameStartTime = currentTime;
+    }
+
     // write debug text
     SDL_SetRenderScale(renderer, 1.5f, 1.5f);
     SDL_SetRenderDrawColor(renderer, 51, 102, 255, SDL_ALPHA_OPAQUE);
-    SDL_RenderDebugText(renderer, 10.0f, 10.0f, "Some debug text");
-    SDL_RenderDebugTextFormat(renderer, 10.0f, 20.0f, "This is line number %d", 2);
+
+    // SDL_RenderDebugText(renderer, 10.0f, 10.0f, "Some debug text");
+    SDL_RenderDebugTextFormat(renderer, 10.0f, 20.0f, "Fps: %f", fps);
+
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
     SDL_SetRenderScale(renderer, 1.0f, 1.0f);
-    */
 
     SDL_RenderPresent(renderer);
+
+    // compute the frame's time and wait for the target frame time to pass
+    elapsedSeconds = (float)(SDL_GetPerformanceCounter() - frameStartTime) / timeFrequency;
+    double remainingTime = TARGET_FRAME_TIME - elapsedSeconds;
+        
+    if (remainingTime > 0) 
+    {
+        SDL_Delay((Uint32)(remainingTime * 1000)); // Convert to milliseconds
+    }
 
     return SDL_APP_CONTINUE;
 }

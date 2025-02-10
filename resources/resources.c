@@ -82,6 +82,9 @@ void loadBackgroundDrawData(FILE* file, u16 start, BackgroundDrawData* backgroun
 	u16 bufferSize;
 	byte* rawBuffer = getBytesUntilSentinel(file, start, sentinelValue, &bufferSize);
 
+	if (rawBuffer == NULL)
+		return;
+
 	// go through the buffer, counting the number of elements
 	// we need to create.
 	u8 drawCommandCount = 0;
@@ -141,14 +144,36 @@ void loadShapeDrawData(FILE* file, u16 start, ShapeDrawData* shapeDrawData)
 	fread(&shapeDrawData->segmentCount, sizeof(shapeDrawData->segmentCount), 1, file);
 
 	u16 bufferSize = shapeDrawData->segmentCount * sizeof(ShapeSegment);
-	byte* segmentsMemory = (byte*)malloc(bufferSize);
+	ShapeSegment* segmentsMemory = (ShapeSegment*)malloc(bufferSize);
 
 	if (segmentsMemory == NULL)
 		return;
 
 	fread(segmentsMemory, bufferSize, 1, file);
 
-	shapeDrawData->segments = (ShapeSegment*)segmentsMemory;
+	shapeDrawData->segments = segmentsMemory;
+}
+
+void loadDropSpawnPositions(FILE* file, u16 start, DropSpawnPositions* dropSpawnPositions)
+{
+	// take into account that the rom starts at c000
+	start -= 0xc000; 
+
+	fseek(file, start, SEEK_SET);
+	fread(&dropSpawnPositions->spawnAreasCount, sizeof(dropSpawnPositions->spawnAreasCount), 1, file);
+
+	// in the data, the count is off by one.
+	dropSpawnPositions->spawnAreasCount++;
+
+	u16 bufferSize = dropSpawnPositions->spawnAreasCount * sizeof(ShapeSegment);
+	DropSpawnArea* dropSpawnAreasMemory = (DropSpawnArea*)malloc(bufferSize);
+
+	if (dropSpawnAreasMemory == NULL)
+		return;
+
+	fread(dropSpawnAreasMemory, bufferSize, 1, file);
+
+	dropSpawnPositions->dropSpawnAreas = dropSpawnAreasMemory;
 }
 
 BOOL Resources_Init(const char* romPath, Resources* resources)
@@ -234,6 +259,18 @@ BOOL Resources_Init(const char* romPath, Resources* resources)
 	loadShapeDrawData(file, 0xd74c, &resources->shapeDrawData_PreRope_Maybe);
 	loadShapeDrawData(file, 0xd750, &resources->shapeDrawData_PostRope_Maybe);
 
+	loadDropSpawnPositions(file, 0xd073, &resources->drawSpawnPositions_room0);
+	loadDropSpawnPositions(file, 0xd089, &resources->drawSpawnPositions_room1);
+	loadDropSpawnPositions(file, 0xd09c, &resources->drawSpawnPositions_room2);
+	loadDropSpawnPositions(file, 0xd0ac, &resources->drawSpawnPositions_room3);
+	loadDropSpawnPositions(file, 0xd0bf, &resources->drawSpawnPositions_room4);
+	loadDropSpawnPositions(file, 0xd0cf, &resources->drawSpawnPositions_room5);
+	loadDropSpawnPositions(file, 0xd0df, &resources->drawSpawnPositions_room6);
+	loadDropSpawnPositions(file, 0xd0e6, &resources->drawSpawnPositions_room7);
+	loadDropSpawnPositions(file, 0xd0fc, &resources->drawSpawnPositions_room8);
+	loadDropSpawnPositions(file, 0xd10c, &resources->drawSpawnPositions_room9);
+	loadDropSpawnPositions(file, 0xd116, &resources->drawSpawnPositions_room10);
+
 	fclose(file);
 
 	return TRUE;
@@ -271,4 +308,17 @@ void Resources_Shutdown(Resources* resources)
 	free(resources->shapeDrawData_13_RediculouslyLongRope.segments);
 	free(resources->shapeDrawData_PreRope_Maybe.segments);
 	free(resources->shapeDrawData_PostRope_Maybe.segments);
+
+	free(resources->drawSpawnPositions_room0.dropSpawnAreas);
+	free(resources->drawSpawnPositions_room1.dropSpawnAreas);
+	free(resources->drawSpawnPositions_room2.dropSpawnAreas);
+	free(resources->drawSpawnPositions_room3.dropSpawnAreas);
+	free(resources->drawSpawnPositions_room4.dropSpawnAreas);
+	free(resources->drawSpawnPositions_room5.dropSpawnAreas);
+	free(resources->drawSpawnPositions_room6.dropSpawnAreas);
+	free(resources->drawSpawnPositions_room7.dropSpawnAreas);
+	free(resources->drawSpawnPositions_room8.dropSpawnAreas);
+	free(resources->drawSpawnPositions_room9.dropSpawnAreas);
+	free(resources->drawSpawnPositions_room10.dropSpawnAreas);
+
 }

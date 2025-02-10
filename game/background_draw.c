@@ -1,4 +1,4 @@
-#include "draw_background.h"
+#include "background_draw.h"
 
 #include "base_defines.h"
 #include <string.h>
@@ -426,7 +426,7 @@ void (*drawPieceFunctions[])(const Resources* resources) = {
 	DrawPiece_20_UnknownOrBuggy, 
 };
 
-void Draw_Background(const BackgroundDrawData* backgroundDrawData, 
+void Background_Draw(const BackgroundDrawData* backgroundDrawData, 
 					 const Resources* resources,
 					 byte* framebuffer)
 {

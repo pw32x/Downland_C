@@ -2,28 +2,38 @@
 
 #include <string.h>
 
-#include "draw_background.h"
 #include "graphics_utils.h"
+#include "background_draw.h"
+#include "drops_manager.h"
 
 Resources* g_resources;
 
 void Game_Init(GameData* gameData, Resources* resources)
 {
-	g_resources = resources;
-}
+	gameData->gameCompletionCount = 0;
+	gameData->roomNumber = 10;
 
-void Game_Update(GameData* gameData)
-{
+	g_resources = resources;
+
+	// init title screen
+	gameData->gameCompletionCount = 1; // act like the game was going through one for the title screen
+
+	// init drops
+	gameData->dropData.dropSpawnPositions = &g_resources->drawSpawnPositions_room10;
+	DropsManager_Init(&gameData->dropData, gameData->roomNumber, gameData->gameCompletionCount);
+
+	// init background and clean background
 	BackgroundDrawData* roomToDraw = &g_resources->backgroundDrawData_TitleScreen;
 
-	Draw_Background(roomToDraw, 
+	Background_Draw(roomToDraw, 
 					g_resources,
 					gameData->framebuffer);
 
-	Draw_Background(roomToDraw, 
+	Background_Draw(roomToDraw, 
 					g_resources,
 					gameData->cleanBackground);	
 
+	// title screen text
 	drawText(g_resources->text_downland, g_resources->characterFont, gameData->framebuffer, 0x03c9); // 0x07c9 original coco mem location
 	drawText(g_resources->text_writtenBy, g_resources->characterFont, gameData->framebuffer, 0x050a); // 0x090A original coco mem location
 	drawText(g_resources->text_michaelAichlmayer, g_resources->characterFont, gameData->framebuffer, 0x647); // 0x0A47 original coco mem location
@@ -37,8 +47,15 @@ void Game_Update(GameData* gameData)
 	drawText(g_resources->text_highScore, g_resources->characterFont, gameData->framebuffer, 0x118b); // 0x158B original coco mem location
 	drawText(g_resources->text_playerOne, g_resources->characterFont, gameData->framebuffer, 0x1406); // 0x1806 original coco mem location
 	drawText(g_resources->text_playerTwo, g_resources->characterFont, gameData->framebuffer, 0x1546); // 0x1946 original coco mem location
+}
 
-
+void Game_Update(GameData* gameData)
+{
+	DropsManager_Update(&gameData->dropData, 
+						gameData->framebuffer, 
+						gameData->cleanBackground, 
+						gameData->gameCompletionCount,
+						g_resources->sprites_drops);
 
 }
 

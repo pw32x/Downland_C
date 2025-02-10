@@ -50,7 +50,16 @@
     <ClInclude Include="..\resources\resources.h">
       <Filter>resources</Filter>
     </ClInclude>
-    <ClInclude Include="..\game\draw_background.h">
+    <ClInclude Include="..\game\background_draw.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\game\drops_manager.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\game\background_types.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\game\drops_types.h">
       <Filter>game</Filter>
     </ClInclude>
   </ItemGroup>
@@ -88,7 +97,10 @@
     <ClCompile Include="..\resources\resources.c">
       <Filter>resources</Filter>
     </ClCompile>
-    <ClCompile Include="..\game\draw_background.c">
+    <ClCompile Include="..\game\background_draw.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\game\drops_manager.c">
       <Filter>game</Filter>
     </ClCompile>
   </ItemGroup>

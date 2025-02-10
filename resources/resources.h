@@ -2,31 +2,8 @@
 #define RESOURCES_INCLUDE_H
 
 #include "../game/base_types.h"
-
-typedef struct
-{
-    u8 subpixelIncrement;
-    u8 pixelCount;
-    u8 orientation;
-} ShapeSegment;
-
-typedef struct
-{
-    u8 segmentCount;
-    ShapeSegment* segments;
-} ShapeDrawData;
-
-typedef struct
-{
-    u8 shapeCode;
-    u8 drawCount;
-} BackgroundDrawCommand;
-
-typedef struct
-{
-    u8 drawCommandCount;
-    BackgroundDrawCommand* backgroundDrawCommands;
-} BackgroundDrawData;
+#include "../game/background_types.h"
+#include "../game/drops_types.h"
 
 typedef struct
 {
@@ -101,6 +78,22 @@ typedef struct
     ShapeDrawData shapeDrawData_13_RediculouslyLongRope;	            // 0xd72d
     ShapeDrawData shapeDrawData_PreRope_Maybe;	                        // 0xd74c
     ShapeDrawData shapeDrawData_PostRope_Maybe;	                        // 0xd750  
+
+    DropSpawnPositions drawSpawnPositions_room0;
+    DropSpawnPositions drawSpawnPositions_room1;
+    DropSpawnPositions drawSpawnPositions_room2;
+    DropSpawnPositions drawSpawnPositions_room3;
+    DropSpawnPositions drawSpawnPositions_room4;
+    DropSpawnPositions drawSpawnPositions_room5;
+    DropSpawnPositions drawSpawnPositions_room6;
+    DropSpawnPositions drawSpawnPositions_room7;
+    DropSpawnPositions drawSpawnPositions_room8;
+    DropSpawnPositions drawSpawnPositions_room9;
+    DropSpawnPositions drawSpawnPositions_room10; // title screen
+
+
+
+
 /*
 Sprites 0xdcd7
     PlayerSprite_Right_Stand 0xdcd6

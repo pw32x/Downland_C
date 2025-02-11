@@ -10,7 +10,7 @@ typedef struct
 	u8 wiggleTimer;
 	u16 speedY;
 	u16 y;
-	u8 x;
+	u8 x; // position in half resolution (0 - 127)
 	u8* spriteData;
 	u16 framebufferDrawLocation;
 	u16 previousFramebufferDrawLocation;
@@ -19,7 +19,7 @@ typedef struct
 
 typedef struct
 {
-	u8 dropSpawnPoints;
+	u8 dropSpawnPointsCount;
 	u8 y;
 	u8 x;
 } DropSpawnArea;

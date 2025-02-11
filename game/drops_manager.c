@@ -102,7 +102,7 @@ void drawSprite(u8* framebuffer,
 void wiggleDrop(Drop* drop)
 {
 	drop->wiggleTimer--;
-	drop->speedY = (drop->wiggleTimer & 2) == 0 ? DROP_WIGGLE_DOWN_SPEED : DROP_WIGGLE_UP_SPEED;
+	drop->speedY = (drop->wiggleTimer & 2) == 0 ? DROP_WIGGLE_UP_SPEED : DROP_WIGGLE_DOWN_SPEED;
 }
 
 void initDrop(Drop* drop, DropData* dropData, u8 gameCompletionCount, u8* dropSprites)
@@ -115,18 +115,21 @@ void initDrop(Drop* drop, DropData* dropData, u8 gameCompletionCount, u8* dropSp
 	DropSpawnArea* dropSpawnArea = &dropData->dropSpawnPositions->dropSpawnAreas[dropSpawnAreaIndex];
 
 	// randomly pick a position in the drop spawn area
-	u8 dropSpawnPointX = rand() % dropSpawnArea->dropSpawnPoints;
-	dropSpawnPointX *= 8; // spacing between drops
+	u8 dropSpawnPointX = rand() % (dropSpawnArea->dropSpawnPointsCount + 1); // spawn points count is inclusive in the original
+	dropSpawnPointX *= 8; // spacing between drops. 8 pixels, not 8 bytes.
 
-	dropSpawnPointX += dropSpawnArea->x;
-
-	if (gameCompletionCount < 3)
-		dropSpawnPointX &= 0xFE; // 11111110b to ensure even positions for x? 
-
-	drop->x = dropSpawnPointX;
+	drop->x = dropSpawnPointX + dropSpawnArea->x;
 	drop->y = dropSpawnArea->y << 8;
 
-	drop->framebufferDrawLocation = drop->x + ((drop->y >> 8) * FRAMEBUFFER_PITCH);
+	if (gameCompletionCount < 3)
+		drop->x &= 0xFE; // 11111110b to ensure even positions for x? 
+
+	// TODO
+	// here, check if there's a collision with the background 6 pixels down and 
+	// 4 to the right. If so, then move the drop's x position to the left.
+	// See address 0xcfeb in the disassembly
+
+	drop->framebufferDrawLocation = (drop->x / 4) + ((drop->y >> 8) * FRAMEBUFFER_PITCH);
 	drop->previousFramebufferDrawLocation = drop->framebufferDrawLocation;
 
 	u8 spriteIndex = drop->x & 3; // sprite depends on which column of four pixels it lands on
@@ -180,8 +183,9 @@ void DropsManager_Update(DropData* dropData,
 			//		initDrop(drop, dropData, gameCompletionCount);
 
 			// bottom bounds checking. not in the original game.
-			if (drop->y >> 8 > FRAMEBUFFER_HEIGHT - 16)
+			if ((drop->y >> 8) > 40)//FRAMEBUFFER_HEIGHT - 16)
 			{
+				eraseSprite(framebuffer, cleanBackground, drop->previousFramebufferDrawLocation, drop->spriteData, 6);
 				initDrop(drop, dropData, gameCompletionCount, dropSprites);
 			}
 		}
@@ -191,7 +195,7 @@ void DropsManager_Update(DropData* dropData,
 		drop->speedY = DROP_FALL_SPEED;
 
 		// compute framebuffer location
-		drop->framebufferDrawLocation = drop->x + ((drop->y >> 8) * FRAMEBUFFER_PITCH);
+		drop->framebufferDrawLocation = (drop->x / 4) + ((drop->y >> 8) * FRAMEBUFFER_PITCH);
 
 		// erase drop from screen
 		eraseSprite(framebuffer, cleanBackground, drop->previousFramebufferDrawLocation, drop->spriteData, 6);

@@ -40,6 +40,36 @@ byte* getBytes(FILE* file, u16 start, u16 end)
 	return memory;
 }
 
+byte* getBytesSwapped(FILE* file, u16 start, u16 end)
+{
+	// take into account that the rom starts at c000
+	start -= 0xc000; 
+	end -= 0xc000;
+
+	u16 size = end - start;
+
+	byte* memory = (byte*)malloc(size);
+
+	if (memory == NULL)
+		return NULL;
+
+	fseek(file, start, SEEK_SET);
+	fread(memory, size, 1, file);
+
+	// swap bytes because endianness difference between 6809 and x86
+	u8* memoryRunner = memory;
+	for (int loop = 0; loop < size / 2; loop++)
+	{
+		u8 temp = memoryRunner[0];
+		memoryRunner[0] = memoryRunner[1];
+		memoryRunner[1] = temp;
+		memoryRunner += 2;
+	}
+
+
+	return memory;
+}
+
 
 byte* getBytesUntilSentinel(FILE* file, u16 start, u8 sentinelValue, u16* bufferSize)
 {

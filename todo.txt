@@ -26,6 +26,9 @@ rework resources so that they're indexable by room number
 
 handle input
 
+change room
+
+screen transition
 
 draw scores on title screen
 

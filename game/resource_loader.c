@@ -1,4 +1,4 @@
-#include "resources.h"
+#include "resource_loader.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -206,7 +206,7 @@ void loadDropSpawnPositions(FILE* file, u16 start, DropSpawnPositions* dropSpawn
 	dropSpawnPositions->dropSpawnAreas = dropSpawnAreasMemory;
 }
 
-BOOL Resources_Init(const char* romPath, Resources* resources)
+BOOL ResourceLoader_Init(const char* romPath, Resources* resources)
 {
 	if (!checksumCheck(romPath))
 		return FALSE;
@@ -306,7 +306,7 @@ BOOL Resources_Init(const char* romPath, Resources* resources)
 	return TRUE;
 }
 
-void Resources_Shutdown(Resources* resources)
+void ResourceLoader_Shutdown(Resources* resources)
 {
 	free(resources->characterFont);
 

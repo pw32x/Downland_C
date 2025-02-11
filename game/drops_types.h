@@ -9,7 +9,7 @@ typedef struct
 {
 	u8 wiggleTimer;
 	u16 speedY;
-	u16 y;
+	u16 y; // u16 because 256 pixels with 256 subpixels resolution
 	u8 x; // position in half resolution (0 - 127)
 	u8* spriteData;
 	u16 framebufferDrawLocation;

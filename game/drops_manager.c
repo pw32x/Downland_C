@@ -174,16 +174,9 @@ void DropsManager_Update(DropData* dropData,
 		{
 			// falling
 
-			// get previous framebuffer position
-			// check six pixels down on the clean background
-			// get the drop collision mask
-			// touch terrain test
-			// if touched terrain or touch terrain test but one pixel down
-			//		erase drop from screen
-			//		initDrop(drop, dropData, gameCompletionCount);
-
-			// bottom bounds checking. not in the original game.
-			if ((drop->y >> 8) > 40)//FRAMEBUFFER_HEIGHT - 16)
+			if ((cleanBackground[drop->previousFramebufferDrawLocation + 0xc0] & drop->collisionMask) || // 6 pixels down
+				(cleanBackground[drop->previousFramebufferDrawLocation + 0xe0] & drop->collisionMask) || // 7 pixels down
+				((drop->y >> 8) > FRAMEBUFFER_HEIGHT - 16)) // bottom bounds checking. not in the original game.
 			{
 				eraseSprite(framebuffer, cleanBackground, drop->previousFramebufferDrawLocation, drop->spriteData, 6);
 				initDrop(drop, dropData, gameCompletionCount, dropSprites);

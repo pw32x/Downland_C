@@ -5,9 +5,7 @@
 #include "../game/base_defines.h"
 #include "../game/base_types.h"
 #include "../game/game.h"
-#include "../game/graphics_utils.h"
-#include "../resources/resources.h"
-#include "../misc/screenshot_data.h"
+#include "../game/resource_loader.h"
 #include "sdl_utils.h"
 
 static SDL_Window *window = NULL;
@@ -71,17 +69,13 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
 
     SDL_SetTextureScaleMode(crtFramebufferTexture, SDL_SCALEMODE_NEAREST); // no smoothing
 
-    if (!Resources_Init(romFilePath, &resources))
+    if (!ResourceLoader_Init(romFilePath, &resources))
         return SDL_APP_FAILURE;
 
     Game_Init(&gameData, &resources);
 
-    // setup screenshot
-    //memcpy(gameData.framebuffer, screenshot_data, FRAMEBUFFER_SIZE);
-
     gameStartTime = SDL_GetPerformanceCounter();
     timeFrequency = SDL_GetPerformanceFrequency();
-
 
     return SDL_APP_CONTINUE;
 }
@@ -94,10 +88,41 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
     return SDL_APP_CONTINUE;
 }
 
+void Update_Controls(JoystickState* joystickState)
+{
+    const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
+
+    u8 leftDown = currentKeyStates[SDL_SCANCODE_LEFT];
+    u8 rightDown = currentKeyStates[SDL_SCANCODE_RIGHT];
+    u8 upDown = currentKeyStates[SDL_SCANCODE_UP];
+    u8 downDown = currentKeyStates[SDL_SCANCODE_DOWN];
+    u8 jumpDown = currentKeyStates[SDL_SCANCODE_SPACE];
+
+    joystickState->leftPressed = !joystickState->leftDown & leftDown;
+    joystickState->rightPressed = !joystickState->rightDown & rightDown;
+    joystickState->upPressed = !joystickState->upDown & upDown;
+    joystickState->downPressed =  !joystickState->downDown & downDown;
+    joystickState->jumpDown =  !joystickState->downDown & downDown;
+
+    joystickState->leftReleased = joystickState->leftDown & !leftDown;
+    joystickState->rightReleased = joystickState->rightDown & !rightDown;
+    joystickState->upReleased = joystickState->upDown & !upDown;
+    joystickState->downReleased =  joystickState->downDown & !downDown;
+    joystickState->jumpReleased =  joystickState->jumpDown & !jumpDown;
+
+    joystickState->leftDown = leftDown;
+    joystickState->rightDown = rightDown;
+    joystickState->upDown = upDown;
+    joystickState->downDown = downDown;
+    joystickState->jumpDown = jumpDown;
+}
 
 SDL_AppResult SDL_AppIterate(void *appstate)
 {
     Uint64 frameStartTime = SDL_GetPerformanceCounter();
+
+    Update_Controls(&gameData.joystickState);
+
     Game_Update(&gameData);
 
     // Render to screen
@@ -160,5 +185,5 @@ void SDL_AppQuit(void *appstate, SDL_AppResult result)
     SDL_DestroyTexture(framebufferTexture);
 
     Game_Shutdown(&gameData);
-    Resources_Shutdown(&resources);
+    ResourceLoader_Shutdown(&resources);
 }

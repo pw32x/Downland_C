@@ -15,22 +15,13 @@
     <Filter Include="game">
       <UniqueIdentifier>{25c68a46-0917-436b-ac04-5e469f1f0c0b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="misc">
-      <UniqueIdentifier>{22d1770c-c66b-422f-92eb-d1cbb3cbcb06}</UniqueIdentifier>
-    </Filter>
     <Filter Include="sdl_main">
       <UniqueIdentifier>{534e03b9-7bde-413d-b0df-d4447204f737}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="resources">
-      <UniqueIdentifier>{897990da-61f3-45ca-8985-bd364e9868af}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\misc\screenshot_data.h">
-      <Filter>misc</Filter>
     </ClInclude>
     <ClInclude Include="..\game\game.h">
       <Filter>game</Filter>
@@ -47,9 +38,6 @@
     <ClInclude Include="..\sdl_main\sdl_utils.h">
       <Filter>sdl_main</Filter>
     </ClInclude>
-    <ClInclude Include="..\resources\resources.h">
-      <Filter>resources</Filter>
-    </ClInclude>
     <ClInclude Include="..\game\background_draw.h">
       <Filter>game</Filter>
     </ClInclude>
@@ -60,6 +48,21 @@
       <Filter>game</Filter>
     </ClInclude>
     <ClInclude Include="..\game\drops_types.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\game\joystick_types.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\game\rooms.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\game\game_types.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\game\resource_types.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\game\resource_loader.h">
       <Filter>game</Filter>
     </ClInclude>
   </ItemGroup>
@@ -79,9 +82,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\misc\screenshot_data.c">
-      <Filter>misc</Filter>
-    </ClCompile>
     <ClCompile Include="..\game\game.c">
       <Filter>game</Filter>
     </ClCompile>
@@ -94,13 +94,16 @@
     <ClCompile Include="..\sdl_main\sdl_utils.c">
       <Filter>sdl_main</Filter>
     </ClCompile>
-    <ClCompile Include="..\resources\resources.c">
-      <Filter>resources</Filter>
-    </ClCompile>
     <ClCompile Include="..\game\background_draw.c">
       <Filter>game</Filter>
     </ClCompile>
     <ClCompile Include="..\game\drops_manager.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\game\rooms.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\game\resource_loader.c">
       <Filter>game</Filter>
     </ClCompile>
   </ItemGroup>

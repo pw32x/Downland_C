@@ -17,9 +17,16 @@ DONE test each room and fix bugs
 DONE DONE draw to offscreen "clean" buffer
 DONE drawText function
 DONE draw text for title screen
-handle drops
+DONE handle drops
+
+DONE add initial keyboard support for joystick controls
+DONE add room type
+
+rework resources so that they're indexable by room number
 
 handle input
+
+
 draw scores on title screen
 
 extract room data lookup table from rom

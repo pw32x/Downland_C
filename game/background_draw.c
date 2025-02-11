@@ -433,7 +433,7 @@ void Background_Draw(const BackgroundDrawData* backgroundDrawData,
 	g_framebuffer = framebuffer;
 
 	// clear frame buffer
-	memset(g_framebuffer, 0, FRAMEBUFFER_SIZE);
+	memset(g_framebuffer, 0, FRAMEBUFFER_SIZE_IN_BYTES);
 
 	// init plotter position
 	g_plotterCurrentY = 15;

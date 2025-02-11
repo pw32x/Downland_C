@@ -1,5 +1,5 @@
-#ifndef RESOURCES_INCLUDE_H
-#define RESOURCES_INCLUDE_H
+#ifndef RESOURCE_TYPES_INCLUDE_H
+#define RESOURCE_TYPES_INCLUDE_H
 
 #include "../game/base_types.h"
 #include "../game/background_types.h"
@@ -163,8 +163,5 @@ Room Data
 
 */
 } Resources;
-
-BOOL Resources_Init(const char* romPath, Resources* resources);
-void Resources_Shutdown(Resources* resources);
 
 #endif

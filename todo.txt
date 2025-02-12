@@ -22,11 +22,11 @@ DONE handle drops
 DONE add initial keyboard support for joystick controls
 DONE add room type
 
-rework resources so that they're indexable by room number
+DONE rework resources so that they're indexable by room number
 
-handle input
+DONE handle input
 
-change room
+DONE change room
 
 
 

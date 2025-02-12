@@ -19,6 +19,7 @@ typedef struct
 	JoystickState joystickState;
 	Resources* resources;
 	Room* currentRoom;
+	u8 numPlayers;
 } GameData;
 
 #endif

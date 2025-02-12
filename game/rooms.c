@@ -6,6 +6,7 @@
 #include "game_types.h"
 #include "graphics_utils.h"
 #include "drops_manager.h"
+#include "game.h"
 
 void titleScreen_init(Room* room, GameData* gameData, Resources* resources)
 {
@@ -46,6 +47,27 @@ void titleScreen_update(GameData* gameData)
 						gameData->cleanBackground, 
 						gameData->gameCompletionCount,
 						gameData->resources->sprites_drops);
+
+	if (gameData->joystickState.leftPressed)
+	{
+		gameData->numPlayers = 1;
+
+	}
+	else if (gameData->joystickState.rightPressed)
+	{
+		gameData->numPlayers = 2;
+	}
+
+	u16 drawLocation = gameData->numPlayers == 1 ? 0xf64 : 0xf70;  // hardcoded locations in the frambuffer
+	u16 eraseLocation = gameData->numPlayers == 1 ? 0xf70 : 0xf64; // based on the original game.
+
+	gameData->framebuffer[drawLocation] = 0xff;
+	gameData->framebuffer[eraseLocation] = 0;
+
+	if (gameData->joystickState.jumpPressed)
+	{
+		Game_EnterRoom(gameData, 0);
+	}
 }
 
 Room g_titleScreenRoom =
@@ -55,9 +77,41 @@ Room g_titleScreenRoom =
 	(UpdateFunctionType)titleScreen_update
 };
 
+void room_init(Room* room, GameData* gameData, Resources* resources)
+{
+	u8 roomNumber = room->roomNumber;
+
+	// init background and clean background
+	Background_Draw(&resources->roomResources[roomNumber].backgroundDrawData, 
+					resources,
+					gameData->framebuffer);
+
+	memcpy(gameData->cleanBackground, gameData->framebuffer, FRAMEBUFFER_SIZE_IN_BYTES);
+
+	// init drops
+	gameData->dropData.dropSpawnPositions = &resources->roomResources[roomNumber].dropSpawnPositions;
+	DropsManager_Init(&gameData->dropData, roomNumber, gameData->gameCompletionCount);
+}
+
+void room_update(GameData* gameData)
+{
+	DropsManager_Update(&gameData->dropData, 
+						gameData->framebuffer, 
+						gameData->cleanBackground, 
+						gameData->gameCompletionCount,
+						gameData->resources->sprites_drops);	
+}
+
+Room room0 =
+{
+	0,
+	(InitFunctionType)room_init,
+	(UpdateFunctionType)room_update
+};
+
 Room* g_rooms[NUM_ROOMS] = 
 {
-	NULL,
+	&room0,
 	NULL,
 	NULL,
 	NULL,

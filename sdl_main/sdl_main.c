@@ -102,7 +102,7 @@ void Update_Controls(JoystickState* joystickState)
     joystickState->rightPressed = !joystickState->rightDown & rightDown;
     joystickState->upPressed = !joystickState->upDown & upDown;
     joystickState->downPressed =  !joystickState->downDown & downDown;
-    joystickState->jumpDown =  !joystickState->downDown & downDown;
+    joystickState->jumpPressed =  !joystickState->jumpDown & jumpDown;
 
     joystickState->leftReleased = joystickState->leftDown & !leftDown;
     joystickState->rightReleased = joystickState->rightDown & !rightDown;
@@ -152,16 +152,24 @@ SDL_AppResult SDL_AppIterate(void *appstate)
         frameCount = 0;
         gameStartTime = currentTime;
     }
-
+     
+#if 0
     // write debug text
     SDL_SetRenderScale(renderer, 1.5f, 1.5f);
-    SDL_SetRenderDrawColor(renderer, 51, 102, 255, SDL_ALPHA_OPAQUE);
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
 
     // SDL_RenderDebugText(renderer, 10.0f, 10.0f, "Some debug text");
     SDL_RenderDebugTextFormat(renderer, 10.0f, 20.0f, "Fps: %f", fps);
 
+    SDL_RenderDebugTextFormat(renderer, 10.0f, 30.0f, "left: %d", gameData.joystickState.leftDown);
+    SDL_RenderDebugTextFormat(renderer, 10.0f, 40.0f, "right: %d", gameData.joystickState.rightDown);
+    SDL_RenderDebugTextFormat(renderer, 10.0f, 50.0f, "up: %d", gameData.joystickState.upDown);
+    SDL_RenderDebugTextFormat(renderer, 10.0f, 60.0f, "down: %d", gameData.joystickState.downDown);
+    SDL_RenderDebugTextFormat(renderer, 10.0f, 70.0f, "jump: %d", gameData.joystickState.jumpDown);
+
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
     SDL_SetRenderScale(renderer, 1.0f, 1.0f);
+#endif
 
     SDL_RenderPresent(renderer);
 

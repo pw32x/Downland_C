@@ -20,6 +20,7 @@ typedef struct
 	Resources* resources;
 	Room* currentRoom;
 	u8 numPlayers;
+	u8 transitionRoomNumber;
 } GameData;
 
 #endif

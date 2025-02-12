@@ -25,6 +25,16 @@ void Game_EnterRoom(GameData* gameData, u8 roomNumber)
 								gameData->resources);
 }
 
+void Game_TransitionToRoom(GameData* gameData, u8 roomNumber)
+{
+	gameData->transitionRoomNumber = roomNumber;
+
+	gameData->currentRoom = g_rooms[TRANSITION_ROOM_INDEX];
+	gameData->currentRoom->init((struct Room*)gameData->currentRoom, 
+								(struct GameData*)gameData, 
+								gameData->resources);
+}
+
 void Game_Shutdown(GameData* gameData)
 {
 

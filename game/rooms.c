@@ -66,11 +66,11 @@ void titleScreen_update(GameData* gameData)
 
 	if (gameData->joystickState.jumpPressed)
 	{
-		Game_EnterRoom(gameData, 0);
+		Game_TransitionToRoom(gameData, 0);
 	}
 }
 
-Room g_titleScreenRoom =
+Room titleScreenRoom =
 {
 	TITLE_SCREEN_ROOM_INDEX,
 	(InitFunctionType)titleScreen_init,
@@ -109,6 +109,27 @@ Room room0 =
 	(UpdateFunctionType)room_update
 };
 
+void transition_init(Room* room, GameData* gameData, Resources* resources)
+{
+	// init clean background. we'll be slowly revealing it during the
+	// room transition.
+	Background_Draw(&resources->roomResources[gameData->transitionRoomNumber].backgroundDrawData, 
+					resources,
+					gameData->framebuffer);
+}
+
+void transition_update(GameData* gameData)
+{
+	Game_EnterRoom(gameData, gameData->transitionRoomNumber);
+}
+
+Room transitionRoom =
+{
+	TRANSITION_ROOM_INDEX,
+	(InitFunctionType)transition_init,
+	(UpdateFunctionType)transition_update
+};
+
 Room* g_rooms[NUM_ROOMS] = 
 {
 	&room0,
@@ -121,5 +142,6 @@ Room* g_rooms[NUM_ROOMS] =
 	NULL,
 	NULL,
 	NULL,
-	&g_titleScreenRoom
+	&titleScreenRoom,
+	&transitionRoom
 };

@@ -28,9 +28,7 @@ DONE handle input
 
 DONE change room
 
-
-
-screen transition
+draw screen transition
 
 try to fix weird forward decleration of Room and GameData structs
 

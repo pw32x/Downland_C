@@ -1,9 +1,16 @@
 #ifndef RESOURCE_TYPES_INCLUDE_H
 #define RESOURCE_TYPES_INCLUDE_H
 
-#include "../game/base_types.h"
-#include "../game/background_types.h"
-#include "../game/drops_types.h"
+#include "base_types.h"
+#include "base_defines.h"
+#include "background_types.h"
+#include "drops_types.h"
+
+typedef struct
+{
+    BackgroundDrawData backgroundDrawData;
+    DropSpawnPositions dropSpawnPositions;
+} RoomResources;
 
 typedef struct
 {
@@ -42,18 +49,7 @@ typedef struct
     byte* sprite_door;              // 0xdf0a
     byte* sprites_drops;            // 0xdf2a
 
-    BackgroundDrawData backgroundDrawData_TitleScreen; // 0xcec4
-    BackgroundDrawData backgroundDrawData_room0_drawCommands; // 0xd35e
-    BackgroundDrawData backgroundDrawData_room1_drawCommands; // 0xd3a0
-    BackgroundDrawData backgroundDrawData_room2_drawCommands; // 0xd3e4
-    BackgroundDrawData backgroundDrawData_room3_drawCommands; // 0xd426
-    BackgroundDrawData backgroundDrawData_room4_drawCommands; // 0xd467
-    BackgroundDrawData backgroundDrawData_room5_drawCommands; // 0xd4a2
-    BackgroundDrawData backgroundDrawData_room6_drawCommands; // 0xd4d9
-    BackgroundDrawData backgroundDrawData_room7_drawCommands; // 0xd4f6
-    BackgroundDrawData backgroundDrawData_room8_drawCommands; // 0xd52f
-    BackgroundDrawData backgroundDrawData_room9_drawCommands; // 0xd561
-
+    // background piece shapes
     ShapeDrawData shapeDrawData_00_Stalactite;	                        // 0xd5f7
     ShapeDrawData shapeDrawData_01_WallGoingDown;	                    // 0xd60c
     ShapeDrawData shapeDrawData_07_WallPieceGoingUp;	                // 0xd616
@@ -79,20 +75,7 @@ typedef struct
     ShapeDrawData shapeDrawData_PreRope_Maybe;	                        // 0xd74c
     ShapeDrawData shapeDrawData_PostRope_Maybe;	                        // 0xd750  
 
-    DropSpawnPositions drawSpawnPositions_room0;
-    DropSpawnPositions drawSpawnPositions_room1;
-    DropSpawnPositions drawSpawnPositions_room2;
-    DropSpawnPositions drawSpawnPositions_room3;
-    DropSpawnPositions drawSpawnPositions_room4;
-    DropSpawnPositions drawSpawnPositions_room5;
-    DropSpawnPositions drawSpawnPositions_room6;
-    DropSpawnPositions drawSpawnPositions_room7;
-    DropSpawnPositions drawSpawnPositions_room8;
-    DropSpawnPositions drawSpawnPositions_room9;
-    DropSpawnPositions drawSpawnPositions_room10; // title screen
-
-
-
+    RoomResources roomResources[NUM_ROOMS];
 
 /*
 Sprites 0xdcd7
@@ -117,34 +100,6 @@ Sprites 0xdcd7
     PlayerSplatSprite 0xdeef
     DoorSprite 0xdf0a
     DropSprites 0xdf2a
-
-TitleScreenBackground_DrawCommands
-
-DrawData    
-    DrawData_00_Stalactite	0xd5f7
-    DrawData_01_WallGoingDown	0xd60c
-    DrawData_07_WallPieceGoingUp	0xd616
-    DrawData_02_LeftHandCornerPiece	0xd625
-    DrawData_08_CornerPieceGoingDownLeft	0xd635
-    DrawData_03_TopRightHandCornerPiece	0xd644
-    DrawData_04_TopRightHandCornerPiece2	0xd654
-    DrawData_05_BottomRightSideOfFloatingPlatforms	0xd663
-    DrawData_14_HorizontalRopeStartGoingRight	0xd67b
-    DrawData_15_HorizontalRopeEndGoingRight	0xd68d
-    DrawData_17_BlankAreaGoingRight	0xd697
-    DrawData_18_BlankAreaGoingLeft	0xd6a0
-    DrawData_19_BlankAreaGoingDownRight	0xd6a9
-    DrawData_0b_ShortLineGoingUp	0xd6b2
-    DrawData_0c_VeryShortRope	0xd6d9
-    DrawData_0d_ShortRope	0xd6e5
-    DrawData_0e_MidLengthRope	0xd6f1
-    DrawData_0f_LongRope	0xd6fd
-    DrawData_10_VeryLongRope	0xd709
-    DrawData_11_SuperLongRope	0xd715
-    DrawData_12_ExcessivelyLongRope	0xd721
-    DrawData_13_RediculouslyLongRope	0xd72d
-    DrawData_PreRope_Maybe	0xd74c
-    DrawData_PostRope_Maybe	0xd750  
 
 Room Data
 

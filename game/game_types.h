@@ -16,7 +16,6 @@ typedef struct
 	u32 crtFramebuffer[FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT]; // frame buffer for basic CRT artifact effects
 	DropData dropData;
 	u8 gameCompletionCount;
-	u8 roomNumber;
 	JoystickState joystickState;
 	Resources* resources;
 	Room* currentRoom;

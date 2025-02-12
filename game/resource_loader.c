@@ -1,7 +1,10 @@
 #include "resource_loader.h"
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+
+#include "base_defines.h"
 
 // Checks for Downland V1.1
 BOOL checksumCheck(const char* romPath)
@@ -251,19 +254,7 @@ BOOL ResourceLoader_Init(const char* romPath, Resources* resources)
     resources->sprite_door = getBytes(file, 0xdf0a, 0xdf2a);
     resources->sprites_drops = getBytes(file, 0xdf2a, 0xdf5a);
 
-	// title screen background
-	loadBackgroundDrawData(file, 0xcec4, &resources->backgroundDrawData_TitleScreen);
-	loadBackgroundDrawData(file, 0xd35e, &resources->backgroundDrawData_room0_drawCommands);
-	loadBackgroundDrawData(file, 0xd3a0, &resources->backgroundDrawData_room1_drawCommands);
-	loadBackgroundDrawData(file, 0xd3e4, &resources->backgroundDrawData_room2_drawCommands);
-	loadBackgroundDrawData(file, 0xd426, &resources->backgroundDrawData_room3_drawCommands);
-	loadBackgroundDrawData(file, 0xd467, &resources->backgroundDrawData_room4_drawCommands);
-	loadBackgroundDrawData(file, 0xd4a2, &resources->backgroundDrawData_room5_drawCommands);
-	loadBackgroundDrawData(file, 0xd4d9, &resources->backgroundDrawData_room6_drawCommands);
-	loadBackgroundDrawData(file, 0xd4f6, &resources->backgroundDrawData_room7_drawCommands);
-	loadBackgroundDrawData(file, 0xd52f, &resources->backgroundDrawData_room8_drawCommands);
-	loadBackgroundDrawData(file, 0xd561, &resources->backgroundDrawData_room9_drawCommands);
-
+	// get shapes data
 	loadShapeDrawData(file, 0xd5f7, &resources->shapeDrawData_00_Stalactite);
 	loadShapeDrawData(file, 0xd60c, &resources->shapeDrawData_01_WallGoingDown);
 	loadShapeDrawData(file, 0xd616, &resources->shapeDrawData_07_WallPieceGoingUp);
@@ -289,17 +280,31 @@ BOOL ResourceLoader_Init(const char* romPath, Resources* resources)
 	loadShapeDrawData(file, 0xd74c, &resources->shapeDrawData_PreRope_Maybe);
 	loadShapeDrawData(file, 0xd750, &resources->shapeDrawData_PostRope_Maybe);
 
-	loadDropSpawnPositions(file, 0xd073, &resources->drawSpawnPositions_room0);
-	loadDropSpawnPositions(file, 0xd089, &resources->drawSpawnPositions_room1);
-	loadDropSpawnPositions(file, 0xd09c, &resources->drawSpawnPositions_room2);
-	loadDropSpawnPositions(file, 0xd0ac, &resources->drawSpawnPositions_room3);
-	loadDropSpawnPositions(file, 0xd0bf, &resources->drawSpawnPositions_room4);
-	loadDropSpawnPositions(file, 0xd0cf, &resources->drawSpawnPositions_room5);
-	loadDropSpawnPositions(file, 0xd0df, &resources->drawSpawnPositions_room6);
-	loadDropSpawnPositions(file, 0xd0e6, &resources->drawSpawnPositions_room7);
-	loadDropSpawnPositions(file, 0xd0fc, &resources->drawSpawnPositions_room8);
-	loadDropSpawnPositions(file, 0xd10c, &resources->drawSpawnPositions_room9);
-	loadDropSpawnPositions(file, 0xd116, &resources->drawSpawnPositions_room10);
+
+	// get background resources
+	loadBackgroundDrawData(file, 0xd35e, &resources->roomResources[0].backgroundDrawData);
+	loadBackgroundDrawData(file, 0xd3a0, &resources->roomResources[1].backgroundDrawData);
+	loadBackgroundDrawData(file, 0xd3e4, &resources->roomResources[2].backgroundDrawData);
+	loadBackgroundDrawData(file, 0xd426, &resources->roomResources[3].backgroundDrawData);
+	loadBackgroundDrawData(file, 0xd467, &resources->roomResources[4].backgroundDrawData);
+	loadBackgroundDrawData(file, 0xd4a2, &resources->roomResources[5].backgroundDrawData);
+	loadBackgroundDrawData(file, 0xd4d9, &resources->roomResources[6].backgroundDrawData);
+	loadBackgroundDrawData(file, 0xd4f6, &resources->roomResources[7].backgroundDrawData);
+	loadBackgroundDrawData(file, 0xd52f, &resources->roomResources[8].backgroundDrawData);
+	loadBackgroundDrawData(file, 0xd561, &resources->roomResources[9].backgroundDrawData);
+	loadBackgroundDrawData(file, 0xcec4, &resources->roomResources[10].backgroundDrawData);
+
+	loadDropSpawnPositions(file, 0xd073, &resources->roomResources[0].dropSpawnPositions);
+	loadDropSpawnPositions(file, 0xd089, &resources->roomResources[1].dropSpawnPositions);
+	loadDropSpawnPositions(file, 0xd09c, &resources->roomResources[2].dropSpawnPositions);
+	loadDropSpawnPositions(file, 0xd0ac, &resources->roomResources[3].dropSpawnPositions);
+	loadDropSpawnPositions(file, 0xd0bf, &resources->roomResources[4].dropSpawnPositions);
+	loadDropSpawnPositions(file, 0xd0cf, &resources->roomResources[5].dropSpawnPositions);
+	loadDropSpawnPositions(file, 0xd0df, &resources->roomResources[6].dropSpawnPositions);
+	loadDropSpawnPositions(file, 0xd0e6, &resources->roomResources[7].dropSpawnPositions);
+	loadDropSpawnPositions(file, 0xd0fc, &resources->roomResources[8].dropSpawnPositions);
+	loadDropSpawnPositions(file, 0xd10c, &resources->roomResources[9].dropSpawnPositions);
+	loadDropSpawnPositions(file, 0xd116, &resources->roomResources[10].dropSpawnPositions);
 
 	fclose(file);
 
@@ -310,10 +315,38 @@ void ResourceLoader_Shutdown(Resources* resources)
 {
 	free(resources->characterFont);
 
-	// free background draw data
-	free(resources->backgroundDrawData_TitleScreen.backgroundDrawCommands);
+	free(resources->text_downland);
+	free(resources->text_writtenBy);
+	free(resources->text_michaelAichlmayer);
+	free(resources->text_copyright1983);
+	free(resources->text_spectralAssociates);
+	free(resources->text_licensedTo);
+	free(resources->text_tandyCorporation);
+	free(resources->text_allRightsReserved);
+	free(resources->text_onePlayer);
+	free(resources->text_twoPlayer);
+	free(resources->text_highScore);
+	free(resources->text_playerOne);
+	free(resources->text_playerTwo);
+	free(resources->text_pL1);
+	free(resources->text_pL2);
+	free(resources->text_getReadyPlayerOne);
+	free(resources->text_getReadyPlayerTwo);
+	free(resources->text_chamber);
 
-	// free draw data
+	// get sprites
+    free(resources->sprites_player);
+    free(resources->collisionmask_player);
+    free(resources->sprites_bouncyBall);
+    free(resources->sprites_bird);
+    free(resources->sprite_moneyBag);
+    free(resources->sprite_diamond);
+    free(resources->sprite_key);
+    free(resources->sprite_playerSplat);
+    free(resources->sprite_door);
+    free(resources->sprites_drops);
+
+	// free shapes data
 	free(resources->shapeDrawData_00_Stalactite.segments);
 	free(resources->shapeDrawData_01_WallGoingDown.segments);
 	free(resources->shapeDrawData_07_WallPieceGoingUp.segments);
@@ -339,16 +372,10 @@ void ResourceLoader_Shutdown(Resources* resources)
 	free(resources->shapeDrawData_PreRope_Maybe.segments);
 	free(resources->shapeDrawData_PostRope_Maybe.segments);
 
-	free(resources->drawSpawnPositions_room0.dropSpawnAreas);
-	free(resources->drawSpawnPositions_room1.dropSpawnAreas);
-	free(resources->drawSpawnPositions_room2.dropSpawnAreas);
-	free(resources->drawSpawnPositions_room3.dropSpawnAreas);
-	free(resources->drawSpawnPositions_room4.dropSpawnAreas);
-	free(resources->drawSpawnPositions_room5.dropSpawnAreas);
-	free(resources->drawSpawnPositions_room6.dropSpawnAreas);
-	free(resources->drawSpawnPositions_room7.dropSpawnAreas);
-	free(resources->drawSpawnPositions_room8.dropSpawnAreas);
-	free(resources->drawSpawnPositions_room9.dropSpawnAreas);
-	free(resources->drawSpawnPositions_room10.dropSpawnAreas);
-
+	// free background resources
+	for (int loop = 0; loop < NUM_ROOMS; loop++)
+	{
+		free(resources->roomResources[loop].backgroundDrawData.backgroundDrawCommands);
+		free(resources->roomResources[loop].dropSpawnPositions.dropSpawnAreas);
+	}
 }

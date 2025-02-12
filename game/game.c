@@ -1,6 +1,5 @@
 #include "game.h"
 
-#include "drops_manager.h"
 #include "rooms.h"
 
 void Game_Init(GameData* gameData, Resources* resources)
@@ -9,23 +8,15 @@ void Game_Init(GameData* gameData, Resources* resources)
 	gameData->resources = resources;
 
 	// init title screen
-	gameData->currentRoom = &g_titleScreenRoom;
-	gameData->currentRoom->init((struct GameData*)gameData);
-
-	// init drops
-	DropsManager_Init(&gameData->dropData, gameData->roomNumber, gameData->gameCompletionCount);
+	gameData->currentRoom = g_rooms[TITLE_SCREEN_ROOM_INDEX];
+	gameData->currentRoom->init((struct Room*)gameData->currentRoom, 
+								(struct GameData*)gameData, 
+								resources);
 }
 
 void Game_Update(GameData* gameData)
 {
 	gameData->currentRoom->update((struct GameData*)gameData);
-
-	DropsManager_Update(&gameData->dropData, 
-						gameData->framebuffer, 
-						gameData->cleanBackground, 
-						gameData->gameCompletionCount,
-						gameData->resources->sprites_drops);
-
 }
 
 void Game_Shutdown(GameData* gameData)

@@ -28,7 +28,11 @@ handle input
 
 change room
 
+
+
 screen transition
+
+try to fix weird forward decleration of Room and GameData structs
 
 draw scores on title screen
 

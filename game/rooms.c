@@ -5,20 +5,15 @@
 #include "background_draw.h"
 #include "game_types.h"
 #include "graphics_utils.h"
-#include "resource_types.h"
+#include "drops_manager.h"
 
-void titleScreen_init(GameData* gameData)
+void titleScreen_init(Room* room, GameData* gameData, Resources* resources)
 {
-	Resources* resources = gameData->resources;
-
-	gameData->roomNumber = 10;
+	u8 roomNumber = room->roomNumber;
 	gameData->gameCompletionCount = 1; // act like the game was going through one for the title screen
 
 	// init background and clean background
-
-	gameData->dropData.dropSpawnPositions = &resources->drawSpawnPositions_room10;
-
-	Background_Draw(&resources->backgroundDrawData_TitleScreen, 
+	Background_Draw(&resources->roomResources[roomNumber].backgroundDrawData, 
 					resources,
 					gameData->framebuffer);
 
@@ -38,16 +33,24 @@ void titleScreen_init(GameData* gameData)
 	drawText(resources->text_playerTwo, resources->characterFont, gameData->framebuffer, 0x1546); // 0x1946 original coco mem location
 
 	memcpy(gameData->cleanBackground, gameData->framebuffer, FRAMEBUFFER_SIZE_IN_BYTES);
+
+	// init drops
+	gameData->dropData.dropSpawnPositions = &resources->roomResources[roomNumber].dropSpawnPositions;
+	DropsManager_Init(&gameData->dropData, roomNumber, gameData->gameCompletionCount);
 }
 
 void titleScreen_update(GameData* gameData)
 {
-
+	DropsManager_Update(&gameData->dropData, 
+						gameData->framebuffer, 
+						gameData->cleanBackground, 
+						gameData->gameCompletionCount,
+						gameData->resources->sprites_drops);
 }
 
 Room g_titleScreenRoom =
 {
-	NULL,
+	TITLE_SCREEN_ROOM_INDEX,
 	(InitFunctionType)titleScreen_init,
 	(UpdateFunctionType)titleScreen_update
 };
@@ -56,5 +59,13 @@ Room* g_rooms[NUM_ROOMS] =
 {
 	NULL,
 	NULL,
-	NULL
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	&g_titleScreenRoom
 };

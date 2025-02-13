@@ -28,14 +28,17 @@ DONE handle input
 
 DONE change room
 
-draw screen transition
+DONE draw screen transition
 
-try to fix weird forward decleration of Room and GameData structs
-
-draw scores on title screen
+KINDA try to fix weird forward declration of Room and GameData structs
 
 extract room data lookup table from rom
 extract each room data from rom
 
+draw treasures
+draw ball
+timers
 
+player
 
+draw scores on title screen

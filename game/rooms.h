@@ -5,11 +5,9 @@
 #include "background_types.h"
 #include "resource_types.h"
 
-
 struct GameData;
-struct Room;
 
-typedef struct
+typedef struct Room
 {
 	u8 roomNumber;
 	void (*init)(struct Room* room, struct GameData* gameData, Resources* resources);
@@ -19,7 +17,7 @@ typedef struct
 
 extern Room* g_rooms[NUM_ROOMS];
 
-typedef void (*InitFunctionType)(struct Room* room, struct GameData* gameObject, Resources* resources);
+typedef void (*InitFunctionType)(Room* room, struct GameData* gameObject, Resources* resources);
 typedef void (*DrawFunctionType)(u8 roomNumber, u8* framebuffer, Resources* resources);
 typedef void (*UpdateFunctionType)(struct GameData* gameObject);
 

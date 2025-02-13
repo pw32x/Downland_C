@@ -8,30 +8,35 @@
 #include "drops_manager.h"
 #include "game.h"
 
+void titleScreen_draw(u8 roomNumber, u8* framebuffer, Resources* resources)
+{
+	// init background and text
+	Background_Draw(&resources->roomResources[roomNumber].backgroundDrawData, 
+					resources,
+					framebuffer);
+
+	// title screen text
+	drawText(resources->text_downland, resources->characterFont, framebuffer, 0x03c9); // 0x07c9 original coco mem location
+	drawText(resources->text_writtenBy, resources->characterFont, framebuffer, 0x050a); // 0x090A original coco mem location
+	drawText(resources->text_michaelAichlmayer, resources->characterFont, framebuffer, 0x647); // 0x0A47 original coco mem location
+	drawText(resources->text_copyright1983, resources->characterFont, framebuffer, 0x789); // 0x0B89 original coco mem location
+	drawText(resources->text_spectralAssociates, resources->characterFont, framebuffer, 0x8c6); // 0x0CC6 original coco mem location
+	drawText(resources->text_licensedTo, resources->characterFont, framebuffer, 0xa0a); // 0x0E0A original coco mem location
+	drawText(resources->text_tandyCorporation, resources->characterFont, framebuffer, 0xb47); // 0x0F47 original coco mem location
+	drawText(resources->text_allRightsReserved, resources->characterFont, framebuffer, 0xc86); // 0x1086 original coco mem location
+	drawText(resources->text_onePlayer, resources->characterFont, framebuffer, 0xf05); // 0x1305 original coco mem location
+	drawText(resources->text_twoPlayer, resources->characterFont, framebuffer, 0xf11); // 0x1311 original coco mem location
+	drawText(resources->text_highScore, resources->characterFont, framebuffer, 0x118b); // 0x158B original coco mem location
+	drawText(resources->text_playerOne, resources->characterFont, framebuffer, 0x1406); // 0x1806 original coco mem location
+	drawText(resources->text_playerTwo, resources->characterFont, framebuffer, 0x1546); // 0x1946 original coco mem location
+}
+
 void titleScreen_init(Room* room, GameData* gameData, Resources* resources)
 {
 	u8 roomNumber = room->roomNumber;
 	gameData->gameCompletionCount = 1; // act like the game was going through one for the title screen
 
-	// init background and clean background
-	Background_Draw(&resources->roomResources[roomNumber].backgroundDrawData, 
-					resources,
-					gameData->framebuffer);
-
-	// title screen text
-	drawText(resources->text_downland, resources->characterFont, gameData->framebuffer, 0x03c9); // 0x07c9 original coco mem location
-	drawText(resources->text_writtenBy, resources->characterFont, gameData->framebuffer, 0x050a); // 0x090A original coco mem location
-	drawText(resources->text_michaelAichlmayer, resources->characterFont, gameData->framebuffer, 0x647); // 0x0A47 original coco mem location
-	drawText(resources->text_copyright1983, resources->characterFont, gameData->framebuffer, 0x789); // 0x0B89 original coco mem location
-	drawText(resources->text_spectralAssociates, resources->characterFont, gameData->framebuffer, 0x8c6); // 0x0CC6 original coco mem location
-	drawText(resources->text_licensedTo, resources->characterFont, gameData->framebuffer, 0xa0a); // 0x0E0A original coco mem location
-	drawText(resources->text_tandyCorporation, resources->characterFont, gameData->framebuffer, 0xb47); // 0x0F47 original coco mem location
-	drawText(resources->text_allRightsReserved, resources->characterFont, gameData->framebuffer, 0xc86); // 0x1086 original coco mem location
-	drawText(resources->text_onePlayer, resources->characterFont, gameData->framebuffer, 0xf05); // 0x1305 original coco mem location
-	drawText(resources->text_twoPlayer, resources->characterFont, gameData->framebuffer, 0xf11); // 0x1311 original coco mem location
-	drawText(resources->text_highScore, resources->characterFont, gameData->framebuffer, 0x118b); // 0x158B original coco mem location
-	drawText(resources->text_playerOne, resources->characterFont, gameData->framebuffer, 0x1406); // 0x1806 original coco mem location
-	drawText(resources->text_playerTwo, resources->characterFont, gameData->framebuffer, 0x1546); // 0x1946 original coco mem location
+	titleScreen_draw(roomNumber, gameData->framebuffer, resources);
 
 	memcpy(gameData->cleanBackground, gameData->framebuffer, FRAMEBUFFER_SIZE_IN_BYTES);
 
@@ -66,6 +71,7 @@ void titleScreen_update(GameData* gameData)
 
 	if (gameData->joystickState.jumpPressed)
 	{
+		memset(gameData->framebuffer, 0, FRAMEBUFFER_SIZE_IN_BYTES);
 		Game_TransitionToRoom(gameData, 0);
 	}
 }
@@ -74,18 +80,22 @@ Room titleScreenRoom =
 {
 	TITLE_SCREEN_ROOM_INDEX,
 	(InitFunctionType)titleScreen_init,
+	(DrawFunctionType)titleScreen_draw,
 	(UpdateFunctionType)titleScreen_update
 };
+
+void room_draw(u8 roomNumber, u8* framebuffer, Resources* resources)
+{
+	Background_Draw(&resources->roomResources[roomNumber].backgroundDrawData, 
+					resources,
+					framebuffer);
+}
 
 void room_init(Room* room, GameData* gameData, Resources* resources)
 {
 	u8 roomNumber = room->roomNumber;
 
-	// init background and clean background
-	Background_Draw(&resources->roomResources[roomNumber].backgroundDrawData, 
-					resources,
-					gameData->framebuffer);
-
+	room_draw(roomNumber, gameData->framebuffer, resources);
 	memcpy(gameData->cleanBackground, gameData->framebuffer, FRAMEBUFFER_SIZE_IN_BYTES);
 
 	// init drops
@@ -106,42 +116,159 @@ Room room0 =
 {
 	0,
 	(InitFunctionType)room_init,
+	(DrawFunctionType)room_draw,
 	(UpdateFunctionType)room_update
 };
 
-void transition_init(Room* room, GameData* gameData, Resources* resources)
+Room room1 =
 {
-	// init clean background. we'll be slowly revealing it during the
-	// room transition.
-	Background_Draw(&resources->roomResources[gameData->transitionRoomNumber].backgroundDrawData, 
-					resources,
-					gameData->framebuffer);
+	1,
+	(InitFunctionType)room_init,
+	(DrawFunctionType)room_draw,
+	(UpdateFunctionType)room_update
+};
+
+Room room2 =
+{
+	2,
+	(InitFunctionType)room_init,
+	(DrawFunctionType)room_draw,
+	(UpdateFunctionType)room_update
+};
+
+Room room3 =
+{
+	3,
+	(InitFunctionType)room_init,
+	(DrawFunctionType)room_draw,
+	(UpdateFunctionType)room_update
+};
+
+Room room4 =
+{
+	4,
+	(InitFunctionType)room_init,
+	(DrawFunctionType)room_draw,
+	(UpdateFunctionType)room_update
+};
+
+Room room5 =
+{
+	5,
+	(InitFunctionType)room_init,
+	(DrawFunctionType)room_draw,
+	(UpdateFunctionType)room_update
+};
+
+Room room6 =
+{
+	6,
+	(InitFunctionType)room_init,
+	(DrawFunctionType)room_draw,
+	(UpdateFunctionType)room_update
+};
+
+Room room7 =
+{
+	7,
+	(InitFunctionType)room_init,
+	(DrawFunctionType)room_draw,
+	(UpdateFunctionType)room_update
+};
+
+Room room8 =
+{
+	8,
+	(InitFunctionType)room_init,
+	(DrawFunctionType)room_draw,
+	(UpdateFunctionType)room_update
+};
+
+Room room9 =
+{
+	9,
+	(InitFunctionType)room_init,
+	(DrawFunctionType)room_draw,
+	(UpdateFunctionType)room_update
+};
+
+void transition_init(Room* targetRoom, GameData* gameData, Resources* resources)
+{
+	// init the clean background with the target room. 
+	// we'll be slowly revealing it during the room transition.
+	targetRoom->draw(gameData->transitionRoomNumber, gameData->cleanBackground, resources);
+
+	// setup screen transition
+	gameData->transitionInitialDelay = 30;
+	gameData->transitionCurrentLine = 0;
+	gameData->transitionFrameDelay = 0;
 }
 
 void transition_update(GameData* gameData)
 {
-	Game_EnterRoom(gameData, gameData->transitionRoomNumber);
+	if (gameData->transitionInitialDelay)
+	{
+		gameData->transitionInitialDelay--;
+		return;
+	}
+
+	gameData->transitionFrameDelay = !gameData->transitionFrameDelay;
+
+	if (gameData->transitionFrameDelay)
+		return;
+
+	u16 offset = gameData->transitionCurrentLine * FRAMEBUFFER_PITCH;
+
+	u8* cleanBackgroundRunner = gameData->cleanBackground + offset;
+	u8* framebufferRunner = gameData->framebuffer + offset;
+
+	for (int loop = 0; loop < 6; loop++)
+	{
+		for (int innerLoop = 0; innerLoop < FRAMEBUFFER_PITCH; innerLoop++)
+		{
+			*framebufferRunner = *cleanBackgroundRunner;
+
+			if (gameData->transitionCurrentLine < 31)
+			{
+				*(framebufferRunner + FRAMEBUFFER_PITCH) = CRT_EFFECT_MASK;
+			}
+
+			framebufferRunner++;
+			cleanBackgroundRunner++;
+		}
+
+		cleanBackgroundRunner += 0x380;
+		framebufferRunner += 0x380;
+	}
+
+	gameData->transitionCurrentLine++;
+
+	if (gameData->transitionCurrentLine == 32)
+	{
+		Game_EnterRoom(gameData, gameData->transitionRoomNumber);
+	}
 }
 
 Room transitionRoom =
 {
 	TRANSITION_ROOM_INDEX,
 	(InitFunctionType)transition_init,
+	NULL,
 	(UpdateFunctionType)transition_update
 };
 
 Room* g_rooms[NUM_ROOMS] = 
 {
 	&room0,
-	NULL,
-	NULL,
-	NULL,
-	NULL,
-	NULL,
-	NULL,
-	NULL,
-	NULL,
-	NULL,
+	&room1,
+	&room2,
+	&room3,
+	&room4,
+	&room5,
+	&room6,
+	&room7,
+	&room8,
+	&room9,
 	&titleScreenRoom,
 	&transitionRoom
 };

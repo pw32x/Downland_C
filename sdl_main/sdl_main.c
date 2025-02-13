@@ -82,9 +82,28 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
 
 SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
 {
-    if (event->type == SDL_EVENT_QUIT) {
+    if (event->type == SDL_EVENT_QUIT) 
+    {
         return SDL_APP_SUCCESS;
     }
+    else if (event->type == SDL_EVENT_KEY_DOWN)
+    {
+        if (event->key.key == SDLK_TAB || 
+            event->key.key == SDLK_GRAVE)
+        {
+            Game_TransitionToRoom(&gameData, TITLE_SCREEN_ROOM_INDEX);
+        }
+        else if (event->key.key >= SDLK_1 && event->key.key <= SDLK_9)
+        {
+            u8 roomNumber = event->key.key - SDLK_1;
+            Game_TransitionToRoom(&gameData, roomNumber);
+        }
+        else if (event->key.key == SDLK_0)
+        {
+            Game_TransitionToRoom(&gameData, 9);
+        }
+    }
+
     return SDL_APP_CONTINUE;
 }
 

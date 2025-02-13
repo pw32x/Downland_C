@@ -30,7 +30,7 @@ void Game_TransitionToRoom(GameData* gameData, u8 roomNumber)
 	gameData->transitionRoomNumber = roomNumber;
 
 	gameData->currentRoom = g_rooms[TRANSITION_ROOM_INDEX];
-	gameData->currentRoom->init((struct Room*)gameData->currentRoom, 
+	gameData->currentRoom->init((struct Room*)g_rooms[roomNumber], 
 								(struct GameData*)gameData, 
 								gameData->resources);
 }

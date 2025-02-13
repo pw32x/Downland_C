@@ -20,7 +20,12 @@ typedef struct
 	Resources* resources;
 	Room* currentRoom;
 	u8 numPlayers;
+
+	// used for screen transitions
 	u8 transitionRoomNumber;
+	u16 transitionInitialDelay;
+	u8 transitionCurrentLine;
+	u8 transitionFrameDelay;
 } GameData;
 
 #endif

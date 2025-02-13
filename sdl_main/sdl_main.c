@@ -18,6 +18,8 @@ static SDL_Renderer *renderer = NULL;
 SDL_Texture* framebufferTexture = NULL;
 SDL_Texture* crtFramebufferTexture = NULL;
 
+BOOL paused = false;
+
 Resources resources;
 GameData gameData;
 
@@ -88,6 +90,11 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
     }
     else if (event->type == SDL_EVENT_KEY_DOWN)
     {
+        if (event->key.key == SDLK_ESCAPE)
+        {
+            paused = !paused;
+        }
+
         if (event->key.key == SDLK_TAB || 
             event->key.key == SDLK_GRAVE)
         {
@@ -140,9 +147,11 @@ SDL_AppResult SDL_AppIterate(void *appstate)
 {
     Uint64 frameStartTime = SDL_GetPerformanceCounter();
 
-    Update_Controls(&gameData.joystickState);
-
-    Game_Update(&gameData);
+    if (!paused)
+    {
+        Update_Controls(&gameData.joystickState);
+        Game_Update(&gameData);
+    }
 
     // Render to screen
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);

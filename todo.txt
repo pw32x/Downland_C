@@ -38,7 +38,17 @@ extract each room data from rom
 draw treasures
 draw ball
 timers
-
+bird
+doors
+analog stick support
+draw score
+draw high score
+draw lives
+draw chamber number
 player
-
+    collision detection
+change room    
+door triggers
 draw scores on title screen
+
+

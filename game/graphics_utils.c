@@ -38,3 +38,26 @@ void drawText(u8* text, u8* characterFont, u8* framebuffer, u16 framebufferPosit
         text++;
     }
 }
+
+void drawSprite_16PixelsWide(u8* sprite, u8 x, u8 y, u8* framebuffer)
+{
+    u8 rowsPerSprite = 10;
+
+    framebuffer += (x / 4) + (y * FRAMEBUFFER_PITCH);
+
+    // for each character
+    while (rowsPerSprite--)
+    {
+        // first byte
+        *framebuffer |= *sprite;
+        framebuffer++;
+        sprite++;
+
+        // second byte
+        *framebuffer |= *sprite;
+        sprite++;
+
+        // move framebuffer to next row
+        framebuffer += 0x1f; // go down one row in the frame buffer for the next line.
+    }
+}

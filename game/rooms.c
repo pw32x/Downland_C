@@ -6,6 +6,7 @@
 #include "game_types.h"
 #include "graphics_utils.h"
 #include "drops_manager.h"
+#include "pickup_types.h"
 #include "game.h"
 
 void titleScreen_draw(u8 roomNumber, u8* framebuffer, Resources* resources)
@@ -45,7 +46,7 @@ void titleScreen_init(Room* room, GameData* gameData, Resources* resources)
 	DropsManager_Init(&gameData->dropData, roomNumber, gameData->gameCompletionCount);
 }
 
-void titleScreen_update(GameData* gameData)
+void titleScreen_update(Room* room, GameData* gameData)
 {
 	DropsManager_Update(&gameData->dropData, 
 						gameData->framebuffer, 
@@ -79,10 +80,30 @@ void titleScreen_update(GameData* gameData)
 Room titleScreenRoom =
 {
 	TITLE_SCREEN_ROOM_INDEX,
-	(InitFunctionType)titleScreen_init,
-	(DrawFunctionType)titleScreen_draw,
-	(UpdateFunctionType)titleScreen_update
+	(InitRoomFunctionType)titleScreen_init,
+	(DrawRoomFunctionType)titleScreen_draw,
+	(UpdateRoomFunctionType)titleScreen_update
 };
+
+void drawPickups(Pickup* pickups, 
+				 u8 currentPlayer,
+				 Resources* resources, 
+				 u8* framebuffer)
+{
+	u8 count = NUM_PICKUPS_PER_ROOM;
+
+	while (count--)
+	{
+		if (!(pickups->state & currentPlayer))
+			continue;
+
+		drawSprite_16PixelsWide(resources->pickupSprites[pickups->type],
+								pickups->x, 
+								pickups->y, 
+								framebuffer);
+		pickups++;
+	}
+}
 
 void room_draw(u8 roomNumber, u8* framebuffer, Resources* resources)
 {
@@ -95,16 +116,20 @@ void room_init(Room* room, GameData* gameData, Resources* resources)
 {
 	u8 roomNumber = room->roomNumber;
 
-	room_draw(roomNumber, gameData->framebuffer, resources);
-	memcpy(gameData->cleanBackground, gameData->framebuffer, FRAMEBUFFER_SIZE_IN_BYTES);
+	//room_draw(roomNumber, gameData->framebuffer, resources);
+	//memcpy(gameData->cleanBackground, gameData->framebuffer, FRAMEBUFFER_SIZE_IN_BYTES);
 
 	// init drops
 	gameData->dropData.dropSpawnPositions = &resources->roomResources[roomNumber].dropSpawnPositions;
 	DropsManager_Init(&gameData->dropData, roomNumber, gameData->gameCompletionCount);
 }
 
-void room_update(GameData* gameData)
+void room_update(Room* room, GameData* gameData)
 {
+	drawPickups(gameData->gamePickups[room->roomNumber], 
+				gameData->currentPlayer,
+				gameData->resources, gameData->framebuffer);
+
 	DropsManager_Update(&gameData->dropData, 
 						gameData->framebuffer, 
 						gameData->cleanBackground, 
@@ -115,81 +140,81 @@ void room_update(GameData* gameData)
 Room room0 =
 {
 	0,
-	(InitFunctionType)room_init,
-	(DrawFunctionType)room_draw,
-	(UpdateFunctionType)room_update
+	(InitRoomFunctionType)room_init,
+	(DrawRoomFunctionType)room_draw,
+	(UpdateRoomFunctionType)room_update
 };
 
 Room room1 =
 {
 	1,
-	(InitFunctionType)room_init,
-	(DrawFunctionType)room_draw,
-	(UpdateFunctionType)room_update
+	(InitRoomFunctionType)room_init,
+	(DrawRoomFunctionType)room_draw,
+	(UpdateRoomFunctionType)room_update
 };
 
 Room room2 =
 {
 	2,
-	(InitFunctionType)room_init,
-	(DrawFunctionType)room_draw,
-	(UpdateFunctionType)room_update
+	(InitRoomFunctionType)room_init,
+	(DrawRoomFunctionType)room_draw,
+	(UpdateRoomFunctionType)room_update
 };
 
 Room room3 =
 {
 	3,
-	(InitFunctionType)room_init,
-	(DrawFunctionType)room_draw,
-	(UpdateFunctionType)room_update
+	(InitRoomFunctionType)room_init,
+	(DrawRoomFunctionType)room_draw,
+	(UpdateRoomFunctionType)room_update
 };
 
 Room room4 =
 {
 	4,
-	(InitFunctionType)room_init,
-	(DrawFunctionType)room_draw,
-	(UpdateFunctionType)room_update
+	(InitRoomFunctionType)room_init,
+	(DrawRoomFunctionType)room_draw,
+	(UpdateRoomFunctionType)room_update
 };
 
 Room room5 =
 {
 	5,
-	(InitFunctionType)room_init,
-	(DrawFunctionType)room_draw,
-	(UpdateFunctionType)room_update
+	(InitRoomFunctionType)room_init,
+	(DrawRoomFunctionType)room_draw,
+	(UpdateRoomFunctionType)room_update
 };
 
 Room room6 =
 {
 	6,
-	(InitFunctionType)room_init,
-	(DrawFunctionType)room_draw,
-	(UpdateFunctionType)room_update
+	(InitRoomFunctionType)room_init,
+	(DrawRoomFunctionType)room_draw,
+	(UpdateRoomFunctionType)room_update
 };
 
 Room room7 =
 {
 	7,
-	(InitFunctionType)room_init,
-	(DrawFunctionType)room_draw,
-	(UpdateFunctionType)room_update
+	(InitRoomFunctionType)room_init,
+	(DrawRoomFunctionType)room_draw,
+	(UpdateRoomFunctionType)room_update
 };
 
 Room room8 =
 {
 	8,
-	(InitFunctionType)room_init,
-	(DrawFunctionType)room_draw,
-	(UpdateFunctionType)room_update
+	(InitRoomFunctionType)room_init,
+	(DrawRoomFunctionType)room_draw,
+	(UpdateRoomFunctionType)room_update
 };
 
 Room room9 =
 {
 	9,
-	(InitFunctionType)room_init,
-	(DrawFunctionType)room_draw,
-	(UpdateFunctionType)room_update
+	(InitRoomFunctionType)room_init,
+	(DrawRoomFunctionType)room_draw,
+	(UpdateRoomFunctionType)room_update
 };
 
 void transition_init(Room* targetRoom, GameData* gameData, Resources* resources)
@@ -204,7 +229,7 @@ void transition_init(Room* targetRoom, GameData* gameData, Resources* resources)
 	gameData->transitionFrameDelay = 0;
 }
 
-void transition_update(GameData* gameData)
+void transition_update(Room* room, GameData* gameData)
 {
 	if (gameData->transitionInitialDelay)
 	{
@@ -237,8 +262,8 @@ void transition_update(GameData* gameData)
 			cleanBackgroundRunner++;
 		}
 
-		cleanBackgroundRunner += 0x380;
-		framebufferRunner += 0x380;
+		cleanBackgroundRunner += 0x3e0;
+		framebufferRunner += 0x3e0;
 	}
 
 	gameData->transitionCurrentLine++;
@@ -252,12 +277,12 @@ void transition_update(GameData* gameData)
 Room transitionRoom =
 {
 	TRANSITION_ROOM_INDEX,
-	(InitFunctionType)transition_init,
+	(InitRoomFunctionType)transition_init,
 	NULL,
-	(UpdateFunctionType)transition_update
+	(UpdateRoomFunctionType)transition_update
 };
 
-Room* g_rooms[NUM_ROOMS] = 
+Room* g_rooms[] = 
 {
 	&room0,
 	&room1,

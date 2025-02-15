@@ -65,6 +65,9 @@
     <ClInclude Include="..\game\resource_loader.h">
       <Filter>game</Filter>
     </ClInclude>
+    <ClInclude Include="..\game\pickup_types.h">
+      <Filter>game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Downland.ico">

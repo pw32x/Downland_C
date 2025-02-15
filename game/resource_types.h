@@ -4,6 +4,7 @@
 #include "base_types.h"
 #include "base_defines.h"
 #include "background_types.h"
+#include "pickup_types.h"
 #include "drops_types.h"
 
 typedef struct
@@ -49,6 +50,8 @@ typedef struct
     byte* sprite_door;              // 0xdf0a
     byte* sprites_drops;            // 0xdf2a
 
+    byte* pickupSprites[3];
+
     // background piece shapes
     ShapeDrawData shapeDrawData_00_Stalactite;	                        // 0xd5f7
     ShapeDrawData shapeDrawData_01_WallGoingDown;	                    // 0xd60c
@@ -75,7 +78,12 @@ typedef struct
     ShapeDrawData shapeDrawData_PreRope_Maybe;	                        // 0xd74c
     ShapeDrawData shapeDrawData_PostRope_Maybe;	                        // 0xd750  
 
-    RoomResources roomResources[NUM_ROOMS];
+    RoomResources roomResources[NUM_ROOMS_PLUS_TITLESCREN];
+
+    PickupPosition* roomPickupPositions;
+
+    u8* keyPickUpDoorIndexes; // 20 items
+    u8* keyPickUpDoorIndexesHardMode; // 20 items
 
 /*
 Sprites 0xdcd7

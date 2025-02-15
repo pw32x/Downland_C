@@ -7,6 +7,8 @@
 #include "drops_types.h"
 #include "rooms.h"
 #include "resource_types.h"
+#include "pickup_types.h"
+
 
 
 typedef struct
@@ -20,6 +22,9 @@ typedef struct
 	Resources* resources;
 	Room* currentRoom;
 	u8 numPlayers;
+	u8 currentPlayer;
+
+	RoomPickups gamePickups;
 
 	// used for screen transitions
 	u8 transitionRoomNumber;

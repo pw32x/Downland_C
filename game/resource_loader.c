@@ -248,11 +248,15 @@ BOOL ResourceLoader_Init(const char* romPath, Resources* resources)
     resources->sprites_bouncyBall = getBytes(file, 0xde7b, 0xde9b);
     resources->sprites_bird = getBytes(file, 0xde9b, 0xdeb3);
     resources->sprite_moneyBag = getBytes(file, 0xdeb3, 0xdec7);
-    resources->sprite_diamond = getBytes(file, 0xdec7, 0xd3db);
-    resources->sprite_key = getBytes(file, 0xd3db, 0xdeef);
+    resources->sprite_diamond = getBytes(file, 0xdec7, 0xdedb);
+    resources->sprite_key = getBytes(file, 0xdedb, 0xdeef);
     resources->sprite_playerSplat = getBytes(file, 0xdeef, 0xdf0a);
     resources->sprite_door = getBytes(file, 0xdf0a, 0xdf2a);
     resources->sprites_drops = getBytes(file, 0xdf2a, 0xdf5a);
+
+	resources->pickupSprites[0] = resources->sprite_diamond;
+	resources->pickupSprites[1] = resources->sprite_moneyBag;
+	resources->pickupSprites[2] = resources->sprite_key;
 
 	// get shapes data
 	loadShapeDrawData(file, 0xd5f7, &resources->shapeDrawData_00_Stalactite);
@@ -305,6 +309,11 @@ BOOL ResourceLoader_Init(const char* romPath, Resources* resources)
 	loadDropSpawnPositions(file, 0xd0fc, &resources->roomResources[8].dropSpawnPositions);
 	loadDropSpawnPositions(file, 0xd10c, &resources->roomResources[9].dropSpawnPositions);
 	loadDropSpawnPositions(file, 0xd116, &resources->roomResources[10].dropSpawnPositions);
+
+	resources->roomPickupPositions = (PickupPosition*)getBytes(file, 0xd1ea, 0xd24e);
+
+	resources->keyPickUpDoorIndexes = getBytes(file, 0xd1c2, 0xd1d6); // 20 items
+    resources->keyPickUpDoorIndexesHardMode = getBytes(file, 0xd1d6, 0xd1ea); // 20 items
 
 	fclose(file);
 
@@ -378,4 +387,6 @@ void ResourceLoader_Shutdown(Resources* resources)
 		free(resources->roomResources[loop].backgroundDrawData.backgroundDrawCommands);
 		free(resources->roomResources[loop].dropSpawnPositions.dropSpawnAreas);
 	}
+
+	free(resources->roomPickupPositions);
 }

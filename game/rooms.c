@@ -116,9 +116,6 @@ void room_init(Room* room, GameData* gameData, Resources* resources)
 {
 	u8 roomNumber = room->roomNumber;
 
-	//room_draw(roomNumber, gameData->framebuffer, resources);
-	//memcpy(gameData->cleanBackground, gameData->framebuffer, FRAMEBUFFER_SIZE_IN_BYTES);
-
 	// init drops
 	gameData->dropData.dropSpawnPositions = &resources->roomResources[roomNumber].dropSpawnPositions;
 	DropsManager_Init(&gameData->dropData, roomNumber, gameData->gameCompletionCount);
@@ -126,6 +123,8 @@ void room_init(Room* room, GameData* gameData, Resources* resources)
 
 void room_update(Room* room, GameData* gameData)
 {
+	// in the original rom, pickups are indeed drawn every frame
+	// otherwise, falling drops will erase them
 	drawPickups(gameData->gamePickups[room->roomNumber], 
 				gameData->currentPlayer,
 				gameData->resources, gameData->framebuffer);

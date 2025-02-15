@@ -102,6 +102,9 @@ void DrawPixel()
 	u8 pixelMask = pixelMasks[pixelMaskIndex];
 	u8 pixelToDraw = pixelMask & crtMasks[g_crtMaskIndexToUse]; // apply crt artifact mask on top of the pixel
 
+	if (!pixelToDraw)
+		return;
+
 	// remove the pixel (the two bits) at the location and replace with the new two bits
 	*framebufferPos = (*framebufferPos & ~pixelMask) | pixelToDraw;
 }

@@ -39,14 +39,16 @@ void drawText(u8* text, u8* characterFont, u8* framebuffer, u16 framebufferPosit
     }
 }
 
-void drawSprite_16PixelsWide(u8* sprite, u8 x, u8 y, u8* framebuffer)
+void drawSprite_16PixelsWide(u8* sprite, 
+                             u8 x, 
+                             u8 y, 
+                             u8 numLines,
+                             u8* framebuffer)
 {
-    u8 rowsPerSprite = 10;
-
     framebuffer += (x / 4) + (y * FRAMEBUFFER_PITCH);
 
     // for each character
-    while (rowsPerSprite--)
+    while (numLines--)
     {
         // first byte
         *framebuffer |= *sprite;

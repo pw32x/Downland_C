@@ -78,10 +78,10 @@ u8 pixelMasks[4] =
 // colors using crt artifact effects.
 u8 crtMasks[4] = 
 {
-	0x00, // 00000000b
-	0x55, // 01010101b
-	0xaa, // 10101010b
-	0xff  // 11111111b
+	0x00, // 00000000b - black
+	0x55, // 01010101b - blue
+	0xaa, // 10101010b - orange
+	0xff  // 11111111b - white
 };
 
 enum 

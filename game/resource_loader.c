@@ -236,8 +236,8 @@ BOOL ResourceLoader_Init(const char* romPath, Resources* resources)
 	resources->text_highScore = getBytes(file, 0xdab1, 0xdabc);
 	resources->text_playerOne = getBytes(file, 0xdabc, 0xdac7);
 	resources->text_playerTwo = getBytes(file, 0xdac7, 0xdad2);
-	resources->text_pL1 = getBytes(file, 0xdad2, 0xdad6);
-	resources->text_pL2 = getBytes(file, 0xdad6, 0xdada);
+	resources->text_pl1 = getBytes(file, 0xdad2, 0xdad6);
+	resources->text_pl2 = getBytes(file, 0xdad6, 0xdada);
 	resources->text_getReadyPlayerOne = getBytes(file, 0xdada, 0xdaef);
 	resources->text_getReadyPlayerTwo = getBytes(file, 0xdaef, 0xdb04);
 	resources->text_chamber = getBytes(file, 0xdb04, 0xdb0c);
@@ -337,8 +337,8 @@ void ResourceLoader_Shutdown(Resources* resources)
 	free(resources->text_highScore);
 	free(resources->text_playerOne);
 	free(resources->text_playerTwo);
-	free(resources->text_pL1);
-	free(resources->text_pL2);
+	free(resources->text_pl1);
+	free(resources->text_pl2);
 	free(resources->text_getReadyPlayerOne);
 	free(resources->text_getReadyPlayerTwo);
 	free(resources->text_chamber);
@@ -389,4 +389,7 @@ void ResourceLoader_Shutdown(Resources* resources)
 	}
 
 	free(resources->roomPickupPositions);
+	free(resources->keyPickUpDoorIndexes);
+    free(resources->keyPickUpDoorIndexesHardMode);
+
 }

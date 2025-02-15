@@ -85,6 +85,8 @@ Room titleScreenRoom =
 	(UpdateRoomFunctionType)titleScreen_update
 };
 
+#define PICKUPS_NUM_SPRITE_ROWS 10
+
 void drawPickups(Pickup* pickups, 
 				 u8 currentPlayer,
 				 Resources* resources, 
@@ -100,10 +102,34 @@ void drawPickups(Pickup* pickups,
 		drawSprite_16PixelsWide(resources->pickupSprites[pickups->type],
 								pickups->x, 
 								pickups->y, 
+								PICKUPS_NUM_SPRITE_ROWS,
 								framebuffer);
 		pickups++;
 	}
 }
+
+#define PLAYERICON_NUM_SPRITE_ROWS 7
+
+// won't work until I have the player sprite working with subpixels
+void drawPlayerLives(u8 playerLives,
+					 u8* playerSprite,
+					 u8* framebuffer)
+{
+	u8 x = PLAYERLIVES_ICON_X;
+	u8 y = PLAYERLIVES_ICON_Y;
+
+	for (u8 loop = 0; loop < playerLives; loop++)
+	{
+		drawSprite_16PixelsWide(playerSprite,
+								x, 
+								y, 
+								PLAYERICON_NUM_SPRITE_ROWS,
+								framebuffer);
+
+		x += PLAYERLIVES_ICON_SPACING;
+	}
+}
+
 
 void room_draw(u8 roomNumber, u8* framebuffer, Resources* resources)
 {
@@ -119,6 +145,20 @@ void room_init(Room* room, GameData* gameData, Resources* resources)
 	// init drops
 	gameData->dropData.dropSpawnPositions = &resources->roomResources[roomNumber].dropSpawnPositions;
 	DropsManager_Init(&gameData->dropData, roomNumber, gameData->gameCompletionCount);
+
+	drawText(resources->text_pl1, 
+			 resources->characterFont, 
+			 gameData->framebuffer, 
+			 PLAYERLIVES_TEXT_DRAW_LOCATION);
+
+	drawText(resources->text_chamber, 
+			 resources->characterFont, 
+			 gameData->framebuffer, 
+			 CHAMBER_TEXT_DRAW_LOCATION);
+
+	//drawPlayerLives(gameData->playerLives,
+	//				resources->sprites_player,
+	//				gameData->framebuffer);
 }
 
 void room_update(Room* room, GameData* gameData)

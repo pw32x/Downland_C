@@ -9,6 +9,6 @@
 void setPixel(u8* framebuffer, u8 x, u8 y, u8 value);
 
 void drawText(u8* text, u8* characterFont, u8* framebuffer, u16 framebufferPosition);
-void drawSprite_16PixelsWide(u8* sprite, u8 x, u8 y, u8* framebuffer);
+void drawSprite_16PixelsWide(u8* sprite, u8 x, u8 y, u8 numLines, u8* framebuffer);
 
 #endif

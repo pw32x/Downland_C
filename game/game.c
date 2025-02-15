@@ -52,6 +52,7 @@ void Game_Init(GameData* gameData, Resources* resources)
 	gameData->resources = resources;
 	gameData->numPlayers = 1;
 	gameData->currentPlayer = 1;
+	gameData->playerLives = 3;
 
 	initPickups(gameData->gamePickups, 
 				resources->roomPickupPositions,

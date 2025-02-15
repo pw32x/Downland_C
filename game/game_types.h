@@ -23,6 +23,7 @@ typedef struct
 	Room* currentRoom;
 	u8 numPlayers;
 	u8 currentPlayer;
+	u8 playerLives;
 
 	RoomPickups gamePickups;
 

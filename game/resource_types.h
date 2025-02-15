@@ -32,8 +32,8 @@ typedef struct
     byte* text_highScore;           // 0xdab1
     byte* text_playerOne;           // 0xdabc
     byte* text_playerTwo;           // 0xdac7
-    byte* text_pL1;                 // 0xdad2
-    byte* text_pL2;                 // 0xdad6
+    byte* text_pl1;                 // 0xdad2
+    byte* text_pl2;                 // 0xdad6
     byte* text_getReadyPlayerOne;   // 0xdada
     byte* text_getReadyPlayerTwo;   // 0xdaef
     byte* text_chamber;             // 0xdb04

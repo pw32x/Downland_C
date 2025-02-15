@@ -32,21 +32,30 @@ DONE draw screen transition
 
 KINDA try to fix weird forward declration of Room and GameData structs
 
-extract room data lookup table from rom
-extract each room data from rom
+DONE draw treasures
 
-draw treasures
-draw ball
+DONE draw current player text
+DONE draw chamber number
+
+draw score in game screen
 timers
+draw current timer
+
+draw score in title screen
+draw high score in title screen
+
+draw ball
+    draw ball on bit pixels
 bird
+get room door data
 doors
+
 analog stick support
-draw score
-draw high score
-draw lives
-draw chamber number
+
 player
+draw lives
     collision detection
+scoring of points
 change room    
 door triggers
 draw scores on title screen

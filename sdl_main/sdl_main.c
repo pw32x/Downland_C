@@ -98,7 +98,7 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
         if (event->key.key == SDLK_TAB || 
             event->key.key == SDLK_GRAVE)
         {
-            Game_TransitionToRoom(&gameData, TITLE_SCREEN_ROOM_INDEX);
+            Game_TransitionToRoom(&gameData, TITLESCREEN_ROOM_INDEX);
         }
         else if (event->key.key >= SDLK_1 && event->key.key <= SDLK_9)
         {

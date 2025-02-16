@@ -8,12 +8,9 @@
 #include "rooms.h"
 #include "resource_types.h"
 #include "pickup_types.h"
+#include "string_utils.h"
 
 #define ROOM_TIMER_DEFAULT 4096
-
-#define ROOM_NUMBER_STRING_SIZE 2
-#define TIMER_STRING_SIZE 6
-#define SCORE_STRING_SIZE 8
 
 typedef struct
 {
@@ -40,12 +37,16 @@ typedef struct
 	// strings. Number of expected characters + 0xff ending value
 	u8 string_roomNumber[ROOM_NUMBER_STRING_SIZE];
 	u8 string_timer[TIMER_STRING_SIZE]; // max timer is 65535
-	u8 string_score[SCORE_STRING_SIZE];
+	u8 string_playerOneScore[SCORE_STRING_SIZE];
+	u8 string_playerTwoScore[SCORE_STRING_SIZE];
+	u8 string_highScore[SCORE_STRING_SIZE];
 
 	// timers
 	u16 roomTimers[NUM_ROOMS];
 
-	u32 score;
+	u32 playerOneScore;
+	u32 playerTwoScore;
+	u32 highScore;
 } GameData;
 
 #endif

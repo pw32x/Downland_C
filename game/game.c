@@ -58,7 +58,9 @@ void Game_Init(GameData* gameData, Resources* resources)
 	// init strings
 	gameData->string_roomNumber[ROOM_NUMBER_STRING_SIZE - 1] = 0xff; // end of line
 	gameData->string_timer[TIMER_STRING_SIZE - 1] = 0xff;
-	gameData->string_score[SCORE_STRING_SIZE - 1] = 0xff;
+	gameData->string_playerOneScore[SCORE_STRING_SIZE - 1] = 0xff;
+	gameData->string_playerTwoScore[SCORE_STRING_SIZE - 1] = 0xff;
+	gameData->string_highScore[SCORE_STRING_SIZE - 1] = 0xff;
 
 	initPickups(gameData->gamePickups, 
 				resources->roomPickupPositions,
@@ -68,10 +70,12 @@ void Game_Init(GameData* gameData, Resources* resources)
 	for (int loop = 0; loop < NUM_ROOMS; loop++)
 		gameData->roomTimers[loop] = ROOM_TIMER_DEFAULT;
 
-	gameData->score = 7654321;
+	gameData->playerOneScore = 7654321;
+	gameData->playerTwoScore = 4433225;
+	gameData->highScore =      9876543;
 
 	// init title screen
-	Game_EnterRoom(gameData, TITLE_SCREEN_ROOM_INDEX);
+	Game_EnterRoom(gameData, TITLESCREEN_ROOM_INDEX);
 }
 
 void Game_Update(GameData* gameData)

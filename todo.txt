@@ -39,10 +39,10 @@ DONE draw chamber number
 DONE timers
 DONE draw current timer
 
-draw score in game screen
+DONE draw score in game screen
 
-draw score in title screen
-draw high score in title screen
+DONE draw score in title screen
+DONE draw high score in title screen
 
 draw ball
     draw ball on bit pixels

@@ -6,10 +6,13 @@
 #include "draw_utils.h"
 #include "drops_manager.h"
 #include "pickup_types.h"
+#include "string_utils.h"
 #include "game.h"
 
-void titleScreen_draw(u8 roomNumber, u8* framebuffer, Resources* resources)
+void titleScreen_draw(u8 roomNumber, GameData* gameData, Resources* resources)
 {
+	u8* framebuffer = gameData->framebuffer;
+
 	// init background and text
 	drawBackground(&resources->roomResources[roomNumber].backgroundDrawData, 
 				   resources,
@@ -29,6 +32,27 @@ void titleScreen_draw(u8 roomNumber, u8* framebuffer, Resources* resources)
 	drawText(resources->text_highScore, resources->characterFont, framebuffer, 0x118b); // 0x158B original coco mem location
 	drawText(resources->text_playerOne, resources->characterFont, framebuffer, 0x1406); // 0x1806 original coco mem location
 	drawText(resources->text_playerTwo, resources->characterFont, framebuffer, 0x1546); // 0x1946 original coco mem location
+
+	convertScoreToString(gameData->playerOneScore, gameData->string_playerOneScore);
+
+	drawText(gameData->string_playerOneScore, 
+			 gameData->resources->characterFont, 
+			 framebuffer, 
+			 TITLESCREEN_PLAYERONE_SCORE_LOCATION);
+
+	convertScoreToString(gameData->playerTwoScore, gameData->string_playerTwoScore);
+
+	drawText(gameData->string_playerTwoScore, 
+			 gameData->resources->characterFont, 
+			 framebuffer, 
+			 TITLESCREEN_PLAYERTWO_SCORE_LOCATION);
+
+	convertScoreToString(gameData->highScore, gameData->string_highScore);
+
+	drawText(gameData->string_highScore, 
+			 gameData->resources->characterFont, 
+			 framebuffer, 
+			 TITLESCREEN_HIGHSCORE_LOCATION);
 }
 
 void titleScreen_init(Room* room, GameData* gameData, Resources* resources)
@@ -36,7 +60,7 @@ void titleScreen_init(Room* room, GameData* gameData, Resources* resources)
 	u8 roomNumber = room->roomNumber;
 	gameData->gameCompletionCount = 1; // act like the game was going through one for the title screen
 
-	titleScreen_draw(roomNumber, gameData->framebuffer, resources);
+	titleScreen_draw(roomNumber, gameData, resources);
 
 	memcpy(gameData->cleanBackground, gameData->framebuffer, FRAMEBUFFER_SIZE_IN_BYTES);
 
@@ -78,7 +102,7 @@ void titleScreen_update(Room* room, GameData* gameData)
 
 Room titleScreenRoom =
 {
-	TITLE_SCREEN_ROOM_INDEX,
+	TITLESCREEN_ROOM_INDEX,
 	(InitRoomFunctionType)titleScreen_init,
 	(DrawRoomFunctionType)titleScreen_draw,
 	(UpdateRoomFunctionType)titleScreen_update
@@ -148,51 +172,6 @@ void updateTimers(u8 roomNumber, u16* roomTimers)
 	}
 }
 
-void convertTimerToString(u16 timerValue, u8* timerString)
-{
-	timerString[0] = timerValue / 10000;
-	timerValue %= 10000;
-	timerString[1] = timerValue / 1000;
-	timerValue %= 1000;
-	timerString[2] = timerValue / 100;
-	timerValue %= 100;
-	timerString[3] = timerValue / 10;
-	timerValue %= 10;
-	timerString[4] = (u8)timerValue;
-
-	for (int loop = 0; loop < TIMER_STRING_SIZE - 2; loop++)
-	{
-		if (timerString[loop] == CHAR_0)
-			timerString[loop] = CHAR_SPACE;
-		else
-			break;
-	}
-}
-
-void convertScoreToString(u32 score, u8* scoreString)
-{
-	scoreString[0] = score / 1000000;
-	score %= 1000000;
-	scoreString[1] = score / 100000;
-	score %= 100000;
-	scoreString[2] = score / 10000;
-	score %= 10000;
-	scoreString[3] = score / 1000;
-	score %= 1000;
-	scoreString[4] = score / 100;
-	score %= 100;
-	scoreString[5] = score / 10;
-	score %= 10;
-	scoreString[6] = (u8)score;
-
-	for (int loop = 0; loop < SCORE_STRING_SIZE - 2; loop++)
-	{
-		if (scoreString[loop] == CHAR_0)
-			scoreString[loop] = CHAR_SPACE;
-		else
-			break;
-	}
-}
 
 void room_draw(u8 roomNumber, u8* framebuffer, Resources* resources)
 {
@@ -227,6 +206,13 @@ void room_init(Room* room, GameData* gameData, Resources* resources)
 	//drawPlayerLives(gameData->playerLives,
 	//				resources->sprites_player,
 	//				gameData->framebuffer);
+
+	convertScoreToString(gameData->playerOneScore, gameData->string_playerOneScore);
+
+	drawText(gameData->string_playerOneScore, 
+			 gameData->resources->characterFont, 
+			 gameData->framebuffer, 
+			 SCORE_DRAW_LOCATION);
 }
 
 void room_update(Room* room, GameData* gameData)
@@ -252,13 +238,6 @@ void room_update(Room* room, GameData* gameData)
 			 gameData->resources->characterFont, 
 			 gameData->framebuffer, 
 			 TIMER_DRAW_LOCATION);
-
-	convertScoreToString(gameData->score, gameData->string_score);
-
-	drawText(gameData->string_score, 
-			 gameData->resources->characterFont, 
-			 gameData->framebuffer, 
-			 SCORE_DRAW_LOCATION);
 }
 
 Room room0 =

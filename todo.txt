@@ -36,10 +36,10 @@ DONE draw treasures
 
 DONE draw current player text
 DONE draw chamber number
+DONE timers
+DONE draw current timer
 
 draw score in game screen
-timers
-draw current timer
 
 draw score in title screen
 draw high score in title screen
@@ -58,6 +58,6 @@ draw lives
 scoring of points
 change room    
 door triggers
-draw scores on title screen
+
 
 

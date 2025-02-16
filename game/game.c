@@ -58,6 +58,7 @@ void Game_Init(GameData* gameData, Resources* resources)
 	// init strings
 	gameData->string_roomNumber[ROOM_NUMBER_STRING_SIZE - 1] = 0xff; // end of line
 	gameData->string_timer[TIMER_STRING_SIZE - 1] = 0xff;
+	gameData->string_score[SCORE_STRING_SIZE - 1] = 0xff;
 
 	initPickups(gameData->gamePickups, 
 				resources->roomPickupPositions,
@@ -66,6 +67,8 @@ void Game_Init(GameData* gameData, Resources* resources)
 	// init timers
 	for (int loop = 0; loop < NUM_ROOMS; loop++)
 		gameData->roomTimers[loop] = ROOM_TIMER_DEFAULT;
+
+	gameData->score = 7654321;
 
 	// init title screen
 	Game_EnterRoom(gameData, TITLE_SCREEN_ROOM_INDEX);

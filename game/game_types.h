@@ -13,6 +13,7 @@
 
 #define ROOM_NUMBER_STRING_SIZE 2
 #define TIMER_STRING_SIZE 6
+#define SCORE_STRING_SIZE 8
 
 typedef struct
 {
@@ -38,10 +39,13 @@ typedef struct
 
 	// strings. Number of expected characters + 0xff ending value
 	u8 string_roomNumber[ROOM_NUMBER_STRING_SIZE];
-	u8 string_timer[TIMER_STRING_SIZE]; // max timer is 65525
+	u8 string_timer[TIMER_STRING_SIZE]; // max timer is 65535
+	u8 string_score[SCORE_STRING_SIZE];
 
 	// timers
 	u16 roomTimers[NUM_ROOMS];
+
+	u32 score;
 } GameData;
 
 #endif

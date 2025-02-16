@@ -16,41 +16,41 @@ typedef struct
 typedef struct
 {
     // font
-    byte* characterFont;            // 0xd908
+    u8* characterFont;            // 0xd908
 
     // strings
-    byte* text_downland;            // 0xda19
-    byte* text_writtenBy;           // 0xda27
-    byte* text_michaelAichlmayer;   // 0xda33
-    byte* text_copyright1983;       // 0xda45
-    byte* text_spectralAssociates;  // 0xda54
-    byte* text_licensedTo;          // 0xda68
-    byte* text_tandyCorporation;    // 0xda75
-    byte* text_allRightsReserved;   // 0xda87
-    byte* text_onePlayer;           // 0xda9b
-    byte* text_twoPlayer;           // 0xdaa6
-    byte* text_highScore;           // 0xdab1
-    byte* text_playerOne;           // 0xdabc
-    byte* text_playerTwo;           // 0xdac7
-    byte* text_pl1;                 // 0xdad2
-    byte* text_pl2;                 // 0xdad6
-    byte* text_getReadyPlayerOne;   // 0xdada
-    byte* text_getReadyPlayerTwo;   // 0xdaef
-    byte* text_chamber;             // 0xdb04
+    u8* text_downland;            // 0xda19
+    u8* text_writtenBy;           // 0xda27
+    u8* text_michaelAichlmayer;   // 0xda33
+    u8* text_copyright1983;       // 0xda45
+    u8* text_spectralAssociates;  // 0xda54
+    u8* text_licensedTo;          // 0xda68
+    u8* text_tandyCorporation;    // 0xda75
+    u8* text_allRightsReserved;   // 0xda87
+    u8* text_onePlayer;           // 0xda9b
+    u8* text_twoPlayer;           // 0xdaa6
+    u8* text_highScore;           // 0xdab1
+    u8* text_playerOne;           // 0xdabc
+    u8* text_playerTwo;           // 0xdac7
+    u8* text_pl1;                 // 0xdad2
+    u8* text_pl2;                 // 0xdad6
+    u8* text_getReadyPlayerOne;   // 0xdada
+    u8* text_getReadyPlayerTwo;   // 0xdaef
+    u8* text_chamber;             // 0xdb04
 
     // sprites
-    byte* sprites_player;           // 0xdcd6
-    byte* collisionmask_player;     // 0xde17
-    byte* sprites_bouncyBall;       // 0xde7b
-    byte* sprites_bird;             // 0xde9b
-    byte* sprite_moneyBag;          // 0xdeb3
-    byte* sprite_diamond;           // 0xdec7
-    byte* sprite_key;               // 0xd3db
-    byte* sprite_playerSplat;       // 0xdeef
-    byte* sprite_door;              // 0xdf0a
-    byte* sprites_drops;            // 0xdf2a
+    u8* sprites_player;           // 0xdcd6
+    u8* collisionmask_player;     // 0xde17
+    u8* sprites_bouncyBall;       // 0xde7b
+    u8* sprites_bird;             // 0xde9b
+    u8* sprite_moneyBag;          // 0xdeb3
+    u8* sprite_diamond;           // 0xdec7
+    u8* sprite_key;               // 0xd3db
+    u8* sprite_playerSplat;       // 0xdeef
+    u8* sprite_door;              // 0xdf0a
+    u8* sprites_drops;            // 0xdf2a
 
-    byte* pickupSprites[3];
+    u8* pickupSprites[3];
 
     // background piece shapes
     ShapeDrawData shapeDrawData_00_Stalactite;	                        // 0xd5f7
@@ -85,6 +85,7 @@ typedef struct
     u8* keyPickUpDoorIndexes; // 20 items
     u8* keyPickUpDoorIndexesHardMode; // 20 items
 
+    u8* roomsWithBouncingBall;
 /*
 Sprites 0xdcd7
     PlayerSprite_Right_Stand 0xdcd6

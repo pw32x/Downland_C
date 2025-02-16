@@ -50,7 +50,7 @@ bird
 get room door data
 doors
 
-analog stick support
+
 
 player
 draw lives
@@ -60,4 +60,4 @@ change room
 door triggers
 
 
-
+analog stick support

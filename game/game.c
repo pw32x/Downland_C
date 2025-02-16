@@ -50,7 +50,6 @@ void initPickups(RoomPickups roomPickups,
 void Game_Init(GameData* gameData, Resources* resources)
 {
 	//gameData->gameCompletionCount = 0;
-	gameData->resources = resources;
 	gameData->numPlayers = 1;
 	gameData->currentPlayer = 1;
 	gameData->playerLives = 3;
@@ -75,30 +74,30 @@ void Game_Init(GameData* gameData, Resources* resources)
 	gameData->highScore =      9876543;
 
 	// init title screen
-	Game_EnterRoom(gameData, TITLESCREEN_ROOM_INDEX);
+	Game_EnterRoom(gameData, TITLESCREEN_ROOM_INDEX, resources);
 }
 
-void Game_Update(GameData* gameData)
+void Game_Update(GameData* gameData, Resources* resources)
 {
-	gameData->currentRoom->update((struct Room*)gameData->currentRoom, (struct GameData*)gameData);
+	gameData->currentRoom->update((struct Room*)gameData->currentRoom, (struct GameData*)gameData, resources);
 }
 
-void Game_EnterRoom(GameData* gameData, u8 roomNumber)
+void Game_EnterRoom(GameData* gameData, u8 roomNumber, Resources* resources)
 {
 	gameData->currentRoom = g_rooms[roomNumber];
 	gameData->currentRoom->init(gameData->currentRoom, 
 								(struct GameData*)gameData, 
-								gameData->resources);
+								resources);
 }
 
-void Game_TransitionToRoom(GameData* gameData, u8 roomNumber)
+void Game_TransitionToRoom(GameData* gameData, u8 roomNumber, Resources* resources)
 {
 	gameData->transitionRoomNumber = roomNumber;
 
 	gameData->currentRoom = g_rooms[TRANSITION_ROOM_INDEX];
 	gameData->currentRoom->init(g_rooms[roomNumber], 
 								(struct GameData*)gameData, 
-								gameData->resources);
+								resources);
 }
 
 void Game_Shutdown(GameData* gameData)

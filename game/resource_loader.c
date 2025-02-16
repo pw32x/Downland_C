@@ -24,7 +24,7 @@ BOOL checksumCheck(const char* romPath)
 	return accumulator == 0x84883253;
 }
 
-byte* getBytes(FILE* file, u16 start, u16 end)
+u8* getBytes(FILE* file, u16 start, u16 end)
 {
 	// take into account that the rom starts at c000
 	start -= 0xc000; 
@@ -32,7 +32,7 @@ byte* getBytes(FILE* file, u16 start, u16 end)
 
 	u16 size = end - start;
 
-	byte* memory = (byte*)malloc(size);
+	u8* memory = (u8*)malloc(size);
 
 	if (memory == NULL)
 		return NULL;
@@ -43,7 +43,7 @@ byte* getBytes(FILE* file, u16 start, u16 end)
 	return memory;
 }
 
-byte* getBytesSwapped(FILE* file, u16 start, u16 end)
+u8* getBytesSwapped(FILE* file, u16 start, u16 end)
 {
 	// take into account that the rom starts at c000
 	start -= 0xc000; 
@@ -51,7 +51,7 @@ byte* getBytesSwapped(FILE* file, u16 start, u16 end)
 
 	u16 size = end - start;
 
-	byte* memory = (byte*)malloc(size);
+	u8* memory = (u8*)malloc(size);
 
 	if (memory == NULL)
 		return NULL;
@@ -74,7 +74,7 @@ byte* getBytesSwapped(FILE* file, u16 start, u16 end)
 }
 
 
-byte* getBytesUntilSentinel(FILE* file, u16 start, u8 sentinelValue, u16* bufferSize)
+u8* getBytesUntilSentinel(FILE* file, u16 start, u8 sentinelValue, u16* bufferSize)
 {
 	// take into account that the rom starts at c000
 	start -= 0xc000; 
@@ -90,7 +90,7 @@ byte* getBytesUntilSentinel(FILE* file, u16 start, u8 sentinelValue, u16* buffer
 		readCount++;
 		if (value == sentinelValue)
 		{
-			byte* memory = (byte*)malloc(readCount);
+			u8* memory = (u8*)malloc(readCount);
 
 			if (memory == NULL)
 				return NULL;
@@ -113,7 +113,7 @@ void loadBackgroundDrawData(FILE* file, u16 start, BackgroundDrawData* backgroun
 
 	// get the draw buffer
 	u16 bufferSize;
-	byte* rawBuffer = getBytesUntilSentinel(file, start, sentinelValue, &bufferSize);
+	u8* rawBuffer = getBytesUntilSentinel(file, start, sentinelValue, &bufferSize);
 
 	if (rawBuffer == NULL)
 		return;
@@ -121,7 +121,7 @@ void loadBackgroundDrawData(FILE* file, u16 start, BackgroundDrawData* backgroun
 	// go through the buffer, counting the number of elements
 	// we need to create.
 	u8 drawCommandCount = 0;
-	byte* rawBufferRunner = rawBuffer;
+	u8* rawBufferRunner = rawBuffer;
 	while (*rawBufferRunner != sentinelValue)
 	{
 		drawCommandCount++;
@@ -315,6 +315,9 @@ BOOL ResourceLoader_Init(const char* romPath, Resources* resources)
 	resources->keyPickUpDoorIndexes = getBytes(file, 0xd1c2, 0xd1d6); // 20 items
     resources->keyPickUpDoorIndexesHardMode = getBytes(file, 0xd1d6, 0xd1ea); // 20 items
 
+	u16 bufferSize;
+	resources->roomsWithBouncingBall = getBytesUntilSentinel(file, 0xceac, 0xff, &bufferSize);
+
 	fclose(file);
 
 	return TRUE;
@@ -391,5 +394,7 @@ void ResourceLoader_Shutdown(Resources* resources)
 	free(resources->roomPickupPositions);
 	free(resources->keyPickUpDoorIndexes);
     free(resources->keyPickUpDoorIndexesHardMode);
+
+	free(resources->roomsWithBouncingBall);
 
 }

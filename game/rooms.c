@@ -8,6 +8,7 @@
 #include "pickup_types.h"
 #include "string_utils.h"
 #include "game.h"
+#include "ball.h"
 
 void titleScreen_draw(u8 roomNumber, GameData* gameData, Resources* resources)
 {
@@ -36,21 +37,21 @@ void titleScreen_draw(u8 roomNumber, GameData* gameData, Resources* resources)
 	convertScoreToString(gameData->playerOneScore, gameData->string_playerOneScore);
 
 	drawText(gameData->string_playerOneScore, 
-			 gameData->resources->characterFont, 
+			 resources->characterFont, 
 			 framebuffer, 
 			 TITLESCREEN_PLAYERONE_SCORE_LOCATION);
 
 	convertScoreToString(gameData->playerTwoScore, gameData->string_playerTwoScore);
 
 	drawText(gameData->string_playerTwoScore, 
-			 gameData->resources->characterFont, 
+			 resources->characterFont, 
 			 framebuffer, 
 			 TITLESCREEN_PLAYERTWO_SCORE_LOCATION);
 
 	convertScoreToString(gameData->highScore, gameData->string_highScore);
 
 	drawText(gameData->string_highScore, 
-			 gameData->resources->characterFont, 
+			 resources->characterFont, 
 			 framebuffer, 
 			 TITLESCREEN_HIGHSCORE_LOCATION);
 }
@@ -69,13 +70,13 @@ void titleScreen_init(Room* room, GameData* gameData, Resources* resources)
 	DropsManager_Init(&gameData->dropData, roomNumber, gameData->gameCompletionCount);
 }
 
-void titleScreen_update(Room* room, GameData* gameData)
+void titleScreen_update(Room* room, GameData* gameData, Resources* resources)
 {
 	DropsManager_Update(&gameData->dropData, 
 						gameData->framebuffer, 
 						gameData->cleanBackground, 
 						gameData->gameCompletionCount,
-						gameData->resources->sprites_drops);
+						resources->sprites_drops);
 
 	if (gameData->joystickState.leftPressed)
 	{
@@ -96,7 +97,7 @@ void titleScreen_update(Room* room, GameData* gameData)
 	if (gameData->joystickState.jumpPressed)
 	{
 		memset(gameData->framebuffer, 0, FRAMEBUFFER_SIZE_IN_BYTES);
-		Game_TransitionToRoom(gameData, 0);
+		Game_TransitionToRoom(gameData, 0, resources);
 	}
 }
 
@@ -188,6 +189,10 @@ void room_init(Room* room, GameData* gameData, Resources* resources)
 	gameData->dropData.dropSpawnPositions = &resources->roomResources[roomNumber].dropSpawnPositions;
 	DropsManager_Init(&gameData->dropData, roomNumber, gameData->gameCompletionCount);
 
+	Ball_Init(&gameData->ballData, 
+			  resources->sprites_bouncyBall, 
+			  resources->roomsWithBouncingBall);
+
 	drawText(resources->text_pl1, 
 			 resources->characterFont, 
 			 gameData->framebuffer, 
@@ -210,24 +215,26 @@ void room_init(Room* room, GameData* gameData, Resources* resources)
 	convertScoreToString(gameData->playerOneScore, gameData->string_playerOneScore);
 
 	drawText(gameData->string_playerOneScore, 
-			 gameData->resources->characterFont, 
+			 resources->characterFont, 
 			 gameData->framebuffer, 
 			 SCORE_DRAW_LOCATION);
 }
 
-void room_update(Room* room, GameData* gameData)
+void room_update(Room* room, GameData* gameData, Resources* resources)
 {
 	// in the original rom, pickups are indeed drawn every frame
 	// otherwise, falling drops will erase them
 	drawPickups(gameData->gamePickups[room->roomNumber], 
 				gameData->currentPlayer,
-				gameData->resources, gameData->framebuffer);
+				resources, gameData->framebuffer);
+
+	Ball_Update(&gameData->ballData, gameData->framebuffer);
 
 	DropsManager_Update(&gameData->dropData, 
 						gameData->framebuffer, 
 						gameData->cleanBackground, 
 						gameData->gameCompletionCount,
-						gameData->resources->sprites_drops);	
+						resources->sprites_drops);	
 
 	updateTimers(gameData->currentRoom->roomNumber, gameData->roomTimers);
 
@@ -235,7 +242,7 @@ void room_update(Room* room, GameData* gameData)
 						 gameData->string_timer);
 
 	drawText(gameData->string_timer, 
-			 gameData->resources->characterFont, 
+			 resources->characterFont, 
 			 gameData->framebuffer, 
 			 TIMER_DRAW_LOCATION);
 }
@@ -332,7 +339,7 @@ void transition_init(Room* targetRoom, GameData* gameData, Resources* resources)
 	gameData->transitionFrameDelay = 0;
 }
 
-void transition_update(Room* room, GameData* gameData)
+void transition_update(Room* room, GameData* gameData, Resources* resources)
 {
 	if (gameData->transitionInitialDelay)
 	{
@@ -373,7 +380,7 @@ void transition_update(Room* room, GameData* gameData)
 
 	if (gameData->transitionCurrentLine == 32)
 	{
-		Game_EnterRoom(gameData, gameData->transitionRoomNumber);
+		Game_EnterRoom(gameData, gameData->transitionRoomNumber, resources);
 	}
 }
 

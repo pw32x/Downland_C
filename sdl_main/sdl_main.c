@@ -98,16 +98,16 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
         if (event->key.key == SDLK_TAB || 
             event->key.key == SDLK_GRAVE)
         {
-            Game_TransitionToRoom(&gameData, TITLESCREEN_ROOM_INDEX);
+            Game_TransitionToRoom(&gameData, TITLESCREEN_ROOM_INDEX, &resources);
         }
         else if (event->key.key >= SDLK_1 && event->key.key <= SDLK_9)
         {
             u8 roomNumber = event->key.key - SDLK_1;
-            Game_TransitionToRoom(&gameData, roomNumber);
+            Game_TransitionToRoom(&gameData, roomNumber, &resources);
         }
         else if (event->key.key == SDLK_0)
         {
-            Game_TransitionToRoom(&gameData, 9);
+            Game_TransitionToRoom(&gameData, 9, &resources);
         }
     }
 
@@ -150,7 +150,7 @@ SDL_AppResult SDL_AppIterate(void *appstate)
     if (!paused)
     {
         Update_Controls(&gameData.joystickState);
-        Game_Update(&gameData);
+        Game_Update(&gameData, &resources);
     }
 
     // Render to screen

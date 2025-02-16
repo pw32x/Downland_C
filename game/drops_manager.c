@@ -129,7 +129,7 @@ void initDrop(Drop* drop, DropData* dropData, u8 gameCompletionCount, u8* dropSp
 	// 4 to the right. If so, then move the drop's x position to the left.
 	// See address 0xcfeb in the disassembly
 
-	drop->framebufferDrawLocation = (drop->x / 4) + ((drop->y >> 8) * FRAMEBUFFER_PITCH);
+	drop->framebufferDrawLocation = (drop->x / 4) + (GET_FROM_HIRES(drop->y) * FRAMEBUFFER_PITCH);
 	drop->previousFramebufferDrawLocation = drop->framebufferDrawLocation;
 
 	u8 spriteIndex = drop->x & 3; // sprite depends on which column of four pixels it lands on
@@ -176,7 +176,7 @@ void DropsManager_Update(DropData* dropData,
 
 			if ((cleanBackground[drop->previousFramebufferDrawLocation + 0xc0] & drop->collisionMask) || // 6 pixels down
 				(cleanBackground[drop->previousFramebufferDrawLocation + 0xe0] & drop->collisionMask) || // 7 pixels down
-				((drop->y >> 8) > FRAMEBUFFER_HEIGHT - 16)) // bottom bounds checking. not in the original game.
+				(GET_FROM_HIRES(drop->y) > FRAMEBUFFER_HEIGHT - 16)) // bottom bounds checking. not in the original game.
 			{
 				eraseSprite(framebuffer, cleanBackground, drop->previousFramebufferDrawLocation, drop->spriteData, 6);
 				initDrop(drop, dropData, gameCompletionCount, dropSprites);
@@ -188,7 +188,7 @@ void DropsManager_Update(DropData* dropData,
 		drop->speedY = DROP_FALL_SPEED;
 
 		// compute framebuffer location
-		drop->framebufferDrawLocation = (drop->x / 4) + ((drop->y >> 8) * FRAMEBUFFER_PITCH);
+		drop->framebufferDrawLocation = (drop->x / 4) + (GET_FROM_HIRES(drop->y) * FRAMEBUFFER_PITCH);
 
 		// erase drop from screen
 		eraseSprite(framebuffer, cleanBackground, drop->previousFramebufferDrawLocation, drop->spriteData, 6);

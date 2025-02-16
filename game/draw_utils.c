@@ -67,7 +67,7 @@ void drawSprite_16PixelsWide(u8* sprite,
 }
 
 
-byte* g_framebuffer;
+u8* g_framebuffer;
 
 u8 g_plotterCurrentY;
 u8 g_plotterCurrentX;
@@ -175,7 +175,7 @@ void DrawPixel()
 
 void DrawHorizontalSegment(void (*movePlotterFunction)())
 {
-	g_plotterHiresPos = (g_plotterCurrentX << 8) | g_subpixelInitValue;
+	g_plotterHiresPos = SET_HIRES(g_plotterCurrentX) | g_subpixelInitValue;
 
 	while (g_pixelCount--)
 	{
@@ -185,13 +185,13 @@ void DrawHorizontalSegment(void (*movePlotterFunction)())
 			break;
 
 		movePlotterFunction();
-		g_plotterCurrentX = g_plotterHiresPos >> 8;
+		g_plotterCurrentX = GET_FROM_HIRES(g_plotterHiresPos);
 	}
 }
 
 void DrawVerticalSegment(void (*movePlotterFunction)())
 {
-	g_plotterHiresPos = (g_plotterCurrentY << 8) | g_subpixelInitValue;
+	g_plotterHiresPos = SET_HIRES(g_plotterCurrentY) | g_subpixelInitValue;
 
 	while (g_pixelCount--)
 	{
@@ -201,7 +201,7 @@ void DrawVerticalSegment(void (*movePlotterFunction)())
 			break;
 
 		movePlotterFunction();
-		g_plotterCurrentY = g_plotterHiresPos >> 8;
+		g_plotterCurrentY = GET_FROM_HIRES(g_plotterHiresPos);
 	}
 }
 
@@ -495,7 +495,7 @@ void (*drawPieceFunctions[])(const Resources* resources) = {
 
 void drawBackground(const BackgroundDrawData* backgroundDrawData, 
 					const Resources* resources,
-					byte* framebuffer)
+					u8* framebuffer)
 {
 	g_framebuffer = framebuffer;
 

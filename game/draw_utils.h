@@ -15,6 +15,6 @@ void drawSprite_16PixelsWide(u8* sprite, u8 x, u8 y, u8 numLines, u8* framebuffe
 
 void drawBackground(const BackgroundDrawData* backgroundDrawData, 
 					const Resources* resources,
-					byte* framebuffer);
+					u8* framebuffer);
 
 #endif

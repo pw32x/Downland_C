@@ -42,4 +42,7 @@
 #define CHAR_9		9
 #define CHAR_SPACE 0x24
 
+#define SET_HIRES(v) (v << 8)
+#define GET_FROM_HIRES(v) (v >> 8)
+
 #endif

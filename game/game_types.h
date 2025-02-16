@@ -9,6 +9,7 @@
 #include "resource_types.h"
 #include "pickup_types.h"
 #include "string_utils.h"
+#include "ball.h"
 
 #define ROOM_TIMER_DEFAULT 4096
 
@@ -20,13 +21,13 @@ typedef struct
 	DropData dropData;
 	u8 gameCompletionCount;
 	JoystickState joystickState;
-	Resources* resources;
 	Room* currentRoom;
 	u8 numPlayers;
 	u8 currentPlayer;
 	u8 playerLives;
 
 	RoomPickups gamePickups;
+	BallData ballData;
 
 	// used for screen transitions
 	u8 transitionRoomNumber;

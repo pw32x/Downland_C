@@ -12,14 +12,14 @@ typedef struct Room
 	u8 roomNumber;
 	void (*init)(struct Room* room, struct GameData* gameData, Resources* resources);
 	void (*draw)(u8 roomNumber, u8* framebuffer, Resources* resources);
-	void (*update)(struct Room* room, struct GameData* gameData);
+	void (*update)(struct Room* room, struct GameData* gameData, Resources* resources);
 } Room;
 
 extern Room* g_rooms[NUM_ROOMS_AND_ALL];
 
 typedef void (*InitRoomFunctionType)(Room* room, struct GameData* gameObject, Resources* resources);
 typedef void (*DrawRoomFunctionType)(u8 roomNumber, u8* framebuffer, Resources* resources);
-typedef void (*UpdateRoomFunctionType)(Room* room, struct GameData* gameObject);
+typedef void (*UpdateRoomFunctionType)(Room* room, struct GameData* gameObject, Resources* resources);
 
 
 typedef struct

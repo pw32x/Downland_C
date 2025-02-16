@@ -2,7 +2,6 @@
 #define BASE_TYPES_INCLUDE_H
 
 typedef signed char s8;
-typedef unsigned char byte;
 typedef unsigned char u8;
 
 typedef signed short s16;

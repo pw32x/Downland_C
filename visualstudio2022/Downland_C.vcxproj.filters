@@ -32,14 +32,11 @@
     <ClInclude Include="..\game\base_defines.h">
       <Filter>game</Filter>
     </ClInclude>
-    <ClInclude Include="..\game\graphics_utils.h">
+    <ClInclude Include="..\game\draw_utils.h">
       <Filter>game</Filter>
     </ClInclude>
     <ClInclude Include="..\sdl_main\sdl_utils.h">
       <Filter>sdl_main</Filter>
-    </ClInclude>
-    <ClInclude Include="..\game\background_draw.h">
-      <Filter>game</Filter>
     </ClInclude>
     <ClInclude Include="..\game\drops_manager.h">
       <Filter>game</Filter>
@@ -88,7 +85,7 @@
     <ClCompile Include="..\game\game.c">
       <Filter>game</Filter>
     </ClCompile>
-    <ClCompile Include="..\game\graphics_utils.c">
+    <ClCompile Include="..\game\draw_utils.c">
       <Filter>game</Filter>
     </ClCompile>
     <ClCompile Include="..\sdl_main\sdl_main.c">
@@ -96,9 +93,6 @@
     </ClCompile>
     <ClCompile Include="..\sdl_main\sdl_utils.c">
       <Filter>sdl_main</Filter>
-    </ClCompile>
-    <ClCompile Include="..\game\background_draw.c">
-      <Filter>game</Filter>
     </ClCompile>
     <ClCompile Include="..\game\drops_manager.c">
       <Filter>game</Filter>

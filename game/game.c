@@ -2,6 +2,7 @@
 
 #include <stdlib.h>
 
+#include "draw_utils.h"
 #include "rooms.h"
 
 void initPickups(RoomPickups roomPickups, 
@@ -54,9 +55,17 @@ void Game_Init(GameData* gameData, Resources* resources)
 	gameData->currentPlayer = 1;
 	gameData->playerLives = 3;
 
+	// init strings
+	gameData->string_roomNumber[ROOM_NUMBER_STRING_SIZE - 1] = 0xff; // end of line
+	gameData->string_timer[TIMER_STRING_SIZE - 1] = 0xff;
+
 	initPickups(gameData->gamePickups, 
 				resources->roomPickupPositions,
 				resources->keyPickUpDoorIndexes);
+
+	// init timers
+	for (int loop = 0; loop < NUM_ROOMS; loop++)
+		gameData->roomTimers[loop] = ROOM_TIMER_DEFAULT;
 
 	// init title screen
 	Game_EnterRoom(gameData, TITLE_SCREEN_ROOM_INDEX);

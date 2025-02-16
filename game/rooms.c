@@ -2,9 +2,8 @@
 
 #include <string.h>
 
-#include "background_draw.h"
 #include "game_types.h"
-#include "graphics_utils.h"
+#include "draw_utils.h"
 #include "drops_manager.h"
 #include "pickup_types.h"
 #include "game.h"
@@ -12,9 +11,9 @@
 void titleScreen_draw(u8 roomNumber, u8* framebuffer, Resources* resources)
 {
 	// init background and text
-	Background_Draw(&resources->roomResources[roomNumber].backgroundDrawData, 
-					resources,
-					framebuffer);
+	drawBackground(&resources->roomResources[roomNumber].backgroundDrawData, 
+				   resources,
+				   framebuffer);
 
 	// title screen text
 	drawText(resources->text_downland, resources->characterFont, framebuffer, 0x03c9); // 0x07c9 original coco mem location
@@ -130,12 +129,51 @@ void drawPlayerLives(u8 playerLives,
 	}
 }
 
+void updateTimers(u8 roomNumber, u16* roomTimers)
+{
+	for (int loop = 0; loop < NUM_ROOMS; loop++)
+	{
+		if (loop == roomNumber)
+		{
+			if (*roomTimers)
+				(*roomTimers)--;
+		}
+		else 
+		{
+			if (*roomTimers < ROOM_TIMER_DEFAULT)
+				(*roomTimers)++;
+		}
+
+		roomTimers++;
+	}
+}
+
+void convertTimerToString(u16 timerValue, u8* timerString)
+{
+	timerString[0] = timerValue / 10000;
+	timerValue %= 10000;
+	timerString[1] = timerValue / 1000;
+	timerValue %= 1000;
+	timerString[2] = timerValue / 100;
+	timerValue %= 100;
+	timerString[3] = timerValue / 10;
+	timerValue %= 10;
+	timerString[4] = (u8)timerValue;
+
+	for (int loop = 0; loop < TIMER_STRING_SIZE - 2; loop++)
+	{
+		if (timerString[loop] == CHAR_0)
+			timerString[loop] = CHAR_SPACE;
+		else
+			break;
+	}
+}
 
 void room_draw(u8 roomNumber, u8* framebuffer, Resources* resources)
 {
-	Background_Draw(&resources->roomResources[roomNumber].backgroundDrawData, 
-					resources,
-					framebuffer);
+	drawBackground(&resources->roomResources[roomNumber].backgroundDrawData, 
+				   resources,
+				   framebuffer);
 }
 
 void room_init(Room* room, GameData* gameData, Resources* resources)
@@ -156,6 +194,11 @@ void room_init(Room* room, GameData* gameData, Resources* resources)
 			 gameData->framebuffer, 
 			 CHAMBER_TEXT_DRAW_LOCATION);
 
+	drawText(gameData->string_roomNumber, 
+			 resources->characterFont, 
+			 gameData->framebuffer, 
+			 CHAMBER_NUMBER_TEXT_DRAW_LOCATION);
+
 	//drawPlayerLives(gameData->playerLives,
 	//				resources->sprites_player,
 	//				gameData->framebuffer);
@@ -174,6 +217,16 @@ void room_update(Room* room, GameData* gameData)
 						gameData->cleanBackground, 
 						gameData->gameCompletionCount,
 						gameData->resources->sprites_drops);	
+
+	updateTimers(gameData->currentRoom->roomNumber, gameData->roomTimers);
+
+	convertTimerToString(gameData->roomTimers[gameData->currentRoom->roomNumber],
+						 gameData->string_timer);
+
+	drawText(gameData->string_timer, 
+			 gameData->resources->characterFont, 
+			 gameData->framebuffer, 
+			 TIMER_DRAW_LOCATION);
 }
 
 Room room0 =

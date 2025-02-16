@@ -9,7 +9,10 @@
 #include "resource_types.h"
 #include "pickup_types.h"
 
+#define ROOM_TIMER_DEFAULT 4096
 
+#define ROOM_NUMBER_STRING_SIZE 2
+#define TIMER_STRING_SIZE 6
 
 typedef struct
 {
@@ -32,6 +35,13 @@ typedef struct
 	u16 transitionInitialDelay;
 	u8 transitionCurrentLine;
 	u8 transitionFrameDelay;
+
+	// strings. Number of expected characters + 0xff ending value
+	u8 string_roomNumber[ROOM_NUMBER_STRING_SIZE];
+	u8 string_timer[TIMER_STRING_SIZE]; // max timer is 65525
+
+	// timers
+	u16 roomTimers[NUM_ROOMS];
 } GameData;
 
 #endif

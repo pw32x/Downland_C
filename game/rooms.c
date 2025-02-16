@@ -191,6 +191,7 @@ void room_init(Room* room, GameData* gameData, Resources* resources)
 
 	Ball_Init(&gameData->ballData, 
 			  resources->sprites_bouncyBall, 
+			  roomNumber,
 			  resources->roomsWithBouncingBall);
 
 	drawText(resources->text_pl1, 
@@ -228,7 +229,7 @@ void room_update(Room* room, GameData* gameData, Resources* resources)
 				gameData->currentPlayer,
 				resources, gameData->framebuffer);
 
-	Ball_Update(&gameData->ballData, gameData->framebuffer);
+	Ball_Update(&gameData->ballData, gameData->framebuffer, gameData->cleanBackground);
 
 	DropsManager_Update(&gameData->dropData, 
 						gameData->framebuffer, 

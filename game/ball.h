@@ -12,24 +12,31 @@
 #define BALL_START_X 0x65 // 101
 #define BALL_START_Y 0x74 // 116
 
+#define BALL_SPRITE_ROWS 8
+
 typedef struct
 {
+	u8 enabled;
 	u8 state;	// 0 - inactive
 				// 1 - resetting?
 				// 2 - active
 				// 0xff - dying?
-	u8 x;
+	u16 x;
 	u16 y; // high resolution position 256 pixels, 256 subpixels
-	u8 speedx;
+	u16 speedx;
 	u16 speedy; // high resolution
-	u16 framebufferDrawLocation;
-	u16 previousFramebufferDrawLocation;
+
+	u16 previousX;
+	u16 previousY;
 	u8* currentSprite;
 	u8* previousSprite;
-	u8* spriteData;
+	u8* sprite1;
+	u8* sprite2;
+
+	u8 fallStateCounter;
 } BallData;
 
-void Ball_Init(BallData* ballData, u8* ballSpriteData, u8* roomsWithBouncingBall);
-void Ball_Update(BallData* ballData, u8* framebuffer);
+void Ball_Init(BallData* ballData, u8* ballSpriteData, u8 roomNumber, u8* roomsWithBouncingBall);
+void Ball_Update(BallData* ballData, u8* framebuffer, u8* cleanBackground);
 
 #endif

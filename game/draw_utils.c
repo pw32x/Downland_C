@@ -62,9 +62,97 @@ void drawSprite_16PixelsWide(u8* sprite,
         sprite++;
 
         // move framebuffer to next row
-        framebuffer += 0x1f; // go down one row in the frame buffer for the next line.
+        framebuffer += (FRAMEBUFFER_PITCH - 1); // go down one row in the frame buffer for the next line.
     }
 }
+
+
+void eraseSprite_16PixelsWide(u8* framebuffer, 
+							  u8* cleanBackground,
+							  u8 x,
+							  u8 y,
+							  u8* spriteData, 
+							  u8 rowCount)
+{
+	u16 offset = (x / 4) + (y * FRAMEBUFFER_PITCH);
+	framebuffer += offset;
+	cleanBackground += offset;
+
+	for (int loop = 0; loop < rowCount; loop++)
+	{
+		// remove the bits of the sprite from the frame buffer 
+		// and restore with the clean background
+		*framebuffer &= ~(*spriteData);
+		*framebuffer |= *cleanBackground;
+		spriteData++;
+		framebuffer++;
+		cleanBackground++;
+
+		// remove the bits of the sprite from the frame buffer 
+		// and restore with the clean background
+		*framebuffer &= ~(*spriteData);
+		*framebuffer |= *cleanBackground;
+		spriteData++;
+
+		framebuffer += (FRAMEBUFFER_PITCH - 1); // move to the next row
+		cleanBackground += (FRAMEBUFFER_PITCH - 1);
+	}
+}
+
+/*
+// keeping these just in case
+void eraseSprite(u8* framebuffer, 
+				 u8* cleanBackground,
+				 u16 framebufferDrawLocation, 
+				 u8* spriteData, 
+				 u8 rowCount)
+{
+	framebuffer += framebufferDrawLocation;
+	cleanBackground += framebufferDrawLocation;
+
+	for (int loop = 0; loop < rowCount; loop++)
+	{
+		// remove the bits of the sprite from the frame buffer 
+		// and restore with the clean background
+		*framebuffer &= ~(*spriteData);
+		*framebuffer |= *cleanBackground;
+		spriteData++;
+		framebuffer++;
+		cleanBackground++;
+
+		// remove the bits of the sprite from the frame buffer 
+		// and restore with the clean background
+		*framebuffer &= ~(*spriteData);
+		*framebuffer |= *cleanBackground;
+		spriteData++;
+
+		framebuffer += (FRAMEBUFFER_PITCH - 1); // move to the next row
+		cleanBackground += (FRAMEBUFFER_PITCH - 1);
+	}
+}
+
+void drawSprite(u8* framebuffer, 
+				u16 framebufferDrawLocation, 
+				u8* spriteData, 
+				u8 rowCount)
+{
+	framebuffer += framebufferDrawLocation;
+
+	for (int loop = 0; loop < rowCount; loop++)
+	{
+		// blend the first byte of sprite's pixels with the frame buffer
+		*framebuffer |= *spriteData;
+		spriteData++;
+		framebuffer++;
+
+		// blend the second byte of sprite's pixels with the frame buffer
+		*framebuffer |= *spriteData;
+		spriteData++;
+
+		framebuffer += (FRAMEBUFFER_PITCH - 1); // move to the next row
+	}
+}
+*/
 
 
 u8* g_framebuffer;

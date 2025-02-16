@@ -43,6 +43,8 @@
 #define CHAR_SPACE 0x24
 
 #define SET_HIRES(v) (v << 8)
-#define GET_FROM_HIRES(v) (v >> 8)
+#define GET_FROM_HIRES(v) ((u8)(v >> 8))
+#define GET_HIGH_BYTE GET_FROM_HIRES
+#define GET_LOW_BYTE(v) ((u8)v)
 
 #endif

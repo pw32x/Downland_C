@@ -3,6 +3,9 @@
 #include <stdlib.h>
 
 #include "base_defines.h"
+#include "draw_utils.h"
+
+#define DROP_SPRITE_ROWS 6
 
 #define DROP_FALL_SPEED 0x200
 #define DROP_WIGGLE_UP_SPEED 0xff80
@@ -47,58 +50,6 @@ void DropsManager_Init(DropData* dropData, u8 roomNumber, u8 gameCompletionCount
 		dropData->drops[loop].wiggleTimer = 1;
 }
 
-void eraseSprite(u8* framebuffer, 
-				 u8* cleanBackground,
-				 u16 framebufferDrawLocation, 
-				 u8* spriteData, 
-				 u8 rowCount)
-{
-	framebuffer += framebufferDrawLocation;
-	cleanBackground += framebufferDrawLocation;
-
-	for (int loop = 0; loop < rowCount; loop++)
-	{
-		// remove the bits of the sprite from the frame buffer 
-		// and restore with the clean background
-		*framebuffer &= ~(*spriteData);
-		*framebuffer |= *cleanBackground;
-		spriteData++;
-		framebuffer++;
-		cleanBackground++;
-
-		// remove the bits of the sprite from the frame buffer 
-		// and restore with the clean background
-		*framebuffer &= ~(*spriteData);
-		*framebuffer |= *cleanBackground;
-		spriteData++;
-
-		framebuffer += (FRAMEBUFFER_PITCH - 1); // move to the next row
-		cleanBackground += (FRAMEBUFFER_PITCH - 1);
-	}
-}
-
-void drawSprite(u8* framebuffer, 
-				u16 framebufferDrawLocation, 
-				u8* spriteData, 
-				u8 rowCount)
-{
-	framebuffer += framebufferDrawLocation;
-
-	for (int loop = 0; loop < rowCount; loop++)
-	{
-		// blend the sprite's pixels with the frame buffer
-		*framebuffer |= *spriteData;
-		spriteData++;
-		framebuffer++;
-
-		// blend the sprite's pixels with the frame buffer
-		*framebuffer |= *spriteData;
-		spriteData++;
-
-		framebuffer += (FRAMEBUFFER_PITCH - 1); // move to the next row
-	}
-}
-
 void wiggleDrop(Drop* drop)
 {
 	drop->wiggleTimer--;
@@ -128,9 +79,6 @@ void initDrop(Drop* drop, DropData* dropData, u8 gameCompletionCount, u8* dropSp
 	// here, check if there's a collision with the background 6 pixels down and 
 	// 4 to the right. If so, then move the drop's x position to the left.
 	// See address 0xcfeb in the disassembly
-
-	drop->framebufferDrawLocation = (drop->x / 4) + (GET_FROM_HIRES(drop->y) * FRAMEBUFFER_PITCH);
-	drop->previousFramebufferDrawLocation = drop->framebufferDrawLocation;
 
 	u8 spriteIndex = drop->x & 3; // sprite depends on which column of four pixels it lands on
 
@@ -174,30 +122,37 @@ void DropsManager_Update(DropData* dropData,
 		{
 			// falling
 
-			if ((cleanBackground[drop->previousFramebufferDrawLocation + 0xc0] & drop->collisionMask) || // 6 pixels down
-				(cleanBackground[drop->previousFramebufferDrawLocation + 0xe0] & drop->collisionMask) || // 7 pixels down
+			u16 cleanBackgroundLocation = GET_FRAMEBUFFER_LOCATION(drop->x, GET_FROM_HIRES(drop->y));
+
+			if ((cleanBackground[cleanBackgroundLocation + 0xc0] & drop->collisionMask) || // 6 pixels down
+				(cleanBackground[cleanBackgroundLocation + 0xe0] & drop->collisionMask) || // 7 pixels down
 				(GET_FROM_HIRES(drop->y) > FRAMEBUFFER_HEIGHT - 16)) // bottom bounds checking. not in the original game.
 			{
-				eraseSprite(framebuffer, cleanBackground, drop->previousFramebufferDrawLocation, drop->spriteData, 6);
+				eraseSprite_16PixelsWide(framebuffer, 
+										 cleanBackground, 
+										 drop->x,
+										 GET_FROM_HIRES(drop->y),
+										 drop->spriteData, 
+										 DROP_SPRITE_ROWS);
+
 				initDrop(drop, dropData, gameCompletionCount, dropSprites);
 			}
 		}
+
+		// erase drop from screen
+		eraseSprite_16PixelsWide(framebuffer, 
+								 cleanBackground, 
+								 drop->x,
+								 GET_FROM_HIRES(drop->y),
+								 drop->spriteData, 
+								 DROP_SPRITE_ROWS);
 
 		// update y
 		drop->y += drop->speedY;
 		drop->speedY = DROP_FALL_SPEED;
 
-		// compute framebuffer location
-		drop->framebufferDrawLocation = (drop->x / 4) + (GET_FROM_HIRES(drop->y) * FRAMEBUFFER_PITCH);
-
-		// erase drop from screen
-		eraseSprite(framebuffer, cleanBackground, drop->previousFramebufferDrawLocation, drop->spriteData, 6);
-
-		// store framebuffer location to previous framebuffer location
-		drop->previousFramebufferDrawLocation = drop->framebufferDrawLocation;
-
 		// draw sprite
-		drawSprite(framebuffer, drop->framebufferDrawLocation, drop->spriteData, 6);
+		drawSprite_16PixelsWide(drop->spriteData, drop->x, GET_FROM_HIRES(drop->y), DROP_SPRITE_ROWS, framebuffer);
 
 		drops += 2; // skip to the second drop
 	}

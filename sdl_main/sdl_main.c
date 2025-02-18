@@ -1,12 +1,15 @@
 #define SDL_MAIN_USE_CALLBACKS 1  /* use the callbacks instead of main() */
-#include <SDL3/SDL.h>
-#include <SDL3/SDL_main.h>
 
 #include "../game/base_defines.h"
 #include "../game/base_types.h"
 #include "../game/game.h"
 #include "../game/resource_loader.h"
 #include "sdl_utils.h"
+
+#include <SDL3/SDL.h>
+#include <SDL3/SDL_main.h>
+
+
 
 static SDL_Window *window = NULL;
 static SDL_Renderer *renderer = NULL;

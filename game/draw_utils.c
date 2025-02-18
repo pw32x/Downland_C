@@ -1,8 +1,7 @@
 #include "draw_utils.h"
 
-#include <memory.h>
-
 #include "base_defines.h"
+#include <memory.h>
 
 void setPixel(u8* framebuffer, u8 x, u8 y, u8 value) 
 {
@@ -96,6 +95,76 @@ void eraseSprite_16PixelsWide(u8* framebuffer,
 
 		framebuffer += (FRAMEBUFFER_PITCH - 1); // move to the next row
 		cleanBackground += (FRAMEBUFFER_PITCH - 1);
+	}
+}
+
+
+void drawSprite_24PixelsWide(u8* sprite, 
+                             u8 x, 
+                             u8 y, 
+                             u8 numLines,
+                             u8* framebuffer)
+{
+    framebuffer += (x / 4) + (y * FRAMEBUFFER_PITCH);
+
+    // for each character
+    while (numLines--)
+    {
+        // first byte
+        *framebuffer |= *sprite;
+        framebuffer++;
+        sprite++;
+
+        // second byte
+        *framebuffer |= *sprite;
+        framebuffer++;
+        sprite++;
+
+        // third byte
+        *framebuffer |= *sprite;
+        sprite++;
+
+        // move framebuffer to next row
+        framebuffer += (FRAMEBUFFER_PITCH - 2); // go down one row in the frame buffer for the next line.
+    }
+}
+
+
+void eraseSprite_24PixelsWide(u8* framebuffer, 
+							  u8* cleanBackground,
+							  u8 x,
+							  u8 y,
+							  u8* spriteData, 
+							  u8 rowCount)
+{
+	u16 offset = (x / 4) + (y * FRAMEBUFFER_PITCH);
+	framebuffer += offset;
+	cleanBackground += offset;
+
+	for (int loop = 0; loop < rowCount; loop++)
+	{
+		// remove the bits of the sprite from the frame buffer 
+		// and restore with the clean background
+		*framebuffer &= ~(*spriteData);
+		*framebuffer |= *cleanBackground;
+		spriteData++;
+		framebuffer++;
+		cleanBackground++;
+
+		// second byte
+		*framebuffer &= ~(*spriteData);
+		*framebuffer |= *cleanBackground;
+		spriteData++;
+		framebuffer++;
+		cleanBackground++;
+
+		// third byte
+		*framebuffer &= ~(*spriteData);
+		*framebuffer |= *cleanBackground;
+		spriteData++;
+
+		framebuffer += (FRAMEBUFFER_PITCH - 2); // move to the next row
+		cleanBackground += (FRAMEBUFFER_PITCH - 2);
 	}
 }
 
@@ -263,7 +332,7 @@ void DrawPixel()
 
 void DrawHorizontalSegment(void (*movePlotterFunction)())
 {
-	g_plotterHiresPos = SET_HIRES(g_plotterCurrentX) | g_subpixelInitValue;
+	g_plotterHiresPos = SET_HIGH_BYTE(g_plotterCurrentX) | g_subpixelInitValue;
 
 	while (g_pixelCount--)
 	{
@@ -273,13 +342,13 @@ void DrawHorizontalSegment(void (*movePlotterFunction)())
 			break;
 
 		movePlotterFunction();
-		g_plotterCurrentX = GET_FROM_HIRES(g_plotterHiresPos);
+		g_plotterCurrentX = GET_HIGH_BYTE(g_plotterHiresPos);
 	}
 }
 
 void DrawVerticalSegment(void (*movePlotterFunction)())
 {
-	g_plotterHiresPos = SET_HIRES(g_plotterCurrentY) | g_subpixelInitValue;
+	g_plotterHiresPos = SET_HIGH_BYTE(g_plotterCurrentY) | g_subpixelInitValue;
 
 	while (g_pixelCount--)
 	{
@@ -289,7 +358,7 @@ void DrawVerticalSegment(void (*movePlotterFunction)())
 			break;
 
 		movePlotterFunction();
-		g_plotterCurrentY = GET_FROM_HIRES(g_plotterHiresPos);
+		g_plotterCurrentY = GET_HIGH_BYTE(g_plotterHiresPos);
 	}
 }
 

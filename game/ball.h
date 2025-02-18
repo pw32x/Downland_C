@@ -12,7 +12,9 @@
 #define BALL_START_X 0x65 // 101
 #define BALL_START_Y 0x74 // 116
 
-#define BALL_SPRITE_ROWS 8
+#define BALL_SPRITE_COUNT			2
+#define BALL_SPRITE_ROWS			8
+#define BALL_WALL_SENSOR_YOFFSET	5
 
 typedef struct
 {
@@ -28,15 +30,14 @@ typedef struct
 
 	u16 previousX;
 	u16 previousY;
+	u8 frameNumber;
 	u8* currentSprite;
-	u8* previousSprite;
-	u8* sprite1;
-	u8* sprite2;
+	u8* bitShiftedSprites;
 
 	u8 fallStateCounter;
 } BallData;
 
-void Ball_Init(BallData* ballData, u8* ballSpriteData, u8 roomNumber, u8* roomsWithBouncingBall);
+void Ball_Init(BallData* ballData, u8 roomNumber, Resources* resources);
 void Ball_Update(BallData* ballData, u8* framebuffer, u8* cleanBackground);
 
 #endif

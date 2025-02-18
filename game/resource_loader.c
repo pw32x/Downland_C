@@ -1,10 +1,11 @@
 #include "resource_loader.h"
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-
 #include "base_defines.h"
+#include "ball.h"
+
+//#include <stdlib.h>
+#include <stdio.h>
+//#include <string.h>
 
 // Checks for Downland V1.1
 BOOL checksumCheck(const char* romPath)
@@ -209,6 +210,63 @@ void loadDropSpawnPositions(FILE* file, u16 start, DropSpawnPositions* dropSpawn
 	dropSpawnPositions->dropSpawnAreas = dropSpawnAreasMemory;
 }
 
+#define WIDTH_BYTES 2  // Original sprite width in bytes
+#define HEIGHT 10      // Number of rows
+#define SHIFT_COUNT 3  // Number of shifted versions
+
+void generate_shifted_sprites(u8 original[HEIGHT][WIDTH_BYTES], u8 shifted[SHIFT_COUNT][HEIGHT][3]) 
+{
+    for (int shift = 1; shift <= SHIFT_COUNT; shift++) 
+	{
+        int shift_amount = shift * 2;  // 2-bit increments
+        for (int y = 0; y < HEIGHT; y++) 
+		{
+            u32 row = original[y][0] << 16 | original[y][1] << 8; // Load row into 24-bit space
+            row <<= shift_amount;  // Shift left by the required amount
+            
+            shifted[shift - 1][y][0] = (row >> 16) & 0xFF;  // Extract upper byte
+            shifted[shift - 1][y][1] = (row >> 8) & 0xFF;   // Extract middle byte
+            shifted[shift - 1][y][2] = row & 0xFF;          // Extract lower byte
+        }
+    }
+}
+
+// assume two bytes per row
+u8* buildBitShiftedSprites(u8* spriteData, u8 spriteCount, u8 rowCount)
+{
+#define SOURCE_BYTES_PER_ROW		2
+#define DESTINATION_BYTES_PER_ROW	3
+#define NUM_BIT_SHIFTS 4
+
+	u16 bitShiftedSpriteBufferSize = spriteCount * rowCount * DESTINATION_BYTES_PER_ROW * NUM_BIT_SHIFTS;
+	u8* bitShiftedSprites = (u8*)malloc(bitShiftedSpriteBufferSize);
+	u8* bitShiftedSpritesRunner = bitShiftedSprites;
+
+	u32 workBuffer;
+
+	for (int loop = 0; loop < spriteCount; loop++)
+	{
+		for (int shiftAmount = 0; shiftAmount < NUM_BIT_SHIFTS; shiftAmount++)
+		{
+			u8* spriteDataRunner = spriteData + (loop * rowCount * SOURCE_BYTES_PER_ROW);
+
+			for (int rowLoop = 0; rowLoop < rowCount; rowLoop++)
+			{
+				workBuffer = spriteDataRunner[0] << 16 | spriteDataRunner[1] << 8;
+				workBuffer >>= (shiftAmount * 2);
+				bitShiftedSpritesRunner[0] = (u8)(workBuffer >> 16);
+				bitShiftedSpritesRunner[1] = (u8)(workBuffer >> 8);
+				bitShiftedSpritesRunner[2] = (u8)workBuffer;
+
+				spriteDataRunner += SOURCE_BYTES_PER_ROW;
+				bitShiftedSpritesRunner += DESTINATION_BYTES_PER_ROW;
+			}
+		}
+	}
+
+	return bitShiftedSprites;
+}
+
 BOOL ResourceLoader_Init(const char* romPath, Resources* resources)
 {
 	if (!checksumCheck(romPath))
@@ -253,6 +311,9 @@ BOOL ResourceLoader_Init(const char* romPath, Resources* resources)
     resources->sprite_playerSplat = getBytes(file, 0xdeef, 0xdf0a);
     resources->sprite_door = getBytes(file, 0xdf0a, 0xdf2a);
     resources->sprites_drops = getBytes(file, 0xdf2a, 0xdf5a);
+
+	// generate bit shifted sprites
+	resources->bitShiftedSprites_bouncyBall = buildBitShiftedSprites(resources->sprites_bouncyBall, BALL_SPRITE_COUNT, BALL_SPRITE_ROWS);
 
 	resources->pickupSprites[0] = resources->sprite_diamond;
 	resources->pickupSprites[1] = resources->sprite_moneyBag;
@@ -357,6 +418,8 @@ void ResourceLoader_Shutdown(Resources* resources)
     free(resources->sprite_playerSplat);
     free(resources->sprite_door);
     free(resources->sprites_drops);
+
+	// free(resources->bitShiftedSprites_bouncyBall);
 
 	// free shapes data
 	free(resources->shapeDrawData_00_Stalactite.segments);

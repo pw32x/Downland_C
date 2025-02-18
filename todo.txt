@@ -46,6 +46,9 @@ DONE draw high score in title screen
 
 draw ball
     draw ball on bit pixels
+    
+generate the offset sprites    
+    
 bird
 get room door data
 doors

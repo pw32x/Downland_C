@@ -1,9 +1,9 @@
 #include "drops_manager.h"
 
-#include <stdlib.h>
-
 #include "base_defines.h"
 #include "draw_utils.h"
+
+//#include <stdlib.h>
 
 #define DROP_SPRITE_ROWS 6
 
@@ -122,16 +122,16 @@ void DropsManager_Update(DropData* dropData,
 		{
 			// falling
 
-			u16 cleanBackgroundLocation = GET_FRAMEBUFFER_LOCATION(drop->x, GET_FROM_HIRES(drop->y));
+			u16 cleanBackgroundLocation = GET_FRAMEBUFFER_LOCATION(drop->x, GET_HIGH_BYTE(drop->y));
 
 			if ((cleanBackground[cleanBackgroundLocation + 0xc0] & drop->collisionMask) || // 6 pixels down
 				(cleanBackground[cleanBackgroundLocation + 0xe0] & drop->collisionMask) || // 7 pixels down
-				(GET_FROM_HIRES(drop->y) > FRAMEBUFFER_HEIGHT - 16)) // bottom bounds checking. not in the original game.
+				(GET_HIGH_BYTE(drop->y) > FRAMEBUFFER_HEIGHT - 16)) // bottom bounds checking. not in the original game.
 			{
 				eraseSprite_16PixelsWide(framebuffer, 
 										 cleanBackground, 
 										 drop->x,
-										 GET_FROM_HIRES(drop->y),
+										 GET_HIGH_BYTE(drop->y),
 										 drop->spriteData, 
 										 DROP_SPRITE_ROWS);
 
@@ -143,7 +143,7 @@ void DropsManager_Update(DropData* dropData,
 		eraseSprite_16PixelsWide(framebuffer, 
 								 cleanBackground, 
 								 drop->x,
-								 GET_FROM_HIRES(drop->y),
+								 GET_HIGH_BYTE(drop->y),
 								 drop->spriteData, 
 								 DROP_SPRITE_ROWS);
 
@@ -152,7 +152,7 @@ void DropsManager_Update(DropData* dropData,
 		drop->speedY = DROP_FALL_SPEED;
 
 		// draw sprite
-		drawSprite_16PixelsWide(drop->spriteData, drop->x, GET_FROM_HIRES(drop->y), DROP_SPRITE_ROWS, framebuffer);
+		drawSprite_16PixelsWide(drop->spriteData, drop->x, GET_HIGH_BYTE(drop->y), DROP_SPRITE_ROWS, framebuffer);
 
 		drops += 2; // skip to the second drop
 	}

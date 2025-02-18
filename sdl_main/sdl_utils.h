@@ -1,8 +1,11 @@
 #ifndef SDL_UTILS_INCLUDE_H
 #define SDL_UTILS_INCLUDE_H
 
-#include <SDL3/SDL.h>
+#include "../game/base_defines.h"
 #include "../game/base_types.h"
+
+#include <SDL3/SDL.h>
+
 
 // Convert the 1-bit framebuffer into a texture
 void SDLUtils_updateFramebufferTexture(u8* framebuffer, 

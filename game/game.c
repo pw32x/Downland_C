@@ -1,6 +1,6 @@
 #include "game.h"
 
-#include <stdlib.h>
+//#include <stdlib.h>
 
 #include "draw_utils.h"
 #include "rooms.h"

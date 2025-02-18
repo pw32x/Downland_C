@@ -189,10 +189,7 @@ void room_init(Room* room, GameData* gameData, Resources* resources)
 	gameData->dropData.dropSpawnPositions = &resources->roomResources[roomNumber].dropSpawnPositions;
 	DropsManager_Init(&gameData->dropData, roomNumber, gameData->gameCompletionCount);
 
-	Ball_Init(&gameData->ballData, 
-			  resources->sprites_bouncyBall, 
-			  roomNumber,
-			  resources->roomsWithBouncingBall);
+	Ball_Init(&gameData->ballData, roomNumber, resources);
 
 	drawText(resources->text_pl1, 
 			 resources->characterFont, 

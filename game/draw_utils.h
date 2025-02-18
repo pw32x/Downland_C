@@ -14,6 +14,10 @@ void drawText(u8* text, u8* characterFont, u8* framebuffer, u16 framebufferPosit
 void drawSprite_16PixelsWide(u8* sprite, u8 x, u8 y, u8 numLines, u8* framebuffer);
 void eraseSprite_16PixelsWide(u8* framebuffer, u8* cleanBackground, u8 x, u8 y, u8* spriteData, u8 rowCount);
 
+void drawSprite_24PixelsWide(u8* sprite, u8 x, u8 y, u8 numLines, u8* framebuffer);
+void eraseSprite_24PixelsWide(u8* framebuffer, u8* cleanBackground, u8 x, u8 y, u8* spriteData, u8 rowCount);
+
+
 void drawBackground(const BackgroundDrawData* backgroundDrawData, 
 					const Resources* resources,
 					u8* framebuffer);

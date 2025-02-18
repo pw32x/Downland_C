@@ -1,6 +1,10 @@
 #ifndef BASE_DEFINES_INCLUDE_H
 #define BASE_DEFINES_INCLUDE_H
 
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+
 #define FRAMEBUFFER_WIDTH  256
 #define FRAMEBUFFER_HEIGHT 192
 #define FRAMEBUFFER_PITCH  (FRAMEBUFFER_WIDTH / 8)
@@ -42,9 +46,8 @@
 #define CHAR_9		9
 #define CHAR_SPACE 0x24
 
-#define SET_HIRES(v) (v << 8)
-#define GET_FROM_HIRES(v) ((u8)(v >> 8))
-#define GET_HIGH_BYTE GET_FROM_HIRES
+#define SET_HIGH_BYTE(v) (v << 8)
+#define GET_HIGH_BYTE(v) ((u8)(v >> 8))
 #define GET_LOW_BYTE(v) ((u8)v)
 
 #endif

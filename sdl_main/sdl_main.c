@@ -22,6 +22,7 @@ SDL_Texture* framebufferTexture = NULL;
 SDL_Texture* crtFramebufferTexture = NULL;
 
 BOOL paused = false;
+BOOL stepFrame = false;
 
 Resources resources;
 GameData gameData;
@@ -97,6 +98,11 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
         {
             paused = !paused;
         }
+        else if (event->key.key == SDLK_SPACE)
+        {
+            stepFrame = TRUE;
+            paused = FALSE;
+        }
 
         if (event->key.key == SDLK_TAB || 
             event->key.key == SDLK_GRAVE)
@@ -149,6 +155,8 @@ void Update_Controls(JoystickState* joystickState)
 SDL_AppResult SDL_AppIterate(void *appstate)
 {
     Uint64 frameStartTime = SDL_GetPerformanceCounter();
+
+
 
     if (!paused)
     {
@@ -211,6 +219,12 @@ SDL_AppResult SDL_AppIterate(void *appstate)
     if (remainingTime > 0) 
     {
         SDL_Delay((Uint32)(remainingTime * 1000)); // Convert to milliseconds
+    }
+
+    if (stepFrame)
+    {
+        paused = TRUE;
+        stepFrame = FALSE;
     }
 
     return SDL_APP_CONTINUE;

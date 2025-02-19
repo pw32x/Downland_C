@@ -1,6 +1,14 @@
 #include "ball.h"
 #include "draw_utils.h"
 
+#define BALL_INACTIVE			0
+#define BALL_RESETTING_MAYBE	1
+#define BALL_ACTIVE				2
+#define BALL_DYING_MAYBE		0xff
+
+#define BALL_START_X 0x65 // 101
+#define BALL_START_Y 0x74 // 116
+
 u8 collisionCheckXOffsets[4] = { 0, 0, 0, 1 };
 
 #define BITSHIFTED_SPRITE_FRAME_SIZE (BALL_SPRITE_ROWS * 3) // rows * 3 bytes per row
@@ -34,10 +42,9 @@ void initBallPhysics(BallData* ballData)
 	ballData->y = SET_HIGH_BYTE(BALL_START_Y);
 	ballData->speedx = 0xffa8;
 	ballData->speedy = 0;
-	ballData->frameNumber = 0;
 
 	ballData->currentSprite = getCurrentSprite(ballData->bitShiftedSprites, 
-											   ballData->frameNumber,
+											   0,
 											   BALL_START_X & 3,
 											   BITSHIFTED_SPRITE_FRAME_SIZE);
 }
@@ -77,21 +84,12 @@ void Ball_Update(BallData* ballData, u8* framebuffer, u8* cleanBackground)
 	if (!ballData->state)
 	{
 		initBallPhysics(ballData);
+		return;
 	}
 
-	eraseSprite_24PixelsWide(framebuffer, 
-							 cleanBackground,
-							 GET_HIGH_BYTE(ballData->x),
-							 GET_HIGH_BYTE(ballData->y),
-							 ballData->currentSprite,
-							 BALL_SPRITE_ROWS);
-
-	s8 fallStateCounterSigned = (s8)ballData->fallStateCounter;
-
-	if (fallStateCounterSigned > 0)
+	if ((s8)ballData->fallStateCounter > 0)
 	{
 		// jumping up
-		ballData->frameNumber = 0;
 		ballData->speedy += 0xa;
 		ballData->fallStateCounter--;
 
@@ -100,10 +98,9 @@ void Ball_Update(BallData* ballData, u8* framebuffer, u8* cleanBackground)
 			ballData->speedy = 0;
 		}
 	}
-	else if (fallStateCounterSigned < 0)
+	else if ((s8)ballData->fallStateCounter < 0)
 	{
 		// on ground
-		ballData->frameNumber = 1;
 		ballData->fallStateCounter++;
 
 		if (!ballData->fallStateCounter)
@@ -115,7 +112,6 @@ void Ball_Update(BallData* ballData, u8* framebuffer, u8* cleanBackground)
 	else
 	{
 		// falling
-		ballData->frameNumber = 0;
 		u8 pixelX = GET_HIGH_BYTE(ballData->x);
 		u8 tableIndex = pixelX & 0x3;
 		u8 collectionCheckXOffset = collisionCheckXOffsets[tableIndex]; // offset the x byte position depending on x pixel position
@@ -142,40 +138,54 @@ void Ball_Update(BallData* ballData, u8* framebuffer, u8* cleanBackground)
 			// assume we've hit something
 			ballData->speedy = 0xff00;
 			ballData->fallStateCounter = 0xfb;
-
-			// change the sprite to squished
-			ballData->frameNumber = 1;
 		}
 	}
 
-	if (!ballData->frameNumber)
-		ballData->x += ballData->speedx;
 
-	ballData->y += ballData->speedy;
 
-	// check again for collision, but for a wall
-	u8 pixelX = GET_HIGH_BYTE(ballData->x);
-	u8 tableIndex = pixelX & 0x3;
-	u8 collectionCheckXOffset = collisionCheckXOffsets[tableIndex]; // offset the x byte position depending on x pixel position
-	u16 ballWideCollisionMask = ballWideCollisionMasks[tableIndex]; // different masks for different x pixel positions
+	
+	eraseSprite_24PixelsWide(framebuffer, 
+							 cleanBackground,
+							 GET_HIGH_BYTE(ballData->x),
+							 GET_HIGH_BYTE(ballData->y),
+							 ballData->currentSprite,
+							 BALL_SPRITE_ROWS);
 
-	u8 sensorX = pixelX + collectionCheckXOffset;
-	u8 sensorY = GET_HIGH_BYTE(ballData->y) + BALL_WALL_SENSOR_YOFFSET;
-
-	u16 framebufferPosition = GET_FRAMEBUFFER_LOCATION(sensorX, sensorY);
-
-	// if hitting something, reset
-	if ((cleanBackground[framebufferPosition] & GET_HIGH_BYTE(ballWideCollisionMask)) != 0 ||
-		(cleanBackground[framebufferPosition + 1] & GET_LOW_BYTE(ballWideCollisionMask)) != 0)
+	if ((s8)ballData->fallStateCounter >= 0)
 	{
-		ballData->state = 0xff;
-		initBallPhysics(ballData);
+		ballData->x += ballData->speedx;
+		ballData->y += ballData->speedy;	
+
+		// check again for collision, but for a wall
+		u8 pixelX = GET_HIGH_BYTE(ballData->x);
+		u8 tableIndex = pixelX & 0x3;
+		u8 collectionCheckXOffset = collisionCheckXOffsets[tableIndex]; // offset the x byte position depending on x pixel position
+		u16 ballWideCollisionMask = ballWideCollisionMasks[tableIndex]; // different masks for different x pixel positions
+
+		u8 sensorX = pixelX + collectionCheckXOffset;
+		u8 sensorY = GET_HIGH_BYTE(ballData->y) + BALL_WALL_SENSOR_YOFFSET;
+
+		u16 framebufferPosition = GET_FRAMEBUFFER_LOCATION(sensorX, sensorY);
+
+		// if hitting something, reset
+		if ((cleanBackground[framebufferPosition] & GET_HIGH_BYTE(ballWideCollisionMask)) != 0 ||
+			(cleanBackground[framebufferPosition + 1] & GET_LOW_BYTE(ballWideCollisionMask)) != 0)
+		{
+			ballData->state = 0xff;
+			//initBallPhysics(ballData);
+		}
 	}
 
 	ballData->currentSprite = getCurrentSprite(ballData->bitShiftedSprites, 
-											   ballData->frameNumber, 
+											   ((s8)ballData->fallStateCounter < 0), // sprite 0 (not squished) if fallStateCounterSigned >= 0, else sprite 1 (squished)
 											   GET_HIGH_BYTE(ballData->x) & 3, 
 											   BITSHIFTED_SPRITE_FRAME_SIZE);
+
+	if (ballData->state == 0xff)
+	{
+		ballData->state = 0;
+		return;
+	}
 
 	drawSprite_24PixelsWide(ballData->currentSprite, 
 							GET_HIGH_BYTE(ballData->x), 

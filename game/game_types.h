@@ -48,6 +48,8 @@ typedef struct
 	u32 playerOneScore;
 	u32 playerTwoScore;
 	u32 highScore;
+
+	u32 paused;
 } GameData;
 
 #endif

@@ -21,7 +21,6 @@ static SDL_Renderer *renderer = NULL;
 SDL_Texture* framebufferTexture = NULL;
 SDL_Texture* crtFramebufferTexture = NULL;
 
-BOOL paused = false;
 BOOL stepFrame = false;
 
 Resources resources;
@@ -96,12 +95,12 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
     {
         if (event->key.key == SDLK_ESCAPE)
         {
-            paused = !paused;
+            gameData.paused = !gameData.paused;
         }
-        else if (event->key.key == SDLK_SPACE)
+        else if (event->key.key == SDLK_SPACE && gameData.currentRoom->roomNumber != TITLESCREEN_ROOM_INDEX)
         {
             stepFrame = TRUE;
-            paused = FALSE;
+            gameData.paused = FALSE;
         }
 
         if (event->key.key == SDLK_TAB || 
@@ -158,7 +157,7 @@ SDL_AppResult SDL_AppIterate(void *appstate)
 
 
 
-    if (!paused)
+    if (!gameData.paused)
     {
         Update_Controls(&gameData.joystickState);
         Game_Update(&gameData, &resources);
@@ -192,12 +191,13 @@ SDL_AppResult SDL_AppIterate(void *appstate)
         gameStartTime = currentTime;
     }
      
-#if 0
+#if 1
     // write debug text
     SDL_SetRenderScale(renderer, 1.5f, 1.5f);
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
 
     // SDL_RenderDebugText(renderer, 10.0f, 10.0f, "Some debug text");
+    /*
     SDL_RenderDebugTextFormat(renderer, 10.0f, 20.0f, "Fps: %f", fps);
 
     SDL_RenderDebugTextFormat(renderer, 10.0f, 30.0f, "left: %d", gameData.joystickState.leftDown);
@@ -205,6 +205,12 @@ SDL_AppResult SDL_AppIterate(void *appstate)
     SDL_RenderDebugTextFormat(renderer, 10.0f, 50.0f, "up: %d", gameData.joystickState.upDown);
     SDL_RenderDebugTextFormat(renderer, 10.0f, 60.0f, "down: %d", gameData.joystickState.downDown);
     SDL_RenderDebugTextFormat(renderer, 10.0f, 70.0f, "jump: %d", gameData.joystickState.jumpDown);
+    */
+
+    SDL_RenderDebugTextFormat(renderer, 10.0f, 30.0f, "y: %x", gameData.ballData.y);
+    SDL_RenderDebugTextFormat(renderer, 10.0f, 40.0f, "x: %x", gameData.ballData.x);
+    SDL_RenderDebugTextFormat(renderer, 10.0f, 50.0f, "fallcounter: %x", gameData.ballData.fallStateCounter);
+
 
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
     SDL_SetRenderScale(renderer, 1.0f, 1.0f);
@@ -223,7 +229,7 @@ SDL_AppResult SDL_AppIterate(void *appstate)
 
     if (stepFrame)
     {
-        paused = TRUE;
+        gameData.paused = TRUE;
         stepFrame = FALSE;
     }
 

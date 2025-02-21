@@ -1,5 +1,6 @@
 #include "ball.h"
 #include "draw_utils.h"
+#include "debug_utils.h"
 
 #define BALL_INACTIVE			0
 #define BALL_RESETTING_MAYBE	1
@@ -140,9 +141,6 @@ void Ball_Update(BallData* ballData, u8* framebuffer, u8* cleanBackground)
 			ballData->fallStateCounter = 0xfb;
 		}
 	}
-
-
-
 	
 	eraseSprite_24PixelsWide(framebuffer, 
 							 cleanBackground,
@@ -172,7 +170,6 @@ void Ball_Update(BallData* ballData, u8* framebuffer, u8* cleanBackground)
 			(cleanBackground[framebufferPosition + 1] & GET_LOW_BYTE(ballWideCollisionMask)) != 0)
 		{
 			ballData->state = 0xff;
-			//initBallPhysics(ballData);
 		}
 	}
 
@@ -191,8 +188,4 @@ void Ball_Update(BallData* ballData, u8* framebuffer, u8* cleanBackground)
 							GET_HIGH_BYTE(ballData->x), 
 							GET_HIGH_BYTE(ballData->y), 
 							BALL_SPRITE_ROWS, framebuffer);
-
-	//ballData->state++;
-	// ball is active.
-
 }

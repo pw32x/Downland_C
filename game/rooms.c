@@ -174,11 +174,11 @@ void updateTimers(u8 roomNumber, u16* roomTimers)
 }
 
 
-void room_draw(u8 roomNumber, u8* framebuffer, Resources* resources)
+void room_draw(u8 roomNumber, GameData* gameData, Resources* resources)
 {
 	drawBackground(&resources->roomResources[roomNumber].backgroundDrawData, 
 				   resources,
-				   framebuffer);
+				   gameData->cleanBackground);
 }
 
 void room_init(Room* room, GameData* gameData, Resources* resources)
@@ -329,7 +329,7 @@ void transition_init(Room* targetRoom, GameData* gameData, Resources* resources)
 {
 	// init the clean background with the target room. 
 	// we'll be slowly revealing it during the room transition.
-	targetRoom->draw(gameData->transitionRoomNumber, gameData->cleanBackground, resources);
+	targetRoom->draw(gameData->transitionRoomNumber, (struct GameData*)gameData, resources);
 
 	// setup screen transition
 	gameData->transitionInitialDelay = 30;

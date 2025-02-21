@@ -205,12 +205,12 @@ SDL_AppResult SDL_AppIterate(void *appstate)
     SDL_RenderDebugTextFormat(renderer, 10.0f, 50.0f, "up: %d", gameData.joystickState.upDown);
     SDL_RenderDebugTextFormat(renderer, 10.0f, 60.0f, "down: %d", gameData.joystickState.downDown);
     SDL_RenderDebugTextFormat(renderer, 10.0f, 70.0f, "jump: %d", gameData.joystickState.jumpDown);
-    */
+
 
     SDL_RenderDebugTextFormat(renderer, 10.0f, 30.0f, "y: %x", gameData.ballData.y);
     SDL_RenderDebugTextFormat(renderer, 10.0f, 40.0f, "x: %x", gameData.ballData.x);
     SDL_RenderDebugTextFormat(renderer, 10.0f, 50.0f, "fallcounter: %x", gameData.ballData.fallStateCounter);
-
+    */
 
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
     SDL_SetRenderScale(renderer, 1.0f, 1.0f);

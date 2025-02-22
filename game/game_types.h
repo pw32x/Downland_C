@@ -11,6 +11,7 @@
 #include "string_utils.h"
 #include "ball.h"
 #include "bird.h"
+#include "player.h"
 
 #define ROOM_TIMER_DEFAULT 4096
 
@@ -30,6 +31,7 @@ typedef struct
 	RoomPickups gamePickups;
 	BallData ballData;
 	BirdData birdData;
+	PlayerData playerData;
 
 	// used for screen transitions
 	u8 transitionRoomNumber;

@@ -51,8 +51,9 @@ typedef struct
     u8* sprites_drops;                  // 0xdf2a
 
     // bit shifted sprites
-    u8* bitShiftedSprites_bouncyBall;   // 0xde7b
-    u8* bitShiftedSprites_bird;         // 0xde9b
+    u8* bitShiftedSprites_player;
+    u8* bitShiftedSprites_bouncyBall;
+    u8* bitShiftedSprites_bird;
 
     u8* pickupSprites[3];
 

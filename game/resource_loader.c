@@ -3,6 +3,7 @@
 #include "base_defines.h"
 #include "ball.h"
 #include "bird.h"
+#include "player.h"
 
 //#include <stdlib.h>
 #include <stdio.h>
@@ -302,7 +303,7 @@ BOOL ResourceLoader_Init(const char* romPath, Resources* resources)
 	resources->text_chamber = getBytes(file, 0xdb04, 0xdb0c);
 
 	// get sprites
-    resources->sprites_player = getBytes(file, 0xdcd6, 0xde17);
+    resources->sprites_player = getBytes(file, 0xdcd7, 0xde17);
     resources->collisionmask_player = getBytes(file, 0xde17, 0xde7b);
     resources->sprites_bouncyBall = getBytes(file, 0xde7b, 0xde9b);
     resources->sprites_bird = getBytes(file, 0xde9b, 0xdeb3);
@@ -314,6 +315,7 @@ BOOL ResourceLoader_Init(const char* romPath, Resources* resources)
     resources->sprites_drops = getBytes(file, 0xdf2a, 0xdf5a);
 
 	// generate bit shifted sprites
+	resources->bitShiftedSprites_player = buildBitShiftedSprites(resources->sprites_player, PLAYER_SPRITE_COUNT, PLAYER_SPRITE_ROWS);
 	resources->bitShiftedSprites_bouncyBall = buildBitShiftedSprites(resources->sprites_bouncyBall, BALL_SPRITE_COUNT, BALL_SPRITE_ROWS);
 	resources->bitShiftedSprites_bird = buildBitShiftedSprites(resources->sprites_bird, BIRD_SPRITE_COUNT, BIRD_SPRITE_ROWS);
 

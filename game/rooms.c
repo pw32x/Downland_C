@@ -10,6 +10,7 @@
 #include "game.h"
 #include "ball.h"
 #include "bird.h"
+#include "player.h"
 
 void titleScreen_draw(u8 roomNumber, GameData* gameData, Resources* resources)
 {
@@ -135,17 +136,17 @@ void drawPickups(Pickup* pickups,
 
 #define PLAYERICON_NUM_SPRITE_ROWS 7
 
-// won't work until I have the player sprite working with subpixels
+// this is all wrong
 void drawPlayerLives(u8 playerLives,
-					 u8* playerSprite,
+					 u8* playerBitShiftedSprite,
 					 u8* framebuffer)
 {
 	u8 x = PLAYERLIVES_ICON_X;
 	u8 y = PLAYERLIVES_ICON_Y;
 
-	for (u8 loop = 0; loop < playerLives; loop++)
+	for (u8 loop = 0; loop <= playerLives; loop++)
 	{
-		drawSprite_16PixelsWide(playerSprite,
+		drawSprite_24PixelsWide(playerBitShiftedSprite,
 								x, 
 								y, 
 								PLAYERICON_NUM_SPRITE_ROWS,
@@ -192,6 +193,7 @@ void room_init(Room* room, GameData* gameData, Resources* resources)
 
 	Ball_Init(&gameData->ballData, roomNumber, resources);
 	Bird_Init(&gameData->birdData, roomNumber, resources);
+	Player_Init(&gameData->playerData, resources);
 
 	drawText(resources->text_pl1, 
 			 resources->characterFont, 
@@ -210,9 +212,9 @@ void room_init(Room* room, GameData* gameData, Resources* resources)
 			 gameData->framebuffer, 
 			 CHAMBER_NUMBER_TEXT_DRAW_LOCATION);
 
-	//drawPlayerLives(gameData->playerLives,
-	//				resources->sprites_player,
-	//				gameData->framebuffer);
+	drawPlayerLives(gameData->playerLives,
+					gameData->playerData.currentSprite,
+					gameData->framebuffer);
 
 	convertScoreToString(gameData->playerOneScore, gameData->string_playerOneScore);
 
@@ -235,6 +237,7 @@ void room_update(Room* room, GameData* gameData, Resources* resources)
 
 	Ball_Update(&gameData->ballData, gameData->framebuffer, gameData->cleanBackground);
 	Bird_Update(&gameData->birdData, currentTimer, gameData->framebuffer, gameData->cleanBackground);
+	Player_Update(&gameData->playerData, gameData->framebuffer, gameData->cleanBackground);
 
 	DropsManager_Update(&gameData->dropData, 
 						gameData->framebuffer, 

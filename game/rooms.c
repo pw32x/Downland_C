@@ -138,15 +138,21 @@ void drawPickups(Pickup* pickups,
 
 // this is all wrong
 void drawPlayerLives(u8 playerLives,
-					 u8* playerBitShiftedSprite,
+					 u8 currentFrame,
+					 u8* playerBitShiftedSprites,
 					 u8* framebuffer)
 {
 	u8 x = PLAYERLIVES_ICON_X;
 	u8 y = PLAYERLIVES_ICON_Y;
 
-	for (u8 loop = 0; loop <= playerLives; loop++)
+	u8* currentSprite = getBitShiftedSprite(playerBitShiftedSprites, 
+											currentFrame, 
+											0, 
+											PLAYER_BITSHIFTED_SPRITE_FRAME_SIZE);
+
+	for (u8 loop = 0; loop < playerLives; loop++)
 	{
-		drawSprite_24PixelsWide(playerBitShiftedSprite,
+		drawSprite_24PixelsWide(currentSprite,
 								x, 
 								y, 
 								PLAYERICON_NUM_SPRITE_ROWS,
@@ -213,7 +219,8 @@ void room_init(Room* room, GameData* gameData, Resources* resources)
 			 CHAMBER_NUMBER_TEXT_DRAW_LOCATION);
 
 	drawPlayerLives(gameData->playerLives,
-					gameData->playerData.currentSprite,
+					gameData->playerData.currentFrame,
+					gameData->playerData.bitShiftedSprites,
 					gameData->framebuffer);
 
 	convertScoreToString(gameData->playerOneScore, gameData->string_playerOneScore);
@@ -237,7 +244,7 @@ void room_update(Room* room, GameData* gameData, Resources* resources)
 
 	Ball_Update(&gameData->ballData, gameData->framebuffer, gameData->cleanBackground);
 	Bird_Update(&gameData->birdData, currentTimer, gameData->framebuffer, gameData->cleanBackground);
-	Player_Update(&gameData->playerData, gameData->framebuffer, gameData->cleanBackground);
+	Player_Update(&gameData->playerData, &gameData->joystickState, gameData->framebuffer, gameData->cleanBackground);
 
 	DropsManager_Update(&gameData->dropData, 
 						gameData->framebuffer, 

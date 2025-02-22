@@ -7,10 +7,11 @@
 #define PLAYER_ACTIVE			2
 #define PLAYER_DYING_MAYBE		0xff
 
+#define PLAYER_RUN_SPEED_LEFT	0xffca
+#define PLAYER_RUN_SPEED_RIGHT	0x36
+
 #define PLAYER_START_X 0x70 // 112
 #define PLAYER_START_Y 0xa5 // 165
-
-#define BITSHIFTED_SPRITE_FRAME_SIZE (PLAYER_SPRITE_ROWS * 3) // rows * 3 bytes per row
 
 #define PLAYERSPRITE_RIGHT_STAND		0
 #define PLAYERSPRITE_RIGHT_RUN0			1
@@ -23,7 +24,7 @@
 #define PLAYERSPRITE_LEFT_RUN1_JUMP		8
 #define PLAYERSPRITE_LEFT_RUN2			9
 
-void Player_Init(PlayerData* playerData, Resources* resources)
+void Player_Init(PlayerData* playerData, const Resources* resources)
 {
 	playerData->state = PLAYER_RESETTING_MAYBE;
 	playerData->x = SET_HIGH_BYTE(PLAYER_START_X);
@@ -37,10 +38,10 @@ void Player_Init(PlayerData* playerData, Resources* resources)
 	playerData->currentSprite = getBitShiftedSprite(playerData->bitShiftedSprites, 
 											        playerData->currentFrame,
 											        PLAYER_START_X & 3,
-											        BITSHIFTED_SPRITE_FRAME_SIZE);
+											        PLAYER_BITSHIFTED_SPRITE_FRAME_SIZE);
 }
 
-void Player_Update(PlayerData* playerData, u8* framebuffer, u8* cleanBackground)
+void Player_Update(PlayerData* playerData, const JoystickState* joystickState, u8* framebuffer, u8* cleanBackground)
 {
 	eraseSprite_24PixelsWide(framebuffer, 
 							 cleanBackground,
@@ -49,16 +50,30 @@ void Player_Update(PlayerData* playerData, u8* framebuffer, u8* cleanBackground)
 							 playerData->currentSprite,
 							 PLAYER_SPRITE_ROWS);
 
-	playerData->currentSprite = getBitShiftedSprite(playerData->bitShiftedSprites, 
-												    playerData->currentFrame,
-												    GET_HIGH_BYTE(playerData->x) & 3, 
-												    BITSHIFTED_SPRITE_FRAME_SIZE);
-
 	if (playerData->state == 0xff)
 	{
 		playerData->state = 0;
 		return;
 	}
+
+	playerData->speedx = 0;
+
+	if (joystickState->leftDown)
+	{
+		playerData->speedx = PLAYER_RUN_SPEED_LEFT;
+	}
+	else if (joystickState->rightDown)
+	{
+		playerData->speedx = PLAYER_RUN_SPEED_RIGHT;
+	}
+
+	playerData->x += playerData->speedx;
+	playerData->y += playerData->speedy;
+
+	playerData->currentSprite = getBitShiftedSprite(playerData->bitShiftedSprites, 
+												    playerData->currentFrame,
+												    GET_HIGH_BYTE(playerData->x) & 3, 
+												    PLAYER_BITSHIFTED_SPRITE_FRAME_SIZE);
 
 	drawSprite_24PixelsWide(playerData->currentSprite, 
 							GET_HIGH_BYTE(playerData->x), 

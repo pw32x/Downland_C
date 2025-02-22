@@ -75,7 +75,7 @@ draw lives correctly
 get room door data
 doors
 
-fix 
+handle two players
 
 change room    
 door triggers

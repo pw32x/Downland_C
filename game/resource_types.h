@@ -42,7 +42,6 @@ typedef struct
     u8* sprites_player;                 // 0xdcd6
     u8* collisionmask_player;           // 0xde17
     u8* sprites_bouncyBall;             // 0xde7b
-    u8* bitShiftedSprites_bouncyBall;   // 0xde7b
     u8* sprites_bird;                   // 0xde9b
     u8* sprite_moneyBag;                // 0xdeb3
     u8* sprite_diamond;                 // 0xdec7
@@ -50,6 +49,10 @@ typedef struct
     u8* sprite_playerSplat;             // 0xdeef
     u8* sprite_door;                    // 0xdf0a
     u8* sprites_drops;                  // 0xdf2a
+
+    // bit shifted sprites
+    u8* bitShiftedSprites_bouncyBall;   // 0xde7b
+    u8* bitShiftedSprites_bird;         // 0xde9b
 
     u8* pickupSprites[3];
 

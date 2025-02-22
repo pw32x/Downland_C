@@ -168,6 +168,12 @@ void eraseSprite_24PixelsWide(u8* framebuffer,
 	}
 }
 
+u8* getBitShiftedSprite(u8* bitShiftedSpriteData, u8 frameNumber, u8 x, u8 spriteFrameSize)
+{
+	// x will be 0 to 3
+	return bitShiftedSpriteData + (frameNumber * (spriteFrameSize * 4)) + (x * spriteFrameSize);
+}
+
 /*
 // keeping these just in case
 void eraseSprite(u8* framebuffer, 

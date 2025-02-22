@@ -30,12 +30,6 @@ u16 ballWideCollisionMasks[4] =
     0xffc0, // 1111111111000000b
 };
 
-u8* getCurrentSprite(u8* spriteData, u8 frameNumber, u8 x, u8 spriteFrameSize)
-{
-	// x will be 0 to 3
-	return spriteData + (frameNumber * (spriteFrameSize * 4)) + (x * spriteFrameSize);
-}
-
 void initBallPhysics(BallData* ballData)
 {
 	ballData->state = BALL_RESETTING_MAYBE;
@@ -44,10 +38,10 @@ void initBallPhysics(BallData* ballData)
 	ballData->speedx = 0xffa8;
 	ballData->speedy = 0;
 
-	ballData->currentSprite = getCurrentSprite(ballData->bitShiftedSprites, 
-											   0,
-											   BALL_START_X & 3,
-											   BITSHIFTED_SPRITE_FRAME_SIZE);
+	ballData->currentSprite = getBitShiftedSprite(ballData->bitShiftedSprites, 
+											      0,
+											      BALL_START_X & 3,
+											      BITSHIFTED_SPRITE_FRAME_SIZE);
 }
 
 void Ball_Init(BallData* ballData, u8 roomNumber, Resources* resources)
@@ -173,10 +167,10 @@ void Ball_Update(BallData* ballData, u8* framebuffer, u8* cleanBackground)
 		}
 	}
 
-	ballData->currentSprite = getCurrentSprite(ballData->bitShiftedSprites, 
-											   ((s8)ballData->fallStateCounter < 0), // sprite 0 (not squished) if fallStateCounterSigned >= 0, else sprite 1 (squished)
-											   GET_HIGH_BYTE(ballData->x) & 3, 
-											   BITSHIFTED_SPRITE_FRAME_SIZE);
+	ballData->currentSprite = getBitShiftedSprite(ballData->bitShiftedSprites, 
+												  ((s8)ballData->fallStateCounter < 0), // sprite 0 (not squished) if fallStateCounterSigned >= 0, else sprite 1 (squished)
+												  GET_HIGH_BYTE(ballData->x) & 3, 
+												  BITSHIFTED_SPRITE_FRAME_SIZE);
 
 	if (ballData->state == 0xff)
 	{
@@ -187,5 +181,6 @@ void Ball_Update(BallData* ballData, u8* framebuffer, u8* cleanBackground)
 	drawSprite_24PixelsWide(ballData->currentSprite, 
 							GET_HIGH_BYTE(ballData->x), 
 							GET_HIGH_BYTE(ballData->y), 
-							BALL_SPRITE_ROWS, framebuffer);
+							BALL_SPRITE_ROWS, 
+							framebuffer);
 }

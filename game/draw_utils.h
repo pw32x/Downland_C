@@ -17,6 +17,7 @@ void eraseSprite_16PixelsWide(u8* framebuffer, u8* cleanBackground, u8 x, u8 y, 
 void drawSprite_24PixelsWide(u8* sprite, u8 x, u8 y, u8 numLines, u8* framebuffer);
 void eraseSprite_24PixelsWide(u8* framebuffer, u8* cleanBackground, u8 x, u8 y, u8* spriteData, u8 rowCount);
 
+u8* getBitShiftedSprite(u8* bitShiftedSpriteData, u8 frameNumber, u8 x, u8 spriteFrameSize);
 
 void drawBackground(const BackgroundDrawData* backgroundDrawData, 
 					const Resources* resources,

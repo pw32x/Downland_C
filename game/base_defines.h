@@ -47,7 +47,7 @@
 #define CHAR_SPACE 0x24
 
 #define SET_HIGH_BYTE(v) (v << 8)
-#define GET_HIGH_BYTE(v) ((u8)(v >> 8))
+#define GET_HIGH_BYTE(v) ((u8)((v) >> 8))
 #define GET_LOW_BYTE(v) ((u8)v)
 
 #endif

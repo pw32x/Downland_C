@@ -74,6 +74,9 @@
     <ClInclude Include="..\game\debug_utils.h">
       <Filter>game</Filter>
     </ClInclude>
+    <ClInclude Include="..\game\bird.h">
+      <Filter>game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Downland.ico">
@@ -119,6 +122,9 @@
       <Filter>game</Filter>
     </ClCompile>
     <ClCompile Include="..\game\debug_utils.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\game\bird.c">
       <Filter>game</Filter>
     </ClCompile>
   </ItemGroup>

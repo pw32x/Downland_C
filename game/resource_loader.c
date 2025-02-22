@@ -2,6 +2,7 @@
 
 #include "base_defines.h"
 #include "ball.h"
+#include "bird.h"
 
 //#include <stdlib.h>
 #include <stdio.h>
@@ -314,6 +315,7 @@ BOOL ResourceLoader_Init(const char* romPath, Resources* resources)
 
 	// generate bit shifted sprites
 	resources->bitShiftedSprites_bouncyBall = buildBitShiftedSprites(resources->sprites_bouncyBall, BALL_SPRITE_COUNT, BALL_SPRITE_ROWS);
+	resources->bitShiftedSprites_bird = buildBitShiftedSprites(resources->sprites_bird, BIRD_SPRITE_COUNT, BIRD_SPRITE_ROWS);
 
 	resources->pickupSprites[0] = resources->sprite_diamond;
 	resources->pickupSprites[1] = resources->sprite_moneyBag;
@@ -419,7 +421,8 @@ void ResourceLoader_Shutdown(Resources* resources)
     free(resources->sprite_door);
     free(resources->sprites_drops);
 
-	// free(resources->bitShiftedSprites_bouncyBall);
+	free(resources->bitShiftedSprites_bouncyBall);
+	free(resources->bitShiftedSprites_bird);
 
 	// free shapes data
 	free(resources->shapeDrawData_00_Stalactite.segments);

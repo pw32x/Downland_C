@@ -44,14 +44,14 @@ DONE draw score in game screen
 DONE draw score in title screen
 DONE draw high score in title screen
 
-draw ball
+DONE draw ball
     draw ball on bit pixels
     
-generate the offset sprites    
+DONE generate the offset sprites    
     
-bird
-get room door data
-doors
+DONE bird
+DONE add timer trigger
+
 
 
 
@@ -59,8 +59,15 @@ player
 draw lives
     collision detection
 scoring of points
+
+
+get room door data
+doors
+
+
 change room    
 door triggers
+
 
 
 analog stick support

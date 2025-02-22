@@ -9,6 +9,7 @@
 #include "string_utils.h"
 #include "game.h"
 #include "ball.h"
+#include "bird.h"
 
 void titleScreen_draw(u8 roomNumber, GameData* gameData, Resources* resources)
 {
@@ -190,6 +191,7 @@ void room_init(Room* room, GameData* gameData, Resources* resources)
 	DropsManager_Init(&gameData->dropData, roomNumber, gameData->gameCompletionCount);
 
 	Ball_Init(&gameData->ballData, roomNumber, resources);
+	Bird_Init(&gameData->birdData, roomNumber, resources);
 
 	drawText(resources->text_pl1, 
 			 resources->characterFont, 
@@ -200,6 +202,8 @@ void room_init(Room* room, GameData* gameData, Resources* resources)
 			 resources->characterFont, 
 			 gameData->framebuffer, 
 			 CHAMBER_TEXT_DRAW_LOCATION);
+
+	gameData->string_roomNumber[0] = roomNumber;
 
 	drawText(gameData->string_roomNumber, 
 			 resources->characterFont, 
@@ -226,7 +230,11 @@ void room_update(Room* room, GameData* gameData, Resources* resources)
 				gameData->currentPlayer,
 				resources, gameData->framebuffer);
 
+	updateTimers(gameData->currentRoom->roomNumber, gameData->roomTimers);
+	u16 currentTimer = gameData->roomTimers[gameData->currentRoom->roomNumber];
+
 	Ball_Update(&gameData->ballData, gameData->framebuffer, gameData->cleanBackground);
+	Bird_Update(&gameData->birdData, currentTimer, gameData->framebuffer, gameData->cleanBackground);
 
 	DropsManager_Update(&gameData->dropData, 
 						gameData->framebuffer, 
@@ -234,9 +242,7 @@ void room_update(Room* room, GameData* gameData, Resources* resources)
 						gameData->gameCompletionCount,
 						resources->sprites_drops);	
 
-	updateTimers(gameData->currentRoom->roomNumber, gameData->roomTimers);
-
-	convertTimerToString(gameData->roomTimers[gameData->currentRoom->roomNumber],
+	convertTimerToString(currentTimer,
 						 gameData->string_timer);
 
 	drawText(gameData->string_timer, 

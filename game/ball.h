@@ -17,7 +17,7 @@ typedef struct
 				// 1 - resetting?
 				// 2 - active
 				// 0xff - dying?
-	u16 x;
+	u16 x; // high resolution position 256 pixels, 256 subpixels
 	u16 y; // high resolution position 256 pixels, 256 subpixels
 	u16 speedx;
 	u16 speedy; // high resolution

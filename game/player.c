@@ -2,12 +2,7 @@
 
 #include "base_defines.h"
 #include "draw_utils.h"
-
-
-#define PLAYER_ACTIVE			0
-#define PLAYER_DEAD				1
-#define PLAYER_DEAD_AND_FALLING	2
-#define PLAYER_REGENERATING		0xff
+#include "physics_utils.h"
 
 // all the states are mutually exclusive
 #define PLAYER_STATE_STAND		0
@@ -32,26 +27,24 @@
 #define PLAYER_WALL_SENSOR_YOFFSET 12
 #define PLAYER_GROUND_SENSOR_YOFFSET 16
 
-#define PLAYERSPRITE_RIGHT_STAND		0
-#define PLAYERSPRITE_RIGHT_RUN0			1
-#define PLAYERSPRITE_RIGHT_RUN1_JUMP	2
-#define PLAYERSPRITE_RIGHT_RUN2			3
-#define PLAYERSPRITE_RIGHT_CLIMB		4
-#define PLAYERSPRITE_LEFT_CLIMB			5
-#define PLAYERSPRITE_LEFT_STAND			6
-#define PLAYERSPRITE_LEFT_RUN0			7
-#define PLAYERSPRITE_LEFT_RUN1_JUMP		8
-#define PLAYERSPRITE_LEFT_RUN2			9
+#define PLAYER_SPRITE_RIGHT_STAND		0
+#define PLAYER_SPRITE_RIGHT_RUN0		1
+#define PLAYER_SPRITE_RIGHT_RUN1_JUMP	2
+#define PLAYER_SPRITE_RIGHT_RUN2		3
+#define PLAYER_SPRITE_RIGHT_CLIMB		4
+#define PLAYER_SPRITE_LEFT_CLIMB		5
+#define PLAYER_SPRITE_LEFT_STAND		6
+#define PLAYER_SPRITE_LEFT_RUN0			7
+#define PLAYER_SPRITE_LEFT_RUN1_JUMP	8
+#define PLAYER_SPRITE_LEFT_RUN2			9
 
-#define PLAYER_RUN_FRAME_0				0
+#define PLAYER_RUN_FRAME_0_STAND		0
 #define PLAYER_RUN_FRAME_1				1
-#define PLAYER_RUN_FRAME_2				2
+#define PLAYER_RUN_FRAME_2_JUMP			2
 #define PLAYER_RUN_FRAME_3				3
 #define PLAYER_CLIMB_FRAME_0			4
 #define PLAYER_CLIMB_FRAME_1			5
 #define PLAYER_FRAME_COUNT				6
-
-extern u8 collisionCheckXOffsets[4]; // steal this from player.c
 
 u16 playerGroundCollisionMasks[4] =
 {
@@ -82,7 +75,7 @@ void Player_Init(PlayerData* playerData, const Resources* resources)
 	playerData->y = SET_HIGH_BYTE(PLAYER_START_Y);
 	playerData->speedx = 0xffa8;
 	playerData->speedy = 0;
-	playerData->currentFrameNumber = PLAYER_RUN_FRAME_0;
+	playerData->currentFrameNumber = PLAYER_RUN_FRAME_0_STAND;
 	playerData->facingDirection = PLAYER_FACING_LEFT;
 	playerData->safeLanding = TRUE;
 
@@ -94,26 +87,6 @@ void Player_Init(PlayerData* playerData, const Resources* resources)
 											        spriteNumber,
 											        PLAYER_START_X & 3,
 											        PLAYER_BITSHIFTED_SPRITE_FRAME_SIZE);
-}
-
-u8 collisionCheck(u16 x, 
-				  u16 y, 
-				  u16 yOffset, 
-				  u8* cleanBackground)
-{
-	u8 pixelX = GET_HIGH_BYTE(x);
-	u8 tableIndex = pixelX & 0x3;
-	u8 collectionCheckXOffset = collisionCheckXOffsets[tableIndex]; // offset the x byte position depending on x pixel position
-	u16 playerGroundCollisionMask = playerGroundCollisionMasks[tableIndex]; // different masks for different x pixel positions
-
-	u8 sensorX = pixelX + collectionCheckXOffset;
-	u8 sensorY = GET_HIGH_BYTE(y) + yOffset;
-
-	u16 framebufferPosition = GET_FRAMEBUFFER_LOCATION(sensorX, sensorY);
-
-	// if hitting something, reset
-	return (cleanBackground[framebufferPosition] & GET_HIGH_BYTE(playerGroundCollisionMask)) != 0 ||
-		   (cleanBackground[framebufferPosition + 1] & GET_LOW_BYTE(playerGroundCollisionMask)) != 0;
 }
 
 void Player_Update(PlayerData* playerData, 
@@ -133,7 +106,7 @@ void Player_Update(PlayerData* playerData,
 	if (playerData->state == PLAYER_STATE_STAND)
 	{
 		playerData->speedx = 0;
-		playerData->currentFrameNumber = PLAYER_RUN_FRAME_0;
+		playerData->currentFrameNumber = PLAYER_RUN_FRAME_0_STAND;
 
 		if (joystickState->jumpPressed)
 		{
@@ -188,7 +161,7 @@ void Player_Update(PlayerData* playerData,
 
 	if (playerData->state == PLAYER_STATE_JUMP)
 	{
-		playerData->currentFrameNumber = PLAYER_RUN_FRAME_2;
+		playerData->currentFrameNumber = PLAYER_RUN_FRAME_2_JUMP;
 		playerData->jumpAirCounter--;
 		playerData->speedy += 3; // apply gravity
 		if (!playerData->jumpAirCounter)
@@ -199,7 +172,7 @@ void Player_Update(PlayerData* playerData,
 	}
 	else if (playerData->state == PLAYER_STATE_FALL)
 	{
-		playerData->currentFrameNumber = PLAYER_RUN_FRAME_2;
+		playerData->currentFrameNumber = PLAYER_RUN_FRAME_2_JUMP;
 		playerData->speedy += 6; // apply more gravity
 
 		if (playerData->speedy > PLAYER_MAX_FALL_SPEED)
@@ -209,14 +182,15 @@ void Player_Update(PlayerData* playerData,
 		//if (playerData->speedx)
 		//	playerData->facingDirection == PLAYER_FACING_LEFT ? playerData->speedx++ : playerData->speedx--;
 
-		if (collisionCheck(playerData->x, 
-						   playerData->y, 
-						   PLAYER_GROUND_SENSOR_YOFFSET, 
-						   cleanBackground))
+		if (testCollision(playerData->x, 
+						  playerData->y, 
+						  PLAYER_GROUND_SENSOR_YOFFSET, 
+						  playerGroundCollisionMasks,
+						  cleanBackground))
 		{
 			playerData->state = PLAYER_STATE_STAND;
 			playerData->speedy = 0;
-			playerData->currentFrameNumber = PLAYER_RUN_FRAME_0;
+			playerData->currentFrameNumber = PLAYER_RUN_FRAME_0_STAND;
 		}
 	}
 
@@ -226,10 +200,11 @@ void Player_Update(PlayerData* playerData,
 	// if still in run, check for falling
 	if (playerData->state == PLAYER_STATE_RUN)
 	{
-		if (!collisionCheck(playerData->x, 
-						    playerData->y, 
-						    PLAYER_GROUND_SENSOR_YOFFSET, 
-						    cleanBackground))
+		if (!testCollision(playerData->x, 
+						   playerData->y, 
+						   PLAYER_GROUND_SENSOR_YOFFSET, 
+						   playerGroundCollisionMasks,
+						   cleanBackground))
 		{
 			playerData->state = PLAYER_STATE_FALL;
 		}
@@ -237,9 +212,10 @@ void Player_Update(PlayerData* playerData,
 
 	// wall detection when moving
 	if (playerData->speedx && 
-		collisionCheck(playerData->x, 
+		testCollision(playerData->x, 
 					   playerData->y, 
 					   PLAYER_WALL_SENSOR_YOFFSET, 
+					   playerGroundCollisionMasks,
 					   cleanBackground))
 	{
 		playerData->x -= playerData->speedx;
@@ -248,7 +224,7 @@ void Player_Update(PlayerData* playerData,
 		{
 			playerData->speedx = 0;
 			playerData->state = PLAYER_STATE_STAND;
-			playerData->currentFrameNumber = PLAYER_RUN_FRAME_0;
+			playerData->currentFrameNumber = PLAYER_RUN_FRAME_0_STAND;
 		}
 		else if (playerData->state == PLAYER_STATE_JUMP)
 		{

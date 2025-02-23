@@ -1,6 +1,7 @@
 #include "ball.h"
 #include "draw_utils.h"
 #include "debug_utils.h"
+#include "physics_utils.h"
 
 #define BALL_INACTIVE			0
 #define BALL_RESETTING_MAYBE	1
@@ -9,8 +10,6 @@
 
 #define BALL_START_X 0x65 // 101
 #define BALL_START_Y 0x74 // 116
-
-u8 collisionCheckXOffsets[4] = { 0, 0, 0, 1 };
 
 #define BITSHIFTED_SPRITE_FRAME_SIZE (BALL_SPRITE_ROWS * 3) // rows * 3 bytes per row
 
@@ -106,33 +105,23 @@ void Ball_Update(BallData* ballData, u8* framebuffer, u8* cleanBackground)
 	}
 	else
 	{
-		// falling
-		u8 pixelX = GET_HIGH_BYTE(ballData->x);
-		u8 tableIndex = pixelX & 0x3;
-		u8 collectionCheckXOffset = collisionCheckXOffsets[tableIndex]; // offset the x byte position depending on x pixel position
-		u16 ballGroundCollisionMask = ballGroundCollisionMasks[tableIndex]; // different masks for different x pixel positions
-
-		u8 sensorX = pixelX + collectionCheckXOffset;
-		u8 sensorY = GET_HIGH_BYTE(ballData->y) + BALL_SPRITE_ROWS;
-
-		u16 framebufferPosition = GET_FRAMEBUFFER_LOCATION(sensorX, sensorY);
-
-		// if not hitting anything, just keep falling
-		if ((cleanBackground[framebufferPosition] & GET_HIGH_BYTE(ballGroundCollisionMask)) == 0 &&
-			(cleanBackground[framebufferPosition + 1] & GET_LOW_BYTE(ballGroundCollisionMask)) == 0)
+		if (testCollision(ballData->x, 
+						  ballData->y, 
+						  BALL_SPRITE_ROWS, 
+						  ballGroundCollisionMasks, 
+						  cleanBackground))
 		{
+			// we've hit something
+			ballData->speedy = 0xff00;
+			ballData->fallStateCounter = 0xfb;
+		}
+		else
+		{
+			// continue falling
 			ballData->speedy += 0x12;
 
 			if (ballData->speedy > 0x100)
 				ballData->speedy = 0x100;
-		}
-		else
-		{
-			// perform terrain collision check
-
-			// assume we've hit something
-			ballData->speedy = 0xff00;
-			ballData->fallStateCounter = 0xfb;
 		}
 	}
 	
@@ -148,20 +137,11 @@ void Ball_Update(BallData* ballData, u8* framebuffer, u8* cleanBackground)
 		ballData->x += ballData->speedx;
 		ballData->y += ballData->speedy;	
 
-		// check again for collision, but for a wall
-		u8 pixelX = GET_HIGH_BYTE(ballData->x);
-		u8 tableIndex = pixelX & 0x3;
-		u8 collectionCheckXOffset = collisionCheckXOffsets[tableIndex]; // offset the x byte position depending on x pixel position
-		u16 ballWideCollisionMask = ballWideCollisionMasks[tableIndex]; // different masks for different x pixel positions
-
-		u8 sensorX = pixelX + collectionCheckXOffset;
-		u8 sensorY = GET_HIGH_BYTE(ballData->y) + BALL_WALL_SENSOR_YOFFSET;
-
-		u16 framebufferPosition = GET_FRAMEBUFFER_LOCATION(sensorX, sensorY);
-
-		// if hitting something, reset
-		if ((cleanBackground[framebufferPosition] & GET_HIGH_BYTE(ballWideCollisionMask)) != 0 ||
-			(cleanBackground[framebufferPosition + 1] & GET_LOW_BYTE(ballWideCollisionMask)) != 0)
+		if (testCollision(ballData->x, 
+						  ballData->y, 
+						  BALL_WALL_SENSOR_YOFFSET, 
+						  ballWideCollisionMasks, 
+						  cleanBackground))
 		{
 			ballData->state = 0xff;
 		}

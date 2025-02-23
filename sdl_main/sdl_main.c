@@ -130,7 +130,7 @@ void Update_Controls(JoystickState* joystickState)
     u8 rightDown = currentKeyStates[SDL_SCANCODE_RIGHT];
     u8 upDown = currentKeyStates[SDL_SCANCODE_UP];
     u8 downDown = currentKeyStates[SDL_SCANCODE_DOWN];
-    u8 jumpDown = currentKeyStates[SDL_SCANCODE_LCTRL];
+    u8 jumpDown = currentKeyStates[SDL_SCANCODE_LCTRL] || currentKeyStates[SDL_SCANCODE_Z] || currentKeyStates[SDL_SCANCODE_LSHIFT];
 
     joystickState->leftPressed = !joystickState->leftDown & leftDown;
     joystickState->rightPressed = !joystickState->rightDown & rightDown;

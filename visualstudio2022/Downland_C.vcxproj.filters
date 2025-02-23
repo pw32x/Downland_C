@@ -80,6 +80,9 @@
     <ClInclude Include="..\game\player.h">
       <Filter>game</Filter>
     </ClInclude>
+    <ClInclude Include="..\game\physics_utils.h">
+      <Filter>game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Downland.ico">
@@ -131,6 +134,9 @@
       <Filter>game</Filter>
     </ClCompile>
     <ClCompile Include="..\game\player.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\game\physics_utils.c">
       <Filter>game</Filter>
     </ClCompile>
   </ItemGroup>

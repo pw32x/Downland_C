@@ -11,7 +11,6 @@
 
 typedef struct
 {
-	u8 enabled;
 	u8 state;	
 	u16 x; // high resolution position 256 pixels, 256 subpixels
 	u16 y; // high resolution position 256 pixels, 256 subpixels
@@ -21,12 +20,11 @@ typedef struct
 	u8* currentSprite;
 	u8* bitShiftedSprites;
 
-	u8 facingDirection; // 0 for left 0xff for right
+	u8 facingDirection;
 
 	u8 jumpAirCounter;
-	u8 isClimbing;
-	u8 isJumping;
-	u8 isRunning;
+
+	u8 safeLanding;
 
 	u8 globalAnimationCounter; // drives running, climbing animation
 } PlayerData;

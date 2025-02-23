@@ -82,3 +82,10 @@ door triggers
 
 
 analog stick support
+
+
+Tools
+visual studio for code dev
+ghidra for reverse engineering
+trs80gp for rom debugging
+graphics gale for frame analysis

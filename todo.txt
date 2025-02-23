@@ -51,14 +51,14 @@ DONE generate the offset sprites
     
 DONE bird
 DONE add timer trigger
+DONE draw lives correctly
 
 
-
-
-player
-running
+DONE player
+DONE running
 jumping
-terrain collision
+floor collision
+wall collision
 regenerating
 collision detection treasures
 scoring of points
@@ -70,7 +70,6 @@ hang on rope
 
 make ball ignore non-floors and walls, like vines
 
-draw lives correctly
 
 get room door data
 doors

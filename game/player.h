@@ -17,14 +17,18 @@ typedef struct
 	u16 y; // high resolution position 256 pixels, 256 subpixels
 	u16 speedx;
 	u16 speedy;
-	u8 currentFrame;
+	u8 currentFrameNumber;
 	u8* currentSprite;
 	u8* bitShiftedSprites;
 
-	u8 facingDirection;
+	u8 facingDirection; // 0 for left 0xff for right
 
+	u8 jumpAirCounter;
 	u8 isClimbing;
 	u8 isJumping;
+	u8 isRunning;
+
+	u8 globalAnimationCounter; // drives running, climbing animation
 } PlayerData;
 
 void Player_Init(PlayerData* playerData, const Resources* resources);

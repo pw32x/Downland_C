@@ -219,7 +219,7 @@ void room_init(Room* room, GameData* gameData, Resources* resources)
 			 CHAMBER_NUMBER_TEXT_DRAW_LOCATION);
 
 	drawPlayerLives(gameData->playerLives,
-					gameData->playerData.currentFrame,
+					gameData->playerData.currentFrameNumber,
 					gameData->playerData.bitShiftedSprites,
 					gameData->framebuffer);
 

@@ -6,6 +6,11 @@ this project is a port of the original game's code from assembly to C. The Downl
 
 meant for platforms that can work with a framebuffer
 
+not a regorous translation of the original game. 
+it's a best guess interpretation of the assembly code
+doesn't emulate any coco hardware in any way
+
+
 Running
 
 The project loads resources from the downland rom. 

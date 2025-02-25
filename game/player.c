@@ -3,12 +3,14 @@
 #include "base_defines.h"
 #include "draw_utils.h"
 #include "physics_utils.h"
+#include "debug_utils.h"
 
 // all the states are mutually exclusive
 #define PLAYER_STATE_STAND		0
 #define PLAYER_STATE_RUN		1
 #define PLAYER_STATE_JUMP		2
 #define PLAYER_STATE_FALL		3
+#define PLAYER_STATE_CLIMB		4
 
 
 #define PLAYER_RUN_SPEED_LEFT	0xffca
@@ -18,14 +20,18 @@
 #define PLAYER_MAX_FALL_SPEED	0x100
 #define PLAYER_JUMP_AIR_COUNT	0x28
 
+#define PLAYER_CLIMB_UP_SPEED	0xffc0
+#define PLAYER_CLIMB_DOWN_SPEED 0x70
+
 #define PLAYER_FACING_LEFT		0
 #define PLAYER_FACING_RIGHT		0xff
 
 #define PLAYER_START_X 0x70 // 112
 #define PLAYER_START_Y 0xa5 // 165
 
-#define PLAYER_WALL_SENSOR_YOFFSET 12
-#define PLAYER_GROUND_SENSOR_YOFFSET 16
+#define PLAYER_WALL_SENSOR_YOFFSET		12
+#define PLAYER_GROUND_SENSOR_YOFFSET	16
+#define PLAYER_ROPE_SENSOR_YOFFSET		8
 
 #define PLAYER_SPRITE_RIGHT_STAND		0
 #define PLAYER_SPRITE_RIGHT_RUN0		1
@@ -48,10 +54,18 @@
 
 u16 playerGroundCollisionMasks[4] =
 {
-	0x03c0, //  0000001111000000b
-    0x00f0, //  0000000011110000b
-    0x003c, //  0000000000111100b
-    0x0f00, //  0000111100000000b
+	0x03c0, // 0000001111000000b
+    0x00f0, // 0000000011110000b
+    0x003c, // 0000000000111100b
+    0x0f00, // 0000111100000000b
+};
+
+u16 ropeCollisionMasks[4] = 
+{
+    0x0300, // 0000001100000000b
+    0x00c0, // 0000000011000000b
+    0x0030, // 0000000000110000b
+    0x0c00, // 0000110000000000b
 };
 
 u8 computeSpriteNumber(u8 facingDirection, u8 currentFrameNumber)
@@ -157,6 +171,16 @@ void Player_Update(PlayerData* playerData,
 		}
 
 		playerData->currentFrameNumber = (playerData->globalAnimationCounter >> 2) & 0x3;
+
+		// if still in run, check for falling
+		if (!TOUCHES_TERRAIN(testTerrainCollision(playerData->x, 
+												  playerData->y, 
+												  PLAYER_GROUND_SENSOR_YOFFSET, 
+												  playerGroundCollisionMasks,
+												  cleanBackground)))
+		{
+			playerData->state = PLAYER_STATE_FALL;
+		}
 	}
 
 	if (playerData->state == PLAYER_STATE_JUMP)
@@ -182,41 +206,148 @@ void Player_Update(PlayerData* playerData,
 		//if (playerData->speedx)
 		//	playerData->facingDirection == PLAYER_FACING_LEFT ? playerData->speedx++ : playerData->speedx--;
 
-		if (testCollision(playerData->x, 
-						  playerData->y, 
-						  PLAYER_GROUND_SENSOR_YOFFSET, 
-						  playerGroundCollisionMasks,
-						  cleanBackground))
+		if (TOUCHES_TERRAIN(testTerrainCollision(playerData->x, 
+												 playerData->y, 
+												 PLAYER_GROUND_SENSOR_YOFFSET, 
+												 playerGroundCollisionMasks,
+												 cleanBackground)))
 		{
 			playerData->state = PLAYER_STATE_STAND;
 			playerData->speedy = 0;
 			playerData->currentFrameNumber = PLAYER_RUN_FRAME_0_STAND;
+		}
+
+
+	}
+	else if (playerData->state == PLAYER_STATE_CLIMB)
+	{
+		playerData->speedy = 0;
+		u8 testResult = testTerrainCollision(playerData->x, 
+											 playerData->y, 
+											 PLAYER_ROPE_SENSOR_YOFFSET, 
+											 ropeCollisionMasks,
+											 cleanBackground);
+
+		if (joystickState->jumpPressed)
+		{
+			// apply side movement if a direction was held
+			if (joystickState->leftDown)
+			{
+				playerData->speedx = PLAYER_RUN_SPEED_LEFT;
+				playerData->facingDirection = PLAYER_FACING_LEFT;
+				playerData->speedy = 0xff61;
+				playerData->jumpAirCounter = PLAYER_JUMP_AIR_COUNT;
+				playerData->state = PLAYER_STATE_JUMP;
+			}
+			else if (joystickState->rightDown)
+			{
+				playerData->speedx = PLAYER_RUN_SPEED_RIGHT;
+				playerData->facingDirection = PLAYER_FACING_RIGHT;
+				playerData->speedy = 0xff61;
+				playerData->jumpAirCounter = PLAYER_JUMP_AIR_COUNT;
+				playerData->state = PLAYER_STATE_JUMP;
+			}
+		}
+		else if (joystickState->upDown)
+		{
+			playerData->speedy = PLAYER_CLIMB_UP_SPEED;
+
+			playerData->currentFrameNumber = ((playerData->globalAnimationCounter >> 3) & 0x1) + 4;
+
+			if (!TOUCHES_VINE(testResult))
+			{
+				playerData->speedy = 0;
+			}
+		}	
+		else if (joystickState->downDown)
+		{
+			playerData->speedy = PLAYER_CLIMB_DOWN_SPEED;
+			playerData->currentFrameNumber = ((playerData->globalAnimationCounter >> 3) & 0x1) + 4;
+
+			if (!TOUCHES_VINE(testResult))
+			{
+				playerData->state = PLAYER_STATE_FALL;
+			}
 		}
 	}
 
 	playerData->x += playerData->speedx;
 	playerData->y += playerData->speedy;
 
-	// if still in run, check for falling
-	if (playerData->state == PLAYER_STATE_RUN)
+    //debugSetPixel((GET_HIGH_BYTE(playerData->x) << 1), 
+    //              GET_HIGH_BYTE(playerData->y) + PLAYER_ROPE_SENSOR_YOFFSET, 0xff00ff00);
+
+	debugDrawBox(((GET_HIGH_BYTE(playerData->x) << 1) / 8) * 8, 
+			     GET_HIGH_BYTE(playerData->y), 
+			     16, 
+			     16, 
+			     0xff00ff00);
+
+	extern u8 leftPixelData;
+	extern u8 rightPixelData;
+
+	getTerrainValue(playerData->x, 
+					playerData->y, 
+					PLAYER_ROPE_SENSOR_YOFFSET, 
+					ropeCollisionMasks,
+					cleanBackground);
+
+	u8 copyLeftPixelData = leftPixelData;
+	u8 copyRightPixelData = rightPixelData;
+
+	for (int loop = 0; loop < 8; loop++)
 	{
-		if (!testCollision(playerData->x, 
-						   playerData->y, 
-						   PLAYER_GROUND_SENSOR_YOFFSET, 
-						   playerGroundCollisionMasks,
-						   cleanBackground))
+		debugSetPixel((GET_HIGH_BYTE(playerData->x) << 1) + (7 - loop), 
+                      GET_HIGH_BYTE(playerData->y) + PLAYER_ROPE_SENSOR_YOFFSET, 
+					  copyLeftPixelData & 0x1 ? 0xffff0000 : 0x00000000);
+
+		debugSetPixel((GET_HIGH_BYTE(playerData->x) << 1) + (15 - loop), 
+                      GET_HIGH_BYTE(playerData->y) + PLAYER_ROPE_SENSOR_YOFFSET, 
+					  copyRightPixelData & 0x1 ? 0xffff0000 : 0x00000000);
+
+		copyLeftPixelData >>= 1;
+		copyRightPixelData >>= 1;
+	}
+
+
+	/*
+	getTerrainValue(playerData->x, 
+					playerData->y, 
+					PLAYER_ROPE_SENSOR_YOFFSET, 
+					ropeCollisionMasks,
+					cleanBackground);
+	*/
+
+	// if in the air, check for ropes
+	if (playerData->state == PLAYER_STATE_JUMP ||
+		playerData->state == PLAYER_STATE_FALL)
+	{
+		u8 testResult = testTerrainCollision(playerData->x, 
+											 playerData->y, 
+											 PLAYER_ROPE_SENSOR_YOFFSET, 
+											 ropeCollisionMasks,
+											 cleanBackground);
+		if (TOUCHES_VINE(testResult))
 		{
-			playerData->state = PLAYER_STATE_FALL;
+			playerData->state = PLAYER_STATE_CLIMB;
+			playerData->speedx = 0;
+			playerData->speedy = 0;
+			playerData->currentFrameNumber = PLAYER_CLIMB_FRAME_0;
+			playerData->jumpAirCounter = 0;
 		}
 	}
 
+	
+
+
+
 	// wall detection when moving
 	if (playerData->speedx && 
-		testCollision(playerData->x, 
-					   playerData->y, 
-					   PLAYER_WALL_SENSOR_YOFFSET, 
-					   playerGroundCollisionMasks,
-					   cleanBackground))
+		TOUCHES_TERRAIN(testTerrainCollision(playerData->x, 
+						playerData->y, 
+						PLAYER_WALL_SENSOR_YOFFSET, 
+						playerGroundCollisionMasks,
+						cleanBackground)))
 	{
 		playerData->x -= playerData->speedx;
 
@@ -244,6 +375,9 @@ void Player_Update(PlayerData* playerData,
 												    spriteNumber,
 												    GET_HIGH_BYTE(playerData->x) & 3, 
 												    PLAYER_BITSHIFTED_SPRITE_FRAME_SIZE);
+
+	if (playerData->state == PLAYER_STATE_CLIMB)
+		return;
 
 	drawSprite_24PixelsWide(playerData->currentSprite, 
 							GET_HIGH_BYTE(playerData->x), 

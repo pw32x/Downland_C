@@ -106,3 +106,25 @@ void SDLUtils_updateCrtFramebufferAndTexture(u8* framebuffer,
     // Update the texture with the new data
     SDL_UpdateTexture(crtFramebufferTexture, NULL, crtFramebuffer, FRAMEBUFFER_WIDTH * sizeof(uint32_t));
 }
+
+void SDLUtils_updateDebugFramebufferTexture(u32* debugFramebuffer, 
+                                            SDL_Texture* debugFramebufferTexture)
+{
+    void* pixels;
+    int pitch;
+
+    // Lock texture to modify pixel data
+    SDL_LockTexture(debugFramebufferTexture, NULL, &pixels, &pitch);
+
+    Uint32* tex_pixels = (Uint32*)pixels;
+
+    for (int y = 0; y < FRAMEBUFFER_HEIGHT; y++) 
+    {
+        for (int x = 0; x < FRAMEBUFFER_WIDTH; x++) 
+        {
+            tex_pixels[(y * (pitch / 4)) + x] = debugFramebuffer[x + (y * FRAMEBUFFER_WIDTH)];
+        }
+    }
+
+    SDL_UnlockTexture(debugFramebufferTexture);
+}

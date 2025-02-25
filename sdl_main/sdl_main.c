@@ -4,6 +4,10 @@
 #include "../game/base_types.h"
 #include "../game/game.h"
 #include "../game/resource_loader.h"
+#include "../game/physics_utils.h"
+#include "../game/debug_utils.h"
+#include "../game/draw_utils.h"
+
 #include "sdl_utils.h"
 
 #include <SDL3/SDL.h>
@@ -20,6 +24,7 @@ static SDL_Renderer *renderer = NULL;
 
 SDL_Texture* framebufferTexture = NULL;
 SDL_Texture* crtFramebufferTexture = NULL;
+SDL_Texture* debugFramebufferTexture = NULL;
 
 BOOL stepFrame = false;
 
@@ -73,6 +78,15 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
                                               FRAMEBUFFER_HEIGHT);
 
     SDL_SetTextureScaleMode(crtFramebufferTexture, SDL_SCALEMODE_NEAREST); // no smoothing
+
+    // Create the debug texture
+    debugFramebufferTexture = SDL_CreateTexture(renderer, 
+                                                SDL_PIXELFORMAT_ARGB8888, 
+                                                SDL_TEXTUREACCESS_STREAMING, 
+                                                FRAMEBUFFER_WIDTH, 
+                                                FRAMEBUFFER_HEIGHT);
+
+    SDL_SetTextureScaleMode(debugFramebufferTexture, SDL_SCALEMODE_NEAREST); // no smoothing
 
     if (!ResourceLoader_Init(romFilePath, &resources))
         return SDL_APP_FAILURE;
@@ -151,6 +165,14 @@ void Update_Controls(JoystickState* joystickState)
     joystickState->jumpDown = jumpDown;
 }
 
+// Function to convert an 8-bit value to a binary string
+void uint8_to_binary_str(uint8_t value, char *str) {
+    for (int i = 7; i >= 0; i--) {
+        str[7 - i] = (value & (1 << i)) ? '1' : '0';
+    }
+    str[8] = '\0'; // Null-terminate the string
+}
+
 SDL_AppResult SDL_AppIterate(void *appstate)
 {
     Uint64 frameStartTime = SDL_GetPerformanceCounter();
@@ -159,9 +181,12 @@ SDL_AppResult SDL_AppIterate(void *appstate)
 
     if (!gameData.paused)
     {
+        memset(debugFramebuffer, 0, sizeof(debugFramebuffer));
         Update_Controls(&gameData.joystickState);
         Game_Update(&gameData, &resources);
     }
+
+
 
     // Render to screen
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
@@ -179,6 +204,12 @@ SDL_AppResult SDL_AppIterate(void *appstate)
                                             renderer);
 
     SDL_RenderTexture(renderer, crtFramebufferTexture, NULL, NULL);
+
+
+    SDLUtils_updateDebugFramebufferTexture(debugFramebuffer, 
+                                           debugFramebufferTexture);
+
+    SDL_RenderTexture(renderer, debugFramebufferTexture, NULL, NULL);
 
     frameCount++;
 	Uint64 currentTime = SDL_GetPerformanceCounter();
@@ -206,11 +237,22 @@ SDL_AppResult SDL_AppIterate(void *appstate)
     SDL_RenderDebugTextFormat(renderer, 10.0f, 60.0f, "down: %d", gameData.joystickState.downDown);
     SDL_RenderDebugTextFormat(renderer, 10.0f, 70.0f, "jump: %d", gameData.joystickState.jumpDown);
 
+    */
 
-    SDL_RenderDebugTextFormat(renderer, 10.0f, 30.0f, "y: %x", gameData.ballData.y);
-    SDL_RenderDebugTextFormat(renderer, 10.0f, 40.0f, "x: %x", gameData.ballData.x);
+    //SDL_RenderDebugTextFormat(renderer, 10.0f, 20.0f, "x: %x", gameData.playerData.x);
+    //SDL_RenderDebugTextFormat(renderer, 10.0f, 30.0f, "y: %x", gameData.playerData.y);
+    
+    /*
     SDL_RenderDebugTextFormat(renderer, 10.0f, 50.0f, "fallcounter: %x", gameData.ballData.fallStateCounter);
     */
+
+    char binary_str[9];
+    uint8_to_binary_str(leftPixelData, binary_str);
+
+    char binary_str2[9];
+    uint8_to_binary_str(rightPixelData, binary_str2);
+
+    SDL_RenderDebugTextFormat(renderer, 10.0f, 20.0f, "%s%s", binary_str, binary_str2);
 
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
     SDL_SetRenderScale(renderer, 1.0f, 1.0f);

@@ -105,11 +105,11 @@ void Ball_Update(BallData* ballData, u8* framebuffer, u8* cleanBackground)
 	}
 	else
 	{
-		if (testCollision(ballData->x, 
-						  ballData->y, 
-						  BALL_SPRITE_ROWS, 
-						  ballGroundCollisionMasks, 
-						  cleanBackground))
+		if (TOUCHES_TERRAIN(testTerrainCollision(ballData->x, 
+												 ballData->y, 
+												 BALL_SPRITE_ROWS, 
+												 ballGroundCollisionMasks, 
+												 cleanBackground)))
 		{
 			// we've hit something
 			ballData->speedy = 0xff00;
@@ -137,11 +137,13 @@ void Ball_Update(BallData* ballData, u8* framebuffer, u8* cleanBackground)
 		ballData->x += ballData->speedx;
 		ballData->y += ballData->speedy;	
 
-		if (testCollision(ballData->x, 
-						  ballData->y, 
-						  BALL_WALL_SENSOR_YOFFSET, 
-						  ballWideCollisionMasks, 
-						  cleanBackground))
+		u8 terrainTest = testTerrainCollision(ballData->x, 
+											  ballData->y, 
+											  BALL_WALL_SENSOR_YOFFSET, 
+											  ballWideCollisionMasks, 
+											  cleanBackground);
+
+		if (TOUCHES_TERRAIN(terrainTest))
 		{
 			ballData->state = 0xff;
 		}

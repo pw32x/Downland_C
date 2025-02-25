@@ -19,6 +19,7 @@ void SDLUtils_updateCrtFramebufferAndTexture(u8* framebuffer,
                                              SDL_Texture* crtFramebufferTexture,
                                              SDL_Renderer* renderer);
 
-
+void SDLUtils_updateDebugFramebufferTexture(u32* debugFramebuffer, 
+                                            SDL_Texture* debugFramebufferTexture);
 
 #endif

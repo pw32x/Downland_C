@@ -242,15 +242,25 @@ void room_update(Room* room, GameData* gameData, Resources* resources)
 	updateTimers(gameData->currentRoom->roomNumber, gameData->roomTimers);
 	u16 currentTimer = gameData->roomTimers[gameData->currentRoom->roomNumber];
 
+
+
+	Player_Update(&gameData->playerData, &gameData->joystickState, gameData->framebuffer, gameData->cleanBackground);
+
 	Ball_Update(&gameData->ballData, gameData->framebuffer, gameData->cleanBackground);
 	Bird_Update(&gameData->birdData, currentTimer, gameData->framebuffer, gameData->cleanBackground);
-	Player_Update(&gameData->playerData, &gameData->joystickState, gameData->framebuffer, gameData->cleanBackground);
 
 	DropsManager_Update(&gameData->dropData, 
 						gameData->framebuffer, 
 						gameData->cleanBackground, 
 						gameData->gameCompletionCount,
 						resources->sprites_drops);	
+
+	if (Player_HasCollision(&gameData->playerData, gameData->framebuffer, gameData->cleanBackground))
+	{
+		// compute collisions
+		// pick up item or die
+		int a = 3;
+	}
 
 	convertTimerToString(currentTimer,
 						 gameData->string_timer);

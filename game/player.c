@@ -92,13 +92,15 @@ void Player_Init(PlayerData* playerData, const Resources* resources)
 	playerData->currentFrameNumber = PLAYER_RUN_FRAME_0_STAND;
 	playerData->facingDirection = PLAYER_FACING_LEFT;
 	playerData->safeLanding = TRUE;
+	playerData->ignoreRopesCounter = 0;
 
 	playerData->bitShiftedSprites = resources->bitShiftedSprites_player;
+	playerData->bitShiftedCollisionMasks = resources->bitShiftedCollisionmasks_player;
 
-	u8 spriteNumber = computeSpriteNumber(playerData->facingDirection, playerData->currentFrameNumber);
+	playerData->currentSpriteNumber = computeSpriteNumber(playerData->facingDirection, playerData->currentFrameNumber);
 
 	playerData->currentSprite = getBitShiftedSprite(playerData->bitShiftedSprites, 
-											        spriteNumber,
+											        playerData->currentSpriteNumber,
 											        PLAYER_START_X & 3,
 											        PLAYER_BITSHIFTED_SPRITE_FRAME_SIZE);
 }
@@ -168,6 +170,7 @@ void Player_Update(PlayerData* playerData,
 		else
 		{
 			playerData->state = PLAYER_STATE_STAND;
+			playerData->speedx = 0;
 		}
 
 		playerData->currentFrameNumber = (playerData->globalAnimationCounter >> 2) & 0x3;
@@ -238,6 +241,7 @@ void Player_Update(PlayerData* playerData,
 				playerData->speedy = 0xff61;
 				playerData->jumpAirCounter = PLAYER_JUMP_AIR_COUNT;
 				playerData->state = PLAYER_STATE_JUMP;
+				playerData->ignoreRopesCounter = 20;
 			}
 			else if (joystickState->rightDown)
 			{
@@ -246,6 +250,7 @@ void Player_Update(PlayerData* playerData,
 				playerData->speedy = 0xff61;
 				playerData->jumpAirCounter = PLAYER_JUMP_AIR_COUNT;
 				playerData->state = PLAYER_STATE_JUMP;
+				playerData->ignoreRopesCounter = 20;
 			}
 		}
 		else if (joystickState->upDown)
@@ -257,6 +262,7 @@ void Player_Update(PlayerData* playerData,
 			if (!TOUCHES_VINE(testResult))
 			{
 				playerData->speedy = 0;
+				playerData->currentFrameNumber = PLAYER_CLIMB_FRAME_0;
 			}
 		}	
 		else if (joystickState->downDown)
@@ -274,6 +280,13 @@ void Player_Update(PlayerData* playerData,
 	playerData->x += playerData->speedx;
 	playerData->y += playerData->speedy;
 
+
+
+
+	if (playerData->ignoreRopesCounter)
+		playerData->ignoreRopesCounter--;
+
+	/*
     //debugSetPixel((GET_HIGH_BYTE(playerData->x) << 1), 
     //              GET_HIGH_BYTE(playerData->y) + PLAYER_ROPE_SENSOR_YOFFSET, 0xff00ff00);
 
@@ -285,6 +298,7 @@ void Player_Update(PlayerData* playerData,
 
 	extern u8 leftPixelData;
 	extern u8 rightPixelData;
+
 
 	getTerrainValue(playerData->x, 
 					playerData->y, 
@@ -308,7 +322,7 @@ void Player_Update(PlayerData* playerData,
 		copyLeftPixelData >>= 1;
 		copyRightPixelData >>= 1;
 	}
-
+	*/
 
 	/*
 	getTerrainValue(playerData->x, 
@@ -319,8 +333,9 @@ void Player_Update(PlayerData* playerData,
 	*/
 
 	// if in the air, check for ropes
-	if (playerData->state == PLAYER_STATE_JUMP ||
-		playerData->state == PLAYER_STATE_FALL)
+	if ((playerData->state == PLAYER_STATE_JUMP ||
+		playerData->state == PLAYER_STATE_FALL) &&
+		!playerData->ignoreRopesCounter)
 	{
 		u8 testResult = testTerrainCollision(playerData->x, 
 											 playerData->y, 
@@ -369,19 +384,75 @@ void Player_Update(PlayerData* playerData,
 		}
 	}
 
-	u8 spriteNumber = computeSpriteNumber(playerData->facingDirection, playerData->currentFrameNumber);
+	playerData->currentSpriteNumber = computeSpriteNumber(playerData->facingDirection, playerData->currentFrameNumber);
 
 	playerData->currentSprite = getBitShiftedSprite(playerData->bitShiftedSprites, 
-												    spriteNumber,
+												    playerData->currentSpriteNumber,
 												    GET_HIGH_BYTE(playerData->x) & 3, 
 												    PLAYER_BITSHIFTED_SPRITE_FRAME_SIZE);
 
-	if (playerData->state == PLAYER_STATE_CLIMB)
-		return;
+	//if (playerData->state == PLAYER_STATE_CLIMB)
+	//	return;
 
 	drawSprite_24PixelsWide(playerData->currentSprite, 
 							GET_HIGH_BYTE(playerData->x), 
 							GET_HIGH_BYTE(playerData->y), 
 							PLAYER_SPRITE_ROWS, 
 							framebuffer);
+}
+
+u8 collisionTestBuffer[PLAYER_BITSHIFTED_COLLISION_MASK_FRAME_SIZE];
+u8 utilityBuffer[PLAYER_BITSHIFTED_COLLISION_MASK_FRAME_SIZE];
+
+u8 Player_HasCollision(PlayerData* playerData, u8* framebuffer, u8* cleanBackground)
+{
+	u8 sensorX = GET_HIGH_BYTE(playerData->x);
+
+	u8* currentCollisionMask = getBitShiftedSprite(playerData->bitShiftedCollisionMasks, 
+												   playerData->currentSpriteNumber,
+												   sensorX & 3, 
+												   PLAYER_BITSHIFTED_COLLISION_MASK_FRAME_SIZE);
+
+	u8 sensorY = GET_HIGH_BYTE(playerData->y) + 1; // start one line down
+	u16 location = GET_FRAMEBUFFER_LOCATION(sensorX, sensorY);
+
+	framebuffer = &framebuffer[location];
+	u8* cleanBackgroundRunner = &cleanBackground[location];
+
+	u8* collisionTestBufferRunner = collisionTestBuffer;
+
+
+	for (u8 loop = 0; loop < PLAYER_COLLISION_MASK_ROWS; loop++)
+	{
+		collisionTestBufferRunner[0] = (framebuffer[0] & currentCollisionMask[0]) | cleanBackgroundRunner[0];
+		collisionTestBufferRunner[1] = (framebuffer[1] & currentCollisionMask[1]) | cleanBackgroundRunner[1];
+		collisionTestBufferRunner[2] = (framebuffer[2] & currentCollisionMask[2]) | cleanBackgroundRunner[2];
+
+
+		// move along buffers
+		framebuffer += FRAMEBUFFER_PITCH * 3;
+		cleanBackgroundRunner += FRAMEBUFFER_PITCH * 3;
+		collisionTestBufferRunner += 3;
+		currentCollisionMask += 3;
+	}
+
+	u8* currentSprite = playerData->currentSprite + 3; // start one line down
+	cleanBackgroundRunner = &cleanBackground[location];
+	collisionTestBufferRunner = collisionTestBuffer;
+
+	for (u8 loop = 0; loop < PLAYER_COLLISION_MASK_ROWS; loop++)
+	{
+		if ((collisionTestBufferRunner[0] != (currentSprite[0] | cleanBackgroundRunner[0])) ||
+		    (collisionTestBufferRunner[1] != (currentSprite[1] | cleanBackgroundRunner[1])) ||
+		    (collisionTestBufferRunner[2] != (currentSprite[2] | cleanBackgroundRunner[2])))
+		{
+			return TRUE;
+		}
+
+		cleanBackgroundRunner += FRAMEBUFFER_PITCH * 3;
+		collisionTestBufferRunner += 3;
+		currentSprite += 3 * 3;
+	}
+
+	return FALSE;
 }

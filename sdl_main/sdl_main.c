@@ -239,8 +239,8 @@ SDL_AppResult SDL_AppIterate(void *appstate)
 
     */
 
-    //SDL_RenderDebugTextFormat(renderer, 10.0f, 20.0f, "x: %x", gameData.playerData.x);
-    //SDL_RenderDebugTextFormat(renderer, 10.0f, 30.0f, "y: %x", gameData.playerData.y);
+    SDL_RenderDebugTextFormat(renderer, 10.0f, 20.0f, "x: %x", gameData.playerData.x);
+    SDL_RenderDebugTextFormat(renderer, 10.0f, 30.0f, "y: %x", gameData.playerData.y);
     
     /*
     SDL_RenderDebugTextFormat(renderer, 10.0f, 50.0f, "fallcounter: %x", gameData.ballData.fallStateCounter);
@@ -252,7 +252,7 @@ SDL_AppResult SDL_AppIterate(void *appstate)
     char binary_str2[9];
     uint8_to_binary_str(rightPixelData, binary_str2);
 
-    SDL_RenderDebugTextFormat(renderer, 10.0f, 20.0f, "%s%s", binary_str, binary_str2);
+    //SDL_RenderDebugTextFormat(renderer, 10.0f, 20.0f, "%s%s", binary_str, binary_str2);
 
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
     SDL_SetRenderScale(renderer, 1.0f, 1.0f);

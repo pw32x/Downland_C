@@ -304,7 +304,7 @@ BOOL ResourceLoader_Init(const char* romPath, Resources* resources)
 
 	// get sprites
     resources->sprites_player = getBytes(file, 0xdcd7, 0xde17);
-    resources->collisionmask_player = getBytes(file, 0xde17, 0xde7b);
+    resources->collisionmasks_player = getBytes(file, 0xde17, 0xde7b);
     resources->sprites_bouncyBall = getBytes(file, 0xde7b, 0xde9b);
     resources->sprites_bird = getBytes(file, 0xde9b, 0xdeb3);
     resources->sprite_moneyBag = getBytes(file, 0xdeb3, 0xdec7);
@@ -316,6 +316,7 @@ BOOL ResourceLoader_Init(const char* romPath, Resources* resources)
 
 	// generate bit shifted sprites
 	resources->bitShiftedSprites_player = buildBitShiftedSprites(resources->sprites_player, PLAYER_SPRITE_COUNT, PLAYER_SPRITE_ROWS);
+	resources->bitShiftedCollisionmasks_player = buildBitShiftedSprites(resources->collisionmasks_player, PLAYER_SPRITE_COUNT, PLAYER_COLLISION_MASK_ROWS);
 	resources->bitShiftedSprites_bouncyBall = buildBitShiftedSprites(resources->sprites_bouncyBall, BALL_SPRITE_COUNT, BALL_SPRITE_ROWS);
 	resources->bitShiftedSprites_bird = buildBitShiftedSprites(resources->sprites_bird, BIRD_SPRITE_COUNT, BIRD_SPRITE_ROWS);
 
@@ -413,7 +414,7 @@ void ResourceLoader_Shutdown(Resources* resources)
 
 	// get sprites
     free(resources->sprites_player);
-    free(resources->collisionmask_player);
+    free(resources->collisionmasks_player);
     free(resources->sprites_bouncyBall);
     free(resources->sprites_bird);
     free(resources->sprite_moneyBag);

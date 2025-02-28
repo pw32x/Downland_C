@@ -40,7 +40,7 @@ typedef struct
 
     // sprites
     u8* sprites_player;                 // 0xdcd6
-    u8* collisionmask_player;           // 0xde17
+    u8* collisionmasks_player;          // 0xde17
     u8* sprites_bouncyBall;             // 0xde7b
     u8* sprites_bird;                   // 0xde9b
     u8* sprite_moneyBag;                // 0xdeb3
@@ -52,6 +52,7 @@ typedef struct
 
     // bit shifted sprites
     u8* bitShiftedSprites_player;
+    u8* bitShiftedCollisionmasks_player;
     u8* bitShiftedSprites_bouncyBall;
     u8* bitShiftedSprites_bird;
 

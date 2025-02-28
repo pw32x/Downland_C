@@ -125,12 +125,12 @@ void Ball_Update(BallData* ballData, u8* framebuffer, u8* cleanBackground)
 		}
 	}
 	
-	eraseSprite_24PixelsWide(framebuffer, 
-							 cleanBackground,
+	eraseSprite_24PixelsWide(ballData->currentSprite,
 							 GET_HIGH_BYTE(ballData->x),
 							 GET_HIGH_BYTE(ballData->y),
-							 ballData->currentSprite,
-							 BALL_SPRITE_ROWS);
+							 BALL_SPRITE_ROWS,
+							 framebuffer, 
+							 cleanBackground);
 
 	if ((s8)ballData->fallStateCounter >= 0)
 	{

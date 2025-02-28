@@ -40,7 +40,7 @@ void drawText(u8* text, u8* characterFont, u8* framebuffer, u16 framebufferPosit
     }
 }
 
-void drawSprite_16PixelsWide(u8* sprite, 
+void drawSprite_16PixelsWide(u8* spriteData, 
                              u8 x, 
                              u8 y, 
                              u8 numLines,
@@ -52,13 +52,13 @@ void drawSprite_16PixelsWide(u8* sprite,
     while (numLines--)
     {
         // first byte
-        *framebuffer |= *sprite;
+        *framebuffer |= *spriteData;
         framebuffer++;
-        sprite++;
+        spriteData++;
 
         // second byte
-        *framebuffer |= *sprite;
-        sprite++;
+        *framebuffer |= *spriteData;
+        spriteData++;
 
         // move framebuffer to next row
         framebuffer += (FRAMEBUFFER_PITCH - 1); // go down one row in the frame buffer for the next line.
@@ -66,18 +66,18 @@ void drawSprite_16PixelsWide(u8* sprite,
 }
 
 
-void eraseSprite_16PixelsWide(u8* framebuffer, 
-							  u8* cleanBackground,
-							  u8 x,
-							  u8 y,
-							  u8* spriteData, 
-							  u8 rowCount)
+void eraseSprite_16PixelsWide(u8* spriteData, 
+							  u8 x, 
+							  u8 y, 
+							  u8 numLines, 
+							  u8* framebuffer, 
+							  u8* cleanBackground)
 {
 	u16 offset = (x / 4) + (y * FRAMEBUFFER_PITCH);
 	framebuffer += offset;
 	cleanBackground += offset;
 
-	for (int loop = 0; loop < rowCount; loop++)
+	for (int loop = 0; loop < numLines; loop++)
 	{
 		// remove the bits of the sprite from the frame buffer 
 		// and restore with the clean background
@@ -99,7 +99,7 @@ void eraseSprite_16PixelsWide(u8* framebuffer,
 }
 
 
-void drawSprite_24PixelsWide(u8* sprite, 
+void drawSprite_24PixelsWide(u8* spriteData, 
                              u8 x, 
                              u8 y, 
                              u8 numLines,
@@ -111,18 +111,18 @@ void drawSprite_24PixelsWide(u8* sprite,
     while (numLines--)
     {
         // first byte
-        *framebuffer |= *sprite;
+        *framebuffer |= *spriteData;
         framebuffer++;
-        sprite++;
+        spriteData++;
 
         // second byte
-        *framebuffer |= *sprite;
+        *framebuffer |= *spriteData;
         framebuffer++;
-        sprite++;
+        spriteData++;
 
         // third byte
-        *framebuffer |= *sprite;
-        sprite++;
+        *framebuffer |= *spriteData;
+        spriteData++;
 
         // move framebuffer to next row
         framebuffer += (FRAMEBUFFER_PITCH - 2); // go down one row in the frame buffer for the next line.
@@ -130,18 +130,18 @@ void drawSprite_24PixelsWide(u8* sprite,
 }
 
 
-void eraseSprite_24PixelsWide(u8* framebuffer, 
-							  u8* cleanBackground,
-							  u8 x,
-							  u8 y,
-							  u8* spriteData, 
-							  u8 rowCount)
+void eraseSprite_24PixelsWide(u8* spriteData, 
+							  u8 x, 
+							  u8 y, 
+							  u8 numLines, 
+							  u8* framebuffer, 
+							  u8* cleanBackground)
 {
 	u16 offset = (x / 4) + (y * FRAMEBUFFER_PITCH);
 	framebuffer += offset;
 	cleanBackground += offset;
 
-	for (int loop = 0; loop < rowCount; loop++)
+	for (int loop = 0; loop < numLines; loop++)
 	{
 		// remove the bits of the sprite from the frame buffer 
 		// and restore with the clean background

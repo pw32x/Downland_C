@@ -111,8 +111,6 @@ Room titleScreenRoom =
 	(UpdateRoomFunctionType)titleScreen_update
 };
 
-#define PICKUPS_NUM_SPRITE_ROWS 10
-
 void drawPickups(Pickup* pickups, 
 				 u8 currentPlayer,
 				 Resources* resources, 
@@ -223,9 +221,9 @@ void room_init(Room* room, GameData* gameData, Resources* resources)
 					gameData->playerData.bitShiftedSprites,
 					gameData->framebuffer);
 
-	convertScoreToString(gameData->playerOneScore, gameData->string_playerOneScore);
+	convertScoreToString(*gameData->playerData.score, gameData->playerData.scoreString);
 
-	drawText(gameData->string_playerOneScore, 
+	drawText(gameData->playerData.scoreString, 
 			 resources->characterFont, 
 			 gameData->framebuffer, 
 			 SCORE_DRAW_LOCATION);
@@ -260,6 +258,7 @@ void room_update(Room* room, GameData* gameData, Resources* resources)
 		// compute collisions
 		// pick up item or die
 		int a = 3;
+		Player_PerformCollisions((struct GameData*)gameData, resources);
 	}
 
 	convertTimerToString(currentTimer,

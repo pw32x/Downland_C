@@ -69,12 +69,17 @@ void Game_Init(GameData* gameData, Resources* resources)
 	for (int loop = 0; loop < NUM_ROOMS; loop++)
 		gameData->roomTimers[loop] = ROOM_TIMER_DEFAULT;
 
-	gameData->playerOneScore = 7654321;
+	gameData->playerOneScore = 0;
 	gameData->playerTwoScore = 4433225;
 	gameData->highScore =      9876543;
 
+	gameData->playerData.playerMask = PLAYERONE_MASK;
+	gameData->playerData.score = &gameData->playerOneScore;
+	gameData->playerData.scoreString = gameData->string_playerOneScore;
+
 	// init title screen
-	Game_EnterRoom(gameData, TITLESCREEN_ROOM_INDEX, resources);
+	//Game_EnterRoom(gameData, TITLESCREEN_ROOM_INDEX, resources);
+	Game_TransitionToRoom(gameData, 0 /*TITLESCREEN_ROOM_INDEX*/, resources);
 }
 
 void Game_Update(GameData* gameData, Resources* resources)

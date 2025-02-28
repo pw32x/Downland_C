@@ -4,6 +4,8 @@
 #include "draw_utils.h"
 #include "physics_utils.h"
 #include "debug_utils.h"
+#include "game_types.h"
+#include "pickup_types.h"
 
 // all the states are mutually exclusive
 #define PLAYER_STATE_STAND		0
@@ -28,6 +30,8 @@
 
 #define PLAYER_START_X 0x70 // 112
 #define PLAYER_START_Y 0xa5 // 165
+
+#define PLAYER_COLLISION_WIDTH 8
 
 #define PLAYER_WALL_SENSOR_YOFFSET		12
 #define PLAYER_GROUND_SENSOR_YOFFSET	16
@@ -110,12 +114,12 @@ void Player_Update(PlayerData* playerData,
 				   u8* framebuffer, 
 				   u8* cleanBackground)
 {
-	eraseSprite_24PixelsWide(framebuffer, 
-							 cleanBackground,
+	eraseSprite_24PixelsWide(playerData->currentSprite,
 							 GET_HIGH_BYTE(playerData->x),
 							 GET_HIGH_BYTE(playerData->y),
-							 playerData->currentSprite,
-							 PLAYER_SPRITE_ROWS);
+							 PLAYER_SPRITE_ROWS,
+							 framebuffer, 
+							 cleanBackground);
 
 	playerData->globalAnimationCounter++;
 
@@ -455,4 +459,83 @@ u8 Player_HasCollision(PlayerData* playerData, u8* framebuffer, u8* cleanBackgro
 	}
 
 	return FALSE;
+}
+
+BOOL objectCollisionTest(PlayerData* playerData, u8 x, u8 y, u8 width, u8 height)
+{
+	u8 playerX = GET_HIGH_BYTE(playerData->x);
+	u8 playerY = GET_HIGH_BYTE(playerData->y);
+
+	return (x < playerX + PLAYER_COLLISION_WIDTH &&
+		    x + width > playerX &&
+		    y < playerY + PLAYER_SPRITE_ROWS &&
+		    y + height > playerY);
+}
+
+void Player_PerformCollisions(struct GameData* gameDataStruct, 
+							  Resources* resources)
+{
+	GameData* gameData = (GameData*) gameDataStruct;
+	PlayerData* playerData = &gameData->playerData;
+
+	// collide with pickups
+	u8 roomNumber = gameData->currentRoom->roomNumber;
+
+	for (u8 loop = 0; loop < NUM_PICKUPS_PER_ROOM; loop++)
+	{
+		Pickup* pickUp = &gameData->gamePickups[roomNumber][loop];
+
+		// is pickup active? Pickup state contain state for
+		// both players.
+		if (!(pickUp->state & playerData->playerMask))
+			continue;
+
+		if (objectCollisionTest(playerData, pickUp->x, pickUp->y, PICKUP_WIDTH, PICKUP_HEIGHT))
+		{
+			pickUp->state = pickUp->state & ~playerData->playerMask;
+
+			eraseSprite_16PixelsWide(resources->pickupSprites[pickUp->type],
+									 pickUp->x, 
+									 pickUp->y, 
+									 PICKUPS_NUM_SPRITE_ROWS,
+									 gameData->framebuffer,
+									 gameData->cleanBackground);
+
+
+
+			switch (pickUp->type)
+			{
+				case PICKUP_TYPE_KEY:
+				{
+					(*playerData->score) += PICKUP_KEY_POINTS;
+
+					// activate a door
+					// draw a door if in the same room
+					break;
+				}
+				case PICKUP_TYPE_DIAMOND:
+				{
+					(*playerData->score) += PICKUP_DIAMOND_POINTS;
+					break;
+				}
+				case PICKUP_TYPE_MONEYBAG:
+				{
+					(*playerData->score) += PICKUP_MONEYBAG_POINTS;
+					break;
+				}
+			}
+
+			// update score and string
+			convertScoreToString(*gameData->playerData.score, gameData->playerData.scoreString);
+
+			drawText(gameData->playerData.scoreString, 
+					 resources->characterFont, 
+					 gameData->framebuffer, 
+					 SCORE_DRAW_LOCATION);
+		}
+	}
+
+	// collide with drops
+	// collide with ball
+	// collide with bird
 }

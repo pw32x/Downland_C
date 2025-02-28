@@ -128,24 +128,24 @@ void DropsManager_Update(DropData* dropData,
 				(cleanBackground[cleanBackgroundLocation + 0xe0] & drop->collisionMask) || // 7 pixels down
 				(GET_HIGH_BYTE(drop->y) > FRAMEBUFFER_HEIGHT - 16)) // bottom bounds checking. not in the original game.
 			{
-				eraseSprite_16PixelsWide(framebuffer, 
-										 cleanBackground, 
+				eraseSprite_16PixelsWide(drop->spriteData,
 										 drop->x,
-										 GET_HIGH_BYTE(drop->y),
-										 drop->spriteData, 
-										 DROP_SPRITE_ROWS);
+										 GET_HIGH_BYTE(drop->y),										  
+										 DROP_SPRITE_ROWS,
+										 framebuffer, 
+										 cleanBackground);
 
 				initDrop(drop, dropData, gameCompletionCount, dropSprites);
 			}
 		}
 
 		// erase drop from screen
-		eraseSprite_16PixelsWide(framebuffer, 
-								 cleanBackground, 
+		eraseSprite_16PixelsWide(drop->spriteData, 
 								 drop->x,
 								 GET_HIGH_BYTE(drop->y),
-								 drop->spriteData, 
-								 DROP_SPRITE_ROWS);
+								 DROP_SPRITE_ROWS,
+								 framebuffer, 
+								 cleanBackground);
 
 		// update y
 		drop->y += drop->speedY;

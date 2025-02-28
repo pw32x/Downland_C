@@ -44,12 +44,12 @@ void Bird_Update(BirdData* birdData, u16 currentRoomTimer, u8* framebuffer, u8* 
 		return;
 	}
 	
-	eraseSprite_24PixelsWide(framebuffer, 
-							 cleanBackground,
+	eraseSprite_24PixelsWide(birdData->currentSprite,
 							 GET_HIGH_BYTE(birdData->x),
 							 GET_HIGH_BYTE(birdData->y),
-							 birdData->currentSprite,
-							 BIRD_SPRITE_ROWS);
+							 BIRD_SPRITE_ROWS,
+							 framebuffer, 
+							 cleanBackground);
 
 	birdData->animationCounter++;
 	birdData->animationFrame = (birdData->animationCounter >> 3) & 0x1;

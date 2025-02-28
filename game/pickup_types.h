@@ -6,6 +6,15 @@
 
 #define NUM_PICKUPS_PER_ROOM 5
 
+#define PICKUP_HEIGHT	0xa
+#define PICKUP_WIDTH	0x8
+
+#define PICKUPS_NUM_SPRITE_ROWS 10
+
+#define PICKUP_KEY_POINTS		0xc8  // 200
+#define PICKUP_MONEYBAG_POINTS	0x12c // 300 
+#define PICKUP_DIAMOND_POINTS	0x190 // 400
+
 // pick up positions stored in rom
 typedef struct
 {

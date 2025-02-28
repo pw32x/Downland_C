@@ -12,6 +12,11 @@
 #define PLAYER_COLLISION_MASK_ROWS	5
 #define PLAYER_BITSHIFTED_COLLISION_MASK_FRAME_SIZE (PLAYER_COLLISION_MASK_ROWS * 3) // rows * 3 bytes per row
 
+#define PLAYERONE_MASK 0x1
+#define PLAYERTWO_MASK 0x2
+
+struct GameData;
+
 typedef struct
 {
 	u8 state;	
@@ -19,6 +24,7 @@ typedef struct
 	u16 y; // high resolution position 256 pixels, 256 subpixels
 	u16 speedx;
 	u16 speedy;
+	u8 playerMask;
 	u8 currentFrameNumber; // 0 to 3 for run animation (both directions), 4 to 5 for climbing animation
 	u8 currentSpriteNumber; // 0 to 3 run right, 4/5 climb, 6-9 run left
 	u8* currentSprite;
@@ -32,10 +38,14 @@ typedef struct
 
 	u8 safeLanding;
 
+	u32* score; // points to score stored in gameData
+	u8* scoreString;
+
 	u8 globalAnimationCounter; // drives running, climbing animation
 } PlayerData;
 
 void Player_Init(PlayerData* playerData, const Resources* resources);
 void Player_Update(PlayerData* playerData, const JoystickState* joystickState, u8* framebuffer, u8* cleanBackground);
 u8 Player_HasCollision(PlayerData* playerData, u8* framebuffer, u8* cleanBackground);
+void Player_PerformCollisions(struct GameData* gameData, Resources* resources);
 #endif

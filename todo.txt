@@ -52,27 +52,32 @@ DONE generate the offset sprites
 DONE bird
 DONE add timer trigger
 DONE draw lives correctly
+DONE make ball ignore non-floors and walls, like vines
 
 
 DONE player
 DONE running
-jumping
-floor collision
-wall collision
-regenerating
-collision detection treasures
+DONE jumping
+DONE floor collision
+DONE wall collision
+DONE climbing
+
+DONE collision detection treasures
 scoring of points
-collision detection enemies
-dying
-respawning
-climbing
-hang on rope
-
-make ball ignore non-floors and walls, like vines
-
 
 get room door data
 doors
+
+
+
+regenerating
+collision detection enemies
+dying
+respawning
+erase rope on top of player when climbing
+hang on rope
+
+
 
 handle two players
 

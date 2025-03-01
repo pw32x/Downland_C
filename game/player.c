@@ -525,6 +525,9 @@ void Player_PerformCollisions(struct GameData* gameDataStruct,
 				}
 			}
 
+			// add a random value between 0 and 0x7f, as per the original game
+			*gameData->playerData.score += rand() % 0x7f;
+
 			// update score and string
 			convertScoreToString(*gameData->playerData.score, gameData->playerData.scoreString);
 

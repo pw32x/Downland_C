@@ -117,8 +117,7 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
             gameData.paused = FALSE;
         }
 
-        if (event->key.key == SDLK_TAB || 
-            event->key.key == SDLK_GRAVE)
+        if (event->key.key == SDLK_GRAVE)
         {
             Game_TransitionToRoom(&gameData, TITLESCREEN_ROOM_INDEX, &resources);
         }
@@ -145,24 +144,28 @@ void Update_Controls(JoystickState* joystickState)
     u8 upDown = currentKeyStates[SDL_SCANCODE_UP];
     u8 downDown = currentKeyStates[SDL_SCANCODE_DOWN];
     u8 jumpDown = currentKeyStates[SDL_SCANCODE_LCTRL] || currentKeyStates[SDL_SCANCODE_Z] || currentKeyStates[SDL_SCANCODE_LSHIFT];
+    u8 debugStateDown = currentKeyStates[SDL_SCANCODE_TAB];
 
     joystickState->leftPressed = !joystickState->leftDown & leftDown;
     joystickState->rightPressed = !joystickState->rightDown & rightDown;
     joystickState->upPressed = !joystickState->upDown & upDown;
     joystickState->downPressed =  !joystickState->downDown & downDown;
     joystickState->jumpPressed =  !joystickState->jumpDown & jumpDown;
+    joystickState->debugStatePressed = !joystickState->debugStateDown & debugStateDown;
 
     joystickState->leftReleased = joystickState->leftDown & !leftDown;
     joystickState->rightReleased = joystickState->rightDown & !rightDown;
     joystickState->upReleased = joystickState->upDown & !upDown;
     joystickState->downReleased =  joystickState->downDown & !downDown;
     joystickState->jumpReleased =  joystickState->jumpDown & !jumpDown;
+    joystickState->debugStateReleased = joystickState->debugStatePressed & !debugStateDown;
 
     joystickState->leftDown = leftDown;
     joystickState->rightDown = rightDown;
     joystickState->upDown = upDown;
     joystickState->downDown = downDown;
     joystickState->jumpDown = jumpDown;
+    joystickState->debugStateDown = debugStateDown;
 }
 
 // Function to convert an 8-bit value to a binary string

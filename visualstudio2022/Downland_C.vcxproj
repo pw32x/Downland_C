@@ -94,6 +94,7 @@
     <ClInclude Include="..\game\base_types.h" />
     <ClInclude Include="..\game\bird.h" />
     <ClInclude Include="..\game\debug_utils.h" />
+    <ClInclude Include="..\game\door_types.h" />
     <ClInclude Include="..\game\drops_manager.h" />
     <ClInclude Include="..\game\drops_types.h" />
     <ClInclude Include="..\game\game_types.h" />

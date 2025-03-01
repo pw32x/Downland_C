@@ -5,12 +5,14 @@
 #include "base_defines.h"
 #include "background_types.h"
 #include "pickup_types.h"
+#include "door_types.h"
 #include "drops_types.h"
 
 typedef struct
 {
     BackgroundDrawData backgroundDrawData;
     DropSpawnPositions dropSpawnPositions;
+    DoorInfoData doorInfoData;
 } RoomResources;
 
 typedef struct
@@ -55,6 +57,7 @@ typedef struct
     u8* bitShiftedCollisionmasks_player;
     u8* bitShiftedSprites_bouncyBall;
     u8* bitShiftedSprites_bird;
+    u8* bitShiftedSprites_door;
 
     u8* pickupSprites[3];
 
@@ -90,45 +93,23 @@ typedef struct
 
     u8* keyPickUpDoorIndexes; // 20 items
     u8* keyPickUpDoorIndexesHardMode; // 20 items
+    u8* offsetsToDoorsAlreadyActivated; // 16 items
 
     u8* roomsWithBouncingBall;
 /*
-Sprites 0xdcd7
-    PlayerSprite_Right_Stand 0xdcd6
-    PlayerSprite_Right_Run0 0xdcf7
-    PlayerSprite_Right_Run1 0xdd17
-    PlayerSprite_Right_Run2 0xdd37
-    PlayerSprite_Right_Climb 0xdd57
-    PlayerSprite_Left_Climb 0xdd77
-    PlayerSprite_Left_Stand 0xdd97
-    PlayerSprite_Left_Run0 0xddb7
-    PlayerSprite_Left_Run1 0xddd7
-    PlayerSprite_Left_Run2 0xddf7
-    Player_CollisionMasks 0xde17
-    BouncyBallSprite1 0xde7b
-    BouncyBallSprite2 0xde8b
-    BirdSprite1 0xde9b
-    BirdSprite2 0xdea7
-    MoneyBagSprite 0xdeb3
-    DiamondSprite 0xdec7
-    KeySprite 0xd3db
-    PlayerSplatSprite 0xdeef
-    DoorSprite 0xdf0a
-    DropSprites 0xdf2a
-
 Room Data
 
     RoomGraphicsAndDoorData 0xd25a
-        Room0_GraphcisAndDoorData   0xd25a
-        Room1_GraphcisAndDoorData   0xd27d
-        Room2_GraphcisAndDoorData   0xd298
-        Room3_GraphcisAndDoorData   0xd2bf
-        Room4_GraphcisAndDoorData   0xd2ec
-        Room5_GraphcisAndDoorData   0xd307
-        Room6_GraphcisAndDoorData   0xd31c
-        Room7_GraphcisAndDoorData   0xd32b
-        Room8_GraphcisAndDoorData   0xd33a
-        Room9_GraphcisAndDoorData   0xd349
+        Room0_GraphisAndDoorData   0xd25a
+        Room1_GraphisAndDoorData   0xd27d
+        Room2_GraphisAndDoorData   0xd298
+        Room3_GraphisAndDoorData   0xd2bf
+        Room4_GraphisAndDoorData   0xd2ec
+        Room5_GraphisAndDoorData   0xd307
+        Room6_GraphisAndDoorData   0xd31c
+        Room7_GraphisAndDoorData   0xd32b
+        Room8_GraphisAndDoorData   0xd33a
+        Room9_GraphisAndDoorData   0xd349
 
 
 */

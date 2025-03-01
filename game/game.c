@@ -1,6 +1,6 @@
 #include "game.h"
 
-//#include <stdlib.h>
+#include <memory.h>
 
 #include "draw_utils.h"
 #include "rooms.h"
@@ -47,6 +47,21 @@ void initPickups(RoomPickups roomPickups,
 	}
 }
 
+void initDoors(u8* doorStateData, const u8* offsetsToDoorsAlreadyActivated)
+{
+	memset(doorStateData, 0, DOOR_TOTAL_COUNT);
+
+	u8 alreadyOpenedState = 0x3; // set the two bits for each player
+
+	while (*offsetsToDoorsAlreadyActivated != 0xff)
+	{
+		doorStateData[*offsetsToDoorsAlreadyActivated] = alreadyOpenedState;
+
+		offsetsToDoorsAlreadyActivated++;
+	}
+}
+
+
 void Game_Init(GameData* gameData, Resources* resources)
 {
 	//gameData->gameCompletionCount = 0;
@@ -63,7 +78,10 @@ void Game_Init(GameData* gameData, Resources* resources)
 
 	initPickups(gameData->gamePickups, 
 				resources->roomPickupPositions,
-				resources->keyPickUpDoorIndexes);
+				resources->keyPickUpDoorIndexes); // TODO check for hard mode after
+
+	initDoors(gameData->doorStateData, 
+			  resources->offsetsToDoorsAlreadyActivated);
 
 	// init timers
 	for (int loop = 0; loop < NUM_ROOMS; loop++)

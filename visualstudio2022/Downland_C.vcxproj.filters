@@ -83,6 +83,9 @@
     <ClInclude Include="..\game\physics_utils.h">
       <Filter>game</Filter>
     </ClInclude>
+    <ClInclude Include="..\game\door_types.h">
+      <Filter>game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Downland.ico">

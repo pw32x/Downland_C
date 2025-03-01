@@ -212,6 +212,45 @@ void loadDropSpawnPositions(FILE* file, u16 start, DropSpawnPositions* dropSpawn
 	dropSpawnPositions->dropSpawnAreas = dropSpawnAreasMemory;
 }
 
+void loadDoorInfoDataPositions(FILE* file, u16 start, DoorInfoData* doorInfoData)
+{
+	// take into account that the rom starts at c000
+	start -= 0xc000; 
+	fseek(file, start, SEEK_SET);
+
+	u8 doorInfosCount = 0;
+	u8 sentinelValue = 1; // some initial non-zero value
+
+	// get the number of doors by going through
+	// the file until we hit 0
+	while (sentinelValue)
+	{
+		fread(&sentinelValue, 1, 1, file);
+
+		if (!sentinelValue)
+		{
+			break;
+		}
+
+		// move ahead by one DoorInfo (minus one because of the sentinel value)
+		fseek(file, sizeof(DoorInfo) - 1, SEEK_CUR); 
+		doorInfosCount++;
+	}
+
+	if (!doorInfosCount) // this would be weird
+		return;
+
+	fseek(file, start, SEEK_SET);
+
+	u16 bufferSize = doorInfosCount * sizeof(DoorInfo);
+	DoorInfo* doorInfos = (DoorInfo*)malloc(bufferSize);
+
+	fread(doorInfos, bufferSize, 1, file);
+
+	doorInfoData->drawInfosCount = doorInfosCount;
+	doorInfoData->doorInfos = doorInfos;
+}
+
 #define WIDTH_BYTES 2  // Original sprite width in bytes
 #define HEIGHT 10      // Number of rows
 #define SHIFT_COUNT 3  // Number of shifted versions
@@ -319,6 +358,8 @@ BOOL ResourceLoader_Init(const char* romPath, Resources* resources)
 	resources->bitShiftedCollisionmasks_player = buildBitShiftedSprites(resources->collisionmasks_player, PLAYER_SPRITE_COUNT, PLAYER_COLLISION_MASK_ROWS);
 	resources->bitShiftedSprites_bouncyBall = buildBitShiftedSprites(resources->sprites_bouncyBall, BALL_SPRITE_COUNT, BALL_SPRITE_ROWS);
 	resources->bitShiftedSprites_bird = buildBitShiftedSprites(resources->sprites_bird, BIRD_SPRITE_COUNT, BIRD_SPRITE_ROWS);
+	resources->bitShiftedSprites_door = buildBitShiftedSprites(resources->sprite_door, DOOR_SPRITE_COUNT, DOOR_SPRITE_ROWS);
+
 
 	resources->pickupSprites[0] = resources->sprite_diamond;
 	resources->pickupSprites[1] = resources->sprite_moneyBag;
@@ -376,10 +417,22 @@ BOOL ResourceLoader_Init(const char* romPath, Resources* resources)
 	loadDropSpawnPositions(file, 0xd10c, &resources->roomResources[9].dropSpawnPositions);
 	loadDropSpawnPositions(file, 0xd116, &resources->roomResources[10].dropSpawnPositions);
 
+	loadDoorInfoDataPositions(file, 0xd270, &resources->roomResources[0].doorInfoData);
+	loadDoorInfoDataPositions(file, 0xd27f, &resources->roomResources[1].doorInfoData);
+	loadDoorInfoDataPositions(file, 0xd29a, &resources->roomResources[2].doorInfoData);
+	loadDoorInfoDataPositions(file, 0xd2c1, &resources->roomResources[3].doorInfoData);
+	loadDoorInfoDataPositions(file, 0xd2ee, &resources->roomResources[4].doorInfoData);
+	loadDoorInfoDataPositions(file, 0xd309, &resources->roomResources[5].doorInfoData);
+	loadDoorInfoDataPositions(file, 0xd31e, &resources->roomResources[6].doorInfoData);
+	loadDoorInfoDataPositions(file, 0xd32d, &resources->roomResources[7].doorInfoData);
+	loadDoorInfoDataPositions(file, 0xd33c, &resources->roomResources[8].doorInfoData);
+	loadDoorInfoDataPositions(file, 0xd34b, &resources->roomResources[9].doorInfoData);
+
 	resources->roomPickupPositions = (PickupPosition*)getBytes(file, 0xd1ea, 0xd24e);
 
 	resources->keyPickUpDoorIndexes = getBytes(file, 0xd1c2, 0xd1d6); // 20 items
     resources->keyPickUpDoorIndexesHardMode = getBytes(file, 0xd1d6, 0xd1ea); // 20 items
+	resources->offsetsToDoorsAlreadyActivated = getBytes(file, 0xceea, 0xcefa); // 16 items
 
 	u16 bufferSize;
 	resources->roomsWithBouncingBall = getBytesUntilSentinel(file, 0xceac, 0xff, &bufferSize);
@@ -426,6 +479,7 @@ void ResourceLoader_Shutdown(Resources* resources)
 
 	free(resources->bitShiftedSprites_bouncyBall);
 	free(resources->bitShiftedSprites_bird);
+	free(resources->bitShiftedSprites_door);
 
 	// free shapes data
 	free(resources->shapeDrawData_00_Stalactite.segments);
@@ -458,11 +512,13 @@ void ResourceLoader_Shutdown(Resources* resources)
 	{
 		free(resources->roomResources[loop].backgroundDrawData.backgroundDrawCommands);
 		free(resources->roomResources[loop].dropSpawnPositions.dropSpawnAreas);
+		free(resources->roomResources[loop].doorInfoData.doorInfos);
 	}
 
 	free(resources->roomPickupPositions);
 	free(resources->keyPickUpDoorIndexes);
     free(resources->keyPickUpDoorIndexesHardMode);
+	free(resources->offsetsToDoorsAlreadyActivated);
 
 	free(resources->roomsWithBouncingBall);
 

@@ -15,6 +15,8 @@
 
 #define ROOM_TIMER_DEFAULT 4096
 
+#define DOOR_TOTAL_COUNT 0x22 // 34
+
 typedef struct
 {
 	u8 framebuffer[FRAMEBUFFER_HEIGHT * FRAMEBUFFER_PITCH]; // main game 1bpp frame buffer
@@ -29,6 +31,8 @@ typedef struct
 	u8 playerLives;
 
 	RoomPickups gamePickups;
+	u8 doorStateData[DOOR_TOTAL_COUNT];
+
 	BallData ballData;
 	BirdData birdData;
 	PlayerData playerData;

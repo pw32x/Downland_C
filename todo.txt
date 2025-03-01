@@ -63,10 +63,18 @@ DONE wall collision
 DONE climbing
 
 DONE collision detection treasures
-scoring of points
+DONE scoring of points
 
-get room door data
-doors
+DONE get room door data
+DONE draw doors when picking up key
+
+picking up key somehow destroys pickups?
+
+use door to go to next room
+
+draw doors when drawing room at room init
+
+
 
 
 
@@ -77,7 +85,7 @@ respawning
 erase rope on top of player when climbing
 hang on rope
 
-
+use hard mode door indexes after completing the game once
 
 handle two players
 

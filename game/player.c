@@ -13,10 +13,13 @@
 #define PLAYER_STATE_JUMP		2
 #define PLAYER_STATE_FALL		3
 #define PLAYER_STATE_CLIMB		4
+#define PLAYER_STATE_DEBUG		0xff
 
 
 #define PLAYER_RUN_SPEED_LEFT	0xffca
 #define PLAYER_RUN_SPEED_RIGHT	0x36
+
+#define PLAYER_DEBUG_SPEED 0xff
 
 #define PLAYER_JUMP_SPEED		0xff61
 #define PLAYER_MAX_FALL_SPEED	0x100
@@ -114,6 +117,11 @@ void Player_Update(PlayerData* playerData,
 				   u8* framebuffer, 
 				   u8* cleanBackground)
 {
+	if (joystickState->debugStatePressed)
+	{
+		playerData->state = playerData->state != PLAYER_STATE_DEBUG ? PLAYER_STATE_DEBUG : PLAYER_STATE_STAND;
+	}
+
 	eraseSprite_24PixelsWide(playerData->currentSprite,
 							 GET_HIGH_BYTE(playerData->x),
 							 GET_HIGH_BYTE(playerData->y),
@@ -122,6 +130,28 @@ void Player_Update(PlayerData* playerData,
 							 cleanBackground);
 
 	playerData->globalAnimationCounter++;
+
+	if (playerData->state == PLAYER_STATE_DEBUG)
+	{
+		// apply side movement if a direction was held
+		if (joystickState->leftDown)
+		{
+			playerData->x -= PLAYER_DEBUG_SPEED;
+		}
+		else if (joystickState->rightDown)
+		{
+			playerData->x += PLAYER_DEBUG_SPEED;
+		}
+
+		if (joystickState->upDown)
+		{
+			playerData->y -= PLAYER_DEBUG_SPEED;
+		}	
+		else if (joystickState->downDown)
+		{
+			playerData->y += PLAYER_DEBUG_SPEED;
+		}
+	}
 
 	if (playerData->state == PLAYER_STATE_STAND)
 	{
@@ -356,10 +386,6 @@ void Player_Update(PlayerData* playerData,
 		}
 	}
 
-	
-
-
-
 	// wall detection when moving
 	if (playerData->speedx && 
 		TOUCHES_TERRAIN(testTerrainCollision(playerData->x, 
@@ -511,6 +537,57 @@ void Player_PerformCollisions(struct GameData* gameDataStruct,
 
 					// activate a door
 					// draw a door if in the same room
+
+					u8 doorIndex = pickUp->doorUnlockIndex;
+
+					gameData->doorStateData[doorIndex] |= playerData->playerMask;
+
+					// check if we need to activate a door in the room
+					DoorInfoData* doorInfoData = &resources->roomResources[roomNumber].doorInfoData;
+					DoorInfo* doorInfoRunner = doorInfoData->doorInfos;
+
+					for (u8 loop = 0; loop < doorInfoData->drawInfosCount; loop++)
+					{
+						if (doorInfoRunner->globalDoorIndex == doorIndex) // the key actives a door in this room
+						{
+							if (doorInfoRunner->doorPosition != 0xffff) // initial invisible game door
+							{
+
+								// draw the door. 
+								u8 y = GET_LOW_BYTE(doorInfoRunner->doorPosition);
+								u8 x = GET_HIGH_BYTE(doorInfoRunner->doorPosition);
+
+								// adjust the door position, as per the original game.
+								if (x > 40) 
+									x += 7;
+								else
+									x -= 4;
+
+								u8* doorSprite = getBitShiftedSprite(resources->bitShiftedSprites_door, 
+																	 0,
+																	 x & 3, 
+																	 DOOR_BITSHIFTED_SPRITE_FRAME_SIZE);
+
+								// draw on both framebuffer and clean buffer
+								drawSprite_24PixelsWide(doorSprite, 
+														x, 
+														y, 
+														PLAYER_SPRITE_ROWS, 
+														gameData->framebuffer);
+
+								drawSprite_24PixelsWide(doorSprite, 
+														x, 
+														y, 
+														PLAYER_SPRITE_ROWS, 
+														gameData->cleanBackground);
+
+							}
+						}
+
+						doorInfoRunner++;
+
+					}
+
 					break;
 				}
 				case PICKUP_TYPE_DIAMOND:

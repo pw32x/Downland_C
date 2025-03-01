@@ -11,6 +11,7 @@
 #include "ball.h"
 #include "bird.h"
 #include "player.h"
+#include "door_utils.h"
 
 void titleScreen_draw(u8 roomNumber, GameData* gameData, Resources* resources)
 {
@@ -98,6 +99,7 @@ void titleScreen_update(Room* room, GameData* gameData, Resources* resources)
 
 	if (gameData->joystickState.jumpPressed)
 	{
+		gameData->gameCompletionCount = 0;
 		memset(gameData->framebuffer, 0, FRAMEBUFFER_SIZE_IN_BYTES);
 		Game_TransitionToRoom(gameData, 0, resources);
 	}
@@ -120,14 +122,14 @@ void drawPickups(Pickup* pickups,
 
 	while (count--)
 	{
-		if (!(pickups->state & currentPlayer))
-			continue;
-
-		drawSprite_16PixelsWide(resources->pickupSprites[pickups->type],
-								pickups->x, 
-								pickups->y, 
-								PICKUPS_NUM_SPRITE_ROWS,
-								framebuffer);
+		if ((pickups->state & currentPlayer))
+		{
+			drawSprite_16PixelsWide(resources->pickupSprites[pickups->type],
+									pickups->x, 
+									pickups->y, 
+									PICKUPS_NUM_SPRITE_ROWS,
+									framebuffer);
+		}
 		pickups++;
 	}
 }
@@ -185,6 +187,24 @@ void room_draw(u8 roomNumber, GameData* gameData, Resources* resources)
 	drawBackground(&resources->roomResources[roomNumber].backgroundDrawData, 
 				   resources,
 				   gameData->cleanBackground);
+
+	// draw active doors in the room
+	DoorInfoData* doorInfoData = &resources->roomResources[roomNumber].doorInfoData;
+	DoorInfo* doorInfoRunner = doorInfoData->doorInfos;
+	for (u8 loop = 0; loop < doorInfoData->drawInfosCount; loop++)
+	{
+		if ((doorInfoRunner->y != 0xff) &&
+			(gameData->doorStateData[doorInfoRunner->globalDoorIndex] & gameData->playerData.playerMask))
+		{
+			drawDoor(doorInfoRunner, 
+					resources->bitShiftedSprites_door, 
+					gameData->framebuffer, 
+					gameData->cleanBackground,
+					FALSE);
+		}
+
+		doorInfoRunner++;
+	}
 }
 
 void room_init(Room* room, GameData* gameData, Resources* resources)
@@ -197,7 +217,7 @@ void room_init(Room* room, GameData* gameData, Resources* resources)
 
 	Ball_Init(&gameData->ballData, roomNumber, resources);
 	Bird_Init(&gameData->birdData, roomNumber, resources);
-	Player_Init(&gameData->playerData, resources);
+	Player_RoomInit(&gameData->playerData, resources);
 
 	drawText(resources->text_pl1, 
 			 resources->characterFont, 
@@ -240,9 +260,22 @@ void room_update(Room* room, GameData* gameData, Resources* resources)
 	updateTimers(gameData->currentRoom->roomNumber, gameData->roomTimers);
 	u16 currentTimer = gameData->roomTimers[gameData->currentRoom->roomNumber];
 
+	DoorInfo* lastDoor = gameData->playerData.lastDoor;
 
+	Player_Update(&gameData->playerData, 
+				  &gameData->joystickState, 
+				  gameData->framebuffer, 
+				  gameData->cleanBackground,
+				  &resources->roomResources[room->roomNumber].doorInfoData,
+				  gameData->doorStateData);
 
-	Player_Update(&gameData->playerData, &gameData->joystickState, gameData->framebuffer, gameData->cleanBackground);
+	if (lastDoor != gameData->playerData.lastDoor)
+	{
+		Game_TransitionToRoom(gameData, 
+							  gameData->playerData.lastDoor->nextRoomNumber, 
+							  resources);
+		return;
+	}
 
 	Ball_Update(&gameData->ballData, gameData->framebuffer, gameData->cleanBackground);
 	Bird_Update(&gameData->birdData, currentTimer, gameData->framebuffer, gameData->cleanBackground);

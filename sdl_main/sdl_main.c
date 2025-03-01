@@ -96,6 +96,8 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
     gameStartTime = SDL_GetPerformanceCounter();
     timeFrequency = SDL_GetPerformanceFrequency();
 
+    srand((unsigned int)gameStartTime);
+
     return SDL_APP_CONTINUE;
 }
 

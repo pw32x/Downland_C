@@ -95,6 +95,7 @@
     <ClInclude Include="..\game\bird.h" />
     <ClInclude Include="..\game\debug_utils.h" />
     <ClInclude Include="..\game\door_types.h" />
+    <ClInclude Include="..\game\door_utils.h" />
     <ClInclude Include="..\game\drops_manager.h" />
     <ClInclude Include="..\game\drops_types.h" />
     <ClInclude Include="..\game\game_types.h" />
@@ -126,6 +127,7 @@
     <ClCompile Include="..\game\ball.c" />
     <ClCompile Include="..\game\bird.c" />
     <ClCompile Include="..\game\debug_utils.c" />
+    <ClCompile Include="..\game\door_utils.c" />
     <ClCompile Include="..\game\drops_manager.c" />
     <ClCompile Include="..\game\draw_utils.c" />
     <ClCompile Include="..\game\game.c" />

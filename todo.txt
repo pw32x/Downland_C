@@ -68,12 +68,16 @@ DONE scoring of points
 DONE get room door data
 DONE draw doors when picking up key
 
-picking up key somehow destroys pickups?
+DONE picking up key somehow destroys pickups?
 
-use door to go to next room
+DONE rooms don't properly initialize drop count
 
-draw doors when drawing room at room init
+DONE use door to go to next room
 
+DONE draw doors when drawing room at room init
+
+face the correct way when entering a room
+pick a door when entering a room by hotkey
 
 
 

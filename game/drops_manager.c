@@ -24,8 +24,6 @@ u8 drop_CollisionMasks[4] =
 
 void DropsManager_Init(DropData* dropData, u8 roomNumber, u8 gameCompletionCount)
 {
-	srand(34980);
-
 	g_dropTickTockTimer = 0;
 
 	for (int loop = 0; loop < NUM_DROPS; loop++)

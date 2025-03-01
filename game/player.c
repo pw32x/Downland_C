@@ -6,6 +6,7 @@
 #include "debug_utils.h"
 #include "game_types.h"
 #include "pickup_types.h"
+#include "door_utils.h"
 
 // all the states are mutually exclusive
 #define PLAYER_STATE_STAND		0
@@ -89,20 +90,34 @@ u8 computeSpriteNumber(u8 facingDirection, u8 currentFrameNumber)
 	return currentFrameNumber;
 }
 
-void Player_Init(PlayerData* playerData, const Resources* resources)
+void Player_GameInit(PlayerData* playerData, const Resources* resources)
+{
+	playerData->lastDoor = NULL;
+	playerData->bitShiftedSprites = resources->bitShiftedSprites_player;
+	playerData->bitShiftedCollisionMasks = resources->bitShiftedCollisionmasks_player;
+}
+
+void Player_RoomInit(PlayerData* playerData, const Resources* resources)
 {
 	playerData->state = PLAYER_STATE_STAND;
-	playerData->x = SET_HIGH_BYTE(PLAYER_START_X);
-	playerData->y = SET_HIGH_BYTE(PLAYER_START_Y);
+
+	if (playerData->lastDoor)
+	{
+		playerData->x = SET_HIGH_BYTE(playerData->lastDoor->xLocationInNextRoom);
+		playerData->y = SET_HIGH_BYTE(playerData->lastDoor->yLocationInNextRoom);
+	}
+	else
+	{
+		playerData->x = SET_HIGH_BYTE(PLAYER_START_X);
+		playerData->y = SET_HIGH_BYTE(PLAYER_START_Y);
+	}
+
 	playerData->speedx = 0xffa8;
 	playerData->speedy = 0;
 	playerData->currentFrameNumber = PLAYER_RUN_FRAME_0_STAND;
 	playerData->facingDirection = PLAYER_FACING_LEFT;
 	playerData->safeLanding = TRUE;
 	playerData->ignoreRopesCounter = 0;
-
-	playerData->bitShiftedSprites = resources->bitShiftedSprites_player;
-	playerData->bitShiftedCollisionMasks = resources->bitShiftedCollisionmasks_player;
 
 	playerData->currentSpriteNumber = computeSpriteNumber(playerData->facingDirection, playerData->currentFrameNumber);
 
@@ -115,11 +130,24 @@ void Player_Init(PlayerData* playerData, const Resources* resources)
 void Player_Update(PlayerData* playerData, 
 				   const JoystickState* joystickState, 
 				   u8* framebuffer, 
-				   u8* cleanBackground)
+				   u8* cleanBackground,
+				   DoorInfoData* doorInfoData,
+				   u8* doorStateData)
 {
 	if (joystickState->debugStatePressed)
 	{
-		playerData->state = playerData->state != PLAYER_STATE_DEBUG ? PLAYER_STATE_DEBUG : PLAYER_STATE_STAND;
+		if (playerData->state != PLAYER_STATE_DEBUG)
+		{
+			playerData->state = PLAYER_STATE_DEBUG;
+			playerData->speedy = 0;
+			playerData->speedx = 0;
+		}
+		else
+		{	
+			playerData->state = PLAYER_STATE_JUMP;
+			playerData->speedy = 0;
+			playerData->jumpAirCounter = 1;
+		}
 	}
 
 	eraseSprite_24PixelsWide(playerData->currentSprite,
@@ -429,6 +457,24 @@ void Player_Update(PlayerData* playerData,
 							GET_HIGH_BYTE(playerData->y), 
 							PLAYER_SPRITE_ROWS, 
 							framebuffer);
+
+	// door touching check
+	DoorInfo* doorInfoRunner = doorInfoData->doorInfos;
+	for (u8 loop = 0; loop < doorInfoData->drawInfosCount; loop++)
+	{
+		if (GET_HIGH_BYTE(playerData->y) == doorInfoRunner->y &&
+			GET_HIGH_BYTE(playerData->x) == doorInfoRunner->x)
+		{
+			if (doorStateData[doorInfoRunner->globalDoorIndex] & playerData->playerMask)
+			{
+				// jump to next room
+				playerData->lastDoor = doorInfoRunner;
+				return;
+			}
+		}
+
+		doorInfoRunner++;
+	}
 }
 
 u8 collisionTestBuffer[PLAYER_BITSHIFTED_COLLISION_MASK_FRAME_SIZE];
@@ -536,7 +582,7 @@ void Player_PerformCollisions(struct GameData* gameDataStruct,
 					(*playerData->score) += PICKUP_KEY_POINTS;
 
 					// activate a door
-					// draw a door if in the same room
+					// draw a door if it's in the same room
 
 					u8 doorIndex = pickUp->doorUnlockIndex;
 
@@ -550,42 +596,17 @@ void Player_PerformCollisions(struct GameData* gameDataStruct,
 					{
 						if (doorInfoRunner->globalDoorIndex == doorIndex) // the key actives a door in this room
 						{
-							if (doorInfoRunner->doorPosition != 0xffff) // initial invisible game door
+							if (doorInfoRunner->y != 0xffff) // initial invisible game door
 							{
-
-								// draw the door. 
-								u8 y = GET_LOW_BYTE(doorInfoRunner->doorPosition);
-								u8 x = GET_HIGH_BYTE(doorInfoRunner->doorPosition);
-
-								// adjust the door position, as per the original game.
-								if (x > 40) 
-									x += 7;
-								else
-									x -= 4;
-
-								u8* doorSprite = getBitShiftedSprite(resources->bitShiftedSprites_door, 
-																	 0,
-																	 x & 3, 
-																	 DOOR_BITSHIFTED_SPRITE_FRAME_SIZE);
-
-								// draw on both framebuffer and clean buffer
-								drawSprite_24PixelsWide(doorSprite, 
-														x, 
-														y, 
-														PLAYER_SPRITE_ROWS, 
-														gameData->framebuffer);
-
-								drawSprite_24PixelsWide(doorSprite, 
-														x, 
-														y, 
-														PLAYER_SPRITE_ROWS, 
-														gameData->cleanBackground);
-
+								drawDoor(doorInfoRunner, 
+										resources->bitShiftedSprites_door, 
+										gameData->framebuffer, 
+										gameData->cleanBackground,
+										TRUE /*draw on framebuffer*/);
 							}
 						}
 
 						doorInfoRunner++;
-
 					}
 
 					break;

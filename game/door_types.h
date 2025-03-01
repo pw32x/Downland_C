@@ -7,11 +7,15 @@
 #define DOOR_SPRITE_ROWS    16
 #define DOOR_BITSHIFTED_SPRITE_FRAME_SIZE (DOOR_SPRITE_ROWS * 3) // rows * 3 bytes per row
 
+#define DOOR_TOTAL_COUNT 0x22 // 34
+
 // per-room door information stored in rom
 typedef struct
 {
-    u16 doorPosition;
-    u16 spawnLocationInNextRoom;
+    u8 y;
+    u8 x;
+    u8 yLocationInNextRoom;
+    u8 xLocationInNextRoom;
     u8 nextRoomNumber;
     u8 globalDoorIndex;
 } DoorInfo;

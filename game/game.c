@@ -95,6 +95,8 @@ void Game_Init(GameData* gameData, Resources* resources)
 	gameData->playerData.score = &gameData->playerOneScore;
 	gameData->playerData.scoreString = gameData->string_playerOneScore;
 
+	Player_GameInit(&gameData->playerData, resources);
+
 	// init title screen
 	//Game_EnterRoom(gameData, TITLESCREEN_ROOM_INDEX, resources);
 	Game_TransitionToRoom(gameData, 0 /*TITLESCREEN_ROOM_INDEX*/, resources);

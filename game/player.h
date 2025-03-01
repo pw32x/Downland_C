@@ -4,6 +4,7 @@
 #include "base_types.h"
 #include "resource_types.h"
 #include "joystick_types.h"
+#include "door_types.h"
 
 #define PLAYER_SPRITE_COUNT			10
 #define PLAYER_SPRITE_ROWS			16
@@ -42,10 +43,20 @@ typedef struct
 	u8* scoreString;
 
 	u8 globalAnimationCounter; // drives running, climbing animation
+
+	DoorInfo* lastDoor;
 } PlayerData;
 
-void Player_Init(PlayerData* playerData, const Resources* resources);
-void Player_Update(PlayerData* playerData, const JoystickState* joystickState, u8* framebuffer, u8* cleanBackground);
+void Player_GameInit(PlayerData* playerData, const Resources* resources);
+void Player_RoomInit(PlayerData* playerData, const Resources* resources);
+
+void Player_Update(PlayerData* playerData, 
+				   const JoystickState* joystickState, 
+				   u8* framebuffer, 
+				   u8* cleanBackground, 
+				   DoorInfoData* doorInfoData,
+				   u8* doorStateData);
+
 u8 Player_HasCollision(PlayerData* playerData, u8* framebuffer, u8* cleanBackground);
 void Player_PerformCollisions(struct GameData* gameData, Resources* resources);
 #endif

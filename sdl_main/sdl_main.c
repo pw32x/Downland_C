@@ -126,10 +126,12 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
         else if (event->key.key >= SDLK_1 && event->key.key <= SDLK_9)
         {
             u8 roomNumber = event->key.key - SDLK_1;
+            gameData.playerData.lastDoor = &resources.roomResources[roomNumber].doorInfoData.doorInfos[0];
             Game_TransitionToRoom(&gameData, roomNumber, &resources);
         }
         else if (event->key.key == SDLK_0)
         {
+            gameData.playerData.lastDoor = &resources.roomResources[9].doorInfoData.doorInfos[0];
             Game_TransitionToRoom(&gameData, 9, &resources);
         }
     }

@@ -76,7 +76,8 @@ DONE use door to go to next room
 
 DONE draw doors when drawing room at room init
 
-face the correct way when entering a room
+DONE face the correct way when entering a room
+
 pick a door when entering a room by hotkey
 
 

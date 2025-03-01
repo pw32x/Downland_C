@@ -93,6 +93,7 @@ u8 computeSpriteNumber(u8 facingDirection, u8 currentFrameNumber)
 void Player_GameInit(PlayerData* playerData, const Resources* resources)
 {
 	playerData->lastDoor = NULL;
+	playerData->facingDirection = PLAYER_FACING_LEFT;
 	playerData->bitShiftedSprites = resources->bitShiftedSprites_player;
 	playerData->bitShiftedCollisionMasks = resources->bitShiftedCollisionmasks_player;
 }
@@ -115,7 +116,6 @@ void Player_RoomInit(PlayerData* playerData, const Resources* resources)
 	playerData->speedx = 0xffa8;
 	playerData->speedy = 0;
 	playerData->currentFrameNumber = PLAYER_RUN_FRAME_0_STAND;
-	playerData->facingDirection = PLAYER_FACING_LEFT;
 	playerData->safeLanding = TRUE;
 	playerData->ignoreRopesCounter = 0;
 

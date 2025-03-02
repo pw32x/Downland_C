@@ -89,6 +89,8 @@ DONE respawning
 
 mid-air animation, fall
 
+death when falling from too high
+
 losing a life
 
 game over

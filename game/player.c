@@ -16,15 +16,17 @@
 #define PLAYER_STATE_CLIMB			4
 #define PLAYER_STATE_REGENERATION	5
 #define PLAYER_STATE_SPLAT			6
+#define PLAYER_MIDAIR_DEATH			7
+#define PLAYER_STATE_DEBUG			0xff
 
 #define PLAYER_REGENERATION_TIME			0x190 // 400
 #define PLAYER_REGENERATION_IMMOBILE_TIME	0x28  // 40
 #define PLAYER_SPLAT_INITIAL_FREEZE_TIME	0xa
 #define PLAYER_SPLAT_ANIMATION_TRIGGER_TIME 0x46
 #define PLAYER_SPLAT_WAIT_TIME				(PLAYER_SPLAT_ANIMATION_TRIGGER_TIME + PLAYER_SPLAT_INITIAL_FREEZE_TIME)
+#define PLAYER_MIDAIR_DEATH_PAUSE_TIME		0x32 // 40
 
 
-#define PLAYER_STATE_DEBUG			0xff
 
 #define PLAYER_RUN_SPEED_LEFT	0xffca
 #define PLAYER_RUN_SPEED_RIGHT	0x36
@@ -82,6 +84,53 @@ u16 ropeCollisionMasks[4] =
     0x0030, // 0000000000110000b
     0x0c00, // 0000110000000000b
 };
+
+void playerKill(PlayerData* playerData, u8* framebuffer, u8* cleanBackground)
+{
+	playerData->speedx = 0;
+	playerData->speedy = 0;
+	playerData->regenerationCounter = 0;
+	playerData->isDead = TRUE;
+
+	if (playerData->state == PLAYER_STATE_STAND ||
+		playerData->state == PLAYER_STATE_RUN)
+	{
+		playerData->state = PLAYER_STATE_SPLAT;
+		playerData->cantMoveCounter = PLAYER_REGENERATION_IMMOBILE_TIME;
+
+		u8 x = GET_HIGH_BYTE(playerData->x);
+		u8 y = GET_HIGH_BYTE(playerData->y);
+
+		// erase the player, then draw the splat sprite
+		// we won't redraw this again, like the original game
+		eraseSprite_24PixelsWide_simple(x,
+										y,
+										PLAYER_SPRITE_ROWS,
+										framebuffer, 
+										cleanBackground);
+
+		u8* splatSprite = getBitShiftedSprite(playerData->bitShiftedSplatSprite, 
+											  0,
+											  x & 3, 
+											  PLAYER_SPLAT_SPRITE_FRAME_SIZE);
+
+		drawSprite_24PixelsWide(splatSprite, 
+								x, 
+								y + 7, // draw the sprite to the ground
+								PLAYER_SPLAT_SPRITE_ROWS, 
+								framebuffer);
+
+		playerData->cantMoveCounter = PLAYER_SPLAT_WAIT_TIME;
+	}
+	else
+	{
+		playerData->state = PLAYER_MIDAIR_DEATH;
+		playerData->currentFrameNumber = PLAYER_RUN_FRAME_2_JUMP;
+		playerData->cantMoveCounter = PLAYER_MIDAIR_DEATH_PAUSE_TIME;
+		playerData->jumpAirCounter = 0;
+		playerData->safeLanding = FALSE;
+	}
+}
 
 u8 computeSpriteNumber(u8 facingDirection, u8 currentFrameNumber)
 {
@@ -145,7 +194,19 @@ void Player_Update(PlayerData* playerData,
 				   DoorInfoData* doorInfoData,
 				   u8* doorStateData)
 {
-	if (playerData->state == PLAYER_STATE_SPLAT)
+	if (playerData->state == PLAYER_MIDAIR_DEATH)
+	{
+		if (playerData->cantMoveCounter)
+			playerData->cantMoveCounter--;
+
+		playerData->facingDirection = playerData->cantMoveCounter & 4 ? PLAYER_FACING_LEFT : PLAYER_FACING_RIGHT;
+
+		if (!playerData->cantMoveCounter)
+		{
+			playerData->state = PLAYER_STATE_FALL;
+		}
+	}
+	else if (playerData->state == PLAYER_STATE_SPLAT)
 	{
 		if (playerData->cantMoveCounter == PLAYER_SPLAT_ANIMATION_TRIGGER_TIME)
 		{
@@ -341,6 +402,7 @@ void Player_Update(PlayerData* playerData,
 	{
 		playerData->currentFrameNumber = PLAYER_RUN_FRAME_2_JUMP;
 		playerData->jumpAirCounter--;
+		playerData->safeLanding = TRUE;
 		playerData->speedy += 3; // apply gravity
 		if (!playerData->jumpAirCounter)
 		{
@@ -354,7 +416,10 @@ void Player_Update(PlayerData* playerData,
 		playerData->speedy += 6; // apply more gravity
 
 		if (playerData->speedy > PLAYER_MAX_FALL_SPEED)
+		{
 			playerData->speedy = PLAYER_MAX_FALL_SPEED;
+			playerData->safeLanding = FALSE;
+		}
 
 		//// reduce x speed while falling by a little
 		//if (playerData->speedx)
@@ -369,9 +434,13 @@ void Player_Update(PlayerData* playerData,
 			playerData->state = PLAYER_STATE_STAND;
 			playerData->speedy = 0;
 			playerData->currentFrameNumber = PLAYER_RUN_FRAME_0_STAND;
+
+			if (!playerData->safeLanding || playerData->isDead)
+			{
+				playerKill(playerData, framebuffer, cleanBackground);
+				return;
+			}
 		}
-
-
 	}
 	else if (playerData->state == PLAYER_STATE_CLIMB)
 	{
@@ -390,6 +459,7 @@ void Player_Update(PlayerData* playerData,
 				playerData->speedx = PLAYER_RUN_SPEED_LEFT;
 				playerData->facingDirection = PLAYER_FACING_LEFT;
 				playerData->speedy = 0xff61;
+				playerData->safeLanding = TRUE;
 				playerData->jumpAirCounter = PLAYER_JUMP_AIR_COUNT;
 				playerData->state = PLAYER_STATE_JUMP;
 				playerData->ignoreRopesCounter = 20;
@@ -399,6 +469,7 @@ void Player_Update(PlayerData* playerData,
 				playerData->speedx = PLAYER_RUN_SPEED_RIGHT;
 				playerData->facingDirection = PLAYER_FACING_RIGHT;
 				playerData->speedy = 0xff61;
+				playerData->safeLanding = TRUE;
 				playerData->jumpAirCounter = PLAYER_JUMP_AIR_COUNT;
 				playerData->state = PLAYER_STATE_JUMP;
 				playerData->ignoreRopesCounter = 20;
@@ -486,7 +557,8 @@ void Player_Update(PlayerData* playerData,
 	// if in the air, check for ropes
 	if ((playerData->state == PLAYER_STATE_JUMP ||
 		playerData->state == PLAYER_STATE_FALL) &&
-		!playerData->ignoreRopesCounter)
+		!playerData->ignoreRopesCounter &&
+		!playerData->isDead)
 	{
 		u8 testResult = testTerrainCollision(playerData->x, 
 											 playerData->y, 
@@ -633,50 +705,7 @@ u8 Player_HasCollision(PlayerData* playerData, u8* framebuffer, u8* cleanBackgro
 	return FALSE;
 }
 
-void playerKill(PlayerData* playerData, u8* framebuffer, u8* cleanBackground)
-{
-	playerData->speedx = 0;
-	playerData->speedy = 0;
-	playerData->regenerationCounter = 0;
-	playerData->isDead = TRUE;
 
-	if (playerData->state == PLAYER_STATE_STAND ||
-		playerData->state == PLAYER_STATE_RUN)
-	{
-		playerData->state = PLAYER_STATE_SPLAT;
-		playerData->cantMoveCounter = PLAYER_REGENERATION_IMMOBILE_TIME;
-
-		u8 x = GET_HIGH_BYTE(playerData->x);
-		u8 y = GET_HIGH_BYTE(playerData->y);
-
-		// erase the player, then draw the splat sprite
-		// we won't redraw this again, like the original game
-		eraseSprite_24PixelsWide_simple(x,
-										y,
-										PLAYER_SPRITE_ROWS,
-										framebuffer, 
-										cleanBackground);
-
-		u8* splatSprite = getBitShiftedSprite(playerData->bitShiftedSplatSprite, 
-											  0,
-											  x & 3, 
-											  PLAYER_SPLAT_SPRITE_FRAME_SIZE);
-
-		drawSprite_24PixelsWide(splatSprite, 
-								x, 
-								y + 7, // draw the sprite to the ground
-								PLAYER_SPLAT_SPRITE_ROWS, 
-								framebuffer);
-
-		playerData->cantMoveCounter = PLAYER_SPLAT_WAIT_TIME;
-	}
-	else
-	{
-		playerData->state = PLAYER_STATE_REGENERATION;
-		playerData->regenerationCounter = PLAYER_REGENERATION_TIME;
-		playerData->cantMoveCounter = PLAYER_REGENERATION_IMMOBILE_TIME;
-	}
-}
 
 BOOL objectCollisionTest(PlayerData* playerData, u8 x, u8 y, u8 width, u8 height)
 {

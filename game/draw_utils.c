@@ -65,6 +65,101 @@ void drawSprite_16PixelsWide(u8* spriteData,
     }
 }
 
+void drawSprite_24PixelsWide(u8* spriteData, 
+                             u8 x, 
+                             u8 y, 
+                             u8 numLines,
+                             u8* framebuffer)
+{
+    framebuffer += (x / 4) + (y * FRAMEBUFFER_PITCH);
+
+    // for each character
+    while (numLines--)
+    {
+        // first byte
+        *framebuffer |= *spriteData;
+        framebuffer++;
+        spriteData++;
+
+        // second byte
+        *framebuffer |= *spriteData;
+        framebuffer++;
+        spriteData++;
+
+        // third byte
+        *framebuffer |= *spriteData;
+        spriteData++;
+
+        // move framebuffer to next row
+        framebuffer += (FRAMEBUFFER_PITCH - 2); // go down one row in the frame buffer for the next line.
+    }
+}
+
+void drawSprite_24PixelsWide_noblend(u8* spriteData, 
+									 u8 x, 
+									 u8 y, 
+									 u8 numLines,
+									 u8* framebuffer)
+{
+    framebuffer += (x / 4) + (y * FRAMEBUFFER_PITCH);
+
+    // for each character
+    while (numLines--)
+    {
+        // first byte
+        *framebuffer = *spriteData;
+        framebuffer++;
+        spriteData++;
+
+        // second byte
+        *framebuffer = *spriteData;
+        framebuffer++;
+        spriteData++;
+
+        // third byte
+        *framebuffer = *spriteData;
+        spriteData++;
+
+        // move framebuffer to next row
+        framebuffer += (FRAMEBUFFER_PITCH - 2); // go down one row in the frame buffer for the next line.
+    }
+}
+
+u8 corruptByte(u8 value)
+{
+	return ((value << 1) | value) & (rand() % 0xff);
+}
+
+void drawSprite_24PixelsWide_static(u8* spriteData, 
+									u8 x, 
+									u8 y, 
+									u8 numLines,
+									u8* framebuffer)
+{
+    framebuffer += (x / 4) + (y * FRAMEBUFFER_PITCH);
+
+    // for each character
+    while (numLines--)
+    {
+        // first byte
+        *framebuffer |= corruptByte(*spriteData);
+        framebuffer++;
+        spriteData++;
+
+        // second byte
+        *framebuffer |= corruptByte(*spriteData);
+        framebuffer++;
+        spriteData++;
+
+        // third byte
+        *framebuffer |= corruptByte(*spriteData);
+        spriteData++;
+
+        // move framebuffer to next row
+        framebuffer += (FRAMEBUFFER_PITCH - 2); // go down one row in the frame buffer for the next line.
+    }
+}
+
 
 void eraseSprite_16PixelsWide(u8* spriteData, 
 							  u8 x, 
@@ -99,36 +194,32 @@ void eraseSprite_16PixelsWide(u8* spriteData,
 }
 
 
-void drawSprite_24PixelsWide(u8* spriteData, 
-                             u8 x, 
-                             u8 y, 
-                             u8 numLines,
-                             u8* framebuffer)
+void eraseSprite_16PixelsWide_simple(u8 x, 
+									 u8 y, 
+									 u8 numLines, 
+									 u8* framebuffer, 
+									 u8* cleanBackground)
 {
-    framebuffer += (x / 4) + (y * FRAMEBUFFER_PITCH);
+	u16 offset = (x / 4) + (y * FRAMEBUFFER_PITCH);
+	framebuffer += offset;
+	cleanBackground += offset;
 
-    // for each character
-    while (numLines--)
-    {
-        // first byte
-        *framebuffer |= *spriteData;
-        framebuffer++;
-        spriteData++;
+	for (int loop = 0; loop < numLines; loop++)
+	{
+		// remove the bits of the sprite from the frame buffer 
+		// and restore with the clean background
+		*framebuffer = *cleanBackground;
+		framebuffer++;
+		cleanBackground++;
 
-        // second byte
-        *framebuffer |= *spriteData;
-        framebuffer++;
-        spriteData++;
+		// remove the bits of the sprite from the frame buffer 
+		// and restore with the clean background
+		*framebuffer = *cleanBackground;
 
-        // third byte
-        *framebuffer |= *spriteData;
-        spriteData++;
-
-        // move framebuffer to next row
-        framebuffer += (FRAMEBUFFER_PITCH - 2); // go down one row in the frame buffer for the next line.
-    }
+		framebuffer += (FRAMEBUFFER_PITCH - 1); // move to the next row
+		cleanBackground += (FRAMEBUFFER_PITCH - 1);
+	}
 }
-
 
 void eraseSprite_24PixelsWide(u8* spriteData, 
 							  u8 x, 
@@ -162,6 +253,37 @@ void eraseSprite_24PixelsWide(u8* spriteData,
 		*framebuffer &= ~(*spriteData);
 		*framebuffer |= *cleanBackground;
 		spriteData++;
+
+		framebuffer += (FRAMEBUFFER_PITCH - 2); // move to the next row
+		cleanBackground += (FRAMEBUFFER_PITCH - 2);
+	}
+}
+
+void eraseSprite_24PixelsWide_simple(u8 x, 
+									 u8 y, 
+									 u8 numLines, 
+									 u8* framebuffer, 
+									 u8* cleanBackground)
+{
+	u16 offset = (x / 4) + (y * FRAMEBUFFER_PITCH);
+	framebuffer += offset;
+	cleanBackground += offset;
+
+	for (int loop = 0; loop < numLines; loop++)
+	{
+		// remove the bits of the sprite from the frame buffer 
+		// and restore with the clean background
+		*framebuffer = *cleanBackground;
+		framebuffer++;
+		cleanBackground++;
+
+		// second byte
+		*framebuffer = *cleanBackground;
+		framebuffer++;
+		cleanBackground++;
+
+		// third byte
+		*framebuffer = *cleanBackground;
 
 		framebuffer += (FRAMEBUFFER_PITCH - 2); // move to the next row
 		cleanBackground += (FRAMEBUFFER_PITCH - 2);

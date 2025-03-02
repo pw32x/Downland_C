@@ -42,6 +42,9 @@ typedef struct
 	u32* score; // points to score stored in gameData
 	u8* scoreString;
 
+	u8 cantMoveCounter;
+	u16 regenerationCounter;
+
 	u8 globalAnimationCounter; // drives running, climbing animation
 
 	DoorInfo* lastDoor;

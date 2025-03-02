@@ -138,27 +138,44 @@ void drawPickups(Pickup* pickups,
 
 // this is all wrong
 void drawPlayerLives(u8 playerLives,
-					 u8 currentFrame,
+					 u8 currentSpriteNumber,
 					 u8* playerBitShiftedSprites,
-					 u8* framebuffer)
+					 u8* framebuffer,
+					 u8* cleanBackground,
+					 u8 isRegenerating)
 {
 	u8 x = PLAYERLIVES_ICON_X;
 	u8 y = PLAYERLIVES_ICON_Y;
 
 	u8* currentSprite = getBitShiftedSprite(playerBitShiftedSprites, 
-											currentFrame, 
+											currentSpriteNumber, 
 											0, 
 											PLAYER_BITSHIFTED_SPRITE_FRAME_SIZE);
 
 	for (u8 loop = 0; loop < playerLives; loop++)
 	{
-		drawSprite_24PixelsWide(currentSprite,
-								x, 
-								y, 
-								PLAYERICON_NUM_SPRITE_ROWS,
-								framebuffer);
+		drawSprite_24PixelsWide_noblend(currentSprite,
+										x, 
+										y, 
+										PLAYERICON_NUM_SPRITE_ROWS,
+										framebuffer);
 
 		x += PLAYERLIVES_ICON_SPACING;
+	}
+
+	eraseSprite_24PixelsWide_simple(x, 
+									y, 
+									PLAYERICON_NUM_SPRITE_ROWS,
+									framebuffer,
+									cleanBackground);
+
+	if (isRegenerating)
+	{
+		drawSprite_24PixelsWide_static(currentSprite,
+									   x, 
+									   y, 
+									   PLAYERICON_NUM_SPRITE_ROWS,
+									   framebuffer);
 	}
 }
 
@@ -236,11 +253,6 @@ void room_init(Room* room, GameData* gameData, Resources* resources)
 			 gameData->framebuffer, 
 			 CHAMBER_NUMBER_TEXT_DRAW_LOCATION);
 
-	drawPlayerLives(gameData->playerLives,
-					gameData->playerData.currentFrameNumber,
-					gameData->playerData.bitShiftedSprites,
-					gameData->framebuffer);
-
 	convertScoreToString(*gameData->playerData.score, gameData->playerData.scoreString);
 
 	drawText(gameData->playerData.scoreString, 
@@ -301,6 +313,13 @@ void room_update(Room* room, GameData* gameData, Resources* resources)
 			 resources->characterFont, 
 			 gameData->framebuffer, 
 			 TIMER_DRAW_LOCATION);
+
+	drawPlayerLives(gameData->playerLives,
+					gameData->playerData.currentSpriteNumber,
+					gameData->playerData.bitShiftedSprites,
+					gameData->framebuffer,
+					gameData->cleanBackground,
+					gameData->playerData.regenerationCounter || gameData->playerData.cantMoveCounter);
 }
 
 Room room0 =

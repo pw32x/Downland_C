@@ -11,11 +11,16 @@
 void setPixel(u8* framebuffer, u8 x, u8 y, u8 value);
 
 void drawText(u8* text, u8* characterFont, u8* framebuffer, u16 framebufferPosition);
-void drawSprite_16PixelsWide(u8* spriteData, u8 x, u8 y, u8 numLines, u8* framebuffer);
-void eraseSprite_16PixelsWide(u8* spriteData, u8 x, u8 y, u8 numLines, u8* framebuffer, u8* cleanBackground);
 
+void drawSprite_16PixelsWide(u8* spriteData, u8 x, u8 y, u8 numLines, u8* framebuffer);
 void drawSprite_24PixelsWide(u8* spriteData, u8 x, u8 y, u8 numLines, u8* framebuffer);
+void drawSprite_24PixelsWide_noblend(u8* spriteData, u8 x, u8 y, u8 numLines, u8* framebuffer);
+void drawSprite_24PixelsWide_static(u8* spriteData, u8 x, u8 y, u8 numLines, u8* framebuffer);
+
+void eraseSprite_16PixelsWide(u8* spriteData, u8 x, u8 y, u8 numLines, u8* framebuffer, u8* cleanBackground);
+void eraseSprite_16PixelsWide_simple(u8 x, u8 y, u8 numLines, u8* framebuffer, u8* cleanBackground);
 void eraseSprite_24PixelsWide(u8* spriteData, u8 x, u8 y, u8 numLines, u8* framebuffer, u8* cleanBackground);
+void eraseSprite_24PixelsWide_simple(u8 x, u8 y, u8 numLines, u8* framebuffer, u8* cleanBackground);
 
 u8* getBitShiftedSprite(u8* bitShiftedSpriteData, u8 frameNumber, u8 x, u8 spriteFrameSize);
 

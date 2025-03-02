@@ -78,26 +78,22 @@ DONE draw doors when drawing room at room init
 
 DONE face the correct way when entering a room
 
-pick a door when entering a room by hotkey
+DONE pick a door when entering a room by hotkey
 
+DONE regenerating
 
-
-
-regenerating
 collision detection enemies
 dying
 respawning
-erase rope on top of player when climbing
-hang on rope
-
-use hard mode door indexes after completing the game once
 
 handle two players
 
-change room    
-door triggers
 
+erase rope on top of player when climbing
+hang on rope
+use hard mode door indexes after completing the game once
 
+drops positions need to be tweaked on hard mode
 
 analog stick support
 

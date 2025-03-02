@@ -9,13 +9,17 @@
 #include "door_utils.h"
 
 // all the states are mutually exclusive
-#define PLAYER_STATE_STAND		0
-#define PLAYER_STATE_RUN		1
-#define PLAYER_STATE_JUMP		2
-#define PLAYER_STATE_FALL		3
-#define PLAYER_STATE_CLIMB		4
-#define PLAYER_STATE_DEBUG		0xff
+#define PLAYER_STATE_STAND			0
+#define PLAYER_STATE_RUN			1
+#define PLAYER_STATE_JUMP			2
+#define PLAYER_STATE_FALL			3
+#define PLAYER_STATE_CLIMB			4
+#define PLAYER_STATE_REGENERATION	5
 
+#define PLAYER_REGENERATION_TIME			0x190 // 400
+#define PLAYER_REGENERATION_IMMOBILE_TIME	0x28  // 40
+
+#define PLAYER_STATE_DEBUG			0xff
 
 #define PLAYER_RUN_SPEED_LEFT	0xffca
 #define PLAYER_RUN_SPEED_RIGHT	0x36
@@ -100,20 +104,22 @@ void Player_GameInit(PlayerData* playerData, const Resources* resources)
 
 void Player_RoomInit(PlayerData* playerData, const Resources* resources)
 {
-	playerData->state = PLAYER_STATE_STAND;
-
 	if (playerData->lastDoor)
 	{
+		playerData->state = PLAYER_STATE_STAND;
 		playerData->x = SET_HIGH_BYTE(playerData->lastDoor->xLocationInNextRoom);
 		playerData->y = SET_HIGH_BYTE(playerData->lastDoor->yLocationInNextRoom);
 	}
 	else
 	{
+		playerData->state = PLAYER_STATE_REGENERATION;
+		playerData->regenerationCounter = PLAYER_REGENERATION_TIME;
+		playerData->cantMoveCounter = PLAYER_REGENERATION_IMMOBILE_TIME;
 		playerData->x = SET_HIGH_BYTE(PLAYER_START_X);
 		playerData->y = SET_HIGH_BYTE(PLAYER_START_Y);
 	}
 
-	playerData->speedx = 0xffa8;
+	playerData->speedx = 0;
 	playerData->speedy = 0;
 	playerData->currentFrameNumber = PLAYER_RUN_FRAME_0_STAND;
 	playerData->safeLanding = TRUE;
@@ -150,12 +156,35 @@ void Player_Update(PlayerData* playerData,
 		}
 	}
 
-	eraseSprite_24PixelsWide(playerData->currentSprite,
-							 GET_HIGH_BYTE(playerData->x),
-							 GET_HIGH_BYTE(playerData->y),
-							 PLAYER_SPRITE_ROWS,
-							 framebuffer, 
-							 cleanBackground);
+	if (playerData->state == PLAYER_STATE_REGENERATION)
+	{
+		eraseSprite_24PixelsWide_simple(GET_HIGH_BYTE(playerData->x),
+										GET_HIGH_BYTE(playerData->y),
+										PLAYER_SPRITE_ROWS,
+										framebuffer, 
+										cleanBackground);
+	}
+	else
+	{
+		eraseSprite_24PixelsWide(playerData->currentSprite,
+								 GET_HIGH_BYTE(playerData->x),
+								 GET_HIGH_BYTE(playerData->y),
+								 PLAYER_SPRITE_ROWS,
+								 framebuffer, 
+								 cleanBackground);
+	}
+
+	/*
+	// to test the regeneration effect
+	if (joystickState->jumpPressed)
+	{
+		playerData->state = PLAYER_STATE_REGENERATION;
+		playerData->speedx = 0;
+		playerData-.speedy = 0;
+		playerData->regenerationCounter = PLAYER_REGENERATION_TIME;
+		playerData->cantMoveCounter = PLAYER_REGENERATION_IMMOBILE_TIME;
+	}
+	*/
 
 	playerData->globalAnimationCounter++;
 
@@ -178,6 +207,29 @@ void Player_Update(PlayerData* playerData,
 		else if (joystickState->downDown)
 		{
 			playerData->y += PLAYER_DEBUG_SPEED;
+		}
+	}
+
+	if (playerData->state == PLAYER_STATE_REGENERATION)
+	{
+		if (joystickState->leftDown ||
+			joystickState->rightDown ||
+			joystickState->upDown ||
+			joystickState->downDown)
+		{
+			playerData->regenerationCounter = 0;
+		}
+
+		if (playerData->regenerationCounter)
+			playerData->regenerationCounter--;
+
+		if (playerData->cantMoveCounter)
+			playerData->cantMoveCounter--;
+
+		if (!playerData->cantMoveCounter && 
+			!playerData->regenerationCounter)
+		{
+			playerData->state = PLAYER_STATE_STAND;
 		}
 	}
 
@@ -452,11 +504,22 @@ void Player_Update(PlayerData* playerData,
 	//if (playerData->state == PLAYER_STATE_CLIMB)
 	//	return;
 
-	drawSprite_24PixelsWide(playerData->currentSprite, 
-							GET_HIGH_BYTE(playerData->x), 
-							GET_HIGH_BYTE(playerData->y), 
-							PLAYER_SPRITE_ROWS, 
-							framebuffer);
+	if (playerData->state != PLAYER_STATE_REGENERATION)
+	{
+		drawSprite_24PixelsWide(playerData->currentSprite, 
+								GET_HIGH_BYTE(playerData->x), 
+								GET_HIGH_BYTE(playerData->y), 
+								PLAYER_SPRITE_ROWS, 
+								framebuffer);
+	}
+	else
+	{
+		drawSprite_24PixelsWide_static(playerData->currentSprite, 
+									   GET_HIGH_BYTE(playerData->x), 
+									   GET_HIGH_BYTE(playerData->y), 
+									   PLAYER_SPRITE_ROWS, 
+									   framebuffer);
+	}
 
 	// door touching check
 	DoorInfo* doorInfoRunner = doorInfoData->doorInfos;

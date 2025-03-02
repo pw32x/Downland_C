@@ -5,6 +5,9 @@
 
 #define NUM_DROPS 10
 
+#define DROP_WIDTH  4
+#define DROP_HEIGHT	6
+
 typedef struct
 {
 	u8 wiggleTimer;
@@ -32,6 +35,7 @@ typedef struct
 {
 	Drop drops[NUM_DROPS];
 	DropSpawnPositions* dropSpawnPositions;
+	u8 activeDropsCount;
 } DropData;
 
 #endif

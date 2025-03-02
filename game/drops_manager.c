@@ -44,6 +44,8 @@ void DropsManager_Init(DropData* dropData, u8 roomNumber, u8 gameCompletionCount
 		dropsToInitCount++; // always one more
 	}
 
+	dropData->activeDropsCount = dropsToInitCount;
+
 	for (int loop = 0; loop < dropsToInitCount; loop++)
 		dropData->drops[loop].wiggleTimer = 1;
 }
@@ -155,3 +157,4 @@ void DropsManager_Update(DropData* dropData,
 		drops += 2; // skip to the second drop
 	}
 }
+

@@ -39,8 +39,6 @@
 #define PLAYER_START_X 0x70 // 112
 #define PLAYER_START_Y 0xa5 // 165
 
-#define PLAYER_COLLISION_WIDTH 8
-
 #define PLAYER_WALL_SENSOR_YOFFSET		12
 #define PLAYER_GROUND_SENSOR_YOFFSET	16
 #define PLAYER_ROPE_SENSOR_YOFFSET		8
@@ -180,7 +178,7 @@ void Player_Update(PlayerData* playerData,
 	{
 		playerData->state = PLAYER_STATE_REGENERATION;
 		playerData->speedx = 0;
-		playerData-.speedy = 0;
+		playerData->speedy = 0;
 		playerData->regenerationCounter = PLAYER_REGENERATION_TIME;
 		playerData->cantMoveCounter = PLAYER_REGENERATION_IMMOBILE_TIME;
 	}
@@ -596,6 +594,15 @@ u8 Player_HasCollision(PlayerData* playerData, u8* framebuffer, u8* cleanBackgro
 	return FALSE;
 }
 
+void playerKill(PlayerData* playerData)
+{
+	playerData->state = PLAYER_STATE_REGENERATION;
+	playerData->speedx = 0;
+	playerData->speedy = 0;
+	playerData->regenerationCounter = PLAYER_REGENERATION_TIME;
+	playerData->cantMoveCounter = PLAYER_REGENERATION_IMMOBILE_TIME;
+}
+
 BOOL objectCollisionTest(PlayerData* playerData, u8 x, u8 y, u8 width, u8 height)
 {
 	u8 playerX = GET_HIGH_BYTE(playerData->x);
@@ -605,6 +612,31 @@ BOOL objectCollisionTest(PlayerData* playerData, u8 x, u8 y, u8 width, u8 height
 		    x + width > playerX &&
 		    y < playerY + PLAYER_SPRITE_ROWS &&
 		    y + height > playerY);
+}
+
+BOOL dropsManagerCollisionTest(DropData* dropData, PlayerData* playerData)
+{
+	const Drop* dropRunner = dropData->drops;
+
+	for (u8 loop = 0; loop < dropData->activeDropsCount; loop++)
+	{
+		if (dropRunner->wiggleTimer)
+		{
+			if (objectCollisionTest(playerData, 
+									dropRunner->x, 
+									GET_HIGH_BYTE(dropRunner->y),
+									DROP_WIDTH,
+									DROP_HEIGHT))
+			{
+				return TRUE;
+			}
+
+		}
+
+		dropRunner++;
+	}
+
+	return FALSE;
 }
 
 void Player_PerformCollisions(struct GameData* gameDataStruct, 
@@ -635,8 +667,6 @@ void Player_PerformCollisions(struct GameData* gameDataStruct,
 									 PICKUPS_NUM_SPRITE_ROWS,
 									 gameData->framebuffer,
 									 gameData->cleanBackground);
-
-
 
 			switch (pickUp->type)
 			{
@@ -700,6 +730,35 @@ void Player_PerformCollisions(struct GameData* gameDataStruct,
 	}
 
 	// collide with drops
+	if (dropsManagerCollisionTest(&gameData->dropData, playerData))
+	{
+		playerKill(&gameData->playerData);
+		return;
+	}
+
 	// collide with ball
+	BallData* ballData = &gameData->ballData;
+
+	if (objectCollisionTest(playerData, 
+							GET_HIGH_BYTE(ballData->x),
+							GET_HIGH_BYTE(ballData->y),
+							BALL_COLLISION_WIDTH,
+							BALL_SPRITE_ROWS))
+	{
+		playerKill(&gameData->playerData);
+		return;
+	}
+
 	// collide with bird
+	BirdData* birdData = &gameData->birdData;
+
+	if (objectCollisionTest(playerData, 
+							GET_HIGH_BYTE(birdData->x),
+							GET_HIGH_BYTE(birdData->y),
+							BIRD_COLLISION_WIDTH,
+							BIRD_SPRITE_ROWS))
+	{
+		playerKill(&gameData->playerData);
+		return;
+	}
 }

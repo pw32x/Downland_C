@@ -82,9 +82,16 @@ DONE pick a door when entering a room by hotkey
 
 DONE regenerating
 
-collision detection enemies
-dying
+DONE collision detection enemies
+
+mid-air animation, fall
+splat and pause
+
 respawning
+
+losing a life
+
+game over
 
 handle two players
 
@@ -103,3 +110,4 @@ visual studio for code dev
 ghidra for reverse engineering
 trs80gp for rom debugging
 graphics gale for frame analysis
+

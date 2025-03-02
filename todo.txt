@@ -84,10 +84,10 @@ DONE regenerating
 
 DONE collision detection enemies
 
-mid-air animation, fall
-splat and pause
+DONE splat and pause
+DONE respawning
 
-respawning
+mid-air animation, fall
 
 losing a life
 
@@ -95,14 +95,21 @@ game over
 
 handle two players
 
-
 erase rope on top of player when climbing
 hang on rope
+
+
 use hard mode door indexes after completing the game once
 
 drops positions need to be tweaked on hard mode
 
-analog stick support
+bouncing off walls isn't accurate
+jump isn't accurate
+
+sound
+
+beta testing
+player replay system
 
 
 Tools

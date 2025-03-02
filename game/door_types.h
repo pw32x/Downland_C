@@ -3,8 +3,9 @@
 
 #include "base_types.h"
 
-#define DOOR_SPRITE_COUNT   1
-#define DOOR_SPRITE_ROWS    16
+#define DOOR_SPRITE_COUNT           1
+#define DOOR_SPRITE_ROWS            16
+#define DOOR_SPRITE_BYTES_PER_ROW   2
 #define DOOR_BITSHIFTED_SPRITE_FRAME_SIZE (DOOR_SPRITE_ROWS * 3) // rows * 3 bytes per row
 
 #define DOOR_TOTAL_COUNT 0x22 // 34

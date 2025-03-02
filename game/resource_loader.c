@@ -273,9 +273,8 @@ void generate_shifted_sprites(u8 original[HEIGHT][WIDTH_BYTES], u8 shifted[SHIFT
 }
 
 // assume two bytes per row
-u8* buildBitShiftedSprites(u8* spriteData, u8 spriteCount, u8 rowCount)
+u8* buildBitShiftedSprites(u8* spriteData, u8 spriteCount, u8 rowCount, u8 bytesPerRow)
 {
-#define SOURCE_BYTES_PER_ROW		2
 #define DESTINATION_BYTES_PER_ROW	3
 #define NUM_BIT_SHIFTS 4
 
@@ -289,7 +288,7 @@ u8* buildBitShiftedSprites(u8* spriteData, u8 spriteCount, u8 rowCount)
 	{
 		for (int shiftAmount = 0; shiftAmount < NUM_BIT_SHIFTS; shiftAmount++)
 		{
-			u8* spriteDataRunner = spriteData + (loop * rowCount * SOURCE_BYTES_PER_ROW);
+			u8* spriteDataRunner = spriteData + (loop * rowCount * bytesPerRow);
 
 			for (int rowLoop = 0; rowLoop < rowCount; rowLoop++)
 			{
@@ -299,7 +298,7 @@ u8* buildBitShiftedSprites(u8* spriteData, u8 spriteCount, u8 rowCount)
 				bitShiftedSpritesRunner[1] = (u8)(workBuffer >> 8);
 				bitShiftedSpritesRunner[2] = (u8)workBuffer;
 
-				spriteDataRunner += SOURCE_BYTES_PER_ROW;
+				spriteDataRunner += bytesPerRow;
 				bitShiftedSpritesRunner += DESTINATION_BYTES_PER_ROW;
 			}
 		}
@@ -307,6 +306,7 @@ u8* buildBitShiftedSprites(u8* spriteData, u8 spriteCount, u8 rowCount)
 
 	return bitShiftedSprites;
 }
+
 
 BOOL ResourceLoader_Init(const char* romPath, Resources* resources)
 {
@@ -354,12 +354,16 @@ BOOL ResourceLoader_Init(const char* romPath, Resources* resources)
     resources->sprites_drops = getBytes(file, 0xdf2a, 0xdf5a);
 
 	// generate bit shifted sprites
-	resources->bitShiftedSprites_player = buildBitShiftedSprites(resources->sprites_player, PLAYER_SPRITE_COUNT, PLAYER_SPRITE_ROWS);
-	resources->bitShiftedCollisionmasks_player = buildBitShiftedSprites(resources->collisionmasks_player, PLAYER_SPRITE_COUNT, PLAYER_COLLISION_MASK_ROWS);
-	resources->bitShiftedSprites_bouncyBall = buildBitShiftedSprites(resources->sprites_bouncyBall, BALL_SPRITE_COUNT, BALL_SPRITE_ROWS);
-	resources->bitShiftedSprites_bird = buildBitShiftedSprites(resources->sprites_bird, BIRD_SPRITE_COUNT, BIRD_SPRITE_ROWS);
-	resources->bitShiftedSprites_door = buildBitShiftedSprites(resources->sprite_door, DOOR_SPRITE_COUNT, DOOR_SPRITE_ROWS);
+	resources->bitShiftedSprites_player = buildBitShiftedSprites(resources->sprites_player, PLAYER_SPRITE_COUNT, PLAYER_SPRITE_ROWS, PLAYER_SPRITE_BYTES_PER_ROW);
+	resources->bitShiftedCollisionmasks_player = buildBitShiftedSprites(resources->collisionmasks_player, PLAYER_SPRITE_COUNT, PLAYER_COLLISION_MASK_ROWS, PLAYER_COLLISION_MASK_BYTES_PER_ROW);
+	resources->bitShiftedSprites_bouncyBall = buildBitShiftedSprites(resources->sprites_bouncyBall, BALL_SPRITE_COUNT, BALL_SPRITE_ROWS, BALL_SPRITE_BYTES_PER_ROW);
+	resources->bitShiftedSprites_bird = buildBitShiftedSprites(resources->sprites_bird, BIRD_SPRITE_COUNT, BIRD_SPRITE_ROWS, BIRD_SPRITE_BYTES_PER_ROW);
 
+	// in the original game, the player splat sprite and the door
+	// are loaded, bitshifted, and drawn on demand. Here we just 
+	// pre-build them because gigs of ram. 
+	resources->bitShiftedSprites_playerSplat = buildBitShiftedSprites(resources->sprite_playerSplat, PLAYER_SPLAT_SPRITE_COUNT, PLAYER_SPLAT_SPRITE_ROWS, PLAYER_SPLAT_SPRITE_BYTES_PER_ROW);
+	resources->bitShiftedSprites_door = buildBitShiftedSprites(resources->sprite_door, DOOR_SPRITE_COUNT, DOOR_SPRITE_ROWS, DOOR_SPRITE_BYTES_PER_ROW);
 
 	resources->pickupSprites[0] = resources->sprite_diamond;
 	resources->pickupSprites[1] = resources->sprite_moneyBag;
@@ -477,9 +481,12 @@ void ResourceLoader_Shutdown(Resources* resources)
     free(resources->sprite_door);
     free(resources->sprites_drops);
 
+	free(resources->bitShiftedSprites_player);
+	free(resources->bitShiftedCollisionmasks_player);
 	free(resources->bitShiftedSprites_bouncyBall);
 	free(resources->bitShiftedSprites_bird);
 	free(resources->bitShiftedSprites_door);
+	free(resources->bitShiftedSprites_playerSplat);
 
 	// free shapes data
 	free(resources->shapeDrawData_00_Stalactite.segments);

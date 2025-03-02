@@ -15,9 +15,14 @@
 #define PLAYER_STATE_FALL			3
 #define PLAYER_STATE_CLIMB			4
 #define PLAYER_STATE_REGENERATION	5
+#define PLAYER_STATE_SPLAT			6
 
 #define PLAYER_REGENERATION_TIME			0x190 // 400
 #define PLAYER_REGENERATION_IMMOBILE_TIME	0x28  // 40
+#define PLAYER_SPLAT_INITIAL_FREEZE_TIME	0xa
+#define PLAYER_SPLAT_ANIMATION_TRIGGER_TIME 0x46
+#define PLAYER_SPLAT_WAIT_TIME				(PLAYER_SPLAT_ANIMATION_TRIGGER_TIME + PLAYER_SPLAT_INITIAL_FREEZE_TIME)
+
 
 #define PLAYER_STATE_DEBUG			0xff
 
@@ -98,6 +103,7 @@ void Player_GameInit(PlayerData* playerData, const Resources* resources)
 	playerData->facingDirection = PLAYER_FACING_LEFT;
 	playerData->bitShiftedSprites = resources->bitShiftedSprites_player;
 	playerData->bitShiftedCollisionMasks = resources->bitShiftedCollisionmasks_player;
+	playerData->bitShiftedSplatSprite = resources->bitShiftedSprites_playerSplat;
 }
 
 void Player_RoomInit(PlayerData* playerData, const Resources* resources)
@@ -119,6 +125,7 @@ void Player_RoomInit(PlayerData* playerData, const Resources* resources)
 
 	playerData->speedx = 0;
 	playerData->speedy = 0;
+	playerData->isDead = FALSE;
 	playerData->currentFrameNumber = PLAYER_RUN_FRAME_0_STAND;
 	playerData->safeLanding = TRUE;
 	playerData->ignoreRopesCounter = 0;
@@ -138,6 +145,36 @@ void Player_Update(PlayerData* playerData,
 				   DoorInfoData* doorInfoData,
 				   u8* doorStateData)
 {
+	if (playerData->state == PLAYER_STATE_SPLAT)
+	{
+		if (playerData->cantMoveCounter == PLAYER_SPLAT_ANIMATION_TRIGGER_TIME)
+		{
+			u8 x = GET_HIGH_BYTE(playerData->x);
+			u8 y = GET_HIGH_BYTE(playerData->y);
+
+			// erase the top 12 lines of the player sprite
+			// to simulate animation of the splat sprite.
+			eraseSprite_24PixelsWide_simple(x,
+											y,
+											12, 
+											framebuffer, 
+											cleanBackground);
+		}
+
+		if (playerData->cantMoveCounter)
+			playerData->cantMoveCounter--;
+
+		if (!playerData->cantMoveCounter)
+		{
+			playerData->state = PLAYER_STATE_REGENERATION;
+			playerData->currentFrameNumber = PLAYER_RUN_FRAME_0_STAND;
+			playerData->regenerationCounter = PLAYER_REGENERATION_TIME;
+			playerData->cantMoveCounter = PLAYER_REGENERATION_IMMOBILE_TIME;
+		}
+
+		return;
+	}
+
 	if (joystickState->debugStatePressed)
 	{
 		if (playerData->state != PLAYER_STATE_DEBUG)
@@ -183,6 +220,7 @@ void Player_Update(PlayerData* playerData,
 		playerData->cantMoveCounter = PLAYER_REGENERATION_IMMOBILE_TIME;
 	}
 	*/
+	
 
 	playerData->globalAnimationCounter++;
 
@@ -228,6 +266,7 @@ void Player_Update(PlayerData* playerData,
 			!playerData->regenerationCounter)
 		{
 			playerData->state = PLAYER_STATE_STAND;
+			playerData->isDead = FALSE;
 		}
 	}
 
@@ -594,13 +633,49 @@ u8 Player_HasCollision(PlayerData* playerData, u8* framebuffer, u8* cleanBackgro
 	return FALSE;
 }
 
-void playerKill(PlayerData* playerData)
+void playerKill(PlayerData* playerData, u8* framebuffer, u8* cleanBackground)
 {
-	playerData->state = PLAYER_STATE_REGENERATION;
 	playerData->speedx = 0;
 	playerData->speedy = 0;
-	playerData->regenerationCounter = PLAYER_REGENERATION_TIME;
-	playerData->cantMoveCounter = PLAYER_REGENERATION_IMMOBILE_TIME;
+	playerData->regenerationCounter = 0;
+	playerData->isDead = TRUE;
+
+	if (playerData->state == PLAYER_STATE_STAND ||
+		playerData->state == PLAYER_STATE_RUN)
+	{
+		playerData->state = PLAYER_STATE_SPLAT;
+		playerData->cantMoveCounter = PLAYER_REGENERATION_IMMOBILE_TIME;
+
+		u8 x = GET_HIGH_BYTE(playerData->x);
+		u8 y = GET_HIGH_BYTE(playerData->y);
+
+		// erase the player, then draw the splat sprite
+		// we won't redraw this again, like the original game
+		eraseSprite_24PixelsWide_simple(x,
+										y,
+										PLAYER_SPRITE_ROWS,
+										framebuffer, 
+										cleanBackground);
+
+		u8* splatSprite = getBitShiftedSprite(playerData->bitShiftedSplatSprite, 
+											  0,
+											  x & 3, 
+											  PLAYER_SPLAT_SPRITE_FRAME_SIZE);
+
+		drawSprite_24PixelsWide(splatSprite, 
+								x, 
+								y + 7, // draw the sprite to the ground
+								PLAYER_SPLAT_SPRITE_ROWS, 
+								framebuffer);
+
+		playerData->cantMoveCounter = PLAYER_SPLAT_WAIT_TIME;
+	}
+	else
+	{
+		playerData->state = PLAYER_STATE_REGENERATION;
+		playerData->regenerationCounter = PLAYER_REGENERATION_TIME;
+		playerData->cantMoveCounter = PLAYER_REGENERATION_IMMOBILE_TIME;
+	}
 }
 
 BOOL objectCollisionTest(PlayerData* playerData, u8 x, u8 y, u8 width, u8 height)
@@ -644,6 +719,9 @@ void Player_PerformCollisions(struct GameData* gameDataStruct,
 {
 	GameData* gameData = (GameData*) gameDataStruct;
 	PlayerData* playerData = &gameData->playerData;
+
+	if (playerData->isDead)
+		return;
 
 	// collide with pickups
 	u8 roomNumber = gameData->currentRoom->roomNumber;
@@ -732,7 +810,7 @@ void Player_PerformCollisions(struct GameData* gameDataStruct,
 	// collide with drops
 	if (dropsManagerCollisionTest(&gameData->dropData, playerData))
 	{
-		playerKill(&gameData->playerData);
+		playerKill(&gameData->playerData, gameData->framebuffer, gameData->cleanBackground);
 		return;
 	}
 
@@ -745,7 +823,7 @@ void Player_PerformCollisions(struct GameData* gameDataStruct,
 							BALL_COLLISION_WIDTH,
 							BALL_SPRITE_ROWS))
 	{
-		playerKill(&gameData->playerData);
+		playerKill(&gameData->playerData, gameData->framebuffer, gameData->cleanBackground);
 		return;
 	}
 
@@ -758,7 +836,7 @@ void Player_PerformCollisions(struct GameData* gameDataStruct,
 							BIRD_COLLISION_WIDTH,
 							BIRD_SPRITE_ROWS))
 	{
-		playerKill(&gameData->playerData);
+		playerKill(&gameData->playerData, gameData->framebuffer, gameData->cleanBackground);
 		return;
 	}
 }

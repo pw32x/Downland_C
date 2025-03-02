@@ -57,6 +57,7 @@ typedef struct
     u8* bitShiftedCollisionmasks_player;
     u8* bitShiftedSprites_bouncyBall;
     u8* bitShiftedSprites_bird;
+    u8* bitShiftedSprites_playerSplat;
     u8* bitShiftedSprites_door;
 
     u8* pickupSprites[3];

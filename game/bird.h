@@ -6,6 +6,7 @@
 
 #define BIRD_SPRITE_COUNT			2
 #define BIRD_SPRITE_ROWS			6
+#define BIRD_SPRITE_BYTES_PER_ROW	2
 #define BIRD_COLLISION_WIDTH		8
 
 typedef struct

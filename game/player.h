@@ -8,11 +8,18 @@
 
 #define PLAYER_SPRITE_COUNT			10
 #define PLAYER_SPRITE_ROWS			16
+#define PLAYER_SPRITE_BYTES_PER_ROW	2
 #define PLAYER_BITSHIFTED_SPRITE_FRAME_SIZE (PLAYER_SPRITE_ROWS * 3) // rows * 3 bytes per row
 
 #define PLAYER_COLLISION_WIDTH		8
 
-#define PLAYER_COLLISION_MASK_ROWS	5
+#define PLAYER_SPLAT_SPRITE_COUNT			1
+#define PLAYER_SPLAT_SPRITE_ROWS			9
+#define PLAYER_SPLAT_SPRITE_BYTES_PER_ROW	3
+#define PLAYER_SPLAT_SPRITE_FRAME_SIZE	(PLAYER_SPLAT_SPRITE_ROWS * 3)
+
+#define PLAYER_COLLISION_MASK_ROWS			5
+#define PLAYER_COLLISION_MASK_BYTES_PER_ROW 2
 #define PLAYER_BITSHIFTED_COLLISION_MASK_FRAME_SIZE (PLAYER_COLLISION_MASK_ROWS * 3) // rows * 3 bytes per row
 
 #define PLAYERONE_MASK 0x1
@@ -33,6 +40,7 @@ typedef struct
 	u8* currentSprite;
 	u8* bitShiftedSprites;
 	u8* bitShiftedCollisionMasks;
+	u8* bitShiftedSplatSprite;
 
 	u8 facingDirection;
 
@@ -46,6 +54,7 @@ typedef struct
 
 	u8 cantMoveCounter;
 	u16 regenerationCounter;
+	u8 isDead;
 
 	u8 globalAnimationCounter; // drives running, climbing animation
 

@@ -96,7 +96,7 @@ void playerKill(PlayerData* playerData, u8* framebuffer, u8* cleanBackground)
 		playerData->state == PLAYER_STATE_RUN)
 	{
 		playerData->state = PLAYER_STATE_SPLAT;
-		playerData->cantMoveCounter = PLAYER_REGENERATION_IMMOBILE_TIME;
+		playerData->cantMoveCounter = PLAYER_SPLAT_WAIT_TIME;
 
 		u8 x = GET_HIGH_BYTE(playerData->x);
 		u8 y = GET_HIGH_BYTE(playerData->y);
@@ -120,7 +120,7 @@ void playerKill(PlayerData* playerData, u8* framebuffer, u8* cleanBackground)
 								PLAYER_SPLAT_SPRITE_ROWS, 
 								framebuffer);
 
-		playerData->cantMoveCounter = PLAYER_SPLAT_WAIT_TIME;
+
 	}
 	else
 	{
@@ -149,6 +149,8 @@ u8 computeSpriteNumber(u8 facingDirection, u8 currentFrameNumber)
 void Player_GameInit(PlayerData* playerData, const Resources* resources)
 {
 	playerData->lastDoor = NULL;
+	playerData->lives = 3;
+	playerData->gameOver = FALSE;
 	playerData->facingDirection = PLAYER_FACING_LEFT;
 	playerData->bitShiftedSprites = resources->bitShiftedSprites_player;
 	playerData->bitShiftedCollisionMasks = resources->bitShiftedCollisionmasks_player;
@@ -227,6 +229,16 @@ void Player_Update(PlayerData* playerData,
 
 		if (!playerData->cantMoveCounter)
 		{
+			if (playerData->lives)
+			{
+				playerData->lives--;
+			}
+			else
+			{
+				playerData->gameOver = TRUE;
+				return;
+			}
+
 			playerData->state = PLAYER_STATE_REGENERATION;
 			playerData->currentFrameNumber = PLAYER_RUN_FRAME_0_STAND;
 			playerData->regenerationCounter = PLAYER_REGENERATION_TIME;

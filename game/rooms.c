@@ -15,7 +15,7 @@
 
 void titleScreen_draw(u8 roomNumber, GameData* gameData, Resources* resources)
 {
-	u8* framebuffer = gameData->framebuffer;
+	u8* framebuffer = gameData->cleanBackground;
 
 	// init background and text
 	drawBackground(&resources->roomResources[roomNumber].backgroundDrawData, 
@@ -64,9 +64,6 @@ void titleScreen_init(Room* room, GameData* gameData, Resources* resources)
 	u8 roomNumber = room->roomNumber;
 	gameData->gameCompletionCount = 1; // act like the game was going through one for the title screen
 
-	titleScreen_draw(roomNumber, gameData, resources);
-
-	memcpy(gameData->cleanBackground, gameData->framebuffer, FRAMEBUFFER_SIZE_IN_BYTES);
 
 	// init drops
 	gameData->dropData.dropSpawnPositions = &resources->roomResources[roomNumber].dropSpawnPositions;
@@ -101,7 +98,8 @@ void titleScreen_update(Room* room, GameData* gameData, Resources* resources)
 	{
 		gameData->gameCompletionCount = 0;
 		memset(gameData->framebuffer, 0, FRAMEBUFFER_SIZE_IN_BYTES);
-		Game_TransitionToRoom(gameData, 0, resources);
+		Player_GameInit(&gameData->playerData, resources);
+		Game_WipeTransitionToRoom(gameData, 0, resources);
 	}
 }
 
@@ -281,11 +279,19 @@ void room_update(Room* room, GameData* gameData, Resources* resources)
 				  &resources->roomResources[room->roomNumber].doorInfoData,
 				  gameData->doorStateData);
 
-	if (lastDoor != gameData->playerData.lastDoor)
+	if (gameData->playerData.gameOver)
 	{
 		Game_TransitionToRoom(gameData, 
-							  gameData->playerData.lastDoor->nextRoomNumber, 
+							  TITLESCREEN_ROOM_INDEX, 
 							  resources);
+		return;
+	}
+
+	if (lastDoor != gameData->playerData.lastDoor)
+	{
+		Game_WipeTransitionToRoom(gameData, 
+								  gameData->playerData.lastDoor->nextRoomNumber, 
+								  resources);
 		return;
 	}
 
@@ -314,12 +320,12 @@ void room_update(Room* room, GameData* gameData, Resources* resources)
 			 gameData->framebuffer, 
 			 TIMER_DRAW_LOCATION);
 
-	drawPlayerLives(gameData->playerLives,
+	drawPlayerLives(gameData->playerData.lives,
 					gameData->playerData.currentSpriteNumber,
 					gameData->playerData.bitShiftedSprites,
 					gameData->framebuffer,
 					gameData->cleanBackground,
-					gameData->playerData.regenerationCounter || gameData->playerData.cantMoveCounter);
+					gameData->playerData.regenerationCounter > 0);
 }
 
 Room room0 =
@@ -410,11 +416,43 @@ void transition_init(Room* targetRoom, GameData* gameData, Resources* resources)
 
 	// setup screen transition
 	gameData->transitionInitialDelay = 30;
+	memset(gameData->framebuffer, 0, FRAMEBUFFER_SIZE_IN_BYTES);
+}
+
+void transition_update(Room* room, GameData* gameData, Resources* resources)
+{
+	if (gameData->transitionInitialDelay)
+	{
+		gameData->transitionInitialDelay--;
+		return;
+	}
+
+	memcpy(gameData->framebuffer, gameData->cleanBackground, FRAMEBUFFER_SIZE_IN_BYTES);
+
+	Game_EnterRoom(gameData, gameData->transitionRoomNumber, resources);
+}
+
+Room transitionRoom =
+{
+	TRANSITION_ROOM_INDEX,
+	(InitRoomFunctionType)transition_init,
+	NULL,
+	(UpdateRoomFunctionType)transition_update
+};
+
+void wipe_transition_init(Room* targetRoom, GameData* gameData, Resources* resources)
+{
+	// init the clean background with the target room. 
+	// we'll be slowly revealing it during the room transition.
+	targetRoom->draw(gameData->transitionRoomNumber, (struct GameData*)gameData, resources);
+
+	// setup screen transition
+	gameData->transitionInitialDelay = 30;
 	gameData->transitionCurrentLine = 0;
 	gameData->transitionFrameDelay = 0;
 }
 
-void transition_update(Room* room, GameData* gameData, Resources* resources)
+void wipe_transition_update(Room* room, GameData* gameData, Resources* resources)
 {
 	if (gameData->transitionInitialDelay)
 	{
@@ -459,12 +497,12 @@ void transition_update(Room* room, GameData* gameData, Resources* resources)
 	}
 }
 
-Room transitionRoom =
+Room wipeTransitionRoom =
 {
-	TRANSITION_ROOM_INDEX,
-	(InitRoomFunctionType)transition_init,
+	WIPE_TRANSITION_ROOM_INDEX,
+	(InitRoomFunctionType)wipe_transition_init,
 	NULL,
-	(UpdateRoomFunctionType)transition_update
+	(UpdateRoomFunctionType)wipe_transition_update
 };
 
 Room* g_rooms[] = 
@@ -480,5 +518,6 @@ Room* g_rooms[] =
 	&room8,
 	&room9,
 	&titleScreenRoom,
-	&transitionRoom
+	&transitionRoom,
+	&wipeTransitionRoom,
 };

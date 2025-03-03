@@ -121,16 +121,19 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
 
         if (event->key.key == SDLK_GRAVE)
         {
+            Game_Init(&gameData, &resources);
             Game_TransitionToRoom(&gameData, TITLESCREEN_ROOM_INDEX, &resources);
         }
         else if (event->key.key >= SDLK_1 && event->key.key <= SDLK_9)
         {
+            Game_Init(&gameData, &resources);
             u8 roomNumber = event->key.key - SDLK_1;
             gameData.playerData.lastDoor = &resources.roomResources[roomNumber].doorInfoData.doorInfos[0];
             Game_TransitionToRoom(&gameData, roomNumber, &resources);
         }
         else if (event->key.key == SDLK_0)
         {
+            Game_Init(&gameData, &resources);
             gameData.playerData.lastDoor = &resources.roomResources[9].doorInfoData.doorInfos[0];
             Game_TransitionToRoom(&gameData, 9, &resources);
         }

@@ -30,6 +30,8 @@ struct GameData;
 typedef struct
 {
 	u8 state;	
+	u8 lives;
+	u8 gameOver;
 	u16 x; // high resolution position 256 pixels, 256 subpixels
 	u16 y; // high resolution position 256 pixels, 256 subpixels
 	u16 speedx;

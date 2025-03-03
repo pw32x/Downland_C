@@ -87,9 +87,9 @@ DONE collision detection enemies
 DONE splat and pause
 DONE respawning
 
-mid-air animation, fall
+DONE mid-air animation, fall
 
-death when falling from too high
+DONE death when falling from too high
 
 losing a life
 
@@ -104,11 +104,16 @@ hang on rope
 use hard mode door indexes after completing the game once
 
 drops positions need to be tweaked on hard mode
+    or the reverse in easy mode
+
+invulnerable toggle
 
 bouncing off walls isn't accurate
 jump isn't accurate
 
 sound
+
+use union instead of GET_HIGH_BYTE ? 
 
 beta testing
 player replay system

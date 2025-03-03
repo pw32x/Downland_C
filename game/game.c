@@ -67,7 +67,6 @@ void Game_Init(GameData* gameData, Resources* resources)
 	//gameData->gameCompletionCount = 0;
 	gameData->numPlayers = 1;
 	gameData->currentPlayer = 1;
-	gameData->playerLives = 3;
 
 	// init strings
 	gameData->string_roomNumber[ROOM_NUMBER_STRING_SIZE - 1] = 0xff; // end of line
@@ -120,6 +119,16 @@ void Game_TransitionToRoom(GameData* gameData, u8 roomNumber, Resources* resourc
 	gameData->transitionRoomNumber = roomNumber;
 
 	gameData->currentRoom = g_rooms[TRANSITION_ROOM_INDEX];
+	gameData->currentRoom->init(g_rooms[roomNumber], 
+								(struct GameData*)gameData, 
+								resources);
+}
+
+void Game_WipeTransitionToRoom(GameData* gameData, u8 roomNumber, Resources* resources)
+{
+	gameData->transitionRoomNumber = roomNumber;
+
+	gameData->currentRoom = g_rooms[WIPE_TRANSITION_ROOM_INDEX];
 	gameData->currentRoom->init(g_rooms[roomNumber], 
 								(struct GameData*)gameData, 
 								resources);

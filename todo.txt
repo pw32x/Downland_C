@@ -91,25 +91,32 @@ DONE mid-air animation, fall
 
 DONE death when falling from too high
 
-losing a life
+DONE losing a life
 
-game over
+DONE game over
 
 handle two players
-
-erase rope on top of player when climbing
-hang on rope
-
-
-use hard mode door indexes after completing the game once
 
 drops positions need to be tweaked on hard mode
     or the reverse in easy mode
 
+
+use hard mode door indexes after completing the game once
+
+erase rope on top of player when climbing
+hang on rope
+
+entering last door needs to increment completion count
+   
+
 invulnerable toggle
+    or just disable collisions when in debug movement mode
 
 bouncing off walls isn't accurate
-jump isn't accurate
+jump isn't accurate (too high?)
+jump doesn't slow down horizontally
+
+
 
 sound
 

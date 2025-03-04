@@ -5,6 +5,8 @@
 #include "resource_types.h"
 #include "joystick_types.h"
 #include "door_types.h"
+#include "string_utils.h"
+#include "rooms.h"
 
 #define PLAYER_SPRITE_COUNT			10
 #define PLAYER_SPRITE_ROWS			16
@@ -22,8 +24,10 @@
 #define PLAYER_COLLISION_MASK_BYTES_PER_ROW 2
 #define PLAYER_BITSHIFTED_COLLISION_MASK_FRAME_SIZE (PLAYER_COLLISION_MASK_ROWS * 3) // rows * 3 bytes per row
 
-#define PLAYERONE_MASK 0x1
-#define PLAYERTWO_MASK 0x2
+#define PLAYERONE_BITMASK 0x1
+#define PLAYERTWO_BITMASK 0x2
+
+#define ROOM_TIMER_DEFAULT 4096
 
 struct GameData;
 
@@ -51,14 +55,22 @@ typedef struct
 
 	u8 safeLanding;
 
-	u32* score; // points to score stored in gameData
-	u8* scoreString;
+	u32 score;
+	u8 scoreString[SCORE_STRING_SIZE];
 
 	u8 cantMoveCounter;
 	u16 regenerationCounter;
 	u8 isDead;
 
 	u8 globalAnimationCounter; // drives running, climbing animation
+
+	
+	RoomPickups gamePickups;
+	u8 doorStateData[DOOR_TOTAL_COUNT];
+	u8 gameCompletionCount;
+	Room* currentRoom;
+
+	u16 roomTimers[NUM_ROOMS];
 
 	DoorInfo* lastDoor;
 } PlayerData;
@@ -72,6 +84,8 @@ void Player_Update(PlayerData* playerData,
 				   u8* cleanBackground, 
 				   DoorInfoData* doorInfoData,
 				   u8* doorStateData);
+
+void Player_StartRegen(PlayerData* playerData);
 
 u8 Player_HasCollision(PlayerData* playerData, u8* framebuffer, u8* cleanBackground);
 void Player_PerformCollisions(struct GameData* gameData, Resources* resources);

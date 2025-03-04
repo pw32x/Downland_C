@@ -1,5 +1,7 @@
 #include "player.h"
 
+#include <memory.h>
+
 #include "base_defines.h"
 #include "draw_utils.h"
 #include "physics_utils.h"
@@ -146,38 +148,114 @@ u8 computeSpriteNumber(u8 facingDirection, u8 currentFrameNumber)
 	return currentFrameNumber;
 }
 
+void initPickups(RoomPickups roomPickups, 
+				 const PickupPosition* roomPickupPositions,
+				 const u8* keyPickUpDoorIndexes)
+{
+	// init all the keys for all the rooms for both players
+
+	u8 pickUpTypes[NUM_PICKUPS_PER_ROOM];
+	pickUpTypes[0] = PICKUP_TYPE_KEY; // the first two pickups are always keys
+	pickUpTypes[1] = PICKUP_TYPE_KEY;
+
+	for (int loop = 0; loop < NUM_ROOMS; loop++)
+	{
+		Pickup* pickups = roomPickups[loop];
+
+		// the last three pickups are random between diamonds and money bags
+		pickUpTypes[2] = rand() % 2;
+		pickUpTypes[3] = rand() % 2;
+		pickUpTypes[4] = rand() % 2;
+
+		for (int innerLoop = 0; innerLoop < NUM_PICKUPS_PER_ROOM; innerLoop++)
+		{
+			pickups[innerLoop].type = pickUpTypes[innerLoop];
+			pickups[innerLoop].state = INIT_PICKUP_STATE;
+			pickups[innerLoop].x = roomPickupPositions->x;
+			pickups[innerLoop].y = roomPickupPositions->y;
+
+			// if the pickup is a key, get the index of the door it opens
+			if (innerLoop < 2)
+			{
+				pickups[innerLoop].doorUnlockIndex = *keyPickUpDoorIndexes;
+				keyPickUpDoorIndexes++;
+			}
+			else
+			{
+				pickups[innerLoop].doorUnlockIndex = 0;
+			}			
+
+			roomPickupPositions++;
+		}
+	}
+}
+
+void initDoors(u8* doorStateData, const u8* offsetsToDoorsAlreadyActivated)
+{
+	memset(doorStateData, 0, DOOR_TOTAL_COUNT);
+
+	u8 alreadyOpenedState = 0x3; // set the two bits for each player
+
+	while (*offsetsToDoorsAlreadyActivated != 0xff)
+	{
+		doorStateData[*offsetsToDoorsAlreadyActivated] = alreadyOpenedState;
+
+		offsetsToDoorsAlreadyActivated++;
+	}
+}
+
 void Player_GameInit(PlayerData* playerData, const Resources* resources)
 {
 	playerData->lastDoor = NULL;
 	playerData->lives = 3;
 	playerData->gameOver = FALSE;
+	playerData->score = 0;
+	playerData->gameCompletionCount = 0;
 	playerData->facingDirection = PLAYER_FACING_LEFT;
 	playerData->bitShiftedSprites = resources->bitShiftedSprites_player;
 	playerData->bitShiftedCollisionMasks = resources->bitShiftedCollisionmasks_player;
 	playerData->bitShiftedSplatSprite = resources->bitShiftedSprites_playerSplat;
+
+	initPickups(playerData->gamePickups, 
+				resources->roomPickupPositions,
+				resources->keyPickUpDoorIndexes); // TODO check for hard mode after
+
+	initDoors(playerData->doorStateData, 
+			  resources->offsetsToDoorsAlreadyActivated);
+
+	// init timers
+	for (int loop = 0; loop < NUM_ROOMS; loop++)
+		playerData->roomTimers[loop] = ROOM_TIMER_DEFAULT;
 }
 
 void Player_RoomInit(PlayerData* playerData, const Resources* resources)
 {
-	if (playerData->lastDoor)
+	// set initial state
+	playerData->state = PLAYER_STATE_STAND;
+
+	if (playerData->isDead)
 	{
-		playerData->state = PLAYER_STATE_STAND;
+		Player_StartRegen(playerData);
+		playerData->isDead = FALSE;
+	}
+	else if (playerData->lastDoor)
+	{	
+		// we've gone through a door
 		playerData->x = SET_HIGH_BYTE(playerData->lastDoor->xLocationInNextRoom);
 		playerData->y = SET_HIGH_BYTE(playerData->lastDoor->yLocationInNextRoom);
+		playerData->currentFrameNumber = PLAYER_RUN_FRAME_0_STAND;
 	}
 	else
 	{
-		playerData->state = PLAYER_STATE_REGENERATION;
-		playerData->regenerationCounter = PLAYER_REGENERATION_TIME;
-		playerData->cantMoveCounter = PLAYER_REGENERATION_IMMOBILE_TIME;
+		// game start
+		Player_StartRegen(playerData);
 		playerData->x = SET_HIGH_BYTE(PLAYER_START_X);
 		playerData->y = SET_HIGH_BYTE(PLAYER_START_Y);
 	}
 
 	playerData->speedx = 0;
 	playerData->speedy = 0;
-	playerData->isDead = FALSE;
-	playerData->currentFrameNumber = PLAYER_RUN_FRAME_0_STAND;
+
 	playerData->safeLanding = TRUE;
 	playerData->ignoreRopesCounter = 0;
 
@@ -187,6 +265,14 @@ void Player_RoomInit(PlayerData* playerData, const Resources* resources)
 											        playerData->currentSpriteNumber,
 											        PLAYER_START_X & 3,
 											        PLAYER_BITSHIFTED_SPRITE_FRAME_SIZE);
+}
+
+void Player_StartRegen(PlayerData* playerData)
+{
+	playerData->state = PLAYER_STATE_REGENERATION;
+	playerData->currentFrameNumber = PLAYER_RUN_FRAME_0_STAND;
+	playerData->regenerationCounter = PLAYER_REGENERATION_TIME;
+	playerData->cantMoveCounter = PLAYER_REGENERATION_IMMOBILE_TIME;
 }
 
 void Player_Update(PlayerData* playerData, 
@@ -236,13 +322,7 @@ void Player_Update(PlayerData* playerData,
 			else
 			{
 				playerData->gameOver = TRUE;
-				return;
 			}
-
-			playerData->state = PLAYER_STATE_REGENERATION;
-			playerData->currentFrameNumber = PLAYER_RUN_FRAME_0_STAND;
-			playerData->regenerationCounter = PLAYER_REGENERATION_TIME;
-			playerData->cantMoveCounter = PLAYER_REGENERATION_IMMOBILE_TIME;
 		}
 
 		return;
@@ -666,6 +746,12 @@ u8 utilityBuffer[PLAYER_BITSHIFTED_COLLISION_MASK_FRAME_SIZE];
 
 u8 Player_HasCollision(PlayerData* playerData, u8* framebuffer, u8* cleanBackground)
 {
+	if (playerData->state == PLAYER_STATE_DEBUG || 
+		playerData->state == PLAYER_STATE_REGENERATION)
+	{
+		return FALSE;
+	}
+
 	u8 sensorX = GET_HIGH_BYTE(playerData->x);
 
 	u8* currentCollisionMask = getBitShiftedSprite(playerData->bitShiftedCollisionMasks, 
@@ -759,17 +845,17 @@ void Player_PerformCollisions(struct GameData* gameDataStruct,
 							  Resources* resources)
 {
 	GameData* gameData = (GameData*) gameDataStruct;
-	PlayerData* playerData = &gameData->playerData;
+	PlayerData* playerData = gameData->currentPlayerData;
 
 	if (playerData->isDead)
 		return;
 
 	// collide with pickups
-	u8 roomNumber = gameData->currentRoom->roomNumber;
+	u8 roomNumber = playerData->currentRoom->roomNumber;
 
 	for (u8 loop = 0; loop < NUM_PICKUPS_PER_ROOM; loop++)
 	{
-		Pickup* pickUp = &gameData->gamePickups[roomNumber][loop];
+		Pickup* pickUp = &playerData->gamePickups[roomNumber][loop];
 
 		// is pickup active? Pickup state contain state for
 		// both players.
@@ -791,14 +877,14 @@ void Player_PerformCollisions(struct GameData* gameDataStruct,
 			{
 				case PICKUP_TYPE_KEY:
 				{
-					(*playerData->score) += PICKUP_KEY_POINTS;
+					playerData->score += PICKUP_KEY_POINTS;
 
 					// activate a door
 					// draw a door if it's in the same room
 
 					u8 doorIndex = pickUp->doorUnlockIndex;
 
-					gameData->doorStateData[doorIndex] |= playerData->playerMask;
+					playerData->doorStateData[doorIndex] |= playerData->playerMask;
 
 					// check if we need to activate a door in the room
 					DoorInfoData* doorInfoData = &resources->roomResources[roomNumber].doorInfoData;
@@ -825,23 +911,23 @@ void Player_PerformCollisions(struct GameData* gameDataStruct,
 				}
 				case PICKUP_TYPE_DIAMOND:
 				{
-					(*playerData->score) += PICKUP_DIAMOND_POINTS;
+					playerData->score += PICKUP_DIAMOND_POINTS;
 					break;
 				}
 				case PICKUP_TYPE_MONEYBAG:
 				{
-					(*playerData->score) += PICKUP_MONEYBAG_POINTS;
+					playerData->score += PICKUP_MONEYBAG_POINTS;
 					break;
 				}
 			}
 
 			// add a random value between 0 and 0x7f, as per the original game
-			*gameData->playerData.score += rand() % 0x7f;
+			playerData->score += rand() % 0x7f;
 
 			// update score and string
-			convertScoreToString(*gameData->playerData.score, gameData->playerData.scoreString);
+			convertScoreToString(playerData->score, playerData->scoreString);
 
-			drawText(gameData->playerData.scoreString, 
+			drawText(playerData->scoreString, 
 					 resources->characterFont, 
 					 gameData->framebuffer, 
 					 SCORE_DRAW_LOCATION);
@@ -851,7 +937,9 @@ void Player_PerformCollisions(struct GameData* gameDataStruct,
 	// collide with drops
 	if (dropsManagerCollisionTest(&gameData->dropData, playerData))
 	{
-		playerKill(&gameData->playerData, gameData->framebuffer, gameData->cleanBackground);
+		playerKill(playerData, 
+				   gameData->framebuffer, 
+				   gameData->cleanBackground);
 		return;
 	}
 
@@ -864,7 +952,9 @@ void Player_PerformCollisions(struct GameData* gameDataStruct,
 							BALL_COLLISION_WIDTH,
 							BALL_SPRITE_ROWS))
 	{
-		playerKill(&gameData->playerData, gameData->framebuffer, gameData->cleanBackground);
+		playerKill(playerData, 
+				   gameData->framebuffer, 
+				   gameData->cleanBackground);
 		return;
 	}
 
@@ -877,7 +967,9 @@ void Player_PerformCollisions(struct GameData* gameDataStruct,
 							BIRD_COLLISION_WIDTH,
 							BIRD_SPRITE_ROWS))
 	{
-		playerKill(&gameData->playerData, gameData->framebuffer, gameData->cleanBackground);
+		playerKill(playerData, 
+				   gameData->framebuffer, 
+				   gameData->cleanBackground);
 		return;
 	}
 }

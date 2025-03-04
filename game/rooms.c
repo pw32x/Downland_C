@@ -37,16 +37,16 @@ void titleScreen_draw(u8 roomNumber, GameData* gameData, Resources* resources)
 	drawText(resources->text_playerOne, resources->characterFont, framebuffer, 0x1406); // 0x1806 original coco mem location
 	drawText(resources->text_playerTwo, resources->characterFont, framebuffer, 0x1546); // 0x1946 original coco mem location
 
-	convertScoreToString(gameData->playerOneScore, gameData->string_playerOneScore);
+	convertScoreToString(gameData->playerData[PLAYER_ONE].score, gameData->playerData[PLAYER_ONE].scoreString);
 
-	drawText(gameData->string_playerOneScore, 
+	drawText(gameData->playerData[PLAYER_ONE].scoreString, 
 			 resources->characterFont, 
 			 framebuffer, 
 			 TITLESCREEN_PLAYERONE_SCORE_LOCATION);
 
-	convertScoreToString(gameData->playerTwoScore, gameData->string_playerTwoScore);
+	convertScoreToString(gameData->playerData[PLAYER_TWO].score, gameData->playerData[PLAYER_TWO].scoreString);
 
-	drawText(gameData->string_playerTwoScore, 
+	drawText(gameData->playerData[PLAYER_TWO].scoreString, 
 			 resources->characterFont, 
 			 framebuffer, 
 			 TITLESCREEN_PLAYERTWO_SCORE_LOCATION);
@@ -62,12 +62,10 @@ void titleScreen_draw(u8 roomNumber, GameData* gameData, Resources* resources)
 void titleScreen_init(Room* room, GameData* gameData, Resources* resources)
 {
 	u8 roomNumber = room->roomNumber;
-	gameData->gameCompletionCount = 1; // act like the game was going through one for the title screen
-
 
 	// init drops
 	gameData->dropData.dropSpawnPositions = &resources->roomResources[roomNumber].dropSpawnPositions;
-	DropsManager_Init(&gameData->dropData, roomNumber, gameData->gameCompletionCount);
+	DropsManager_Init(&gameData->dropData, roomNumber, 1 /*gameCompletionCount*/);
 }
 
 void titleScreen_update(Room* room, GameData* gameData, Resources* resources)
@@ -75,7 +73,7 @@ void titleScreen_update(Room* room, GameData* gameData, Resources* resources)
 	DropsManager_Update(&gameData->dropData, 
 						gameData->framebuffer, 
 						gameData->cleanBackground, 
-						gameData->gameCompletionCount,
+						1 /*gameCompletionCount*/,
 						resources->sprites_drops);
 
 	if (gameData->joystickState.leftPressed)
@@ -88,17 +86,26 @@ void titleScreen_update(Room* room, GameData* gameData, Resources* resources)
 		gameData->numPlayers = 2;
 	}
 
+	// draw the cursor
 	u16 drawLocation = gameData->numPlayers == 1 ? 0xf64 : 0xf70;  // hardcoded locations in the frambuffer
 	u16 eraseLocation = gameData->numPlayers == 1 ? 0xf70 : 0xf64; // based on the original game.
 
 	gameData->framebuffer[drawLocation] = 0xff;
 	gameData->framebuffer[eraseLocation] = 0;
 
+	// press button to start
 	if (gameData->joystickState.jumpPressed)
 	{
-		gameData->gameCompletionCount = 0;
-		memset(gameData->framebuffer, 0, FRAMEBUFFER_SIZE_IN_BYTES);
-		Player_GameInit(&gameData->playerData, resources);
+		gameData->currentPlayerData = &gameData->playerData[PLAYER_ONE];
+
+		gameData->otherPlayerData = gameData->numPlayers > 1 ? &gameData->playerData[PLAYER_TWO] : NULL;
+
+		for (u8 loop = 0; loop < gameData->numPlayers; loop++)
+		{
+			Player_GameInit(&gameData->playerData[loop], resources);
+		}
+
+		memset(gameData->framebuffer, 0, FRAMEBUFFER_SIZE_IN_BYTES);		
 		Game_WipeTransitionToRoom(gameData, 0, resources);
 	}
 }
@@ -112,7 +119,7 @@ Room titleScreenRoom =
 };
 
 void drawPickups(Pickup* pickups, 
-				 u8 currentPlayer,
+				 u8 playerMask,
 				 Resources* resources, 
 				 u8* framebuffer)
 {
@@ -120,7 +127,7 @@ void drawPickups(Pickup* pickups,
 
 	while (count--)
 	{
-		if ((pickups->state & currentPlayer))
+		if ((pickups->state & playerMask))
 		{
 			drawSprite_16PixelsWide(resources->pickupSprites[pickups->type],
 									pickups->x, 
@@ -209,7 +216,8 @@ void room_draw(u8 roomNumber, GameData* gameData, Resources* resources)
 	for (u8 loop = 0; loop < doorInfoData->drawInfosCount; loop++)
 	{
 		if ((doorInfoRunner->y != 0xff) &&
-			(gameData->doorStateData[doorInfoRunner->globalDoorIndex] & gameData->playerData.playerMask))
+			(gameData->currentPlayerData->doorStateData[doorInfoRunner->globalDoorIndex] & 
+			 gameData->currentPlayerData->playerMask))
 		{
 			drawDoor(doorInfoRunner, 
 					resources->bitShiftedSprites_door, 
@@ -225,14 +233,15 @@ void room_draw(u8 roomNumber, GameData* gameData, Resources* resources)
 void room_init(Room* room, GameData* gameData, Resources* resources)
 {
 	u8 roomNumber = room->roomNumber;
+	PlayerData* playerData = gameData->currentPlayerData;
 
 	// init drops
 	gameData->dropData.dropSpawnPositions = &resources->roomResources[roomNumber].dropSpawnPositions;
-	DropsManager_Init(&gameData->dropData, roomNumber, gameData->gameCompletionCount);
+	DropsManager_Init(&gameData->dropData, roomNumber, playerData->gameCompletionCount);
 
 	Ball_Init(&gameData->ballData, roomNumber, resources);
 	Bird_Init(&gameData->birdData, roomNumber, resources);
-	Player_RoomInit(&gameData->playerData, resources);
+	Player_RoomInit(playerData, resources);
 
 	drawText(resources->text_pl1, 
 			 resources->characterFont, 
@@ -251,9 +260,9 @@ void room_init(Room* room, GameData* gameData, Resources* resources)
 			 gameData->framebuffer, 
 			 CHAMBER_NUMBER_TEXT_DRAW_LOCATION);
 
-	convertScoreToString(*gameData->playerData.score, gameData->playerData.scoreString);
+	convertScoreToString(playerData->score, playerData->scoreString);
 
-	drawText(gameData->playerData.scoreString, 
+	drawText(playerData->scoreString, 
 			 resources->characterFont, 
 			 gameData->framebuffer, 
 			 SCORE_DRAW_LOCATION);
@@ -261,36 +270,76 @@ void room_init(Room* room, GameData* gameData, Resources* resources)
 
 void room_update(Room* room, GameData* gameData, Resources* resources)
 {
+	PlayerData* playerData = gameData->currentPlayerData;
+
 	// in the original rom, pickups are indeed drawn every frame
 	// otherwise, falling drops will erase them
-	drawPickups(gameData->gamePickups[room->roomNumber], 
-				gameData->currentPlayer,
+	drawPickups(playerData->gamePickups[room->roomNumber], 
+				gameData->currentPlayerData->playerMask,
 				resources, gameData->framebuffer);
 
-	updateTimers(gameData->currentRoom->roomNumber, gameData->roomTimers);
-	u16 currentTimer = gameData->roomTimers[gameData->currentRoom->roomNumber];
+	updateTimers(playerData->currentRoom->roomNumber, playerData->roomTimers);
+	u16 currentTimer = playerData->roomTimers[playerData->currentRoom->roomNumber];
 
-	DoorInfo* lastDoor = gameData->playerData.lastDoor;
+	DoorInfo* lastDoor = playerData->lastDoor;
 
-	Player_Update(&gameData->playerData, 
+	u8 playerLives = playerData->lives;
+
+	Player_Update(playerData, 
 				  &gameData->joystickState, 
 				  gameData->framebuffer, 
 				  gameData->cleanBackground,
 				  &resources->roomResources[room->roomNumber].doorInfoData,
-				  gameData->doorStateData);
+				  playerData->doorStateData);
 
-	if (gameData->playerData.gameOver)
+	// player lost a life check
+	if (playerData->lives < playerLives ||
+		playerData->gameOver)
 	{
-		Game_TransitionToRoom(gameData, 
-							  TITLESCREEN_ROOM_INDEX, 
-							  resources);
-		return;
+		// if there's another player and they
+		// have lives left, then switch.
+		if (gameData->otherPlayerData != NULL &&
+			!gameData->otherPlayerData->gameOver)
+		{
+			// switch players
+			PlayerData* temp = gameData->otherPlayerData;
+			gameData->otherPlayerData = gameData->currentPlayerData;
+			gameData->currentPlayerData = temp;
+
+			// enter the new player's room
+			u8 roomNumber = 0;
+			if (gameData->currentPlayerData->currentRoom != NULL)
+				roomNumber = gameData->currentPlayerData->currentRoom->roomNumber;
+
+			Game_TransitionToRoom(gameData, 
+								  roomNumber, 
+								  resources);
+			return;
+		}
+		else
+		{
+			// if there's only one player left and
+			// they have lives left, then regen.
+			// if not, then game over.
+
+			if (playerData->gameOver)
+			{
+				Game_TransitionToRoom(gameData, 
+									  TITLESCREEN_ROOM_INDEX, 
+									  resources);
+				return;
+			}
+			else
+			{
+				Player_StartRegen(playerData);
+			}
+		}
 	}
 
-	if (lastDoor != gameData->playerData.lastDoor)
+	if (lastDoor != playerData->lastDoor)
 	{
 		Game_WipeTransitionToRoom(gameData, 
-								  gameData->playerData.lastDoor->nextRoomNumber, 
+								  playerData->lastDoor->nextRoomNumber, 
 								  resources);
 		return;
 	}
@@ -301,10 +350,10 @@ void room_update(Room* room, GameData* gameData, Resources* resources)
 	DropsManager_Update(&gameData->dropData, 
 						gameData->framebuffer, 
 						gameData->cleanBackground, 
-						gameData->gameCompletionCount,
+						playerData->gameCompletionCount,
 						resources->sprites_drops);	
 
-	if (Player_HasCollision(&gameData->playerData, gameData->framebuffer, gameData->cleanBackground))
+	if (Player_HasCollision(playerData, gameData->framebuffer, gameData->cleanBackground))
 	{
 		// compute collisions
 		// pick up item or die
@@ -320,12 +369,12 @@ void room_update(Room* room, GameData* gameData, Resources* resources)
 			 gameData->framebuffer, 
 			 TIMER_DRAW_LOCATION);
 
-	drawPlayerLives(gameData->playerData.lives,
-					gameData->playerData.currentSpriteNumber,
-					gameData->playerData.bitShiftedSprites,
+	drawPlayerLives(playerData->lives,
+					playerData->currentSpriteNumber,
+					playerData->bitShiftedSprites,
 					gameData->framebuffer,
 					gameData->cleanBackground,
-					gameData->playerData.regenerationCounter > 0);
+					playerData->regenerationCounter > 0);
 }
 
 Room room0 =

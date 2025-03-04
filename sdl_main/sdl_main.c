@@ -113,7 +113,7 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
         {
             gameData.paused = !gameData.paused;
         }
-        else if (event->key.key == SDLK_SPACE && gameData.currentRoom->roomNumber != TITLESCREEN_ROOM_INDEX)
+        else if (event->key.key == SDLK_SPACE && gameData.currentPlayerData->currentRoom->roomNumber != TITLESCREEN_ROOM_INDEX)
         {
             stepFrame = TRUE;
             gameData.paused = FALSE;
@@ -128,13 +128,13 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
         {
             Game_Init(&gameData, &resources);
             u8 roomNumber = event->key.key - SDLK_1;
-            gameData.playerData.lastDoor = &resources.roomResources[roomNumber].doorInfoData.doorInfos[0];
+            gameData.currentPlayerData->lastDoor = &resources.roomResources[roomNumber].doorInfoData.doorInfos[0];
             Game_TransitionToRoom(&gameData, roomNumber, &resources);
         }
         else if (event->key.key == SDLK_0)
         {
             Game_Init(&gameData, &resources);
-            gameData.playerData.lastDoor = &resources.roomResources[9].doorInfoData.doorInfos[0];
+            gameData.currentPlayerData->lastDoor = &resources.roomResources[9].doorInfoData.doorInfos[0];
             Game_TransitionToRoom(&gameData, 9, &resources);
         }
     }
@@ -252,8 +252,8 @@ SDL_AppResult SDL_AppIterate(void *appstate)
     //SDL_RenderDebugTextFormat(renderer, 10.0f, 20.0f, "x: %x", gameData.playerData.x);
     //SDL_RenderDebugTextFormat(renderer, 10.0f, 30.0f, "y: %x", gameData.playerData.y);
 
-    SDL_RenderDebugTextFormat(renderer, 10.0f, 20.0f, "regen time: %x", gameData.playerData.regenerationCounter);
-    SDL_RenderDebugTextFormat(renderer, 10.0f, 30.0f, "cantmove time: %x", gameData.playerData.cantMoveCounter);
+    //SDL_RenderDebugTextFormat(renderer, 10.0f, 20.0f, "regen time: %x", gameData.playerData.regenerationCounter);
+    //SDL_RenderDebugTextFormat(renderer, 10.0f, 30.0f, "cantmove time: %x", gameData.playerData.cantMoveCounter);
 
     
     /*

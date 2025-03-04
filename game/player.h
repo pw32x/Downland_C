@@ -40,6 +40,7 @@ typedef struct
 	u16 y; // high resolution position 256 pixels, 256 subpixels
 	u16 speedx;
 	u16 speedy;
+	u8 playerNumber;
 	u8 playerMask;
 	u8 currentFrameNumber; // 0 to 3 for run animation (both directions), 4 to 5 for climbing animation
 	u8 currentSpriteNumber; // 0 to 3 run right, 4/5 climb, 6-9 run left

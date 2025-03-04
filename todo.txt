@@ -95,11 +95,16 @@ DONE losing a life
 
 DONE game over
 
-handle two players
+DONE handle two players
+
+DONE add "player get ready" screen
 
 drops positions need to be tweaked on hard mode
     or the reverse in easy mode
+    
+maybe grabbing onto rope doesn't reset the safeToLand flag
 
+make drops fall faster on title screen and get ready screen
 
 use hard mode door indexes after completing the game once
 
@@ -119,6 +124,10 @@ jump doesn't slow down horizontally
 
 
 sound
+
+joystick support
+
+split rooms file
 
 use union instead of GET_HIGH_BYTE ? 
 

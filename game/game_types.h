@@ -30,7 +30,6 @@ typedef struct
 	JoystickState joystickState;
 
 	u8 numPlayers;
-	u8 currentPlayerIndex;
 
 	PlayerData playerData[NUM_PLAYERS];
 	PlayerData* currentPlayerData;

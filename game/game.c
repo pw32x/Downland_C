@@ -10,7 +10,6 @@
 void Game_Init(GameData* gameData, Resources* resources)
 {
 	gameData->numPlayers = 1;
-	gameData->currentPlayerIndex = PLAYER_ONE;
 
 	// init strings
 	gameData->string_roomNumber[ROOM_NUMBER_STRING_SIZE - 1] = 0xff; // end of line
@@ -21,7 +20,10 @@ void Game_Init(GameData* gameData, Resources* resources)
 
 	gameData->highScore = 0;
 
+	gameData->playerData[PLAYER_ONE].playerNumber = PLAYER_ONE;
 	gameData->playerData[PLAYER_ONE].playerMask = PLAYERONE_BITMASK;
+
+	gameData->playerData[PLAYER_TWO].playerNumber = PLAYER_TWO;
 	gameData->playerData[PLAYER_TWO].playerMask = PLAYERTWO_BITMASK;
 
 #ifdef START_AT_TITLESCREEN

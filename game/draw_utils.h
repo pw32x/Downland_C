@@ -7,6 +7,8 @@
 
 #define CRT_EFFECT_MASK 0x55 // 01010101b
 
+extern u8 pixelMasks[4];
+
 // Set or clear a pixel in the 1-bit framebuffer
 void setPixel(u8* framebuffer, u8 x, u8 y, u8 value);
 

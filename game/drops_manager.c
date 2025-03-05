@@ -2,6 +2,7 @@
 
 #include "base_defines.h"
 #include "draw_utils.h"
+#include "debug_utils.h"
 
 //#include <stdlib.h>
 
@@ -56,7 +57,11 @@ void wiggleDrop(Drop* drop)
 	drop->speedY = (drop->wiggleTimer & 2) == 0 ? DROP_WIGGLE_UP_SPEED : DROP_WIGGLE_DOWN_SPEED;
 }
 
-void initDrop(Drop* drop, DropData* dropData, u8 gameCompletionCount, u8* dropSprites)
+void initDrop(Drop* drop, 
+			  DropData* dropData, 
+			  u8 gameCompletionCount, 
+			  u8* dropSprites,
+			  u8* cleanBackground)
 {
 	// init drop
 	drop->wiggleTimer = 0xa8;
@@ -72,13 +77,25 @@ void initDrop(Drop* drop, DropData* dropData, u8 gameCompletionCount, u8* dropSp
 	drop->x = dropSpawnPointX + dropSpawnArea->x;
 	drop->y = dropSpawnArea->y << 8;
 
-	if (gameCompletionCount < 3)
-		drop->x &= 0xFE; // 11111110b to ensure even positions for x? 
+	// if the player completed the game at least three times
+	// (I'd like to see that!), adjust the drops so that they're
+	// closer to the player.
+	if (gameCompletionCount >= 3)
+		drop->x &= 0xFE; // 11111110b to make the x position even
 
-	// TODO
 	// here, check if there's a collision with the background 6 pixels down and 
 	// 4 to the right. If so, then move the drop's x position to the left.
 	// See address 0xcfeb in the disassembly
+	u8 value = cleanBackground[GET_FRAMEBUFFER_LOCATION(drop->x + 4, GET_HIGH_BYTE(drop->y) + 6)];
+	u8 pixelMask = pixelMasks[drop->x & 3];
+
+	// check for a rope. If there is one, then move the
+	// drop one pixel to the left, to leave clearance
+	// for the player.
+	if ((value & pixelMask) == pixelMask)
+	{
+		drop->x--;
+	}
 
 	u8 spriteIndex = drop->x & 3; // sprite depends on which column of four pixels it lands on
 
@@ -111,7 +128,11 @@ void DropsManager_Update(DropData* dropData,
 
 		if (drop->wiggleTimer == 1)
 		{
-			initDrop(drop, dropData, gameCompletionCount, dropSprites);
+			initDrop(drop, 
+					 dropData, 
+					 gameCompletionCount, 
+					 dropSprites, 
+					 cleanBackground);
 		}
 		else if ((s8)drop->wiggleTimer < 0)
 		{
@@ -126,7 +147,7 @@ void DropsManager_Update(DropData* dropData,
 
 			if ((cleanBackground[cleanBackgroundLocation + 0xc0] & drop->collisionMask) || // 6 pixels down
 				(cleanBackground[cleanBackgroundLocation + 0xe0] & drop->collisionMask) || // 7 pixels down
-				(GET_HIGH_BYTE(drop->y) > FRAMEBUFFER_HEIGHT - 16)) // bottom bounds checking. not in the original game.
+				(GET_HIGH_BYTE(drop->y) > FRAMEBUFFER_HEIGHT - 16)) // bottom of the screen bounds checking. not in the original game.
 			{
 				eraseSprite_16PixelsWide(drop->spriteData,
 										 drop->x,
@@ -135,7 +156,11 @@ void DropsManager_Update(DropData* dropData,
 										 framebuffer, 
 										 cleanBackground);
 
-				initDrop(drop, dropData, gameCompletionCount, dropSprites);
+				initDrop(drop, 
+						 dropData, 
+						 gameCompletionCount, 
+						 dropSprites, 
+						 cleanBackground);
 			}
 		}
 

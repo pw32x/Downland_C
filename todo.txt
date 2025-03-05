@@ -99,6 +99,8 @@ DONE handle two players
 
 DONE add "player get ready" screen
 
+collide with items, keys, and doors even in debug mode
+
 drops positions need to be tweaked on hard mode
     or the reverse in easy mode
     
@@ -112,24 +114,21 @@ erase rope on top of player when climbing
 hang on rope
 
 entering last door needs to increment completion count
-   
-
-invulnerable toggle
-    or just disable collisions when in debug movement mode
 
 bouncing off walls isn't accurate
 jump isn't accurate (too high?)
 jump doesn't slow down horizontally
 
-
-
 sound
 
 joystick support
 
+code comment pass
+code pretty pass
 split rooms file
-
 use union instead of GET_HIGH_BYTE ? 
+
+
 
 beta testing
 player replay system

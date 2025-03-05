@@ -231,7 +231,7 @@ void Player_GameInit(PlayerData* playerData, const Resources* resources)
 void Player_RoomInit(PlayerData* playerData, const Resources* resources)
 {
 	// set initial state
-	playerData->state = PLAYER_STATE_STAND;
+
 
 	if (playerData->isDead)
 	{
@@ -240,6 +240,9 @@ void Player_RoomInit(PlayerData* playerData, const Resources* resources)
 	}
 	else if (playerData->lastDoor)
 	{	
+		if (playerData->state != PLAYER_STATE_DEBUG)
+			playerData->state = PLAYER_STATE_STAND;
+
 		// we've gone through a door
 		playerData->x = SET_HIGH_BYTE(playerData->lastDoor->xLocationInNextRoom);
 		playerData->y = SET_HIGH_BYTE(playerData->lastDoor->yLocationInNextRoom);
@@ -248,6 +251,7 @@ void Player_RoomInit(PlayerData* playerData, const Resources* resources)
 	else
 	{
 		// game start
+		playerData->state = PLAYER_STATE_STAND;
 		Player_StartRegen(playerData);
 		playerData->x = SET_HIGH_BYTE(PLAYER_START_X);
 		playerData->y = SET_HIGH_BYTE(PLAYER_START_Y);
@@ -338,6 +342,9 @@ void Player_Update(PlayerData* playerData,
 		}
 		else
 		{	
+			playerData->regenerationCounter = 0;
+			playerData->cantMoveCounter = 0;
+			playerData->currentFrameNumber = PLAYER_RUN_FRAME_0_STAND;
 			playerData->state = PLAYER_STATE_JUMP;
 			playerData->speedy = 0;
 			playerData->jumpAirCounter = 1;
@@ -746,12 +753,6 @@ u8 utilityBuffer[PLAYER_BITSHIFTED_COLLISION_MASK_FRAME_SIZE];
 
 u8 Player_HasCollision(PlayerData* playerData, u8* framebuffer, u8* cleanBackground)
 {
-	if (playerData->state == PLAYER_STATE_DEBUG || 
-		playerData->state == PLAYER_STATE_REGENERATION)
-	{
-		return FALSE;
-	}
-
 	u8 sensorX = GET_HIGH_BYTE(playerData->x);
 
 	u8* currentCollisionMask = getBitShiftedSprite(playerData->bitShiftedCollisionMasks, 
@@ -932,6 +933,12 @@ void Player_PerformCollisions(struct GameData* gameDataStruct,
 					 gameData->framebuffer, 
 					 SCORE_DRAW_LOCATION);
 		}
+	}
+
+	if (playerData->state == PLAYER_STATE_DEBUG || 
+		playerData->state == PLAYER_STATE_REGENERATION)
+	{
+		return;
 	}
 
 	// collide with drops

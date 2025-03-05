@@ -70,11 +70,18 @@ void titleScreen_init(Room* room, GameData* gameData, Resources* resources)
 
 void titleScreen_update(Room* room, GameData* gameData, Resources* resources)
 {
-	DropsManager_Update(&gameData->dropData, 
-						gameData->framebuffer, 
-						gameData->cleanBackground, 
-						1 /*gameCompletionCount*/,
-						resources->sprites_drops);
+	// run the drops three times faster to 
+	// simulate the original game's title screen
+	// which didn't wait for vblank and would just
+	// go all out as fast as possible.
+	for (u8 loop = 0; loop < 3; loop++)
+	{
+		DropsManager_Update(&gameData->dropData, 
+							gameData->framebuffer, 
+							gameData->cleanBackground, 
+							1 /*gameCompletionCount*/,
+							resources->sprites_drops);
+	}
 
 	if (gameData->joystickState.leftPressed)
 	{
@@ -576,11 +583,18 @@ void get_ready_room_init(Room* room, GameData* gameData, Resources* resources)
 
 void get_ready_room_update(Room* room, GameData* gameData, Resources* resources)
 {
-	DropsManager_Update(&gameData->dropData, 
-						gameData->framebuffer, 
-						gameData->cleanBackground, 
-						1 /*gameCompletionCount*/,
-						resources->sprites_drops);
+	// run the drops three times faster to 
+	// simulate the original game's title screen
+	// which didn't wait for vblank and would just
+	// go all out as fast as possible.
+	for (u8 loop = 0; loop < 3; loop++)
+	{
+		DropsManager_Update(&gameData->dropData, 
+							gameData->framebuffer, 
+							gameData->cleanBackground, 
+							1 /*gameCompletionCount*/,
+							resources->sprites_drops);
+	}
 
 	// press button to start
 	if (gameData->joystickState.jumpPressed)

@@ -669,6 +669,7 @@ void Player_Update(PlayerData* playerData,
 		{
 			playerData->state = PLAYER_STATE_CLIMB;
 			playerData->speedx = 0;
+			playerData->safeLanding = TRUE;
 			playerData->speedy = 0;
 			playerData->currentFrameNumber = PLAYER_CLIMB_FRAME_0;
 			playerData->jumpAirCounter = 0;

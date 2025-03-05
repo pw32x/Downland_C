@@ -208,6 +208,7 @@ void Player_GameInit(PlayerData* playerData, const Resources* resources)
 {
 	playerData->lastDoor = NULL;
 	playerData->lives = 3;
+	playerData->isDead = 0;
 	playerData->gameOver = FALSE;
 	playerData->score = 0;
 	playerData->gameCompletionCount = 0;

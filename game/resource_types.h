@@ -97,23 +97,6 @@ typedef struct
     u8* offsetsToDoorsAlreadyActivated; // 16 items
 
     u8* roomsWithBouncingBall;
-/*
-Room Data
-
-    RoomGraphicsAndDoorData 0xd25a
-        Room0_GraphisAndDoorData   0xd25a
-        Room1_GraphisAndDoorData   0xd27d
-        Room2_GraphisAndDoorData   0xd298
-        Room3_GraphisAndDoorData   0xd2bf
-        Room4_GraphisAndDoorData   0xd2ec
-        Room5_GraphisAndDoorData   0xd307
-        Room6_GraphisAndDoorData   0xd31c
-        Room7_GraphisAndDoorData   0xd32b
-        Room8_GraphisAndDoorData   0xd33a
-        Room9_GraphisAndDoorData   0xd349
-
-
-*/
 } Resources;
 
 #endif

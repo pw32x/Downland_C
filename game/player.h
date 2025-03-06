@@ -90,4 +90,6 @@ void Player_StartRegen(PlayerData* playerData);
 
 u8 Player_HasCollision(PlayerData* playerData, u8* framebuffer, u8* cleanBackground);
 void Player_PerformCollisions(struct GameData* gameData, Resources* resources);
+
+void Player_CompleteGameLoop(PlayerData* playerData, const Resources* resource);
 #endif

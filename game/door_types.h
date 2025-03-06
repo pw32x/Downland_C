@@ -8,6 +8,8 @@
 #define DOOR_SPRITE_BYTES_PER_ROW   2
 #define DOOR_BITSHIFTED_SPRITE_FRAME_SIZE (DOOR_SPRITE_ROWS * 3) // rows * 3 bytes per row
 
+#define LAST_DOOR_INDEX 0x21 // 33
+
 #define DOOR_TOTAL_COUNT 0x22 // 34
 
 // per-room door information stored in rom

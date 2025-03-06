@@ -113,16 +113,18 @@ DONE restarting the game from the title screen doesn't properly reset
 
 DONE maybe grabbing onto rope doesn't reset the safeToLand flag
 
-use hard mode door indexes after completing the game once
+DONE use hard mode door indexes after completing the game once
 
-erase rope on top of player when climbing
-hang on rope
-
-entering last door needs to 
+DONE entering last door needs to:
     increment completion count
     reset the treasures
     reset the keys
     use the hardmode keys
+
+
+
+erase rope on top of player when climbing
+hang on rope
 
 
 

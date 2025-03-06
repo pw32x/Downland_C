@@ -340,6 +340,11 @@ void room_update(Room* room, GameData* gameData, Resources* resources)
 
 	if (lastDoor != playerData->lastDoor)
 	{
+		if (playerData->lastDoor->globalDoorIndex == LAST_DOOR_INDEX)
+		{
+			Player_CompleteGameLoop(playerData, resources);
+		}
+
 		Game_WipeTransitionToRoom(gameData, 
 								  playerData->lastDoor->nextRoomNumber, 
 								  resources);

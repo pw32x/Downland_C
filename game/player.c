@@ -204,25 +204,42 @@ void initDoors(u8* doorStateData, const u8* offsetsToDoorsAlreadyActivated)
 	}
 }
 
+void playerStartGameLoop(PlayerData* playerData, const Resources* resources)
+{
+	playerData->facingDirection = PLAYER_FACING_LEFT;
+
+	u8* keyPickUpDoorIndexes = playerData->gameCompletionCount == 0 ? resources->keyPickUpDoorIndexes : resources->keyPickUpDoorIndexesHardMode;
+
+	initPickups(playerData->gamePickups, 
+				resources->roomPickupPositions,
+				keyPickUpDoorIndexes);
+
+	initDoors(playerData->doorStateData, 
+			  resources->offsetsToDoorsAlreadyActivated);
+}
+
+
+
+void Player_CompleteGameLoop(PlayerData* playerData, const Resources* resources)
+{
+	playerData->gameCompletionCount++;
+	playerStartGameLoop(playerData, resources);
+}
+
 void Player_GameInit(PlayerData* playerData, const Resources* resources)
 {
+	playerStartGameLoop(playerData, resources);
+
 	playerData->lastDoor = NULL;
 	playerData->lives = 3;
 	playerData->isDead = 0;
 	playerData->gameOver = FALSE;
 	playerData->score = 0;
 	playerData->gameCompletionCount = 0;
-	playerData->facingDirection = PLAYER_FACING_LEFT;
+
 	playerData->bitShiftedSprites = resources->bitShiftedSprites_player;
 	playerData->bitShiftedCollisionMasks = resources->bitShiftedCollisionmasks_player;
 	playerData->bitShiftedSplatSprite = resources->bitShiftedSprites_playerSplat;
-
-	initPickups(playerData->gamePickups, 
-				resources->roomPickupPositions,
-				resources->keyPickUpDoorIndexes); // TODO check for hard mode after
-
-	initDoors(playerData->doorStateData, 
-			  resources->offsetsToDoorsAlreadyActivated);
 
 	// init timers
 	for (int loop = 0; loop < NUM_ROOMS; loop++)

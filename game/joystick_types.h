@@ -9,6 +9,7 @@ typedef struct
 	u8 downDown;
 	u8 jumpDown;
 	u8 debugStateDown;
+	u8 startDown;
 
 	u8 leftPressed;
 	u8 rightPressed;
@@ -16,6 +17,7 @@ typedef struct
 	u8 downPressed;
 	u8 jumpPressed;
 	u8 debugStatePressed;
+	u8 startDownPressed;
 
 	u8 leftReleased;
 	u8 rightReleased;
@@ -23,6 +25,7 @@ typedef struct
 	u8 downReleased;
 	u8 jumpReleased;
 	u8 debugStateReleased;
+	u8 startDownReleased;
 } JoystickState;
 
 #endif

@@ -121,20 +121,24 @@ DONE entering last door needs to:
     reset the keys
     use the hardmode keys
 
+DONE joystick support
 
 
 erase rope on top of player when climbing
 hang on rope
-
-
 
 bouncing off walls isn't accurate
 jump isn't accurate (too high?)
 jump doesn't slow down horizontally
 
 sound
+    which sounds?
+    run
+    jump
+    splat
+    room wipe transition
+    item pickup
 
-joystick support
 
 code comment pass
 code pretty pass

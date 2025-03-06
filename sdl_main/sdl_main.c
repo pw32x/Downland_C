@@ -12,6 +12,7 @@
 
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
+#include <SDL3/SDL_gamepad.h>
 
 
 
@@ -41,11 +42,13 @@ float fps;
 
 const char* romFilePath = "downland.bin";
 
+SDL_Gamepad* gamePad = NULL;
+
 SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
 {
     SDL_SetAppMetadata("Downland_C", "1.0", "com.example.Downland_C");
 
-    if (!SDL_Init(SDL_INIT_VIDEO)) 
+    if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMEPAD)) 
     {
         SDL_Log("Couldn't initialize SDL: %s", SDL_GetError());
         return SDL_APP_FAILURE;
@@ -97,6 +100,17 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
     timeFrequency = SDL_GetPerformanceFrequency();
 
     srand((unsigned int)gameStartTime);
+
+    if (SDL_HasGamepad())
+    {
+        int joystickCount;
+        SDL_JoystickID* joystickIds = SDL_GetGamepads(&joystickCount);
+
+	    if (joystickIds && joystickCount > 0)
+        {
+            gamePad = SDL_OpenGamepad(joystickIds[0]);
+        }
+    }
 
     return SDL_APP_CONTINUE;
 }
@@ -152,6 +166,26 @@ void Update_Controls(JoystickState* joystickState)
     u8 downDown = currentKeyStates[SDL_SCANCODE_DOWN];
     u8 jumpDown = currentKeyStates[SDL_SCANCODE_LCTRL] || currentKeyStates[SDL_SCANCODE_Z] || currentKeyStates[SDL_SCANCODE_LSHIFT];
     u8 debugStateDown = currentKeyStates[SDL_SCANCODE_TAB];
+    u8 startDown = FALSE;
+
+    if (gamePad != NULL)
+    {
+        leftDown |= SDL_GetGamepadButton(gamePad, SDL_GAMEPAD_BUTTON_DPAD_LEFT) || 
+                    SDL_GetGamepadAxis(gamePad, SDL_GAMEPAD_AXIS_LEFTX) < -10000;
+
+        rightDown |= SDL_GetGamepadButton(gamePad, SDL_GAMEPAD_BUTTON_DPAD_RIGHT) || 
+                     SDL_GetGamepadAxis(gamePad, SDL_GAMEPAD_AXIS_LEFTX) > 10000;
+
+        upDown |= SDL_GetGamepadButton(gamePad, SDL_GAMEPAD_BUTTON_DPAD_UP) ||
+                  SDL_GetGamepadAxis(gamePad, SDL_GAMEPAD_AXIS_LEFTY) < -10000;
+
+        downDown |= SDL_GetGamepadButton(gamePad, SDL_GAMEPAD_BUTTON_DPAD_DOWN) ||
+                  SDL_GetGamepadAxis(gamePad, SDL_GAMEPAD_AXIS_LEFTY) > 10000;
+
+        jumpDown |= SDL_GetGamepadButton(gamePad, SDL_GAMEPAD_BUTTON_SOUTH);
+        debugStateDown |= SDL_GetGamepadButton(gamePad, SDL_GAMEPAD_BUTTON_EAST);
+        startDown |= SDL_GetGamepadButton(gamePad, SDL_GAMEPAD_BUTTON_START);
+    }
 
     joystickState->leftPressed = !joystickState->leftDown & leftDown;
     joystickState->rightPressed = !joystickState->rightDown & rightDown;
@@ -159,6 +193,7 @@ void Update_Controls(JoystickState* joystickState)
     joystickState->downPressed =  !joystickState->downDown & downDown;
     joystickState->jumpPressed =  !joystickState->jumpDown & jumpDown;
     joystickState->debugStatePressed = !joystickState->debugStateDown & debugStateDown;
+    joystickState->startDownPressed = !joystickState->startDown & startDown;
 
     joystickState->leftReleased = joystickState->leftDown & !leftDown;
     joystickState->rightReleased = joystickState->rightDown & !rightDown;
@@ -166,6 +201,7 @@ void Update_Controls(JoystickState* joystickState)
     joystickState->downReleased =  joystickState->downDown & !downDown;
     joystickState->jumpReleased =  joystickState->jumpDown & !jumpDown;
     joystickState->debugStateReleased = joystickState->debugStatePressed & !debugStateDown;
+    joystickState->startDownReleased = joystickState->startDownPressed & ~startDown;
 
     joystickState->leftDown = leftDown;
     joystickState->rightDown = rightDown;
@@ -173,6 +209,7 @@ void Update_Controls(JoystickState* joystickState)
     joystickState->downDown = downDown;
     joystickState->jumpDown = jumpDown;
     joystickState->debugStateDown = debugStateDown;
+    joystickState->startDown = startDown;
 }
 
 // Function to convert an 8-bit value to a binary string
@@ -187,16 +224,16 @@ SDL_AppResult SDL_AppIterate(void *appstate)
 {
     Uint64 frameStartTime = SDL_GetPerformanceCounter();
 
+    Update_Controls(&gameData.joystickState);
 
+    if (gameData.joystickState.startDownPressed)
+        gameData.paused = !gameData.paused;
 
     if (!gameData.paused)
     {
         memset(debugFramebuffer, 0, sizeof(debugFramebuffer));
-        Update_Controls(&gameData.joystickState);
         Game_Update(&gameData, &resources);
     }
-
-
 
     // Render to screen
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
@@ -296,6 +333,9 @@ SDL_AppResult SDL_AppIterate(void *appstate)
 void SDL_AppQuit(void *appstate, SDL_AppResult result)
 {
     /* SDL will clean up the window/renderer for us. */
+
+    if (gamePad != NULL) 
+        SDL_CloseGamepad(gamePad);
 
     SDL_DestroyTexture(framebufferTexture);
 

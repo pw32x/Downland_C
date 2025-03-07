@@ -288,6 +288,12 @@ void room_update(Room* room, GameData* gameData, Resources* resources)
 	updateTimers(playerData->currentRoom->roomNumber, playerData->roomTimers);
 	u16 currentTimer = playerData->roomTimers[playerData->currentRoom->roomNumber];
 
+	DropsManager_Update(&gameData->dropData, 
+						gameData->framebuffer, 
+						gameData->cleanBackground, 
+						playerData->gameCompletionCount,
+						resources->sprites_drops);	
+
 	DoorInfo* lastDoor = playerData->lastDoor;
 
 	u8 playerLives = playerData->lives;
@@ -354,11 +360,6 @@ void room_update(Room* room, GameData* gameData, Resources* resources)
 	Ball_Update(&gameData->ballData, gameData->framebuffer, gameData->cleanBackground);
 	Bird_Update(&gameData->birdData, currentTimer, gameData->framebuffer, gameData->cleanBackground);
 
-	DropsManager_Update(&gameData->dropData, 
-						gameData->framebuffer, 
-						gameData->cleanBackground, 
-						playerData->gameCompletionCount,
-						resources->sprites_drops);	
 
 	if (Player_HasCollision(playerData, gameData->framebuffer, gameData->cleanBackground))
 	{

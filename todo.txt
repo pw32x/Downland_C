@@ -127,18 +127,20 @@ DONE joystick support
 erase rope on top of player when climbing
 hang on rope
 
-bouncing off walls isn't accurate
-jump isn't accurate (too high?)
-jump doesn't slow down horizontally
-
 sound
     which sounds?
     run
     jump
+    climb up
+    climb down
+    land from jump
     splat
     room wipe transition
     item pickup
 
+bouncing off walls isn't accurate
+jump isn't accurate (too high?)
+jump doesn't slow down horizontally
 
 code comment pass
 code pretty pass

@@ -50,7 +50,7 @@
 
 #define PLAYER_WALL_SENSOR_YOFFSET		12
 #define PLAYER_GROUND_SENSOR_YOFFSET	16
-#define PLAYER_ROPE_SENSOR_YOFFSET		8
+#define PLAYER_ROPE_SENSOR_YOFFSET		7
 
 #define PLAYER_SPRITE_RIGHT_STAND		0
 #define PLAYER_SPRITE_RIGHT_RUN0		1
@@ -625,16 +625,20 @@ void Player_Update(PlayerData* playerData,
 	if (playerData->ignoreRopesCounter)
 		playerData->ignoreRopesCounter--;
 
+	//for (u8 loop = 0; loop < 12; loop++)
+	//{
+	//	debugSetPixel(((GET_HIGH_BYTE(playerData->x) << 1) + 6), GET_HIGH_BYTE(playerData->y) + loop, 0xffff0000);
+	//	debugSetPixel(((GET_HIGH_BYTE(playerData->x) << 1) + 7), GET_HIGH_BYTE(playerData->y) + loop, 0xffff0000);
+	//}
+
+
+	//debugDrawBox(((GET_HIGH_BYTE(playerData->x) << 1) / 8) * 8, 
+	//		     GET_HIGH_BYTE(playerData->y), 
+	//		     16, 
+	//		     16, 
+	//		     0xff00ff00);
+
 	/*
-    //debugSetPixel((GET_HIGH_BYTE(playerData->x) << 1), 
-    //              GET_HIGH_BYTE(playerData->y) + PLAYER_ROPE_SENSOR_YOFFSET, 0xff00ff00);
-
-	debugDrawBox(((GET_HIGH_BYTE(playerData->x) << 1) / 8) * 8, 
-			     GET_HIGH_BYTE(playerData->y), 
-			     16, 
-			     16, 
-			     0xff00ff00);
-
 	extern u8 leftPixelData;
 	extern u8 rightPixelData;
 
@@ -728,8 +732,21 @@ void Player_Update(PlayerData* playerData,
 												    GET_HIGH_BYTE(playerData->x) & 3, 
 												    PLAYER_BITSHIFTED_SPRITE_FRAME_SIZE);
 
-	//if (playerData->state == PLAYER_STATE_CLIMB)
-	//	return;
+	if (playerData->state == PLAYER_STATE_CLIMB)
+	{
+		// erase the rope behind the player so that it 
+		// doesn't blend with the player sprite, making it
+		// appear on top
+		for (u8 loop = 0; loop < 12; loop++)
+		{
+			// turn off the pixels on the rope
+			u8 ropeX = GET_HIGH_BYTE(playerData->x) + 3;
+			u16 location = GET_FRAMEBUFFER_LOCATION(ropeX, GET_HIGH_BYTE(playerData->y) + loop);
+			framebuffer[location] &= ~pixelMasks[ropeX & 3];
+		}
+
+		//return;
+	}
 
 	if (playerData->state != PLAYER_STATE_REGENERATION)
 	{

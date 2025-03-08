@@ -16,9 +16,11 @@
 #define PLAYER_STATE_JUMP			2
 #define PLAYER_STATE_FALL			3
 #define PLAYER_STATE_CLIMB			4
-#define PLAYER_STATE_REGENERATION	5
-#define PLAYER_STATE_SPLAT			6
-#define PLAYER_MIDAIR_DEATH			7
+#define PLAYER_STATE_HANG_LEFT		5
+#define PLAYER_STATE_HANG_RIGHT		6
+#define PLAYER_STATE_REGENERATION	7
+#define PLAYER_STATE_SPLAT			8
+#define PLAYER_MIDAIR_DEATH			9
 #define PLAYER_STATE_DEBUG			0xff
 
 #define PLAYER_REGENERATION_TIME			0x190 // 400
@@ -27,8 +29,6 @@
 #define PLAYER_SPLAT_ANIMATION_TRIGGER_TIME 0x46
 #define PLAYER_SPLAT_WAIT_TIME				(PLAYER_SPLAT_ANIMATION_TRIGGER_TIME + PLAYER_SPLAT_INITIAL_FREEZE_TIME)
 #define PLAYER_MIDAIR_DEATH_PAUSE_TIME		0x32 // 40
-
-
 
 #define PLAYER_RUN_SPEED_LEFT	0xffca
 #define PLAYER_RUN_SPEED_RIGHT	0x36
@@ -45,12 +45,15 @@
 #define PLAYER_FACING_LEFT		0
 #define PLAYER_FACING_RIGHT		0xff
 
+#define PLAYER_ROPE_HOLD_COUNT	20
+
 #define PLAYER_START_X 0x70 // 112
 #define PLAYER_START_Y 0xa5 // 165
 
 #define PLAYER_WALL_SENSOR_YOFFSET		12
 #define PLAYER_GROUND_SENSOR_YOFFSET	16
-#define PLAYER_ROPE_SENSOR_YOFFSET		7
+#define PLAYER_ROPE_SENSOR_YOFFSET		8
+#define PLAYER_OFF_ROPE_SENSOR_YOFFSET	7
 
 #define PLAYER_SPRITE_RIGHT_STAND		0
 #define PLAYER_SPRITE_RIGHT_RUN0		1
@@ -564,7 +567,7 @@ void Player_Update(PlayerData* playerData,
 		playerData->speedy = 0;
 		u8 testResult = testTerrainCollision(playerData->x, 
 											 playerData->y, 
-											 PLAYER_ROPE_SENSOR_YOFFSET, 
+											 PLAYER_OFF_ROPE_SENSOR_YOFFSET, 
 											 ropeCollisionMasks,
 											 cleanBackground);
 
@@ -614,13 +617,109 @@ void Player_Update(PlayerData* playerData,
 				playerData->state = PLAYER_STATE_FALL;
 			}
 		}
+
+		if (joystickState->leftDown)
+		{
+			playerData->holdLeftCounter++;
+			if (playerData->holdLeftCounter > PLAYER_ROPE_HOLD_COUNT)
+			{
+				playerData->state = PLAYER_STATE_HANG_LEFT;
+				playerData->x -= 4 << 8;
+				playerData->holdLeftCounter = 0;
+			}
+		}
+		else if (joystickState->rightDown)
+		{
+			playerData->holdRightCounter++;
+
+			if (playerData->holdRightCounter > PLAYER_ROPE_HOLD_COUNT)
+			{
+				playerData->state = PLAYER_STATE_HANG_RIGHT;
+				playerData->x += 4 << 8;
+				playerData->holdRightCounter = 0;
+			}
+		}
+		else
+		{
+			playerData->holdLeftCounter = 0;
+			playerData->holdRightCounter = 0;
+		}
+	}
+	else if (playerData->state == PLAYER_STATE_HANG_LEFT)
+	{
+		playerData->currentFrameNumber = PLAYER_RUN_FRAME_2_JUMP;
+		playerData->facingDirection = PLAYER_FACING_LEFT;
+
+		if (joystickState->leftDown)
+		{
+			playerData->holdLeftCounter++;
+			playerData->facingDirection = PLAYER_FACING_LEFT;
+
+			if (playerData->holdLeftCounter > PLAYER_ROPE_HOLD_COUNT)
+			{
+				playerData->state = PLAYER_STATE_FALL;
+				playerData->x -= 4 << 8;
+				playerData->holdLeftCounter = 0;
+			}
+		}
+		else if (joystickState->rightDown)
+		{
+			playerData->holdRightCounter++;
+			playerData->facingDirection = PLAYER_FACING_RIGHT;
+
+			if (playerData->holdRightCounter > PLAYER_ROPE_HOLD_COUNT)
+			{
+				playerData->state = PLAYER_STATE_CLIMB;
+				playerData->currentFrameNumber = PLAYER_CLIMB_FRAME_0;
+				playerData->x += 4 << 8;
+				playerData->holdRightCounter = 0;
+			}
+		}
+		else
+		{
+			playerData->holdLeftCounter = 0;
+			playerData->holdRightCounter = 0;
+		}
+	}
+	else if (playerData->state == PLAYER_STATE_HANG_RIGHT)
+	{
+		playerData->currentFrameNumber = PLAYER_RUN_FRAME_2_JUMP;
+		playerData->facingDirection = PLAYER_FACING_RIGHT;
+
+		if (joystickState->leftDown)
+		{
+			playerData->holdLeftCounter++;
+			playerData->facingDirection = PLAYER_FACING_LEFT;
+
+			if (playerData->holdLeftCounter > PLAYER_ROPE_HOLD_COUNT)
+			{
+				playerData->state = PLAYER_STATE_CLIMB;
+				playerData->currentFrameNumber = PLAYER_CLIMB_FRAME_0;
+				playerData->x -= 4 << 8;
+				playerData->holdLeftCounter = 0;
+			}
+		}
+		else if (joystickState->rightDown)
+		{
+			playerData->holdRightCounter++;
+			playerData->facingDirection = PLAYER_FACING_RIGHT;
+			if (playerData->holdRightCounter > PLAYER_ROPE_HOLD_COUNT)
+			{
+				playerData->state = PLAYER_STATE_FALL;
+				playerData->x += 4 << 8;
+				playerData->holdRightCounter = 0;
+			}
+		}
+		else
+		{
+			playerData->holdLeftCounter = 0;
+			playerData->holdRightCounter = 0;
+		}
+
 	}
 
 	playerData->x += playerData->speedx;
 	playerData->y += playerData->speedy;
-
-
-
 
 	if (playerData->ignoreRopesCounter)
 		playerData->ignoreRopesCounter--;
@@ -690,8 +789,10 @@ void Player_Update(PlayerData* playerData,
 		{
 			playerData->state = PLAYER_STATE_CLIMB;
 			playerData->speedx = 0;
-			playerData->safeLanding = TRUE;
 			playerData->speedy = 0;
+			playerData->safeLanding = TRUE;
+			playerData->holdLeftCounter = 0;
+			playerData->holdRightCounter = 0;
 			playerData->currentFrameNumber = PLAYER_CLIMB_FRAME_0;
 			playerData->jumpAirCounter = 0;
 		}

@@ -54,6 +54,9 @@ typedef struct
 	u8 jumpAirCounter;
 	u8 ignoreRopesCounter;
 
+	u8 holdLeftCounter;
+	u8 holdRightCounter;
+
 	u8 safeLanding;
 
 	u32 score;

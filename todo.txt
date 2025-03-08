@@ -123,9 +123,11 @@ DONE entering last door needs to:
 
 DONE joystick support
 
+DONE erase rope on top of player when climbing
 
-erase rope on top of player when climbing
-hang on rope
+DONE hang on rope
+
+DONE horizontal rope traversal
 
 sound
     which sounds?
@@ -145,6 +147,7 @@ jump doesn't slow down horizontally
 code comment pass
 code pretty pass
 split rooms file
+can make individual update functions for player?
 use union instead of GET_HIGH_BYTE ? 
 
 

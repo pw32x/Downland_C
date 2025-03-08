@@ -13,6 +13,8 @@
 #include "player.h"
 #include "door_utils.h"
 
+//#define DISABLE_ENEMIES
+
 void titleScreen_draw(u8 roomNumber, GameData* gameData, Resources* resources)
 {
 	u8* framebuffer = gameData->cleanBackground;
@@ -288,11 +290,13 @@ void room_update(Room* room, GameData* gameData, Resources* resources)
 	updateTimers(playerData->currentRoom->roomNumber, playerData->roomTimers);
 	u16 currentTimer = playerData->roomTimers[playerData->currentRoom->roomNumber];
 
+#ifndef DISABLE_ENEMIES
 	DropsManager_Update(&gameData->dropData, 
 						gameData->framebuffer, 
 						gameData->cleanBackground, 
 						playerData->gameCompletionCount,
 						resources->sprites_drops);	
+#endif
 
 	DoorInfo* lastDoor = playerData->lastDoor;
 
@@ -357,9 +361,10 @@ void room_update(Room* room, GameData* gameData, Resources* resources)
 		return;
 	}
 
+#ifndef DISABLE_ENEMIES
 	Ball_Update(&gameData->ballData, gameData->framebuffer, gameData->cleanBackground);
 	Bird_Update(&gameData->birdData, currentTimer, gameData->framebuffer, gameData->cleanBackground);
-
+#endif
 
 	if (Player_HasCollision(playerData, gameData->framebuffer, gameData->cleanBackground))
 	{

@@ -1,5 +1,7 @@
 #define SDL_MAIN_USE_CALLBACKS 1  /* use the callbacks instead of main() */
 
+extern "C"
+{
 #include "../game/base_defines.h"
 #include "../game/base_types.h"
 #include "../game/game.h"
@@ -7,6 +9,7 @@
 #include "../game/physics_utils.h"
 #include "../game/debug_utils.h"
 #include "../game/draw_utils.h"
+}
 
 #include "sdl_utils.h"
 
@@ -158,15 +161,15 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
 
 void Update_Controls(JoystickState* joystickState)
 {
-    const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
+    const bool* currentKeyStates = SDL_GetKeyboardState(NULL);
 
-    u8 leftDown = currentKeyStates[SDL_SCANCODE_LEFT];
-    u8 rightDown = currentKeyStates[SDL_SCANCODE_RIGHT];
-    u8 upDown = currentKeyStates[SDL_SCANCODE_UP];
-    u8 downDown = currentKeyStates[SDL_SCANCODE_DOWN];
-    u8 jumpDown = currentKeyStates[SDL_SCANCODE_LCTRL] || currentKeyStates[SDL_SCANCODE_Z] || currentKeyStates[SDL_SCANCODE_LSHIFT];
-    u8 debugStateDown = currentKeyStates[SDL_SCANCODE_TAB];
-    u8 startDown = FALSE;
+    bool leftDown = currentKeyStates[SDL_SCANCODE_LEFT];
+    bool rightDown = currentKeyStates[SDL_SCANCODE_RIGHT];
+    bool upDown = currentKeyStates[SDL_SCANCODE_UP];
+    bool downDown = currentKeyStates[SDL_SCANCODE_DOWN];
+    bool jumpDown = currentKeyStates[SDL_SCANCODE_LCTRL] || currentKeyStates[SDL_SCANCODE_Z] || currentKeyStates[SDL_SCANCODE_LSHIFT];
+    bool debugStateDown = currentKeyStates[SDL_SCANCODE_TAB];
+    bool startDown = FALSE;
 
     if (gamePad != NULL)
     {
@@ -201,7 +204,7 @@ void Update_Controls(JoystickState* joystickState)
     joystickState->downReleased =  joystickState->downDown & !downDown;
     joystickState->jumpReleased =  joystickState->jumpDown & !jumpDown;
     joystickState->debugStateReleased = joystickState->debugStatePressed & !debugStateDown;
-    joystickState->startDownReleased = joystickState->startDownPressed & ~startDown;
+    joystickState->startDownReleased = joystickState->startDownPressed & !startDown;
 
     joystickState->leftDown = leftDown;
     joystickState->rightDown = rightDown;

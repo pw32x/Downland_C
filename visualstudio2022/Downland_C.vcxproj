@@ -136,8 +136,8 @@
     <ClCompile Include="..\game\resource_loader.c" />
     <ClCompile Include="..\game\rooms.c" />
     <ClCompile Include="..\game\string_utils.c" />
-    <ClCompile Include="..\sdl_main\sdl_main.c" />
-    <ClCompile Include="..\sdl_main\sdl_utils.c" />
+    <ClCompile Include="..\sdl_main\sdl_main.cpp" />
+    <ClCompile Include="..\sdl_main\sdl_utils.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

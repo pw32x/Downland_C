@@ -17,7 +17,7 @@
 #define PLAYER_ONE	0
 #define PLAYER_TWO	1
 
-typedef struct
+typedef struct GameData
 {
 	u8 framebuffer[FRAMEBUFFER_HEIGHT * FRAMEBUFFER_PITCH]; // main game 1bpp frame buffer
 	u8 cleanBackground[FRAMEBUFFER_HEIGHT * FRAMEBUFFER_PITCH]; // the game background without UI or objects. Used for terrain collision detection.

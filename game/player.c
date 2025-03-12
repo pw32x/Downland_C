@@ -369,7 +369,6 @@ void Player_Update(PlayerData* playerData,
 			playerData->cantMoveCounter = 0;
 			playerData->currentFrameNumber = PLAYER_RUN_FRAME_0_STAND;
 			playerData->state = PLAYER_STATE_JUMP;
-			Sound_Play(SOUND_JUMP);
 			playerData->speedy = 0;
 			playerData->jumpAirCounter = 1;
 		}

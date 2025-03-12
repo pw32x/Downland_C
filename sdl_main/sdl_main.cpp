@@ -10,14 +10,15 @@ extern "C"
 #include "../game/physics_utils.h"
 #include "../game/debug_utils.h"
 #include "../game/draw_utils.h"
+#include "../game/sound.h"
 }
-
-#include "sdl_utils.h"
-#include "sdl_sound_manager.h"
 
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
 #include <SDL3/SDL_gamepad.h>
+
+#include "sdl_utils.h"
+#include "sdl_sound_manager.h"
 
 static SDL_Window *window = NULL;
 static SDL_Renderer *renderer = NULL;
@@ -34,6 +35,15 @@ BOOL stepFrame = false;
 
 Resources resources;
 GameData gameData;
+
+SDLSoundManager soundManager;
+
+// implement the sound function here
+void Sound_Play(u8 soundIndex)
+{
+	soundManager.play(soundIndex);
+}
+
 
 #define TARGET_FPS 60
 const double TARGET_FRAME_TIME = 1.0 / TARGET_FPS;
@@ -97,7 +107,14 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
     if (!ResourceLoader_Init(romFilePath, &resources))
         return SDL_APP_FAILURE;
 
-    SDLSoundManager_Init();
+    soundManager.init();
+
+    // load these in the same order as the IDs in game\sound.h
+    soundManager.loadSound("jump.wav");
+    soundManager.loadSound("land.wav");
+    soundManager.loadSound("pickup.wav");
+    soundManager.loadSound("transition.wav");
+    soundManager.loadSound("splat.wav");
 
     Game_Init(&gameData, &resources);
 
@@ -131,6 +148,11 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
         if (event->key.key == SDLK_ESCAPE)
         {
             gameData.paused = !gameData.paused;
+
+            if (gameData.paused)
+                soundManager.pause();
+            else
+                soundManager.resume();
         }
 
 #ifdef DEV_MODE
@@ -138,6 +160,7 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
         {
             stepFrame = TRUE;
             gameData.paused = FALSE;
+            soundManager.resume();
         }
 
         if (event->key.key == SDLK_GRAVE)
@@ -243,7 +266,14 @@ SDL_AppResult SDL_AppIterate(void *appstate)
     Update_Controls(&gameData.joystickState);
 
     if (gameData.joystickState.startDownPressed)
+    {
         gameData.paused = !gameData.paused;
+
+        if (gameData.paused)
+            soundManager.pause();
+        else
+            soundManager.resume();
+    }
 
     if (!gameData.paused)
     {
@@ -340,6 +370,7 @@ SDL_AppResult SDL_AppIterate(void *appstate)
     {
         gameData.paused = TRUE;
         stepFrame = FALSE;
+        soundManager.pause();
     }
 
     return SDL_APP_CONTINUE;
@@ -356,6 +387,6 @@ void SDL_AppQuit(void *appstate, SDL_AppResult result)
     SDL_DestroyTexture(framebufferTexture);
 
     Game_Shutdown(&gameData);
-    SDLSoundManager_Shutdown();
+    soundManager.shutdown();
     ResourceLoader_Shutdown(&resources);
 }

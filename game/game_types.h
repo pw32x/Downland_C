@@ -49,7 +49,7 @@ typedef struct GameData
 	u8 string_highScore[SCORE_STRING_SIZE];
 
 	u32 highScore;
-	u32 paused;
+	u8 paused;
 } GameData;
 
 #endif

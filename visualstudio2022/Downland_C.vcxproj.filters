@@ -89,6 +89,18 @@
     <ClInclude Include="..\game\door_utils.h">
       <Filter>game</Filter>
     </ClInclude>
+    <ClInclude Include="..\game\sound.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sdl_main\sdl_sound_manager.h">
+      <Filter>sdl_main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sdl_main\sdl_sound.h">
+      <Filter>sdl_main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\game\player_types.h">
+      <Filter>game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Downland.ico">
@@ -112,10 +124,10 @@
     <ClCompile Include="..\game\draw_utils.c">
       <Filter>game</Filter>
     </ClCompile>
-    <ClCompile Include="..\sdl_main\sdl_main.c">
+    <ClCompile Include="..\sdl_main\sdl_main.cpp">
       <Filter>sdl_main</Filter>
     </ClCompile>
-    <ClCompile Include="..\sdl_main\sdl_utils.c">
+    <ClCompile Include="..\sdl_main\sdl_utils.cpp">
       <Filter>sdl_main</Filter>
     </ClCompile>
     <ClCompile Include="..\game\drops_manager.c">
@@ -147,6 +159,12 @@
     </ClCompile>
     <ClCompile Include="..\game\door_utils.c">
       <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sdl_main\sdl_sound_manager.cpp">
+      <Filter>sdl_main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sdl_main\sdl_sound.cpp">
+      <Filter>sdl_main</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

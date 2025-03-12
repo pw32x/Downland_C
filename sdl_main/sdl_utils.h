@@ -1,8 +1,11 @@
 #ifndef SDL_UTILS_INCLUDE_H
 #define SDL_UTILS_INCLUDE_H
 
+extern "C"
+{
 #include "../game/base_defines.h"
 #include "../game/base_types.h"
+}
 
 #include <SDL3/SDL.h>
 

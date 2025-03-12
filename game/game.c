@@ -5,9 +5,9 @@
 #include "draw_utils.h"
 #include "rooms.h"
 
-#define START_AT_TITLESCREEN
+//#define START_AT_TITLESCREEN
 
-void Game_Init(GameData* gameData, Resources* resources)
+void Game_Init(struct GameData* gameData, Resources* resources)
 {
 	gameData->numPlayers = 1;
 
@@ -37,14 +37,14 @@ void Game_Init(GameData* gameData, Resources* resources)
 #endif
 }
 
-void Game_Update(GameData* gameData, Resources* resources)
+void Game_Update(struct GameData* gameData, Resources* resources)
 {
 	gameData->currentRoom->update((struct Room*)gameData->currentRoom, 
 								  (struct GameData*)gameData, 
 								  resources);
 }
 
-void Game_EnterRoom(GameData* gameData, u8 roomNumber, Resources* resources)
+void Game_EnterRoom(struct GameData* gameData, u8 roomNumber, Resources* resources)
 {
 	gameData->currentRoom = g_rooms[roomNumber];
 
@@ -56,7 +56,7 @@ void Game_EnterRoom(GameData* gameData, u8 roomNumber, Resources* resources)
 								resources);
 }
 
-void Game_TransitionToRoom(GameData* gameData, u8 roomNumber, Resources* resources)
+void Game_TransitionToRoom(struct GameData* gameData, u8 roomNumber, Resources* resources)
 {
 	gameData->transitionRoomNumber = roomNumber;
 
@@ -71,7 +71,7 @@ void Game_TransitionToRoom(GameData* gameData, u8 roomNumber, Resources* resourc
 								resources);
 }
 
-void Game_WipeTransitionToRoom(GameData* gameData, u8 roomNumber, Resources* resources)
+void Game_WipeTransitionToRoom(struct GameData* gameData, u8 roomNumber, Resources* resources)
 {
 	gameData->transitionRoomNumber = roomNumber;
 
@@ -86,7 +86,7 @@ void Game_WipeTransitionToRoom(GameData* gameData, u8 roomNumber, Resources* res
 								resources);
 }
 
-void Game_Shutdown(GameData* gameData)
+void Game_Shutdown(struct GameData* gameData)
 {
 
 }

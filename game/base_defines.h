@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <crtdbg.h>
 
+#define DEV_MODE
+
 #define FRAMEBUFFER_WIDTH  256
 #define FRAMEBUFFER_HEIGHT 192
 #define FRAMEBUFFER_PITCH  (FRAMEBUFFER_WIDTH / 8)

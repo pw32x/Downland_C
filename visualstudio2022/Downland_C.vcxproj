@@ -58,6 +58,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>..\..\SDL3-3.2.2\include;</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -76,6 +77,7 @@
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>..\..\SDL3-3.2.2\include;</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -105,10 +107,14 @@
     <ClInclude Include="..\game\physics_utils.h" />
     <ClInclude Include="..\game\pickup_types.h" />
     <ClInclude Include="..\game\player.h" />
+    <ClInclude Include="..\game\player_types.h" />
     <ClInclude Include="..\game\resource_loader.h" />
     <ClInclude Include="..\game\resource_types.h" />
     <ClInclude Include="..\game\rooms.h" />
+    <ClInclude Include="..\game\sound.h" />
     <ClInclude Include="..\game\string_utils.h" />
+    <ClInclude Include="..\sdl_main\sdl_sound.h" />
+    <ClInclude Include="..\sdl_main\sdl_sound_manager.h" />
     <ClInclude Include="..\sdl_main\sdl_utils.h" />
     <ClInclude Include="Resource.h" />
   </ItemGroup>
@@ -137,6 +143,8 @@
     <ClCompile Include="..\game\rooms.c" />
     <ClCompile Include="..\game\string_utils.c" />
     <ClCompile Include="..\sdl_main\sdl_main.cpp" />
+    <ClCompile Include="..\sdl_main\sdl_sound.cpp" />
+    <ClCompile Include="..\sdl_main\sdl_sound_manager.cpp" />
     <ClCompile Include="..\sdl_main\sdl_utils.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

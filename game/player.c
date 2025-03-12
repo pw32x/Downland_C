@@ -9,6 +9,7 @@
 #include "game_types.h"
 #include "pickup_types.h"
 #include "door_utils.h"
+#include "sound.h"
 
 // all the states are mutually exclusive
 #define PLAYER_STATE_STAND			0
@@ -353,6 +354,7 @@ void Player_Update(PlayerData* playerData,
 		return;
 	}
 
+#ifdef DEV_MODE
 	if (joystickState->debugStatePressed)
 	{
 		if (playerData->state != PLAYER_STATE_DEBUG)
@@ -367,10 +369,12 @@ void Player_Update(PlayerData* playerData,
 			playerData->cantMoveCounter = 0;
 			playerData->currentFrameNumber = PLAYER_RUN_FRAME_0_STAND;
 			playerData->state = PLAYER_STATE_JUMP;
+			Sound_Play(SOUND_JUMP);
 			playerData->speedy = 0;
 			playerData->jumpAirCounter = 1;
 		}
 	}
+#endif
 
 	if (playerData->state == PLAYER_STATE_REGENERATION)
 	{
@@ -461,6 +465,7 @@ void Player_Update(PlayerData* playerData,
 			playerData->speedy = 0xff61;
 			playerData->jumpAirCounter = PLAYER_JUMP_AIR_COUNT;
 			playerData->state = PLAYER_STATE_JUMP;
+			Sound_Play(SOUND_JUMP);
 
 			// apply side movement if a direction was held
 			if (joystickState->leftDown)
@@ -488,6 +493,7 @@ void Player_Update(PlayerData* playerData,
 			playerData->speedy = 0xff61;
 			playerData->jumpAirCounter = PLAYER_JUMP_AIR_COUNT;
 			playerData->state = PLAYER_STATE_JUMP;
+			Sound_Play(SOUND_JUMP);
 		}
 		else if (joystickState->leftDown)
 		{
@@ -582,6 +588,7 @@ void Player_Update(PlayerData* playerData,
 				playerData->safeLanding = TRUE;
 				playerData->jumpAirCounter = PLAYER_JUMP_AIR_COUNT;
 				playerData->state = PLAYER_STATE_JUMP;
+				Sound_Play(SOUND_JUMP);
 				playerData->ignoreRopesCounter = 20;
 			}
 			else if (joystickState->rightDown)
@@ -592,6 +599,7 @@ void Player_Update(PlayerData* playerData,
 				playerData->safeLanding = TRUE;
 				playerData->jumpAirCounter = PLAYER_JUMP_AIR_COUNT;
 				playerData->state = PLAYER_STATE_JUMP;
+				Sound_Play(SOUND_JUMP);
 				playerData->ignoreRopesCounter = 20;
 			}
 		}

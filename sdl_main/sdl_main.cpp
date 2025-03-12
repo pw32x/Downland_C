@@ -5,6 +5,7 @@ extern "C"
 #include "../game/base_defines.h"
 #include "../game/base_types.h"
 #include "../game/game.h"
+#include "../game/game_types.h"
 #include "../game/resource_loader.h"
 #include "../game/physics_utils.h"
 #include "../game/debug_utils.h"
@@ -12,12 +13,11 @@ extern "C"
 }
 
 #include "sdl_utils.h"
+#include "sdl_sound_manager.h"
 
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
 #include <SDL3/SDL_gamepad.h>
-
-
 
 static SDL_Window *window = NULL;
 static SDL_Renderer *renderer = NULL;
@@ -97,6 +97,8 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
     if (!ResourceLoader_Init(romFilePath, &resources))
         return SDL_APP_FAILURE;
 
+    SDLSoundManager_Init();
+
     Game_Init(&gameData, &resources);
 
     gameStartTime = SDL_GetPerformanceCounter();
@@ -130,6 +132,8 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
         {
             gameData.paused = !gameData.paused;
         }
+
+#ifdef DEV_MODE
         else if (event->key.key == SDLK_SPACE && gameData.currentPlayerData->currentRoom->roomNumber != TITLESCREEN_ROOM_INDEX)
         {
             stepFrame = TRUE;
@@ -154,6 +158,7 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
             gameData.currentPlayerData->lastDoor = &resources.roomResources[9].doorInfoData.doorInfos[0];
             Game_TransitionToRoom(&gameData, 9, &resources);
         }
+#endif
     }
 
     return SDL_APP_CONTINUE;
@@ -168,7 +173,6 @@ void Update_Controls(JoystickState* joystickState)
     bool upDown = currentKeyStates[SDL_SCANCODE_UP];
     bool downDown = currentKeyStates[SDL_SCANCODE_DOWN];
     bool jumpDown = currentKeyStates[SDL_SCANCODE_LCTRL] || currentKeyStates[SDL_SCANCODE_Z] || currentKeyStates[SDL_SCANCODE_LSHIFT];
-    bool debugStateDown = currentKeyStates[SDL_SCANCODE_TAB];
     bool startDown = FALSE;
 
     if (gamePad != NULL)
@@ -186,7 +190,6 @@ void Update_Controls(JoystickState* joystickState)
                   SDL_GetGamepadAxis(gamePad, SDL_GAMEPAD_AXIS_LEFTY) > 10000;
 
         jumpDown |= SDL_GetGamepadButton(gamePad, SDL_GAMEPAD_BUTTON_SOUTH);
-        debugStateDown |= SDL_GetGamepadButton(gamePad, SDL_GAMEPAD_BUTTON_EAST);
         startDown |= SDL_GetGamepadButton(gamePad, SDL_GAMEPAD_BUTTON_START);
     }
 
@@ -195,7 +198,6 @@ void Update_Controls(JoystickState* joystickState)
     joystickState->upPressed = !joystickState->upDown & upDown;
     joystickState->downPressed =  !joystickState->downDown & downDown;
     joystickState->jumpPressed =  !joystickState->jumpDown & jumpDown;
-    joystickState->debugStatePressed = !joystickState->debugStateDown & debugStateDown;
     joystickState->startDownPressed = !joystickState->startDown & startDown;
 
     joystickState->leftReleased = joystickState->leftDown & !leftDown;
@@ -203,7 +205,6 @@ void Update_Controls(JoystickState* joystickState)
     joystickState->upReleased = joystickState->upDown & !upDown;
     joystickState->downReleased =  joystickState->downDown & !downDown;
     joystickState->jumpReleased =  joystickState->jumpDown & !jumpDown;
-    joystickState->debugStateReleased = joystickState->debugStatePressed & !debugStateDown;
     joystickState->startDownReleased = joystickState->startDownPressed & !startDown;
 
     joystickState->leftDown = leftDown;
@@ -211,8 +212,20 @@ void Update_Controls(JoystickState* joystickState)
     joystickState->upDown = upDown;
     joystickState->downDown = downDown;
     joystickState->jumpDown = jumpDown;
-    joystickState->debugStateDown = debugStateDown;
     joystickState->startDown = startDown;
+
+#ifdef DEV_MODE
+    bool debugStateDown = currentKeyStates[SDL_SCANCODE_TAB];
+
+    if (gamePad != NULL)
+    {
+        debugStateDown |= SDL_GetGamepadButton(gamePad, SDL_GAMEPAD_BUTTON_EAST);
+    }
+
+    joystickState->debugStatePressed = !joystickState->debugStateDown & debugStateDown;
+    joystickState->debugStateReleased = joystickState->debugStatePressed & !debugStateDown;
+    joystickState->debugStateDown = debugStateDown;
+#endif
 }
 
 // Function to convert an 8-bit value to a binary string
@@ -272,7 +285,7 @@ SDL_AppResult SDL_AppIterate(void *appstate)
         gameStartTime = currentTime;
     }
      
-#if 1
+#ifdef DEV_MODE
     // write debug text
     SDL_SetRenderScale(renderer, 1.5f, 1.5f);
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
@@ -343,5 +356,6 @@ void SDL_AppQuit(void *appstate, SDL_AppResult result)
     SDL_DestroyTexture(framebufferTexture);
 
     Game_Shutdown(&gameData);
+    SDLSoundManager_Shutdown();
     ResourceLoader_Shutdown(&resources);
 }

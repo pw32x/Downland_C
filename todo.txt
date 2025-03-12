@@ -131,15 +131,26 @@ DONE horizontal rope traversal
 
 sound
     which sounds?
-    run
-    jump
-    climb up
-    climb down
-    land from jump
-    splat
-    room wipe transition
-    item pickup
-
+        run
+        climb up
+        climb down        
+        DONE jump
+        DONE land from jump
+        DONE splat
+        DONE room wipe transition
+        DONE item pickup
+        
+        Length: 0:26.650
+        Sample rate: 44100
+        Channels: 1
+        Bits/sample: 8 (int)
+        Total samples: 1,175,265
+        Blockalign: 1
+        Datablock start: 44
+        
+    
+filter system for graphics?
+    
 bouncing off walls isn't accurate
 jump isn't accurate (too high?)
 jump doesn't slow down horizontally

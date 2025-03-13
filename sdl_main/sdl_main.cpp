@@ -112,9 +112,9 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
     // load these in the same order as the IDs in game\sound.h
     soundManager.loadSound("jump.wav");
     soundManager.loadSound("land.wav");
-    soundManager.loadSound("pickup.wav");
     soundManager.loadSound("transition.wav");
     soundManager.loadSound("splat.wav");
+    soundManager.loadSound("pickup.wav");
 
     Game_Init(&gameData, &resources);
 

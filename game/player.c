@@ -102,6 +102,7 @@ void playerKill(PlayerData* playerData, u8* framebuffer, u8* cleanBackground)
 		playerData->state == PLAYER_STATE_RUN)
 	{
 		playerData->state = PLAYER_STATE_SPLAT;
+		Sound_Play(SOUND_SPLAT);
 		playerData->cantMoveCounter = PLAYER_SPLAT_WAIT_TIME;
 
 		u8 x = GET_HIGH_BYTE(playerData->x);
@@ -558,6 +559,7 @@ void Player_Update(PlayerData* playerData,
 		{
 			playerData->state = PLAYER_STATE_STAND;
 			playerData->speedy = 0;
+			Sound_Play(SOUND_LAND);
 			playerData->currentFrameNumber = PLAYER_RUN_FRAME_0_STAND;
 
 			if (!playerData->safeLanding || playerData->isDead)
@@ -1010,6 +1012,8 @@ void Player_PerformCollisions(struct GameData* gameDataStruct,
 		if (objectCollisionTest(playerData, pickUp->x, pickUp->y, PICKUP_WIDTH, PICKUP_HEIGHT))
 		{
 			pickUp->state = pickUp->state & ~playerData->playerMask;
+
+			Sound_Play(SOUND_PICKUP);
 
 			eraseSprite_16PixelsWide(resources->pickupSprites[pickUp->type],
 									 pickUp->x, 

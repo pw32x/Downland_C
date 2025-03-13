@@ -12,6 +12,7 @@
 #include "bird.h"
 #include "player.h"
 #include "door_utils.h"
+#include "sound.h"
 
 //#define DISABLE_ENEMIES
 
@@ -526,6 +527,11 @@ void wipe_transition_update(Room* room, GameData* gameData, Resources* resources
 
 	if (gameData->transitionFrameDelay)
 		return;
+
+	if (gameData->transitionCurrentLine == 5)
+	{
+		Sound_Play(SOUND_SCREEN_TRANSITION);
+	}
 
 	u16 offset = gameData->transitionCurrentLine * FRAMEBUFFER_PITCH;
 

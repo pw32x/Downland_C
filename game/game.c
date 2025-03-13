@@ -5,7 +5,7 @@
 #include "draw_utils.h"
 #include "rooms.h"
 
-//#define START_AT_TITLESCREEN
+#define START_AT_TITLESCREEN
 
 void Game_Init(struct GameData* gameData, Resources* resources)
 {

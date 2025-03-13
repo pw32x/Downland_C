@@ -3,6 +3,7 @@
 
 #include <SDL3/SDL.h>
 
+// barebones support for SDL playback of a sound
 class SDLSound
 {
 public:

@@ -49,6 +49,7 @@ void SDLSound::play()
 {
     m_isPaused = false;
 
+    // just dump the whole sound. we're not being fancy.
     SDL_PutAudioStreamData(m_audioStream, 
                             m_wavData, 
                             (int) m_wavDataLength);

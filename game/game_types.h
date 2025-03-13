@@ -50,6 +50,8 @@ typedef struct GameData
 
 	u32 highScore;
 	u8 paused;
+
+	u8 targetFps; 
 } GameData;
 
 #endif

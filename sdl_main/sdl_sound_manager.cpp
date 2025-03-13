@@ -18,7 +18,7 @@ void SDLSoundManager::init()
         throw std::runtime_error(std::format("SDLSoundManager already initialized"));
     }
 
-    if (!SDL_InitSubSystem(SDL_INIT_AUDIO))
+    if (!SDL_WasInit(SDL_INIT_AUDIO) && !SDL_InitSubSystem(SDL_INIT_AUDIO))
     {
         throw std::runtime_error(std::format("Couldn't init audio subsystem: {}", SDL_GetError()));
     }

@@ -65,6 +65,9 @@ void titleScreen_draw(u8 roomNumber, GameData* gameData, Resources* resources)
 void titleScreen_init(Room* room, GameData* gameData, Resources* resources)
 {
 	u8 roomNumber = room->roomNumber;
+	gameData->targetFps = NORMAL_FPS * 3; // simulate the title screen not
+										  // waiting for vsync in the original
+										  // game by running 3x fast.
 
 	// init drops
 	gameData->dropData.dropSpawnPositions = &resources->roomResources[roomNumber].dropSpawnPositions;
@@ -73,18 +76,11 @@ void titleScreen_init(Room* room, GameData* gameData, Resources* resources)
 
 void titleScreen_update(Room* room, GameData* gameData, Resources* resources)
 {
-	// run the drops three times faster to 
-	// simulate the original game's title screen
-	// which didn't wait for vblank and would just
-	// go all out as fast as possible.
-	for (u8 loop = 0; loop < 3; loop++)
-	{
-		DropsManager_Update(&gameData->dropData, 
-							gameData->framebuffer, 
-							gameData->cleanBackground, 
-							1 /*gameCompletionCount*/,
-							resources->sprites_drops);
-	}
+	DropsManager_Update(&gameData->dropData, 
+						gameData->framebuffer, 
+						gameData->cleanBackground, 
+						1 /*gameCompletionCount*/,
+						resources->sprites_drops);
 
 	if (gameData->joystickState.leftPressed)
 	{
@@ -115,6 +111,7 @@ void titleScreen_update(Room* room, GameData* gameData, Resources* resources)
 			Player_GameInit(&gameData->playerData[loop], resources);
 		}
 
+		gameData->targetFps = NORMAL_FPS;
 		memset(gameData->framebuffer, 0, FRAMEBUFFER_SIZE_IN_BYTES);		
 		Game_WipeTransitionToRoom(gameData, 0, resources);
 	}
@@ -151,7 +148,6 @@ void drawPickups(Pickup* pickups,
 
 #define PLAYERICON_NUM_SPRITE_ROWS 7
 
-// this is all wrong
 void drawPlayerLives(u8 playerLives,
 					 u8 currentSpriteNumber,
 					 u8* playerBitShiftedSprites,
@@ -243,6 +239,7 @@ void room_draw(u8 roomNumber, GameData* gameData, Resources* resources)
 void room_init(Room* room, GameData* gameData, Resources* resources)
 {
 	u8 roomNumber = room->roomNumber;
+	gameData->targetFps = NORMAL_FPS;
 	PlayerData* playerData = gameData->currentPlayerData;
 
 	// init drops
@@ -528,9 +525,11 @@ void wipe_transition_update(Room* room, GameData* gameData, Resources* resources
 	if (gameData->transitionFrameDelay)
 		return;
 
-	if (gameData->transitionCurrentLine == 5)
+	if (!gameData->transitionCurrentLine)
 	{
 		Sound_Play(SOUND_SCREEN_TRANSITION);
+		gameData->targetFps = 80; // simulate the lack of vsync waiting on the original game
+								  // to sync up the transition sound with the visuals.
 	}
 
 	u16 offset = gameData->transitionCurrentLine * FRAMEBUFFER_PITCH;
@@ -561,6 +560,7 @@ void wipe_transition_update(Room* room, GameData* gameData, Resources* resources
 
 	if (gameData->transitionCurrentLine == 32)
 	{
+		gameData->targetFps = NORMAL_FPS;
 		Game_EnterRoom(gameData, gameData->transitionRoomNumber, resources);
 	}
 }
@@ -592,6 +592,7 @@ void get_ready_room_draw(u8 roomNumber, GameData* gameData, Resources* resources
 void get_ready_room_init(Room* room, GameData* gameData, Resources* resources)
 {
 	u8 roomNumber = room->roomNumber;
+	gameData->targetFps = NORMAL_FPS * 3; // speed up the game, like the title screen 
 
 	// init drops
 	gameData->dropData.dropSpawnPositions = &resources->roomResources[TITLESCREEN_ROOM_INDEX].dropSpawnPositions;
@@ -600,18 +601,12 @@ void get_ready_room_init(Room* room, GameData* gameData, Resources* resources)
 
 void get_ready_room_update(Room* room, GameData* gameData, Resources* resources)
 {
-	// run the drops three times faster to 
-	// simulate the original game's title screen
-	// which didn't wait for vblank and would just
-	// go all out as fast as possible.
-	for (u8 loop = 0; loop < 3; loop++)
-	{
-		DropsManager_Update(&gameData->dropData, 
-							gameData->framebuffer, 
-							gameData->cleanBackground, 
-							1 /*gameCompletionCount*/,
-							resources->sprites_drops);
-	}
+	DropsManager_Update(&gameData->dropData, 
+						gameData->framebuffer, 
+						gameData->cleanBackground, 
+						1 /*gameCompletionCount*/,
+						resources->sprites_drops);
+
 
 	// press button to start
 	if (gameData->joystickState.jumpPressed)
@@ -621,6 +616,7 @@ void get_ready_room_update(Room* room, GameData* gameData, Resources* resources)
 		if (gameData->currentPlayerData->lastDoor != NULL)
 			roomNumber = gameData->currentPlayerData->lastDoor->nextRoomNumber;
 
+		gameData->targetFps = NORMAL_FPS;
 		memset(gameData->framebuffer, 0, FRAMEBUFFER_SIZE_IN_BYTES);		
 		Game_WipeTransitionToRoom(gameData, roomNumber, resources);
 	}

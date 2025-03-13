@@ -129,11 +129,8 @@ DONE hang on rope
 
 DONE horizontal rope traversal
 
-sound
+DONE sound
     which sounds?
-        run
-        climb up
-        climb down        
         DONE jump
         DONE land from jump
         DONE splat
@@ -148,6 +145,20 @@ sound
         Blockalign: 1
         Datablock start: 44
         
+DONE implement sound playing
+
+DOME implement discrete sounds
+    Jump
+    Land
+    Splat
+    Pickup
+    Screen Transition
+    
+implement looping sounds
+    Run
+    Climb up
+    Climb down
+    
     
 filter system for graphics?
     
@@ -164,7 +175,7 @@ use union instead of GET_HIGH_BYTE ?
 
 
 beta testing
-player replay system
+player replay system?
 
 
 Tools

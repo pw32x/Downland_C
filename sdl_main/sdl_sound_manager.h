@@ -7,6 +7,7 @@
 #include <vector>
 #include <memory>
 
+// super simple SDL sound manager
 class SDLSoundManager
 {
 public:

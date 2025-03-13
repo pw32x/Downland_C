@@ -45,9 +45,6 @@ void Sound_Play(u8 soundIndex)
 }
 
 
-#define TARGET_FPS 60
-const double TARGET_FRAME_TIME = 1.0 / TARGET_FPS;
-
 Uint64 gameStartTime;
 Uint64 timeFrequency;
 Uint64 frameCount = 0;
@@ -359,7 +356,12 @@ SDL_AppResult SDL_AppIterate(void *appstate)
 
     // compute the frame's time and wait for the target frame time to pass
     elapsedSeconds = (float)(SDL_GetPerformanceCounter() - frameStartTime) / timeFrequency;
-    double remainingTime = TARGET_FRAME_TIME - elapsedSeconds;
+
+
+    double targetFrameTime = 1.0 / gameData.targetFps; // the game can vary the framerate
+                                                       // to simulate performance on real
+                                                       // hardware.
+    double remainingTime = targetFrameTime - elapsedSeconds;
         
     if (remainingTime > 0) 
     {

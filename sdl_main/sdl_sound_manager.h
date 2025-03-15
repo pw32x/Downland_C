@@ -18,7 +18,8 @@ public:
 
 	void loadSound(const char* filename);
 
-	void play(int soundIndex);
+	void play(int soundIndex, bool loop);
+	void stop(int soundIndex);
 	void stopAll();
 
 	void pause();

@@ -52,7 +52,7 @@ void SDLSoundManager::loadSound(const char* filename)
     m_sounds.emplace_back(std::make_unique<SDLSound>(filename, m_audioDevice));
 }
 
-void SDLSoundManager::play(int soundIndex)
+void SDLSoundManager::play(int soundIndex, bool loop)
 {
     if (!m_audioDevice)
     {
@@ -60,9 +60,35 @@ void SDLSoundManager::play(int soundIndex)
     }
 
     if (soundIndex > m_sounds.size() - 1)
-        return;
+        throw std::runtime_error(std::format("No sound for index: {}", soundIndex));
 
-    m_sounds[soundIndex]->play();
+    m_sounds[soundIndex]->play(loop);
+}
+
+void SDLSoundManager::stop(int soundIndex)
+{
+    if (!m_audioDevice)
+    {
+        throw std::runtime_error(std::format("SDLSoundManager not initialized"));
+    }
+
+    if (soundIndex > m_sounds.size() - 1)
+        throw std::runtime_error(std::format("No sound for index: {}", soundIndex));
+
+    m_sounds[soundIndex]->stop();
+}
+
+void SDLSoundManager::stopAll()
+{
+    if (!m_audioDevice)
+    {
+        throw std::runtime_error(std::format("SDLSoundManager not initialized"));
+    }
+
+    for (auto& sound : m_sounds)
+    {
+        sound->stop();
+    };
 }
 
 void SDLSoundManager::pause()
@@ -98,15 +124,3 @@ void SDLSoundManager::resume()
     };
 }
 
-void SDLSoundManager::stopAll()
-{
-    if (!m_audioDevice)
-    {
-        throw std::runtime_error(std::format("SDLSoundManager not initialized"));
-    }
-
-    for (auto& sound : m_sounds)
-    {
-        sound->stop();
-    };
-}

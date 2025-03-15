@@ -39,9 +39,14 @@ GameData gameData;
 SDLSoundManager soundManager;
 
 // implement the sound function here
-void Sound_Play(u8 soundIndex)
+void Sound_Play(u8 soundIndex, u8 loop)
 {
-	soundManager.play(soundIndex);
+	soundManager.play(soundIndex, loop);
+}
+
+void Sound_Stop(u8 soundindex)
+{
+    soundManager.stop(soundindex);
 }
 
 
@@ -112,6 +117,9 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
     soundManager.loadSound("transition.wav");
     soundManager.loadSound("splat.wav");
     soundManager.loadSound("pickup.wav");
+    soundManager.loadSound("run.wav");
+    soundManager.loadSound("climb_up.wav");
+    soundManager.loadSound("climb_down.wav");
 
     Game_Init(&gameData, &resources);
 

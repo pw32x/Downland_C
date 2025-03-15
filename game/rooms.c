@@ -527,7 +527,7 @@ void wipe_transition_update(Room* room, GameData* gameData, Resources* resources
 
 	if (!gameData->transitionCurrentLine)
 	{
-		Sound_Play(SOUND_SCREEN_TRANSITION);
+		Sound_Play(SOUND_SCREEN_TRANSITION, FALSE);
 		gameData->targetFps = 80; // simulate the lack of vsync waiting on the original game
 								  // to sync up the transition sound with the visuals.
 	}

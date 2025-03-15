@@ -102,7 +102,8 @@ void playerKill(PlayerData* playerData, u8* framebuffer, u8* cleanBackground)
 		playerData->state == PLAYER_STATE_RUN)
 	{
 		playerData->state = PLAYER_STATE_SPLAT;
-		Sound_Play(SOUND_SPLAT);
+		Sound_Stop(SOUND_RUN);
+		Sound_Play(SOUND_SPLAT, FALSE);
 		playerData->cantMoveCounter = PLAYER_SPLAT_WAIT_TIME;
 
 		u8 x = GET_HIGH_BYTE(playerData->x);
@@ -465,7 +466,7 @@ void Player_Update(PlayerData* playerData,
 			playerData->speedy = 0xff61;
 			playerData->jumpAirCounter = PLAYER_JUMP_AIR_COUNT;
 			playerData->state = PLAYER_STATE_JUMP;
-			Sound_Play(SOUND_JUMP);
+			Sound_Play(SOUND_JUMP, FALSE);
 
 			// apply side movement if a direction was held
 			if (joystickState->leftDown)
@@ -493,15 +494,26 @@ void Player_Update(PlayerData* playerData,
 			playerData->speedy = 0xff61;
 			playerData->jumpAirCounter = PLAYER_JUMP_AIR_COUNT;
 			playerData->state = PLAYER_STATE_JUMP;
-			Sound_Play(SOUND_JUMP);
+			Sound_Play(SOUND_JUMP, FALSE);
+			Sound_Stop(SOUND_RUN);
 		}
 		else if (joystickState->leftDown)
 		{
+			if (!playerData->speedx)
+			{
+				Sound_Play(SOUND_RUN, TRUE);
+			}
+
 			playerData->speedx = PLAYER_RUN_SPEED_LEFT;
 			playerData->facingDirection = PLAYER_FACING_LEFT;
 		}
 		else if (joystickState->rightDown)
 		{
+			if (!playerData->speedx)
+			{
+				Sound_Play(SOUND_RUN, TRUE);
+			}
+
 			playerData->speedx = PLAYER_RUN_SPEED_RIGHT;
 			playerData->facingDirection = PLAYER_FACING_RIGHT;
 		}
@@ -509,6 +521,7 @@ void Player_Update(PlayerData* playerData,
 		{
 			playerData->state = PLAYER_STATE_STAND;
 			playerData->speedx = 0;
+			Sound_Stop(SOUND_RUN);
 		}
 
 		playerData->currentFrameNumber = (playerData->globalAnimationCounter >> 2) & 0x3;
@@ -520,6 +533,7 @@ void Player_Update(PlayerData* playerData,
 												  playerGroundCollisionMasks,
 												  cleanBackground)))
 		{
+			Sound_Stop(SOUND_RUN);
 			playerData->state = PLAYER_STATE_FALL;
 		}
 	}
@@ -559,7 +573,7 @@ void Player_Update(PlayerData* playerData,
 		{
 			playerData->state = PLAYER_STATE_STAND;
 			playerData->speedy = 0;
-			Sound_Play(SOUND_LAND);
+			Sound_Play(SOUND_LAND, FALSE);
 			playerData->currentFrameNumber = PLAYER_RUN_FRAME_0_STAND;
 
 			if (!playerData->safeLanding || playerData->isDead)
@@ -589,7 +603,9 @@ void Player_Update(PlayerData* playerData,
 				playerData->safeLanding = TRUE;
 				playerData->jumpAirCounter = PLAYER_JUMP_AIR_COUNT;
 				playerData->state = PLAYER_STATE_JUMP;
-				Sound_Play(SOUND_JUMP);
+				Sound_Play(SOUND_JUMP, FALSE);
+				Sound_Stop(SOUND_CLIMB_UP);
+				Sound_Stop(SOUND_CLIMB_DOWN);
 				playerData->ignoreRopesCounter = 20;
 			}
 			else if (joystickState->rightDown)
@@ -600,12 +616,19 @@ void Player_Update(PlayerData* playerData,
 				playerData->safeLanding = TRUE;
 				playerData->jumpAirCounter = PLAYER_JUMP_AIR_COUNT;
 				playerData->state = PLAYER_STATE_JUMP;
-				Sound_Play(SOUND_JUMP);
+				Sound_Play(SOUND_JUMP, FALSE);
+				Sound_Stop(SOUND_CLIMB_UP);
+				Sound_Stop(SOUND_CLIMB_DOWN);
 				playerData->ignoreRopesCounter = 20;
 			}
 		}
 		else if (joystickState->upDown)
 		{
+			if (!playerData->speedy)
+			{
+				Sound_Play(SOUND_CLIMB_UP, TRUE);
+			}
+
 			playerData->speedy = PLAYER_CLIMB_UP_SPEED;
 
 			playerData->currentFrameNumber = ((playerData->globalAnimationCounter >> 3) & 0x1) + 4;
@@ -614,21 +637,36 @@ void Player_Update(PlayerData* playerData,
 			{
 				playerData->speedy = 0;
 				playerData->currentFrameNumber = PLAYER_CLIMB_FRAME_0;
+				Sound_Stop(SOUND_CLIMB_UP);
 			}
 		}	
 		else if (joystickState->downDown)
 		{
+			if (!playerData->speedy)
+			{
+				Sound_Play(SOUND_CLIMB_DOWN, TRUE);
+			}
+
 			playerData->speedy = PLAYER_CLIMB_DOWN_SPEED;
 			playerData->currentFrameNumber = ((playerData->globalAnimationCounter >> 3) & 0x1) + 4;
 
 			if (!TOUCHES_VINE(testResult))
 			{
 				playerData->state = PLAYER_STATE_FALL;
+				Sound_Stop(SOUND_CLIMB_DOWN);
 			}
+		}
+		else
+		{
+			Sound_Stop(SOUND_CLIMB_UP);
+			Sound_Stop(SOUND_CLIMB_DOWN);
 		}
 
 		if (joystickState->leftDown)
 		{
+			Sound_Stop(SOUND_CLIMB_UP);
+			Sound_Stop(SOUND_CLIMB_DOWN);
+
 			playerData->holdLeftCounter++;
 			if (playerData->holdLeftCounter > PLAYER_ROPE_HOLD_COUNT)
 			{
@@ -639,6 +677,9 @@ void Player_Update(PlayerData* playerData,
 		}
 		else if (joystickState->rightDown)
 		{
+			Sound_Stop(SOUND_CLIMB_UP);
+			Sound_Stop(SOUND_CLIMB_DOWN);
+
 			playerData->holdRightCounter++;
 
 			if (playerData->holdRightCounter > PLAYER_ROPE_HOLD_COUNT)
@@ -1013,7 +1054,7 @@ void Player_PerformCollisions(struct GameData* gameDataStruct,
 		{
 			pickUp->state = pickUp->state & ~playerData->playerMask;
 
-			Sound_Play(SOUND_PICKUP);
+			Sound_Play(SOUND_PICKUP, FALSE);
 
 			eraseSprite_16PixelsWide(resources->pickupSprites[pickUp->type],
 									 pickUp->x, 

@@ -148,6 +148,15 @@
     <ClCompile Include="..\sdl_main\sdl_utils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <Media Include="..\..\..\..\downland_sounds\climb_down.wav">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+    </Media>
+    <Media Include="..\..\..\..\downland_sounds\climb_up.wav">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+    </Media>
+    <Media Include="..\..\..\..\downland_sounds\run.wav">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+    </Media>
     <Media Include="..\sounds\jump.wav">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
     </Media>

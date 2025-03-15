@@ -2,11 +2,30 @@
 
 #include <format>
 
+void __cdecl SDL_Sound_AudioStreamCallback(void *userdata, 
+                                           SDL_AudioStream *stream, 
+                                           int additional_amount, 
+                                           int total_amount)
+{
+    SDLSound* sound = static_cast<SDLSound*>(userdata);
+
+    if (!sound->isLooped())
+        return;
+
+    int amount = SDL_GetAudioStreamQueued(stream);
+    if (amount < (int)sound->getWavDataLength()) 
+    {
+        /* feed more data to the stream. It will queue at the end, and trickle out as the hardware needs more data. */
+        SDL_PutAudioStreamData(stream, sound->getWavData(), sound->getWavDataLength());
+    }
+}
+
 SDLSound::SDLSound(const char* filename, SDL_AudioDeviceID audioDevice) 
  : m_wavData(nullptr),
    m_wavDataLength(0),
    m_audioStream(nullptr),
-   m_isPaused(false)
+   m_isPaused(false),
+   m_isLooped(false)
 {
     SDL_AudioSpec spec;
     char *wav_path = NULL;
@@ -45,20 +64,27 @@ SDLSound::~SDLSound()
 }
 
 // starts the sound from the beginning
-void SDLSound::play()
+void SDLSound::play(bool loop)
 {
     m_isPaused = false;
+    m_isLooped = loop;
 
     // just dump the whole sound. we're not being fancy.
     SDL_PutAudioStreamData(m_audioStream, 
                             m_wavData, 
                             (int) m_wavDataLength);
+
+    if (m_isLooped)
+    {
+        SDL_SetAudioStreamGetCallback(m_audioStream, SDL_Sound_AudioStreamCallback, this);
+    }
 }
 
 void SDLSound::stop()
 {
     m_isPaused = false;
     SDL_ClearAudioStream(m_audioStream);
+    SDL_SetAudioStreamGetCallback(m_audioStream, NULL, NULL);
 }
 
 void SDLSound::pause()

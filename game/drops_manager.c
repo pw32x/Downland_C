@@ -9,6 +9,9 @@
 #define DROP_SPRITE_ROWS 6
 
 #define DROP_FALL_SPEED 0x200
+#define DROP_WIGGLE_START_TIME 0xa8 // wiggle timer starts at 168 which signed is -40. The value is decremented
+								    // until it reaches 127 which then gets treated as a positive number. At that
+									// point the drop falls.
 #define DROP_WIGGLE_UP_SPEED 0xff80
 #define DROP_WIGGLE_DOWN_SPEED 0x80
 #define DROP_SPRITE_FRAME_SIZE_IN_BYTES 0xc
@@ -64,7 +67,7 @@ void initDrop(Drop* drop,
 			  u8* cleanBackground)
 {
 	// init drop
-	drop->wiggleTimer = 0xa8;
+	drop->wiggleTimer = DROP_WIGGLE_START_TIME;
 
 	// randomly pick a drop spawn area
 	u8 dropSpawnAreaIndex = rand() % dropData->dropSpawnPositions->spawnAreasCount;

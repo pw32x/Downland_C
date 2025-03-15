@@ -592,6 +592,8 @@ void Player_Update(PlayerData* playerData,
 											 ropeCollisionMasks,
 											 cleanBackground);
 
+		u8 processLeftRight = TRUE;
+
 		if (joystickState->jumpPressed)
 		{
 			// apply side movement if a direction was held
@@ -621,6 +623,8 @@ void Player_Update(PlayerData* playerData,
 				Sound_Stop(SOUND_CLIMB_DOWN);
 				playerData->ignoreRopesCounter = 20;
 			}
+
+			processLeftRight = FALSE;
 		}
 		else if (joystickState->upDown)
 		{
@@ -639,6 +643,8 @@ void Player_Update(PlayerData* playerData,
 				playerData->currentFrameNumber = PLAYER_CLIMB_FRAME_0;
 				Sound_Stop(SOUND_CLIMB_UP);
 			}
+
+			processLeftRight = FALSE;
 		}	
 		else if (joystickState->downDown)
 		{
@@ -655,6 +661,8 @@ void Player_Update(PlayerData* playerData,
 				playerData->state = PLAYER_STATE_FALL;
 				Sound_Stop(SOUND_CLIMB_DOWN);
 			}
+
+			processLeftRight = FALSE;
 		}
 		else
 		{
@@ -662,37 +670,41 @@ void Player_Update(PlayerData* playerData,
 			Sound_Stop(SOUND_CLIMB_DOWN);
 		}
 
-		if (joystickState->leftDown)
+		if (processLeftRight)
 		{
-			Sound_Stop(SOUND_CLIMB_UP);
-			Sound_Stop(SOUND_CLIMB_DOWN);
 
-			playerData->holdLeftCounter++;
-			if (playerData->holdLeftCounter > PLAYER_ROPE_HOLD_COUNT)
+			if (joystickState->leftDown)
 			{
-				playerData->state = PLAYER_STATE_HANG_LEFT;
-				playerData->x -= 4 << 8;
-				playerData->holdLeftCounter = 0;
+				Sound_Stop(SOUND_CLIMB_UP);
+				Sound_Stop(SOUND_CLIMB_DOWN);
+
+				playerData->holdLeftCounter++;
+				if (playerData->holdLeftCounter > PLAYER_ROPE_HOLD_COUNT)
+				{
+					playerData->state = PLAYER_STATE_HANG_LEFT;
+					playerData->x -= 4 << 8;
+					playerData->holdLeftCounter = 0;
+				}
 			}
-		}
-		else if (joystickState->rightDown)
-		{
-			Sound_Stop(SOUND_CLIMB_UP);
-			Sound_Stop(SOUND_CLIMB_DOWN);
-
-			playerData->holdRightCounter++;
-
-			if (playerData->holdRightCounter > PLAYER_ROPE_HOLD_COUNT)
+			else if (joystickState->rightDown)
 			{
-				playerData->state = PLAYER_STATE_HANG_RIGHT;
-				playerData->x += 4 << 8;
+				Sound_Stop(SOUND_CLIMB_UP);
+				Sound_Stop(SOUND_CLIMB_DOWN);
+
+				playerData->holdRightCounter++;
+
+				if (playerData->holdRightCounter > PLAYER_ROPE_HOLD_COUNT)
+				{
+					playerData->state = PLAYER_STATE_HANG_RIGHT;
+					playerData->x += 4 << 8;
+					playerData->holdRightCounter = 0;
+				}
+			}
+			else
+			{
+				playerData->holdLeftCounter = 0;
 				playerData->holdRightCounter = 0;
 			}
-		}
-		else
-		{
-			playerData->holdLeftCounter = 0;
-			playerData->holdRightCounter = 0;
 		}
 	}
 	else if (playerData->state == PLAYER_STATE_HANG_LEFT)
@@ -1010,7 +1022,8 @@ BOOL dropsManagerCollisionTest(DropData* dropData, PlayerData* playerData)
 
 	for (u8 loop = 0; loop < dropData->activeDropsCount; loop++)
 	{
-		if (dropRunner->wiggleTimer)
+		if ((s8)dropRunner->wiggleTimer > 0) // see note about wiggle time. 
+											 // only test collision when it is positive in signed.
 		{
 			if (objectCollisionTest(playerData, 
 									dropRunner->x, 

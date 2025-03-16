@@ -2,6 +2,8 @@
 
 #include <format>
 
+// Sound handling based on SDL3 examples.
+
 void __cdecl SDL_Sound_AudioStreamCallback(void *userdata, 
                                            SDL_AudioStream *stream, 
                                            int additional_amount, 
@@ -13,6 +15,9 @@ void __cdecl SDL_Sound_AudioStreamCallback(void *userdata,
         return;
 
     int amount = SDL_GetAudioStreamQueued(stream);
+
+    // if there's less than the size of the wave left in the stream
+    // feed in another copy of the sound.
     if (amount < (int)sound->getWavDataLength()) 
     {
         /* feed more data to the stream. It will queue at the end, and trickle out as the hardware needs more data. */
@@ -71,8 +76,8 @@ void SDLSound::play(bool loop)
 
     // just dump the whole sound. we're not being fancy.
     SDL_PutAudioStreamData(m_audioStream, 
-                            m_wavData, 
-                            (int) m_wavDataLength);
+                           m_wavData, 
+                           (int)m_wavDataLength);
 
     if (m_isLooped)
     {

@@ -1,3 +1,5 @@
+// This implements basic SDL support
+
 #define SDL_MAIN_USE_CALLBACKS 1  /* use the callbacks instead of main() */
 
 extern "C"
@@ -260,9 +262,9 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
             gameData.paused = !gameData.paused;
 
             if (gameData.paused)
-                soundManager.pause();
+                soundManager.pauseAll();
             else
-                soundManager.resume();
+                soundManager.resumeAll();
         }
         else if (event->key.key == SDLK_F1)
         {
@@ -283,7 +285,7 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
         {
             stepFrame = TRUE;
             gameData.paused = FALSE;
-            soundManager.resume();
+            soundManager.resumeAll();
         }
 
         if (event->key.key == SDLK_GRAVE)
@@ -398,9 +400,9 @@ SDL_AppResult SDL_AppIterate(void *appstate)
         gameData.paused = !gameData.paused;
 
         if (gameData.paused)
-            soundManager.pause();
+            soundManager.pauseAll();
         else
-            soundManager.resume();
+            soundManager.resumeAll();
     }
 
     // Process the game 
@@ -507,7 +509,7 @@ SDL_AppResult SDL_AppIterate(void *appstate)
     {
         gameData.paused = TRUE;
         stepFrame = FALSE;
-        soundManager.pause();
+        soundManager.pauseAll();
     }
 
     return SDL_APP_CONTINUE;

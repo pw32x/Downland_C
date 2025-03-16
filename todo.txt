@@ -178,8 +178,13 @@ split rooms file
 can make individual update functions for player?
 use union instead of GET_HIGH_BYTE ? 
 
+saving stuff? ini file? xml?
+    score
+    fullscreen setting
+    filter setting    
 
-    
+make drop manager run 3x instead of upping the framerate
+
 bouncing off walls isn't accurate
 jump isn't accurate (too high?)
 jump doesn't slow down horizontally
@@ -229,6 +234,7 @@ release
             Space       Step Pause
             F1          Change video filter
             Alt+Enter   Toggle Fullscreen
+            Alt+F4      Close
             
             Keyboard    Arrow keys for Movement
                         Left Shift/LeftCtrl/Z for jump

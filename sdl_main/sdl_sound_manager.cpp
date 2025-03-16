@@ -42,7 +42,7 @@ void SDLSoundManager::shutdown()
     m_sounds.clear();
 }
 
-void SDLSoundManager::loadSound(const char* filename)
+int SDLSoundManager::loadSound(const char* filename)
 {
     if (!m_audioDevice)
     {
@@ -50,6 +50,8 @@ void SDLSoundManager::loadSound(const char* filename)
     }
 
     m_sounds.emplace_back(std::make_unique<SDLSound>(filename, m_audioDevice));
+
+    return (int)(m_sounds.size() - 1);
 }
 
 void SDLSoundManager::play(int soundIndex, bool loop)
@@ -91,7 +93,7 @@ void SDLSoundManager::stopAll()
     };
 }
 
-void SDLSoundManager::pause()
+void SDLSoundManager::pauseAll()
 {
     if (!m_audioDevice)
     {
@@ -107,7 +109,7 @@ void SDLSoundManager::pause()
         sound->pause();
     }
 }
-void SDLSoundManager::resume()
+void SDLSoundManager::resumeAll()
 {
     if (!m_audioDevice)
     {

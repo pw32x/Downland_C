@@ -3,7 +3,10 @@
 
 #include <SDL3/SDL.h>
 
-// barebones support for SDL playback of a sound
+// Barebones support for SDL playback of a sound.
+// It has crude handling of feednig sound to the stream, 
+// feeding a whole copy of the sound to the stream at a time. 
+// Can be paused and resumed.
 class SDLSound
 {
 public:

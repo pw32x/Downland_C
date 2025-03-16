@@ -7,7 +7,8 @@
 #include <vector>
 #include <memory>
 
-// super simple SDL sound manager
+// Super simple SDL sound manager. Sounds are loaded and given
+// an index which is referred to by play() and stop();
 class SDLSoundManager
 {
 public:
@@ -16,14 +17,14 @@ public:
 	void init();
 	void shutdown();
 
-	void loadSound(const char* filename);
+	int loadSound(const char* filename);
 
 	void play(int soundIndex, bool loop);
 	void stop(int soundIndex);
-	void stopAll();
 
-	void pause();
-	void resume();
+	void stopAll();
+	void pauseAll();
+	void resumeAll();
 
 private:
 	SDL_AudioDeviceID m_audioDevice;

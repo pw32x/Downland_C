@@ -1,10 +1,6 @@
 #ifndef BASE_DEFINES_INCLUDE_H
 #define BASE_DEFINES_INCLUDE_H
 
-#define _CRTDBG_MAP_ALLOC
-#include <stdlib.h>
-#include <crtdbg.h>
-
 #define DEV_MODE
 
 #define NORMAL_FPS 60

@@ -1,4 +1,4 @@
-#include "sdl_utils.h"
+#include "sdl_video_filter_utils.h"
 
 // Convert the 1-bit framebuffer into a texture
 void SDLUtils_updateFramebufferTexture(u8* framebuffer, 
@@ -26,14 +26,15 @@ void SDLUtils_updateFramebufferTexture(u8* framebuffer,
 
 
 void SDLUtils_updateCrtFramebufferAndTexture(u8* framebuffer,
-                                             u32* crtFramebuffer, 
+                                             u32* crtFramebuffer,
                                              SDL_Texture* crtFramebufferTexture,
+                                             CrtColor crtColor,
                                              SDL_Renderer* renderer) 
 {
     // Color definitions
     const uint32_t BLACK  = 0x000000; // 00 black
-    const uint32_t BLUE   = 0x0000FF; // 01 blue
-    const uint32_t ORANGE = 0xFFA500; // 10 orange
+    const uint32_t BLUE   = crtColor == CrtColor::Blue ? 0x0000FF : 0xFFA500; // 01 blue
+    const uint32_t ORANGE = crtColor == CrtColor::Blue ? 0xFFA500 : 0x0000FF; // 10 orange
     const uint32_t WHITE  = 0xFFFFFF; // 11 white
 
     for (int y = 0; y < FRAMEBUFFER_HEIGHT; ++y) 

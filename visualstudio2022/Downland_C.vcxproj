@@ -115,7 +115,11 @@
     <ClInclude Include="..\game\string_utils.h" />
     <ClInclude Include="..\sdl_main\sdl_sound.h" />
     <ClInclude Include="..\sdl_main\sdl_sound_manager.h" />
-    <ClInclude Include="..\sdl_main\sdl_utils.h" />
+    <ClInclude Include="..\sdl_main\video_filters\sdl_video_filter_base.h" />
+    <ClInclude Include="..\sdl_main\video_filters\sdl_video_filter_basic_crt_artifacts_blue.h" />
+    <ClInclude Include="..\sdl_main\video_filters\sdl_video_filter_basic_crt_artifacts_orange.h" />
+    <ClInclude Include="..\sdl_main\video_filters\sdl_video_filter_raw.h" />
+    <ClInclude Include="..\sdl_main\video_filters\sdl_video_filter_utils.h" />
     <ClInclude Include="Resource.h" />
   </ItemGroup>
   <ItemGroup>
@@ -145,7 +149,10 @@
     <ClCompile Include="..\sdl_main\sdl_main.cpp" />
     <ClCompile Include="..\sdl_main\sdl_sound.cpp" />
     <ClCompile Include="..\sdl_main\sdl_sound_manager.cpp" />
-    <ClCompile Include="..\sdl_main\sdl_utils.cpp" />
+    <ClCompile Include="..\sdl_main\video_filters\sdl_video_filter_basic_crt_artifacts_blue.cpp" />
+    <ClCompile Include="..\sdl_main\video_filters\sdl_video_filter_basic_crt_artifacts_orange.cpp" />
+    <ClCompile Include="..\sdl_main\video_filters\sdl_video_filter_raw.cpp" />
+    <ClCompile Include="..\sdl_main\video_filters\sdl_video_filter_utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="..\..\..\..\downland_sounds\climb_down.wav">

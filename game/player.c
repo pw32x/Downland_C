@@ -1,6 +1,7 @@
 #include "player.h"
 
 #include <memory.h>
+#include <stdlib.h>
 
 #include "base_defines.h"
 #include "draw_utils.h"
@@ -10,6 +11,7 @@
 #include "pickup_types.h"
 #include "door_utils.h"
 #include "sound.h"
+
 
 // all the states are mutually exclusive
 #define PLAYER_STATE_STAND			0
@@ -938,6 +940,7 @@ void Player_Update(PlayerData* playerData,
 			if (doorStateData[doorInfoRunner->globalDoorIndex] & playerData->playerMask)
 			{
 				// jump to next room
+				Sound_Stop(SOUND_RUN);
 				playerData->lastDoor = doorInfoRunner;
 				return;
 			}

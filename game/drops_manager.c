@@ -4,7 +4,7 @@
 #include "draw_utils.h"
 #include "debug_utils.h"
 
-//#include <stdlib.h>
+#include <stdlib.h>
 
 #define DROP_SPRITE_ROWS 6
 

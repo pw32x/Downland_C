@@ -2,6 +2,7 @@
 
 #include "base_defines.h"
 #include <memory.h>
+#include <stdlib.h>
 
 void setPixel(u8* framebuffer, u8 x, u8 y, u8 value) 
 {

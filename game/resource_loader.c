@@ -5,9 +5,8 @@
 #include "bird.h"
 #include "player.h"
 
-//#include <stdlib.h>
+#include <stdlib.h>
 #include <stdio.h>
-//#include <string.h>
 
 // Checks for Downland V1.1
 BOOL checksumCheck(const char* romPath)

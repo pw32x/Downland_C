@@ -17,8 +17,14 @@ extern "C"
 #include <SDL3/SDL_main.h>
 #include <SDL3/SDL_gamepad.h>
 
-#include "sdl_utils.h"
+#include "video_filters\sdl_video_filter_utils.h"
+#include "video_filters\sdl_video_filter_raw.h"
+#include "video_filters\sdl_video_filter_basic_crt_artifacts_blue.h"
+#include "video_filters\sdl_video_filter_basic_crt_artifacts_orange.h"
+
 #include "sdl_sound_manager.h"
+
+#include <vector>
 
 static SDL_Window *window = NULL;
 static SDL_Renderer *renderer = NULL;
@@ -36,6 +42,9 @@ BOOL stepFrame = false;
 Resources resources;
 GameData gameData;
 
+int currentVideoFilterIndex = -1;
+std::vector<std::unique_ptr<SDLVideoFilterBase>> videoFilters;
+
 SDLSoundManager soundManager;
 
 // implement the sound function here
@@ -49,7 +58,6 @@ void Sound_Stop(u8 soundindex)
     soundManager.stop(soundindex);
 }
 
-
 Uint64 gameStartTime;
 Uint64 timeFrequency;
 Uint64 frameCount = 0;
@@ -58,6 +66,16 @@ float fps;
 const char* romFilePath = "downland.bin";
 
 SDL_Gamepad* gamePad = NULL;
+
+void selectFilter(int videoFilterIndex)
+{
+    if (currentVideoFilterIndex != -1)
+    {
+        videoFilters[currentVideoFilterIndex]->shutdown();
+    }
+
+    currentVideoFilterIndex = videoFilterIndex;
+}
 
 SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
 {
@@ -80,23 +98,7 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
         return SDL_APP_FAILURE;
     }
 
-    framebufferTexture = SDL_CreateTexture(renderer, 
-                                           SDL_PIXELFORMAT_XRGB8888, 
-                                           SDL_TEXTUREACCESS_STREAMING, 
-                                           FRAMEBUFFER_WIDTH, 
-                                           FRAMEBUFFER_HEIGHT);
-
-    SDL_SetTextureScaleMode(framebufferTexture, SDL_SCALEMODE_NEAREST); // no smoothing
-
-    // Create the texture
-    crtFramebufferTexture = SDL_CreateTexture(renderer, 
-                                              SDL_PIXELFORMAT_XRGB8888, 
-                                              SDL_TEXTUREACCESS_STREAMING, 
-                                              FRAMEBUFFER_WIDTH, 
-                                              FRAMEBUFFER_HEIGHT);
-
-    SDL_SetTextureScaleMode(crtFramebufferTexture, SDL_SCALEMODE_NEAREST); // no smoothing
-
+#ifdef DEV_MODE
     // Create the debug texture
     debugFramebufferTexture = SDL_CreateTexture(renderer, 
                                                 SDL_PIXELFORMAT_ARGB8888, 
@@ -105,6 +107,7 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
                                                 FRAMEBUFFER_HEIGHT);
 
     SDL_SetTextureScaleMode(debugFramebufferTexture, SDL_SCALEMODE_NEAREST); // no smoothing
+#endif
 
     if (!ResourceLoader_Init(romFilePath, &resources))
         return SDL_APP_FAILURE;
@@ -139,6 +142,12 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
         }
     }
 
+    videoFilters.emplace_back(std::make_unique<SDLVideoFilterRaw>(renderer));
+    videoFilters.emplace_back(std::make_unique<SDLVideoFilterBasicCrtArtifactsBlue>(renderer));
+    videoFilters.emplace_back(std::make_unique<SDLVideoFilterBasicCrtArtifactsOrange>(renderer));
+
+    selectFilter(1); // my favorite
+
     return SDL_APP_CONTINUE;
 }
 
@@ -158,6 +167,15 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
                 soundManager.pause();
             else
                 soundManager.resume();
+        }
+        else if (event->key.key == SDLK_F1)
+        {
+            int nextVideoFilterIndex = currentVideoFilterIndex + 1;
+
+            if (nextVideoFilterIndex >= videoFilters.size())
+                nextVideoFilterIndex = 0;
+
+            selectFilter(nextVideoFilterIndex);
         }
 
 #ifdef DEV_MODE
@@ -290,24 +308,17 @@ SDL_AppResult SDL_AppIterate(void *appstate)
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
 
-    // Update texture from framebuffer
-    SDLUtils_updateFramebufferTexture(gameData.framebuffer, framebufferTexture); 
-    SDL_RenderTexture(renderer, framebufferTexture, NULL, NULL);
+    auto& currentVideoFilter = videoFilters[currentVideoFilterIndex];
 
+    currentVideoFilter->update(gameData.framebuffer);
+    SDL_RenderTexture(renderer, currentVideoFilter->getOutputTexture(), NULL, NULL);
 
-    // Update texture from crtFramebuffer
-    SDLUtils_updateCrtFramebufferAndTexture(gameData.framebuffer,
-                                            gameData.crtFramebuffer,
-                                            crtFramebufferTexture,
-                                            renderer);
-
-    SDL_RenderTexture(renderer, crtFramebufferTexture, NULL, NULL);
-
-
+#ifdef DEV_MODE
     SDLUtils_updateDebugFramebufferTexture(debugFramebuffer, 
                                            debugFramebufferTexture);
 
     SDL_RenderTexture(renderer, debugFramebufferTexture, NULL, NULL);
+#endif
 
     frameCount++;
 	Uint64 currentTime = SDL_GetPerformanceCounter();

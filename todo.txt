@@ -154,17 +154,28 @@ DOME implement discrete sounds
     Pickup
     Screen Transition
     
-implement looping sounds
+DONE implement looping sounds
     Run
     Climb up
     Climb down
     
+DONE run sound needs to start sooner
+DONE bug when going diagonally on rope    
+DONE double check that drops don't kill player when wobbling
     
-filter system for graphics?
+DONE filter system for graphics
+DONE hotkey for toggle graphics mode (blue, orange, raw bits)
+
+DONE full screen toggle
+
+
+resizable window
     
-bouncing off walls isn't accurate
-jump isn't accurate (too high?)
-jump doesn't slow down horizontally
+hotkey for invisibility
+
+report error through callback
+
+display dialog box if rom is missing
 
 code comment pass
 code pretty pass
@@ -173,14 +184,76 @@ can make individual update functions for player?
 use union instead of GET_HIGH_BYTE ? 
 
 
+    
+bouncing off walls isn't accurate
+jump isn't accurate (too high?)
+jump doesn't slow down horizontally
+
+how to make a release?
+
+0.8 alpha
+0.9 beta
+    beta testing
+1.0 official release
+
 
 beta testing
 player replay system?
 
+release
 
-Tools
-visual studio for code dev
-ghidra for reverse engineering
-trs80gp for rom debugging
-graphics gale for frame analysis
+    release manifest
+    
+        downland.exe
+        readme.txt
+        sounds (*.wav)
+        
+    
+    readme.txt
+    
+        explain how to run
+        you will need a copy of Downland V1.1. 
+        place in the same folder as the .exe
+        
+        
+        joystick support
+            works with xbox controllers
+            
+            TODO
+                test with PS5 controller
+                
+        controls
+        
+            Escape  Pause
+            Space   Step Pause
+            F1      Change video filter
+    
+        Tools Used to make this
+            visual studio for code dev
+            ghidra for reverse engineering
+            trs80gp for rom debugging
+            graphics gale for frame analysis
+            GarageBand for sound editing
+            
 
+Engine Architecture
+
+    there is a separation between the core game and the platform-specific front end
+
+    Game folder
+        - core game files
+        - renders to 1bpp framebuffer
+        
+    SDL app 
+        - handles input
+        - handles sound
+        - takes the framebuffer and renders it using basic video filters
+        
+    Sounds
+        - sound assets
+        
+    visualstudio2022
+        - Windows specific code solution
+        - uses Game core files
+        - uses SDL 
+    

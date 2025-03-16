@@ -83,20 +83,18 @@ void selectFilter(int videoFilterIndex)
     currentVideoFilterIndex = videoFilterIndex;
 }
 
-void setFullscreen(bool fullscreen)
+void updateDestRect()
 {
     SDL_DisplayID displayId = SDL_GetPrimaryDisplay();
     const SDL_DisplayMode* displayMode = SDL_GetDesktopDisplayMode(displayId);
 
-    if (fullscreen)
+    if (isFullscreen)
     {
-        SDL_SetWindowFullscreen(window, true);
         screenWidth = displayMode->w;
         screenHeight = displayMode->h;
     }
     else
     {
-        SDL_SetWindowFullscreen(window, false);
         SDL_GetWindowSize(window, &screenWidth, &screenHeight);
     }
     
@@ -105,9 +103,16 @@ void setFullscreen(bool fullscreen)
                                     FRAMEBUFFER_WIDTH,
                                     FRAMEBUFFER_HEIGHT,
                                     &destRect);
-
-    isFullscreen = fullscreen;
 }
+
+void setFullscreen(bool fullscreen)
+{
+    SDL_SetWindowFullscreen(window, fullscreen);
+    isFullscreen = fullscreen;
+
+    updateDestRect();
+}
+
 
 
 SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
@@ -130,6 +135,8 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
         SDL_Log("Couldn't create window/renderer: %s", SDL_GetError());
         return SDL_APP_FAILURE;
     }
+
+    SDL_SetWindowResizable(window, true);
 
 #ifdef DEV_MODE
     // Create the debug texture
@@ -194,6 +201,10 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
     if (event->type == SDL_EVENT_QUIT) 
     {
         return SDL_APP_SUCCESS;
+    }
+    else if (event->type == SDL_EVENT_WINDOW_RESIZED)
+    {
+        updateDestRect();
     }
     else if (event->type == SDL_EVENT_KEY_DOWN)
     {

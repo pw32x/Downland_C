@@ -127,3 +127,33 @@ void SDLUtils_updateDebugFramebufferTexture(u32* debugFramebuffer,
 
     SDL_UnlockTexture(debugFramebufferTexture);
 }
+
+void SDLUtils_computeDestinationRect(int screenWidth, 
+                                     int screenHeight, 
+                                     int framebufferWidth, 
+                                     int framebufferHeight, 
+                                     SDL_FRect* outRect) 
+{
+    float screenAspect = (float)screenWidth / screenHeight;
+    float texAspect = (float)framebufferWidth / framebufferHeight;
+
+    float scale;
+    if (screenAspect > texAspect) 
+    {
+        // Screen is wider than the texture's aspect ratio, fit by height
+        scale = (float)screenHeight / framebufferHeight;
+    } 
+    else 
+    {
+        // Screen is taller than the texture's aspect ratio, fit by width
+        scale = (float)screenWidth / framebufferWidth;
+    }
+
+    // Compute final width and height
+    outRect->w = framebufferWidth * scale;
+    outRect->h = framebufferHeight * scale;
+
+    // Center the rectangle on the screen
+    outRect->x = (screenWidth - outRect->w) / 2;
+    outRect->y = (screenHeight - outRect->h) / 2;
+}

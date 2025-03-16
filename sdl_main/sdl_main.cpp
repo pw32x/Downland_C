@@ -33,6 +33,9 @@ static SDL_Renderer *renderer = NULL;
 #define SCREEN_WIDTH (FRAMEBUFFER_WIDTH * SCREEN_SCALE)
 #define SCREEN_HEIGHT (FRAMEBUFFER_HEIGHT * SCREEN_SCALE)
 
+int screenWidth = SCREEN_WIDTH;
+int screenHeight = SCREEN_HEIGHT;
+
 SDL_Texture* framebufferTexture = NULL;
 SDL_Texture* crtFramebufferTexture = NULL;
 SDL_Texture* debugFramebufferTexture = NULL;
@@ -46,6 +49,9 @@ int currentVideoFilterIndex = -1;
 std::vector<std::unique_ptr<SDLVideoFilterBase>> videoFilters;
 
 SDLSoundManager soundManager;
+
+bool isFullscreen = false;
+SDL_FRect destRect;
 
 // implement the sound function here
 void Sound_Play(u8 soundIndex, u8 loop)
@@ -77,6 +83,33 @@ void selectFilter(int videoFilterIndex)
     currentVideoFilterIndex = videoFilterIndex;
 }
 
+void setFullscreen(bool fullscreen)
+{
+    SDL_DisplayID displayId = SDL_GetPrimaryDisplay();
+    const SDL_DisplayMode* displayMode = SDL_GetDesktopDisplayMode(displayId);
+
+    if (fullscreen)
+    {
+        SDL_SetWindowFullscreen(window, true);
+        screenWidth = displayMode->w;
+        screenHeight = displayMode->h;
+    }
+    else
+    {
+        SDL_SetWindowFullscreen(window, false);
+        SDL_GetWindowSize(window, &screenWidth, &screenHeight);
+    }
+    
+    SDLUtils_computeDestinationRect(screenWidth, 
+                                    screenHeight,
+                                    FRAMEBUFFER_WIDTH,
+                                    FRAMEBUFFER_HEIGHT,
+                                    &destRect);
+
+    isFullscreen = fullscreen;
+}
+
+
 SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
 {
     SDL_SetAppMetadata("Downland_C", "1.0", "com.example.Downland_C");
@@ -88,8 +121,8 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
     }
 
     if (!SDL_CreateWindowAndRenderer("Downland_C", 
-                                     SCREEN_WIDTH, 
-                                     SCREEN_HEIGHT, 
+                                     screenWidth, 
+                                     screenHeight, 
                                      0 , 
                                      &window, 
                                      &renderer)) 
@@ -148,11 +181,16 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
 
     selectFilter(1); // my favorite
 
+    setFullscreen(false);
+
+
     return SDL_APP_CONTINUE;
 }
 
 SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
 {
+    const bool* currentKeyStates = SDL_GetKeyboardState(NULL);
+
     if (event->type == SDL_EVENT_QUIT) 
     {
         return SDL_APP_SUCCESS;
@@ -176,6 +214,10 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
                 nextVideoFilterIndex = 0;
 
             selectFilter(nextVideoFilterIndex);
+        }
+        else if (event->key.key == SDLK_RETURN && currentKeyStates[SDL_SCANCODE_LALT])
+        {
+            setFullscreen(!isFullscreen);
         }
 
 #ifdef DEV_MODE
@@ -282,6 +324,8 @@ void uint8_to_binary_str(uint8_t value, char *str) {
     str[8] = '\0'; // Null-terminate the string
 }
 
+
+
 SDL_AppResult SDL_AppIterate(void *appstate)
 {
     Uint64 frameStartTime = SDL_GetPerformanceCounter();
@@ -311,7 +355,7 @@ SDL_AppResult SDL_AppIterate(void *appstate)
     auto& currentVideoFilter = videoFilters[currentVideoFilterIndex];
 
     currentVideoFilter->update(gameData.framebuffer);
-    SDL_RenderTexture(renderer, currentVideoFilter->getOutputTexture(), NULL, NULL);
+    SDL_RenderTexture(renderer, currentVideoFilter->getOutputTexture(), NULL, &destRect);
 
 #ifdef DEV_MODE
     SDLUtils_updateDebugFramebufferTexture(debugFramebuffer, 

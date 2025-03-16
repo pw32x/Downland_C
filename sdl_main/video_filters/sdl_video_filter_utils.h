@@ -32,4 +32,10 @@ void SDLUtils_updateCrtFramebufferAndTexture(u8* framebuffer,
 void SDLUtils_updateDebugFramebufferTexture(u32* debugFramebuffer, 
                                             SDL_Texture* debugFramebufferTexture);
 
+void SDLUtils_computeDestinationRect(int screenWidth, 
+                                     int screenHeight, 
+                                     int framebufferWidth, 
+                                     int framebufferHeight, 
+                                     SDL_FRect* outRect);
+
 #endif

@@ -26,6 +26,9 @@ extern "C"
 
 #include <vector>
 
+const char* appName = "Downland_C";
+const char* appIdentifier = "com.example.Downland_C";
+
 static SDL_Window *window = NULL;
 static SDL_Renderer *renderer = NULL;
 
@@ -36,9 +39,9 @@ static SDL_Renderer *renderer = NULL;
 int screenWidth = SCREEN_WIDTH;
 int screenHeight = SCREEN_HEIGHT;
 
-SDL_Texture* framebufferTexture = NULL;
-SDL_Texture* crtFramebufferTexture = NULL;
+#ifdef DEV_MODE
 SDL_Texture* debugFramebufferTexture = NULL;
+#endif
 
 BOOL stepFrame = false;
 
@@ -92,6 +95,9 @@ void selectFilter(int videoFilterIndex)
 
 void updateDestRect()
 {
+    // Get the current rendering dimentions and recompute
+    // the destination rect for the rendering of the game to
+    // maintain the correct aspect ratio.
     SDL_DisplayID displayId = SDL_GetPrimaryDisplay();
     const SDL_DisplayMode* displayMode = SDL_GetDesktopDisplayMode(displayId);
 
@@ -120,11 +126,12 @@ void setFullscreen(bool fullscreen)
     updateDestRect();
 }
 
-
-
 SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
 {
-    SDL_SetAppMetadata("Downland_C", "1.0", "com.example.Downland_C");
+    // Init the app and main window
+    // 
+
+    SDL_SetAppMetadata(appName, "1.0", appIdentifier);
 
     if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMEPAD)) 
     {
@@ -132,7 +139,7 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
         return SDL_APP_FAILURE;
     }
 
-    if (!SDL_CreateWindowAndRenderer("Downland_C", 
+    if (!SDL_CreateWindowAndRenderer(appName, 
                                      screenWidth, 
                                      screenHeight, 
                                      0 , 
@@ -156,6 +163,9 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
     SDL_SetTextureScaleMode(debugFramebufferTexture, SDL_SCALEMODE_NEAREST); // no smoothing
 #endif
 
+    // Load game resources from the rom
+    // 
+
     bool romFoundAndLoaded = false;
     for (int loop = 0; loop < romFileNamesCount; loop++)
     {
@@ -169,7 +179,7 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
     if (!romFoundAndLoaded)
     {
         SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, 
-                                 "Downland_C", 
+                                 appName, 
                                  "Downland V1.1 rom file not found. \n "\
                                  "'downland.rom',\n 'downland.bin', or \n"\
                                  "'Downland V1.1 (1983) (26-3046) (Tandy) [a1].ccc'\n "\
@@ -177,6 +187,9 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
                                  window);
         return SDL_APP_FAILURE;
     }
+
+    // Init sound
+    // 
 
     soundManager.init();
 
@@ -190,12 +203,19 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
     soundManager.loadSound("climb_up.wav");
     soundManager.loadSound("climb_down.wav");
 
+    // Init Game
     Game_Init(&gameData, &resources);
+
+    // Init timers and random numbers
+    // 
 
     gameStartTime = SDL_GetPerformanceCounter();
     timeFrequency = SDL_GetPerformanceFrequency();
 
     srand((unsigned int)gameStartTime);
+
+    // Init joystick
+    // 
 
     if (SDL_HasGamepad())
     {
@@ -208,6 +228,8 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
         }
     }
 
+    // Init video filters
+    // 
     videoFilters.emplace_back(std::make_unique<SDLVideoFilterRaw>(renderer));
     videoFilters.emplace_back(std::make_unique<SDLVideoFilterBasicCrtArtifactsBlue>(renderer));
     videoFilters.emplace_back(std::make_unique<SDLVideoFilterBasicCrtArtifactsOrange>(renderer));
@@ -215,7 +237,6 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
     selectFilter(1); // my favorite
 
     setFullscreen(false);
-
 
     return SDL_APP_CONTINUE;
 }
@@ -367,6 +388,9 @@ SDL_AppResult SDL_AppIterate(void *appstate)
 {
     Uint64 frameStartTime = SDL_GetPerformanceCounter();
 
+    // Update the controls even if paused, to 
+    // handle the start (pause/unpause) button.
+
     Update_Controls(&gameData.joystickState);
 
     if (gameData.joystickState.startDownPressed)
@@ -379,6 +403,9 @@ SDL_AppResult SDL_AppIterate(void *appstate)
             soundManager.resume();
     }
 
+    // Process the game 
+    // 
+
     if (!gameData.paused)
     {
         memset(debugFramebuffer, 0, sizeof(debugFramebuffer));
@@ -386,6 +413,8 @@ SDL_AppResult SDL_AppIterate(void *appstate)
     }
 
     // Render to screen
+    // 
+
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
 
@@ -400,6 +429,9 @@ SDL_AppResult SDL_AppIterate(void *appstate)
 
     SDL_RenderTexture(renderer, debugFramebufferTexture, NULL, NULL);
 #endif
+
+    // Compute elapsed time for the frame
+    // 
 
     frameCount++;
 	Uint64 currentTime = SDL_GetPerformanceCounter();
@@ -468,6 +500,9 @@ SDL_AppResult SDL_AppIterate(void *appstate)
         SDL_Delay((Uint32)(remainingTime * 1000)); // Convert to milliseconds
     }
 
+    // If we're stepping, then automatically pause
+    //
+
     if (stepFrame)
     {
         gameData.paused = TRUE;
@@ -485,8 +520,6 @@ void SDL_AppQuit(void *appstate, SDL_AppResult result)
 
     if (gamePad != NULL) 
         SDL_CloseGamepad(gamePad);
-
-    SDL_DestroyTexture(framebufferTexture);
 
     Game_Shutdown(&gameData);
     soundManager.shutdown();

@@ -225,9 +225,18 @@ release
                 
         controls
         
-            Escape  Pause
-            Space   Step Pause
-            F1      Change video filter
+            Escape      Pause
+            Space       Step Pause
+            F1          Change video filter
+            Alt+Enter   Toggle Fullscreen
+            
+            Keyboard    Arrow keys for Movement
+                        Left Shift/LeftCtrl/Z for jump
+            
+            Joystick    Dpad+Left Analog Stick Movement
+                        A (Xbox controller) for jump
+                        
+                    
     
         Tools Used to make this
             visual studio for code dev

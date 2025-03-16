@@ -167,15 +167,10 @@ DONE filter system for graphics
 DONE hotkey for toggle graphics mode (blue, orange, raw bits)
 
 DONE full screen toggle
+DONE resizable window
 
-
-resizable window
-    
-hotkey for invisibility
-
-report error through callback
-
-display dialog box if rom is missing
+NAH report error through callback
+DONE display dialog box if rom is missing
 
 code comment pass
 code pretty pass
@@ -213,6 +208,12 @@ release
     
         explain how to run
         you will need a copy of Downland V1.1. 
+        the game will load files with these names
+            downland.bin
+            downland.rom
+            Downland V1.1 (1983) (26-3046) (Tandy) [a1].ccc
+            
+            
         place in the same folder as the .exe
         
         

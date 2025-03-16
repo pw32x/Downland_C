@@ -1,5 +1,6 @@
 #include "debug_utils.h"
 
+#ifdef DEV_MODE
 #ifdef _WINDOWS
 
 #include <windows.h>
@@ -42,4 +43,5 @@ void DebugPrintf(const char *format, ...)
     
     OutputDebugStringA(buffer);
 }
+#endif
 #endif

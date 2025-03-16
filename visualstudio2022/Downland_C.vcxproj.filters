@@ -18,6 +18,12 @@
     <Filter Include="sdl_main">
       <UniqueIdentifier>{534e03b9-7bde-413d-b0df-d4447204f737}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sdl_main\video_filters">
+      <UniqueIdentifier>{c67945e2-8348-4105-b6aa-0e908ae970e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sounds">
+      <UniqueIdentifier>{58b6e2ba-4802-40fe-8670-1524ac2fee14}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">
@@ -34,9 +40,6 @@
     </ClInclude>
     <ClInclude Include="..\game\draw_utils.h">
       <Filter>game</Filter>
-    </ClInclude>
-    <ClInclude Include="..\sdl_main\sdl_utils.h">
-      <Filter>sdl_main</Filter>
     </ClInclude>
     <ClInclude Include="..\game\drops_manager.h">
       <Filter>game</Filter>
@@ -101,6 +104,21 @@
     <ClInclude Include="..\game\player_types.h">
       <Filter>game</Filter>
     </ClInclude>
+    <ClInclude Include="..\sdl_main\video_filters\sdl_video_filter_utils.h">
+      <Filter>sdl_main\video_filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sdl_main\video_filters\sdl_video_filter_base.h">
+      <Filter>sdl_main\video_filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sdl_main\video_filters\sdl_video_filter_basic_crt_artifacts_blue.h">
+      <Filter>sdl_main\video_filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sdl_main\video_filters\sdl_video_filter_basic_crt_artifacts_orange.h">
+      <Filter>sdl_main\video_filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sdl_main\video_filters\sdl_video_filter_raw.h">
+      <Filter>sdl_main\video_filters</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Downland.ico">
@@ -125,9 +143,6 @@
       <Filter>game</Filter>
     </ClCompile>
     <ClCompile Include="..\sdl_main\sdl_main.cpp">
-      <Filter>sdl_main</Filter>
-    </ClCompile>
-    <ClCompile Include="..\sdl_main\sdl_utils.cpp">
       <Filter>sdl_main</Filter>
     </ClCompile>
     <ClCompile Include="..\game\drops_manager.c">
@@ -166,5 +181,43 @@
     <ClCompile Include="..\sdl_main\sdl_sound.cpp">
       <Filter>sdl_main</Filter>
     </ClCompile>
+    <ClCompile Include="..\sdl_main\video_filters\sdl_video_filter_basic_crt_artifacts_blue.cpp">
+      <Filter>sdl_main\video_filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sdl_main\video_filters\sdl_video_filter_basic_crt_artifacts_orange.cpp">
+      <Filter>sdl_main\video_filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sdl_main\video_filters\sdl_video_filter_raw.cpp">
+      <Filter>sdl_main\video_filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sdl_main\video_filters\sdl_video_filter_utils.cpp">
+      <Filter>sdl_main\video_filters</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="..\..\..\..\downland_sounds\climb_down.wav">
+      <Filter>sounds</Filter>
+    </Media>
+    <Media Include="..\..\..\..\downland_sounds\climb_up.wav">
+      <Filter>sounds</Filter>
+    </Media>
+    <Media Include="..\sounds\jump.wav">
+      <Filter>sounds</Filter>
+    </Media>
+    <Media Include="..\sounds\land.wav">
+      <Filter>sounds</Filter>
+    </Media>
+    <Media Include="..\sounds\pickup.wav">
+      <Filter>sounds</Filter>
+    </Media>
+    <Media Include="..\..\..\..\downland_sounds\run.wav">
+      <Filter>sounds</Filter>
+    </Media>
+    <Media Include="..\sounds\splat.wav">
+      <Filter>sounds</Filter>
+    </Media>
+    <Media Include="..\sounds\transition.wav">
+      <Filter>sounds</Filter>
+    </Media>
   </ItemGroup>
 </Project>

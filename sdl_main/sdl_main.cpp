@@ -69,7 +69,14 @@ Uint64 timeFrequency;
 Uint64 frameCount = 0;
 float fps;
 
-const char* romFilePath = "downland.bin";
+const char* romFileNames[] = 
+{
+    "downland.bin",
+    "downland.rom",
+    "Downland V1.1 (1983) (26-3046) (Tandy) [a1].ccc"
+};
+
+int romFileNamesCount = sizeof(romFileNames) / sizeof(romFileNames[0]);
 
 SDL_Gamepad* gamePad = NULL;
 
@@ -149,8 +156,27 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
     SDL_SetTextureScaleMode(debugFramebufferTexture, SDL_SCALEMODE_NEAREST); // no smoothing
 #endif
 
-    if (!ResourceLoader_Init(romFilePath, &resources))
+    bool romFoundAndLoaded = false;
+    for (int loop = 0; loop < romFileNamesCount; loop++)
+    {
+        if (ResourceLoader_Init(romFileNames[loop], &resources))
+        {
+            romFoundAndLoaded = true;
+            break;
+        }
+    }
+
+    if (!romFoundAndLoaded)
+    {
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, 
+                                 "Downland_C", 
+                                 "Downland V1.1 rom file not found. \n "\
+                                 "'downland.rom',\n 'downland.bin', or \n"\
+                                 "'Downland V1.1 (1983) (26-3046) (Tandy) [a1].ccc'\n "\
+                                 "not found in the same folder as the Downland_C.exe", 
+                                 window);
         return SDL_APP_FAILURE;
+    }
 
     soundManager.init();
 

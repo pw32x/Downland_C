@@ -16,6 +16,9 @@ BOOL checksumCheck(const char* romPath)
 
 	FILE* file = fopen(romPath, "rb");
 
+	if (!file)
+		return FALSE;
+
 	while (fread(&value, sizeof(value), 1, file))
 	{
 		accumulator += value;

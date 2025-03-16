@@ -3,6 +3,7 @@
 
 #include "base_defines.h"
 
+#ifdef DEV_MODE
 #ifdef _WINDOWS
 
 unsigned int debugFramebuffer[FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT];
@@ -10,6 +11,7 @@ void debugSetPixel(unsigned char x, unsigned char y, unsigned int pixel);
 void debugDrawBox(unsigned char x, unsigned char y, unsigned char width, unsigned char height, unsigned int pixel);
 
 void DebugPrintf(const char *format, ...);
+#endif
 #endif
 
 #endif

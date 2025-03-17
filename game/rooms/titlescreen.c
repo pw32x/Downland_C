@@ -7,6 +7,10 @@
 #include "..\drops_manager.h"
 #include "..\sound.h"
 
+#define TITLESCREEN_HIGHSCORE_LOCATION			0x12cc
+#define TITLESCREEN_PLAYERONE_SCORE_LOCATION	0x1412
+#define TITLESCREEN_PLAYERTWO_SCORE_LOCATION	0x1552
+
 void titleScreen_draw(u8 roomNumber, GameData* gameData, Resources* resources)
 {
 	u8* framebuffer = gameData->cleanBackground;

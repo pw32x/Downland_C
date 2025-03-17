@@ -174,17 +174,15 @@ DONE display dialog box if rom is missing
 
 DONE split rooms file
 
-make drop manager run 3x instead of upping the framerate
+DONE make drop manager run 3x instead of upping the framerate
+
+NAH hires position variables
+    use union instead of GET_HIGH_BYTE ? 
 
 fix up player.c
 
 code comment pass
 code pretty pass
-
-hires position variables
-    use union instead of GET_HIGH_BYTE ? 
-
-
 
 bouncing off walls isn't accurate
 jump isn't accurate (too high?)

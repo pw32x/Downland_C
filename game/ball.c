@@ -11,8 +11,13 @@
 #define BALL_START_X 0x65 // 101
 #define BALL_START_Y 0x74 // 116
 
+#define BALL_GROUND_FREEZE_TIME 0xfb
+
 #define BITSHIFTED_SPRITE_FRAME_SIZE (BALL_SPRITE_ROWS * 3) // rows * 3 bytes per row
 
+// used as a sensor at the bottom of the
+// ball to detect whether the ball is touching
+// the floor. 
 u16 ballGroundCollisionMasks[4] =
 {
 	0x0300, // 0000001100000000b
@@ -21,6 +26,9 @@ u16 ballGroundCollisionMasks[4] =
 	0x0c00  // 0000110000000000b
 };
 
+// used as a sensor mid-way across the
+// ball to detect whether it has touched
+// a wall.
 u16 ballWideCollisionMasks[4] =
 {
     0x3ff0, // 0011111111110000b
@@ -75,6 +83,7 @@ void Ball_Update(BallData* ballData, u8* framebuffer, u8* cleanBackground)
 	if (!ballData->enabled)
 		return;
 
+	// we're deactivated, so activate
 	if (!ballData->state)
 	{
 		initBallPhysics(ballData);
@@ -111,9 +120,11 @@ void Ball_Update(BallData* ballData, u8* framebuffer, u8* cleanBackground)
 												 ballGroundCollisionMasks, 
 												 cleanBackground)))
 		{
-			// we've hit something
+			// we've hit the ground. stop our y speed
+			// and set the counter so that we don't move
+			// for a bit.
 			ballData->speedy = 0xff00;
-			ballData->fallStateCounter = 0xfb;
+			ballData->fallStateCounter = BALL_GROUND_FREEZE_TIME; 
 		}
 		else
 		{

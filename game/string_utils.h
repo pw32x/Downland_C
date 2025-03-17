@@ -7,6 +7,18 @@
 #define TIMER_STRING_SIZE 6
 #define SCORE_STRING_SIZE 8
 
+#define CHAR_0		0
+#define CHAR_1		1
+#define CHAR_2		2
+#define CHAR_3		3
+#define CHAR_4		4
+#define CHAR_5		5
+#define CHAR_6		6
+#define CHAR_7		7
+#define CHAR_8		8
+#define CHAR_9		9
+#define CHAR_SPACE 0x24
+
 void convertTimerToString(u16 timerValue, u8* timerString);
 void convertScoreToString(u32 score, u8* scoreString);
 

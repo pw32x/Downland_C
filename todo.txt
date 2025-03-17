@@ -179,7 +179,9 @@ DONE make drop manager run 3x instead of upping the framerate
 NAH hires position variables
     use union instead of GET_HIGH_BYTE ? 
 
-fix up player.c
+NAH fix up player.c
+    REASON
+        too much of a pain right now. maybe later
 
 code comment pass
 code pretty pass

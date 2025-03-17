@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-// Checks for Downland V1.1
+// Verifies the checksum for Downland V1.1
 BOOL checksumCheck(const char* romPath)
 {
 	u32 accumulator = 0;
@@ -256,23 +256,6 @@ void loadDoorInfoDataPositions(FILE* file, u16 start, DoorInfoData* doorInfoData
 #define WIDTH_BYTES 2  // Original sprite width in bytes
 #define HEIGHT 10      // Number of rows
 #define SHIFT_COUNT 3  // Number of shifted versions
-
-void generate_shifted_sprites(u8 original[HEIGHT][WIDTH_BYTES], u8 shifted[SHIFT_COUNT][HEIGHT][3]) 
-{
-    for (int shift = 1; shift <= SHIFT_COUNT; shift++) 
-	{
-        int shift_amount = shift * 2;  // 2-bit increments
-        for (int y = 0; y < HEIGHT; y++) 
-		{
-            u32 row = original[y][0] << 16 | original[y][1] << 8; // Load row into 24-bit space
-            row <<= shift_amount;  // Shift left by the required amount
-            
-            shifted[shift - 1][y][0] = (row >> 16) & 0xFF;  // Extract upper byte
-            shifted[shift - 1][y][1] = (row >> 8) & 0xFF;   // Extract middle byte
-            shifted[shift - 1][y][2] = row & 0xFF;          // Extract lower byte
-        }
-    }
-}
 
 // assume two bytes per row
 u8* buildBitShiftedSprites(u8* spriteData, u8 spriteCount, u8 rowCount, u8 bytesPerRow)

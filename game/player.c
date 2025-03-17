@@ -26,10 +26,12 @@
 #define PLAYER_MIDAIR_DEATH			9
 #define PLAYER_STATE_DEBUG			0xff
 
+#define PLAYER_START_LIVES 3
+
 #define PLAYER_REGENERATION_TIME			0x190 // 400
 #define PLAYER_REGENERATION_IMMOBILE_TIME	0x28  // 40
-#define PLAYER_SPLAT_INITIAL_FREEZE_TIME	0xa
-#define PLAYER_SPLAT_ANIMATION_TRIGGER_TIME 0x46
+#define PLAYER_SPLAT_INITIAL_FREEZE_TIME	0xa	  // 10
+#define PLAYER_SPLAT_ANIMATION_TRIGGER_TIME 0x46  // 70
 #define PLAYER_SPLAT_WAIT_TIME				(PLAYER_SPLAT_ANIMATION_TRIGGER_TIME + PLAYER_SPLAT_INITIAL_FREEZE_TIME)
 #define PLAYER_MIDAIR_DEATH_PAUSE_TIME		0x32 // 40
 
@@ -58,6 +60,7 @@
 #define PLAYER_ROPE_SENSOR_YOFFSET		8
 #define PLAYER_OFF_ROPE_SENSOR_YOFFSET	7
 
+// individual sprites
 #define PLAYER_SPRITE_RIGHT_STAND		0
 #define PLAYER_SPRITE_RIGHT_RUN0		1
 #define PLAYER_SPRITE_RIGHT_RUN1_JUMP	2
@@ -69,6 +72,14 @@
 #define PLAYER_SPRITE_LEFT_RUN1_JUMP	8
 #define PLAYER_SPRITE_LEFT_RUN2			9
 
+// used for animation
+// - run is always 0 to 3, no matter what direction
+// the player is facing. the correct sprite is
+// chosen right before drawing.
+// - climb alternates between frames 4 and 5, which
+// match the sprites above.
+// - standing is run frame 0
+// - jumping is run frame 2
 #define PLAYER_RUN_FRAME_0_STAND		0
 #define PLAYER_RUN_FRAME_1				1
 #define PLAYER_RUN_FRAME_2_JUMP			2
@@ -77,6 +88,8 @@
 #define PLAYER_CLIMB_FRAME_1			5
 #define PLAYER_FRAME_COUNT				6
 
+// used to determine whether the player
+// is touching the ground
 u16 playerGroundCollisionMasks[4] =
 {
 	0x03c0, // 0000001111000000b
@@ -85,6 +98,8 @@ u16 playerGroundCollisionMasks[4] =
     0x0f00, // 0000111100000000b
 };
 
+// used to determine whether the player
+// is touching a rope.
 u16 ropeCollisionMasks[4] = 
 {
     0x0300, // 0000001100000000b
@@ -242,7 +257,7 @@ void Player_GameInit(PlayerData* playerData, const Resources* resources)
 	playerStartGameLoop(playerData, resources);
 
 	playerData->lastDoor = NULL;
-	playerData->lives = 3;
+	playerData->lives = PLAYER_START_LIVES;
 	playerData->isDead = 0;
 	playerData->gameOver = FALSE;
 	playerData->score = 0;
@@ -259,16 +274,17 @@ void Player_GameInit(PlayerData* playerData, const Resources* resources)
 
 void Player_RoomInit(PlayerData* playerData, const Resources* resources)
 {
-	// set initial state
-
+	// setup initial state for room
 
 	if (playerData->isDead)
 	{
+		// we've died in a room and need to regenerate
 		Player_StartRegen(playerData);
 		playerData->isDead = FALSE;
 	}
 	else if (playerData->lastDoor)
 	{	
+		// we've entered a room
 		if (playerData->state != PLAYER_STATE_DEBUG)
 			playerData->state = PLAYER_STATE_STAND;
 
@@ -279,7 +295,7 @@ void Player_RoomInit(PlayerData* playerData, const Resources* resources)
 	}
 	else
 	{
-		// game start
+		// we're starting the game
 		playerData->state = PLAYER_STATE_STAND;
 		Player_StartRegen(playerData);
 		playerData->x = SET_HIGH_BYTE(PLAYER_START_X);
@@ -315,6 +331,8 @@ void Player_Update(PlayerData* playerData,
 				   DoorInfoData* doorInfoData,
 				   u8* doorStateData)
 {
+	playerData->globalAnimationCounter++;
+
 	if (playerData->state == PLAYER_MIDAIR_DEATH)
 	{
 		if (playerData->cantMoveCounter)
@@ -413,7 +431,7 @@ void Player_Update(PlayerData* playerData,
 	*/
 	
 
-	playerData->globalAnimationCounter++;
+
 
 	if (playerData->state == PLAYER_STATE_DEBUG)
 	{
@@ -791,56 +809,6 @@ void Player_Update(PlayerData* playerData,
 	if (playerData->ignoreRopesCounter)
 		playerData->ignoreRopesCounter--;
 
-	//for (u8 loop = 0; loop < 12; loop++)
-	//{
-	//	debugSetPixel(((GET_HIGH_BYTE(playerData->x) << 1) + 6), GET_HIGH_BYTE(playerData->y) + loop, 0xffff0000);
-	//	debugSetPixel(((GET_HIGH_BYTE(playerData->x) << 1) + 7), GET_HIGH_BYTE(playerData->y) + loop, 0xffff0000);
-	//}
-
-
-	//debugDrawBox(((GET_HIGH_BYTE(playerData->x) << 1) / 8) * 8, 
-	//		     GET_HIGH_BYTE(playerData->y), 
-	//		     16, 
-	//		     16, 
-	//		     0xff00ff00);
-
-	/*
-	extern u8 leftPixelData;
-	extern u8 rightPixelData;
-
-
-	getTerrainValue(playerData->x, 
-					playerData->y, 
-					PLAYER_ROPE_SENSOR_YOFFSET, 
-					ropeCollisionMasks,
-					cleanBackground);
-
-	u8 copyLeftPixelData = leftPixelData;
-	u8 copyRightPixelData = rightPixelData;
-
-	for (int loop = 0; loop < 8; loop++)
-	{
-		debugSetPixel((GET_HIGH_BYTE(playerData->x) << 1) + (7 - loop), 
-                      GET_HIGH_BYTE(playerData->y) + PLAYER_ROPE_SENSOR_YOFFSET, 
-					  copyLeftPixelData & 0x1 ? 0xffff0000 : 0x00000000);
-
-		debugSetPixel((GET_HIGH_BYTE(playerData->x) << 1) + (15 - loop), 
-                      GET_HIGH_BYTE(playerData->y) + PLAYER_ROPE_SENSOR_YOFFSET, 
-					  copyRightPixelData & 0x1 ? 0xffff0000 : 0x00000000);
-
-		copyLeftPixelData >>= 1;
-		copyRightPixelData >>= 1;
-	}
-	*/
-
-	/*
-	getTerrainValue(playerData->x, 
-					playerData->y, 
-					PLAYER_ROPE_SENSOR_YOFFSET, 
-					ropeCollisionMasks,
-					cleanBackground);
-	*/
-
 	// if in the air, check for ropes
 	if ((playerData->state == PLAYER_STATE_JUMP ||
 		playerData->state == PLAYER_STATE_FALL) &&
@@ -897,8 +865,10 @@ void Player_Update(PlayerData* playerData,
 		}
 	}
 
+	// from the frame number, get the actual sprite to use
 	playerData->currentSpriteNumber = computeSpriteNumber(playerData->facingDirection, playerData->currentFrameNumber);
 
+	// get the sprite for the current horizontal bit the player is on
 	playerData->currentSprite = getBitShiftedSprite(playerData->bitShiftedSprites, 
 												    playerData->currentSpriteNumber,
 												    GET_HIGH_BYTE(playerData->x) & 3, 
@@ -916,8 +886,6 @@ void Player_Update(PlayerData* playerData,
 			u16 location = GET_FRAMEBUFFER_LOCATION(ropeX, GET_HIGH_BYTE(playerData->y) + loop);
 			framebuffer[location] &= ~pixelMasks[ropeX & 3];
 		}
-
-		//return;
 	}
 
 	if (playerData->state != PLAYER_STATE_REGENERATION)

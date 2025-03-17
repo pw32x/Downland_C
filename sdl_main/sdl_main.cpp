@@ -410,7 +410,9 @@ SDL_AppResult SDL_AppIterate(void *appstate)
 
     if (!gameData.paused)
     {
+#ifdef DEV_MODE
         memset(debugFramebuffer, 0, sizeof(debugFramebuffer));
+#endif
         Game_Update(&gameData, &resources);
     }
 

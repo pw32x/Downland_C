@@ -184,6 +184,8 @@ code pretty pass
 hires position variables
     use union instead of GET_HIGH_BYTE ? 
 
+
+
 bouncing off walls isn't accurate
 jump isn't accurate (too high?)
 jump doesn't slow down horizontally

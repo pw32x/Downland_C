@@ -25,7 +25,7 @@ void get_ready_room_draw(u8 roomNumber, GameData* gameData, Resources* resources
 void get_ready_room_init(Room* room, GameData* gameData, Resources* resources)
 {
 	u8 roomNumber = room->roomNumber;
-	gameData->targetFps = NORMAL_FPS * 3; // speed up the game, like the title screen 
+	gameData->targetFps = NORMAL_FPS;
 
 	// init drops
 	gameData->dropData.dropSpawnPositions = &resources->roomResources[TITLESCREEN_ROOM_INDEX].dropSpawnPositions;
@@ -34,12 +34,17 @@ void get_ready_room_init(Room* room, GameData* gameData, Resources* resources)
 
 void get_ready_room_update(Room* room, GameData* gameData, Resources* resources)
 {
-	DropsManager_Update(&gameData->dropData, 
-						gameData->framebuffer, 
-						gameData->cleanBackground, 
-						1 /*gameCompletionCount*/,
-						resources->sprites_drops);
-
+	// run the drops manager three times to simulate
+	// the lack of checking for vsync in the original 
+	// game, making drops fall more often and faster.
+	for (int loop = 0; loop < 3; loop++)
+	{
+		DropsManager_Update(&gameData->dropData, 
+							gameData->framebuffer, 
+							gameData->cleanBackground, 
+							1 /*gameCompletionCount*/,
+							resources->sprites_drops);
+	}
 
 	// press button to start
 	if (gameData->joystickState.jumpPressed)
@@ -49,7 +54,6 @@ void get_ready_room_update(Room* room, GameData* gameData, Resources* resources)
 		if (gameData->currentPlayerData->lastDoor != NULL)
 			roomNumber = gameData->currentPlayerData->lastDoor->nextRoomNumber;
 
-		gameData->targetFps = NORMAL_FPS;
 		memset(gameData->framebuffer, 0, FRAMEBUFFER_SIZE_IN_BYTES);		
 		Game_WipeTransitionToRoom(gameData, roomNumber, resources);
 	}

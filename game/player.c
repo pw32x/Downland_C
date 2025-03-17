@@ -854,6 +854,7 @@ void Player_Update(PlayerData* playerData,
 											 cleanBackground);
 		if (TOUCHES_VINE(testResult))
 		{
+			Sound_Stop(SOUND_JUMP);
 			playerData->state = PLAYER_STATE_CLIMB;
 			playerData->speedx = 0;
 			playerData->speedy = 0;

@@ -55,10 +55,8 @@ void titleScreen_draw(u8 roomNumber, GameData* gameData, Resources* resources)
 
 void titleScreen_init(Room* room, GameData* gameData, Resources* resources)
 {
+	gameData->targetFps = NORMAL_FPS;
 	u8 roomNumber = room->roomNumber;
-	gameData->targetFps = NORMAL_FPS * 3; // simulate the title screen not
-										  // waiting for vsync in the original
-										  // game by running 3x fast.
 
 	// init drops
 	gameData->dropData.dropSpawnPositions = &resources->roomResources[roomNumber].dropSpawnPositions;
@@ -67,11 +65,17 @@ void titleScreen_init(Room* room, GameData* gameData, Resources* resources)
 
 void titleScreen_update(Room* room, GameData* gameData, Resources* resources)
 {
-	DropsManager_Update(&gameData->dropData, 
-						gameData->framebuffer, 
-						gameData->cleanBackground, 
-						1 /*gameCompletionCount*/,
-						resources->sprites_drops);
+	// run the drops manager three times to simulate
+	// the lack of checking for vsync in the original 
+	// game, making drops fall more often and faster.
+	for (int loop = 0; loop < 3; loop++)
+	{
+		DropsManager_Update(&gameData->dropData, 
+							gameData->framebuffer, 
+							gameData->cleanBackground, 
+							1 /*gameCompletionCount*/,
+							resources->sprites_drops);
+	}
 
 	// update the number of players and cursor depending on the direction
 	// pressed on the controls.
@@ -104,7 +108,7 @@ void titleScreen_update(Room* room, GameData* gameData, Resources* resources)
 			Player_GameInit(&gameData->playerData[loop], resources);
 		}
 
-		gameData->targetFps = NORMAL_FPS;
+
 		memset(gameData->framebuffer, 0, FRAMEBUFFER_SIZE_IN_BYTES);		
 		Game_WipeTransitionToRoom(gameData, 0, resources);
 	}

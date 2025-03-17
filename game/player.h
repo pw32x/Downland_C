@@ -7,7 +7,7 @@
 #include "joystick_types.h"
 #include "door_types.h"
 #include "string_utils.h"
-#include "rooms.h"
+#include "rooms\rooms.h"
 #include "game.h"
 
 void Player_GameInit(PlayerData* playerData, const Resources* resources);

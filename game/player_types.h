@@ -6,7 +6,7 @@
 #include "joystick_types.h"
 #include "door_types.h"
 #include "string_utils.h"
-#include "rooms.h"
+#include "rooms\rooms.h"
 
 #define PLAYER_SPRITE_COUNT			10
 #define PLAYER_SPRITE_ROWS			16

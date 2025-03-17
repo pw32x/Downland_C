@@ -1,11 +1,15 @@
-#ifndef ROOMS_INCLUDE_H
-#define ROOMS_INCLUDE_H
+#ifndef ROOM_TYPES_INCLUDE_H
+#define ROOM_TYPES_INCLUDE_H
 
-#include "base_defines.h"
-#include "background_types.h"
-#include "resource_types.h"
+#include "..\base_defines.h"
+#include "..\resource_types.h"
 
 struct GameData;
+
+// A room generally means one of the ten chambers of the game but in
+// reality it means the game's current mode. The game can be in a 
+// gameplay mode, a titlescreen/getready mode, or a transition mode.
+// A mode needs an init, an update, and a draw. 
 
 typedef struct Room
 {
@@ -15,24 +19,9 @@ typedef struct Room
 	void (*update)(struct Room* room, struct GameData* gameData, Resources* resources);
 } Room;
 
-extern Room* g_rooms[NUM_ROOMS_AND_ALL];
-
 typedef void (*InitRoomFunctionType)(Room* room, struct GameData* gameObject, Resources* resources);
 typedef void (*DrawRoomFunctionType)(u8 roomNumber, struct GameData* gameData, Resources* resources);
 typedef void (*UpdateRoomFunctionType)(Room* room, struct GameData* gameObject, Resources* resources);
 
-
-typedef struct
-{
-	u16 spawnPosition;
-	u8 roomNumber;
-	u8 globalDoorIndex;
-} Door;
-
-typedef struct
-{
-	u8 doorCount;
-	Door* doors;
-} Doors;
 
 #endif

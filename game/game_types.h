@@ -5,7 +5,7 @@
 #include "base_defines.h"
 #include "joystick_types.h"
 #include "drops_types.h"
-#include "rooms.h"
+#include "rooms\rooms.h"
 #include "resource_types.h"
 #include "pickup_types.h"
 #include "string_utils.h"
@@ -17,22 +17,25 @@
 #define PLAYER_ONE	0
 #define PLAYER_TWO	1
 
+// contains the global state of the game
 typedef struct GameData
 {
 	u8 framebuffer[FRAMEBUFFER_HEIGHT * FRAMEBUFFER_PITCH]; // main game 1bpp frame buffer
 	u8 cleanBackground[FRAMEBUFFER_HEIGHT * FRAMEBUFFER_PITCH]; // the game background without UI or objects. Used for terrain collision detection.
 
+	// objects
+	PlayerData playerData[NUM_PLAYERS];
 	DropData dropData;
 	BallData ballData;
 	BirdData birdData;
 
 	JoystickState joystickState;
 
-	u8 numPlayers;
-
-	PlayerData playerData[NUM_PLAYERS];
+	// there's no distinct player one or player two
+	// the pointers swap every time a player dies.
 	PlayerData* currentPlayerData;
 	PlayerData* otherPlayerData;
+	u8 numPlayers;
 
 	Room* currentRoom;
 

@@ -172,18 +172,17 @@ DONE resizable window
 NAH report error through callback
 DONE display dialog box if rom is missing
 
-code comment pass
-code pretty pass
-split rooms file
-can make individual update functions for player?
-use union instead of GET_HIGH_BYTE ? 
-
-saving stuff? ini file? xml?
-    score
-    fullscreen setting
-    filter setting    
+DONE split rooms file
 
 make drop manager run 3x instead of upping the framerate
+
+fix up player.c
+
+code comment pass
+code pretty pass
+
+hires position variables
+    use union instead of GET_HIGH_BYTE ? 
 
 bouncing off walls isn't accurate
 jump isn't accurate (too high?)
@@ -259,6 +258,14 @@ Engine Architecture
     Game folder
         - core game files
         - renders to 1bpp framebuffer
+        
+        Code notes:
+        
+        Use of contants and unsigned variables
+        
+            with very few exceptions, all the variables are treated as signed, just like the original game
+            constants are generally kept in hex, to map them easier to the original disassembly
+            
         
     SDL app 
         - handles input

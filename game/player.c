@@ -100,11 +100,14 @@ void playerKill(PlayerData* playerData, u8* framebuffer, u8* cleanBackground)
 	playerData->regenerationCounter = 0;
 	playerData->isDead = TRUE;
 
+	Sound_Stop(SOUND_RUN);
+	Sound_Stop(SOUND_CLIMB_UP);
+	Sound_Stop(SOUND_CLIMB_DOWN);
+
 	if (playerData->state == PLAYER_STATE_STAND ||
 		playerData->state == PLAYER_STATE_RUN)
 	{
 		playerData->state = PLAYER_STATE_SPLAT;
-		Sound_Stop(SOUND_RUN);
 		Sound_Play(SOUND_SPLAT, FALSE);
 		playerData->cantMoveCounter = PLAYER_SPLAT_WAIT_TIME;
 
@@ -876,16 +879,19 @@ void Player_Update(PlayerData* playerData,
 		{
 			playerData->speedx = 0;
 			playerData->state = PLAYER_STATE_STAND;
+			Sound_Stop(SOUND_RUN);
 			playerData->currentFrameNumber = PLAYER_RUN_FRAME_0_STAND;
 		}
 		else if (playerData->state == PLAYER_STATE_JUMP)
 		{
+			Sound_Stop(SOUND_JUMP);
 			playerData->speedx = -playerData->speedx;
 			playerData->jumpAirCounter = 1;
 			playerData->facingDirection = !playerData->facingDirection;
 		}
 		else if (playerData->state == PLAYER_STATE_FALL)
 		{
+			Sound_Stop(SOUND_JUMP);
 			playerData->speedx = 0;
 		}
 	}
@@ -941,6 +947,7 @@ void Player_Update(PlayerData* playerData,
 			{
 				// jump to next room
 				Sound_Stop(SOUND_RUN);
+				Sound_Stop(SOUND_JUMP);
 				playerData->lastDoor = doorInfoRunner;
 				return;
 			}

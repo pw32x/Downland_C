@@ -24,6 +24,9 @@
     <Filter Include="sounds">
       <UniqueIdentifier>{58b6e2ba-4802-40fe-8670-1524ac2fee14}</UniqueIdentifier>
     </Filter>
+    <Filter Include="game\rooms">
+      <UniqueIdentifier>{645272e5-88c9-45ff-8ae0-62f86e92a91b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">
@@ -51,9 +54,6 @@
       <Filter>game</Filter>
     </ClInclude>
     <ClInclude Include="..\game\joystick_types.h">
-      <Filter>game</Filter>
-    </ClInclude>
-    <ClInclude Include="..\game\rooms.h">
       <Filter>game</Filter>
     </ClInclude>
     <ClInclude Include="..\game\game_types.h">
@@ -119,6 +119,12 @@
     <ClInclude Include="..\sdl_main\video_filters\sdl_video_filter_raw.h">
       <Filter>sdl_main\video_filters</Filter>
     </ClInclude>
+    <ClInclude Include="..\game\rooms\rooms.h">
+      <Filter>game\rooms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\game\rooms\room_types.h">
+      <Filter>game\rooms</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Downland.ico">
@@ -146,9 +152,6 @@
       <Filter>sdl_main</Filter>
     </ClCompile>
     <ClCompile Include="..\game\drops_manager.c">
-      <Filter>game</Filter>
-    </ClCompile>
-    <ClCompile Include="..\game\rooms.c">
       <Filter>game</Filter>
     </ClCompile>
     <ClCompile Include="..\game\resource_loader.c">
@@ -192,6 +195,21 @@
     </ClCompile>
     <ClCompile Include="..\sdl_main\video_filters\sdl_video_filter_utils.cpp">
       <Filter>sdl_main\video_filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\game\rooms\titlescreen.c">
+      <Filter>game\rooms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\game\rooms\transitions.c">
+      <Filter>game\rooms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\game\rooms\chambers.c">
+      <Filter>game\rooms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\game\rooms\getready.c">
+      <Filter>game\rooms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\game\rooms\rooms.c">
+      <Filter>game\rooms</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

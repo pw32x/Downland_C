@@ -3,7 +3,7 @@
 #include <memory.h>
 
 #include "draw_utils.h"
-#include "rooms.h"
+#include "rooms\rooms.h"
 
 #define START_AT_TITLESCREEN
 

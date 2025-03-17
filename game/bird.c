@@ -10,6 +10,11 @@
 #define BIRD_START_X 0x23 // 35
 #define BIRD_START_Y 0x1a // 26
 
+#define SCREEN_BOUNDS_LEFT		0x7
+#define SCREEN_BOUNDS_RIGHT		0x73
+#define SCREEN_BOUNDS_TOP		0x10
+#define SCREEN_BOUNDS_BOTTOM	0xb1
+
 #define BITSHIFTED_SPRITE_FRAME_SIZE (BIRD_SPRITE_ROWS * 3) // rows * 3 bytes per row
 
 void initBirdPhysics(BirdData* birdData)
@@ -58,8 +63,8 @@ void Bird_Update(BirdData* birdData, u16 currentRoomTimer, u8* framebuffer, u8* 
 
 	u8 newPixelY = GET_HIGH_BYTE(birdData->y + birdData->speedy);
 
-	if (newPixelY <= 0x10 || 
-		newPixelY >= 0xb1)
+	if (newPixelY <= SCREEN_BOUNDS_TOP || 
+		newPixelY >= SCREEN_BOUNDS_BOTTOM)
 	{
 		birdData->speedy = -birdData->speedy;
 	}
@@ -68,8 +73,8 @@ void Bird_Update(BirdData* birdData, u16 currentRoomTimer, u8* framebuffer, u8* 
 
 	u8 newPixelX = GET_HIGH_BYTE(birdData->x + birdData->speedx);
 
-	if (newPixelX <= 0x7 || 
-		newPixelX >= 0x73)
+	if (newPixelX <= SCREEN_BOUNDS_LEFT || 
+		newPixelX >= SCREEN_BOUNDS_RIGHT)
 	{
 		birdData->speedx = -birdData->speedx;
 	}

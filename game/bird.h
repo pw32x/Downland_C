@@ -4,6 +4,8 @@
 #include "base_types.h"
 #include "resource_types.h"
 
+// It's a bird! It's a bat! It's a flying tomato!
+
 #define BIRD_SPRITE_COUNT			2
 #define BIRD_SPRITE_ROWS			6
 #define BIRD_SPRITE_BYTES_PER_ROW	2

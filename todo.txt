@@ -183,14 +183,20 @@ NAH fix up player.c
     REASON
         too much of a pain right now. maybe later
 
-code comment pass
-code pretty pass
+DONE code comment pass
+DONE code pretty pass
+DONE jump isn't accurate (takes one frame too many)
 
 bouncing off walls isn't accurate
-jump isn't accurate (too high?)
 jump doesn't slow down horizontally
 
 how to make a release?
+
+write a better readme file
+
+make sound files smaller
+don't speed up fps when transition
+    update 2 lines instead of 1 every four frames, or something.
 
 0.8 alpha
 0.9 beta

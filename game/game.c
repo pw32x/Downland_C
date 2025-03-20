@@ -5,8 +5,6 @@
 #include "draw_utils.h"
 #include "rooms\rooms.h"
 
-#define START_AT_TITLESCREEN
-
 void Game_Init(struct GameData* gameData, Resources* resources)
 {
 	gameData->targetFps = NORMAL_FPS;

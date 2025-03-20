@@ -394,6 +394,7 @@ void Player_Update(PlayerData* playerData,
 			playerData->cantMoveCounter = 0;
 			playerData->currentFrameNumber = PLAYER_RUN_FRAME_0_STAND;
 			playerData->state = PLAYER_STATE_JUMP;
+			playerData->currentFrameNumber = PLAYER_RUN_FRAME_2_JUMP;
 			playerData->speedy = 0;
 			playerData->jumpAirCounter = 1;
 		}
@@ -489,6 +490,7 @@ void Player_Update(PlayerData* playerData,
 			playerData->speedy = 0xff61;
 			playerData->jumpAirCounter = PLAYER_JUMP_AIR_COUNT;
 			playerData->state = PLAYER_STATE_JUMP;
+			playerData->currentFrameNumber = PLAYER_RUN_FRAME_2_JUMP;
 			Sound_Play(SOUND_JUMP, FALSE);
 
 			// apply side movement if a direction was held
@@ -510,13 +512,14 @@ void Player_Update(PlayerData* playerData,
 		}		
 	}
 
-	if (playerData->state == PLAYER_STATE_RUN)
+	else if (playerData->state == PLAYER_STATE_RUN)
 	{
 		if (joystickState->jumpPressed)
 		{
 			playerData->speedy = 0xff61;
 			playerData->jumpAirCounter = PLAYER_JUMP_AIR_COUNT;
 			playerData->state = PLAYER_STATE_JUMP;
+			playerData->currentFrameNumber = PLAYER_RUN_FRAME_2_JUMP;
 			Sound_Play(SOUND_JUMP, FALSE);
 			Sound_Stop(SOUND_RUN);
 		}
@@ -561,7 +564,7 @@ void Player_Update(PlayerData* playerData,
 		}
 	}
 
-	if (playerData->state == PLAYER_STATE_JUMP)
+	else if (playerData->state == PLAYER_STATE_JUMP)
 	{
 		playerData->currentFrameNumber = PLAYER_RUN_FRAME_2_JUMP;
 		playerData->jumpAirCounter--;
@@ -628,6 +631,7 @@ void Player_Update(PlayerData* playerData,
 				playerData->safeLanding = TRUE;
 				playerData->jumpAirCounter = PLAYER_JUMP_AIR_COUNT;
 				playerData->state = PLAYER_STATE_JUMP;
+				playerData->currentFrameNumber = PLAYER_RUN_FRAME_2_JUMP;
 				Sound_Play(SOUND_JUMP, FALSE);
 				Sound_Stop(SOUND_CLIMB_UP);
 				Sound_Stop(SOUND_CLIMB_DOWN);
@@ -641,6 +645,7 @@ void Player_Update(PlayerData* playerData,
 				playerData->safeLanding = TRUE;
 				playerData->jumpAirCounter = PLAYER_JUMP_AIR_COUNT;
 				playerData->state = PLAYER_STATE_JUMP;
+				playerData->currentFrameNumber = PLAYER_RUN_FRAME_2_JUMP;
 				Sound_Play(SOUND_JUMP, FALSE);
 				Sound_Stop(SOUND_CLIMB_UP);
 				Sound_Stop(SOUND_CLIMB_DOWN);

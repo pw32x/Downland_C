@@ -213,12 +213,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Media Include="..\..\..\..\downland_sounds\climb_down.wav">
-      <Filter>sounds</Filter>
-    </Media>
-    <Media Include="..\..\..\..\downland_sounds\climb_up.wav">
-      <Filter>sounds</Filter>
-    </Media>
     <Media Include="..\sounds\jump.wav">
       <Filter>sounds</Filter>
     </Media>
@@ -228,13 +222,19 @@
     <Media Include="..\sounds\pickup.wav">
       <Filter>sounds</Filter>
     </Media>
-    <Media Include="..\..\..\..\downland_sounds\run.wav">
-      <Filter>sounds</Filter>
-    </Media>
     <Media Include="..\sounds\splat.wav">
       <Filter>sounds</Filter>
     </Media>
     <Media Include="..\sounds\transition.wav">
+      <Filter>sounds</Filter>
+    </Media>
+    <Media Include="..\sounds\climb_up.wav">
+      <Filter>sounds</Filter>
+    </Media>
+    <Media Include="..\sounds\run.wav">
+      <Filter>sounds</Filter>
+    </Media>
+    <Media Include="..\sounds\climb_down.wav">
       <Filter>sounds</Filter>
     </Media>
   </ItemGroup>

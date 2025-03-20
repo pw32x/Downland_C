@@ -1,7 +1,8 @@
 #ifndef BASE_DEFINES_INCLUDE_H
 #define BASE_DEFINES_INCLUDE_H
 
-//#define DEV_MODE
+#define DEV_MODE
+//#define START_AT_TITLESCREEN
 
 #define NORMAL_FPS 60
 

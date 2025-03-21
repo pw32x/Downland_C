@@ -187,7 +187,9 @@ DONE code comment pass
 DONE code pretty pass
 DONE jump isn't accurate (takes one frame too many)
 
-bouncing off walls isn't accurate
+DONE bouncing off walls isn't accurate
+DONE bumping head while jumping doesn't happen
+
 jump doesn't slow down horizontally
 
 how to make a release?

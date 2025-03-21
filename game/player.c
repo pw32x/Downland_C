@@ -55,7 +55,7 @@
 #define PLAYER_START_X 0x70 // 112
 #define PLAYER_START_Y 0xa5 // 165
 
-#define PLAYER_WALL_SENSOR_YOFFSET		12
+#define PLAYER_WALL_SENSOR_YOFFSET		15
 #define PLAYER_GROUND_SENSOR_YOFFSET	16
 #define PLAYER_ROPE_SENSOR_YOFFSET		8
 #define PLAYER_OFF_ROPE_SENSOR_YOFFSET	7
@@ -522,45 +522,59 @@ void Player_Update(PlayerData* playerData,
 			playerData->currentFrameNumber = PLAYER_RUN_FRAME_2_JUMP;
 			Sound_Play(SOUND_JUMP, FALSE);
 			Sound_Stop(SOUND_RUN);
-		}
-		else if (joystickState->leftDown)
-		{
-			if (!playerData->speedx)
-			{
-				Sound_Play(SOUND_RUN, TRUE);
-			}
 
-			playerData->speedx = PLAYER_RUN_SPEED_LEFT;
-			playerData->facingDirection = PLAYER_FACING_LEFT;
-		}
-		else if (joystickState->rightDown)
-		{
-			if (!playerData->speedx)
+			if (joystickState->leftDown)
 			{
-				Sound_Play(SOUND_RUN, TRUE);
+				playerData->speedx = PLAYER_RUN_SPEED_LEFT;
+				playerData->facingDirection = PLAYER_FACING_LEFT;
 			}
-
-			playerData->speedx = PLAYER_RUN_SPEED_RIGHT;
-			playerData->facingDirection = PLAYER_FACING_RIGHT;
+			else if (joystickState->rightDown)
+			{
+				playerData->speedx = PLAYER_RUN_SPEED_RIGHT;
+				playerData->facingDirection = PLAYER_FACING_RIGHT;
+			}
 		}
 		else
 		{
-			playerData->state = PLAYER_STATE_STAND;
-			playerData->speedx = 0;
-			Sound_Stop(SOUND_RUN);
-		}
+			if (joystickState->leftDown)
+			{
+				if (!playerData->speedx)
+				{
+					Sound_Play(SOUND_RUN, TRUE);
+				}
 
-		playerData->currentFrameNumber = (playerData->globalAnimationCounter >> 2) & 0x3;
+				playerData->speedx = PLAYER_RUN_SPEED_LEFT;
+				playerData->facingDirection = PLAYER_FACING_LEFT;
+			}
+			else if (joystickState->rightDown)
+			{
+				if (!playerData->speedx)
+				{
+					Sound_Play(SOUND_RUN, TRUE);
+				}
 
-		// if still in run, check for falling
-		if (!TOUCHES_TERRAIN(testTerrainCollision(playerData->x, 
-												  playerData->y, 
-												  PLAYER_GROUND_SENSOR_YOFFSET, 
-												  playerGroundCollisionMasks,
-												  cleanBackground)))
-		{
-			Sound_Stop(SOUND_RUN);
-			playerData->state = PLAYER_STATE_FALL;
+				playerData->speedx = PLAYER_RUN_SPEED_RIGHT;
+				playerData->facingDirection = PLAYER_FACING_RIGHT;
+			}
+			else
+			{
+				playerData->state = PLAYER_STATE_STAND;
+				playerData->speedx = 0;
+				Sound_Stop(SOUND_RUN);
+			}
+
+			playerData->currentFrameNumber = (playerData->globalAnimationCounter >> 2) & 0x3;
+
+			// if still in run, check for falling
+			if (!TOUCHES_TERRAIN(testTerrainCollision(playerData->x, 
+													  playerData->y, 
+													  PLAYER_GROUND_SENSOR_YOFFSET, 
+													  playerGroundCollisionMasks,
+													  cleanBackground)))
+			{
+				Sound_Stop(SOUND_RUN);
+				playerData->state = PLAYER_STATE_FALL;
+			}
 		}
 	}
 
@@ -840,8 +854,7 @@ void Player_Update(PlayerData* playerData,
 	}
 
 	// wall detection when moving
-	if (playerData->speedx && 
-		TOUCHES_TERRAIN(testTerrainCollision(playerData->x, 
+	if (TOUCHES_TERRAIN(testTerrainCollision(playerData->x, 
 						playerData->y, 
 						PLAYER_WALL_SENSOR_YOFFSET, 
 						playerGroundCollisionMasks,
@@ -866,7 +879,6 @@ void Player_Update(PlayerData* playerData,
 		else if (playerData->state == PLAYER_STATE_FALL)
 		{
 			Sound_Stop(SOUND_JUMP);
-			playerData->speedx = 0;
 		}
 	}
 

@@ -19,8 +19,6 @@
 #define PLAYERLIVES_ICON_SPACING 0xc // 0x3 bytes * 4 pixels
 #define PLAYERLIVES_ICON_LINESTODRAW 0x7
 
-//#define DISABLE_ENEMIES
-
 
 void drawPickups(Pickup* pickups, 
 				 u8 playerMask,

@@ -199,9 +199,9 @@ NAH try to remove dependencies on C runtime (<memory>, <stdio>, etc)
         memset()
         memcpy()
 
-move resource_loader to outside the game project
+DONE move resource_loader to outside the game project
 
-make sound files smaller
+DONE make sound files smaller
 
 don't speed up fps when transition
     update 2 lines instead of 1 every four frames, or something.

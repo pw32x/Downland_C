@@ -19,8 +19,8 @@ The project is based on the original Downland, version 1.1. This version was a l
 ## RUNNING THE GAME
 
 You will need: 
-- a copy of the Downland V1.1 rom
-- install it in the same folder as the Downland_C exe.
+- A copy of the Downland V1.1 rom.
+- Install it in the same folder as the Downland_C exe.
 
 The project loads resources from the Downland rom. If the rom isn't present the game will not run.
 
@@ -33,8 +33,8 @@ Downland_C supports multiple rom names:
 ## CONTROLING THE GAME
 
 You will need:
-- a keyboard
-- (optionally) a gamepad. Xbox Series X/S and PS5 gamepads are supported (as they're the ones I have)
+- A keyboard
+- (optionally) A gamepad. Xbox Series X/S and PS5 gamepads are supported (as they're the ones I have)
 
 Currently only supports one gamepad. For two players you'll have to share!
 
@@ -49,31 +49,31 @@ Currently only supports one gamepad. For two players you'll have to share!
                 
     Escape      Pause/Unpause
     Space       Step Pause
-    F1          Change video filter (see below)
+    F1          Cycle through video filters (see below)
     Alt+Enter   Toggle Fullscreen
-    Alt+F4      Close
+    Alt+F4      Close the application
 
 ## VIDEO FILTERS
 
 The game has basic support for different graphics looks. 
 The F1 key cycles through:
-- a basic blue CRT artifact mode
-- a basic orange CRT artifact mode
-- raw 1bpp mode
+- A basic blue CRT artifact mode.
+- A basic orange CRT artifact mode.
+- A raw 1bpp mode.
 
 ## GAMEPLAY NOTES
 
-- the number of drops in a room is 6 for Chambers 0 to 5 and (Chamber Number + 1) for chambers 6 to 9
-- the maximum number of active drops in a room is 10
-- drops constantly wiggle for 40 frames
-- every room has a unique timer. The rooms you're on in will have their timers increase.
+- The number of drops in a room is 6 for Chambers 0 to 5 and (Chamber Number + 1) for chambers 6 to 9.
+- The maximum number of active drops in a room is 10.
+- Drops constantly wiggle for 40 frames.
+- Every room has a unique timer. The rooms you're on in will have their timers increase.
 
 Completing the game once will:
-- enable all 10 drops for every room
-- slightly change the order in which doors are opened by keys
+- Enable all 10 drops for every room.
+- Change the order in which doors are opened by keys.
 
 Completing the game three times will:
-- tweak the drops' horizontal position such that those that fall to the right of the vine will touch the player
+- Tweak the drops' horizontal position such that those that fall to the right of the vine will touch the player while climbing.
 
 
 ## SCORING SYSTEM
@@ -86,7 +86,7 @@ The pickups are:
 - Money bag:  300 points
 - Diamond:    400 points
 
-The scoring system also has a random-based component. The three treasures are randomly chosen at game . When they're picked up, the player gets the base points, plus the game adds a random amount  from 0 to 127. 
+The scoring system also has a random-based component. The three treasures are randomly chosen at game . When they're picked up, the player gets the base points, plus the game adds a random amount from 0 to 127. 
 
 ## DEBUGGING
 
@@ -98,11 +98,11 @@ For alpha testing, Downland_C has extra controls:
     
     Gamepad     B (Xbox) or O (PS5) to toggle debug movement mode
     
-Debug movement mode disables collisions with hazards but keeps collisions with treasures. 
+Debug movement mode disables collisions with hazards but keeps collisions with pickups. 
 
 ## CONTACT
 
-Send questions, comments, & bugs about Downland_C to jump@puffweet.com
+Send questions, comments, & bugs about Downland_C to pw32x at jump@puffweet.com
 
 
 

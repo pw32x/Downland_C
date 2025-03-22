@@ -9,9 +9,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="binaries">
-      <UniqueIdentifier>{06ce69e5-2593-46bc-8918-797b8c05c6a4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="game">
       <UniqueIdentifier>{b72b7c48-84aa-4525-8fa2-1b3ff98f645a}</UniqueIdentifier>
     </Filter>
@@ -30,10 +27,16 @@
     <Filter Include="sdl_main\video_filters">
       <UniqueIdentifier>{f7f12c44-e033-405f-94d2-4c81a336cba9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="binaries\x64">
+    <Filter Include="thirdparty">
+      <UniqueIdentifier>{06ce69e5-2593-46bc-8918-797b8c05c6a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="thirdparty\SDL3">
+      <UniqueIdentifier>{e139de72-943f-44d1-8936-fcc7e817c9b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="thirdparty\SDL3\x64">
       <UniqueIdentifier>{8ce32a11-60c7-4c9f-bde3-93fb648faeeb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="binaries\x86">
+    <Filter Include="thirdparty\SDL3\x86">
       <UniqueIdentifier>{48861716-7952-44c3-bad7-cfdaa8041002}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -243,11 +246,11 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\binaries\windows\x86\SDL3.dll">
-      <Filter>binaries\x86</Filter>
+    <None Include="..\thirdparty\sdl3\x86\SDL3.dll">
+      <Filter>thirdparty\SDL3\x86</Filter>
     </None>
-    <None Include="..\binaries\windows\x64\SDL3.dll">
-      <Filter>binaries\x64</Filter>
+    <None Include="..\thirdparty\sdl3\x64\SDL3.dll">
+      <Filter>thirdparty\SDL3\x64</Filter>
     </None>
   </ItemGroup>
 </Project>

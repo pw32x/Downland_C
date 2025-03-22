@@ -33,8 +33,8 @@ bld/
 [Ll]ogs/
 
 # Allow specific exceptions
-!binaries/windows/x64/
-!binaries/windows/x86/
+!thirdparty/sdl3/x64/
+!thirdparty/sdl3/x86/
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/

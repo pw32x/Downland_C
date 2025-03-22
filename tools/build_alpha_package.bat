@@ -14,5 +14,5 @@ echo Build completed.
 
 pushd builds\alpha
 del ..\Downland_C.alpha.zip /q
-"C:\Program Files\7-Zip\7z.exe" a -tzip ..\Downland_C.alpha.zip "*" -xr!*.pdb -xr!*.bin -xr!*.ccc
+"C:\Program Files\7-Zip\7z.exe" a -tzip ..\Downland_C.alpha.zip "*" -xr!*.pdb -xr!*.bin -xr!*.ccc ..\..\..\LICENSE ..\..\..\README.md
 popd

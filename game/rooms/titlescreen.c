@@ -49,6 +49,11 @@ void titleScreen_draw(u8 roomNumber, GameData* gameData, Resources* resources)
 			 framebuffer, 
 			 TITLESCREEN_PLAYERTWO_SCORE_LOCATION);
 
+	if (gameData->playerData[PLAYER_ONE].score > gameData->highScore)
+		gameData->highScore = gameData->playerData[PLAYER_ONE].score;
+	else if (gameData->playerData[PLAYER_TWO].score > gameData->highScore)
+		gameData->highScore = gameData->playerData[PLAYER_TWO].score;
+
 	convertScoreToString(gameData->highScore, gameData->string_highScore);
 
 	drawText(gameData->string_highScore, 

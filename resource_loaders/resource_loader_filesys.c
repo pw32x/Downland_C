@@ -1,9 +1,9 @@
-#include "resource_loader.h"
+#include "resource_loader_filesys.h"
 
-#include "base_defines.h"
-#include "ball.h"
-#include "bird.h"
-#include "player.h"
+#include "..\game\base_defines.h"
+#include "..\game\ball.h"
+#include "..\game\bird.h"
+#include "..\game\player.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -293,7 +293,7 @@ u8* buildBitShiftedSprites(u8* spriteData, u8 spriteCount, u8 rowCount, u8 bytes
 }
 
 
-BOOL ResourceLoader_Init(const char* romPath, Resources* resources)
+BOOL ResourceLoaderFileSys_Init(const char* romPath, Resources* resources)
 {
 	if (!checksumCheck(romPath))
 		return FALSE;
@@ -431,7 +431,7 @@ BOOL ResourceLoader_Init(const char* romPath, Resources* resources)
 	return TRUE;
 }
 
-void ResourceLoader_Shutdown(Resources* resources)
+void ResourceLoaderFileSys_Shutdown(Resources* resources)
 {
 	free(resources->characterFont);
 

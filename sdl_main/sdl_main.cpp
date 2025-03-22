@@ -8,7 +8,7 @@ extern "C"
 #include "../game/base_types.h"
 #include "../game/game.h"
 #include "../game/game_types.h"
-#include "../game/resource_loader.h"
+#include "../resource_loaders/resource_loader_filesys.h"
 #include "../game/physics_utils.h"
 #include "../game/debug_utils.h"
 #include "../game/draw_utils.h"
@@ -171,7 +171,7 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
     bool romFoundAndLoaded = false;
     for (int loop = 0; loop < romFileNamesCount; loop++)
     {
-        if (ResourceLoader_Init(romFileNames[loop], &resources))
+        if (ResourceLoaderFileSys_Init(romFileNames[loop], &resources))
         {
             romFoundAndLoaded = true;
             break;
@@ -465,8 +465,17 @@ SDL_AppResult SDL_AppIterate(void *appstate)
 
     */
 
-    //SDL_RenderDebugTextFormat(renderer, 10.0f, 20.0f, "x: %x", gameData.playerData.x);
-    //SDL_RenderDebugTextFormat(renderer, 10.0f, 30.0f, "y: %x", gameData.playerData.y);
+    if (gameData.currentPlayerData != NULL)
+    {
+        SDL_RenderDebugTextFormat(renderer, 20.0f, 20.0f, "x:    %x", gameData.currentPlayerData->x);
+        SDL_RenderDebugTextFormat(renderer, 20.0f, 30.0f, "y:    %x", gameData.currentPlayerData->y);
+        SDL_RenderDebugTextFormat(renderer, 20.0f, 40.0f, "air:  %x", gameData.currentPlayerData->jumpAirCounter);
+        SDL_RenderDebugTextFormat(renderer, 20.0f, 50.0f, "spdx: %x", gameData.currentPlayerData->speedx);
+        SDL_RenderDebugTextFormat(renderer, 20.0f, 60.0f, "spdy: %x", gameData.currentPlayerData->speedy);
+
+        SDL_RenderDebugTextFormat(renderer, 20.0f, 80.0f, "air momentum: %x", gameData.currentPlayerData->preserveAirMomentum);
+    }
+    
 
     //SDL_RenderDebugTextFormat(renderer, 10.0f, 20.0f, "regen time: %x", gameData.playerData.regenerationCounter);
     //SDL_RenderDebugTextFormat(renderer, 10.0f, 30.0f, "cantmove time: %x", gameData.playerData.cantMoveCounter);
@@ -527,5 +536,5 @@ void SDL_AppQuit(void *appstate, SDL_AppResult result)
 
     Game_Shutdown(&gameData);
     soundManager.shutdown();
-    ResourceLoader_Shutdown(&resources);
+    ResourceLoaderFileSys_Shutdown(&resources);
 }

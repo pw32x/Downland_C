@@ -97,7 +97,7 @@ There are exactly five pick ups per room
 
 ## DEBUGGING
 
-    For alpha testing, Downland_C has extra controls:
+For alpha testing, Downland_C has extra controls:
     
     Keyboard    Tab to toggle debug movement mode
                 Tilde Key to return to the title screen
@@ -114,7 +114,7 @@ There are exactly five pick ups per room
 
 ## CONTACT
 
-Send questions, comments, & bugs about Downland_C to pw_32x at: jump@puffweet.com
+Send questions, comments, & bugs about Downland_C to jump@puffweet.com
 
 
 

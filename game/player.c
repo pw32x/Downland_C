@@ -156,7 +156,7 @@ void playerKill(PlayerData* playerData, u8* framebuffer, u8* cleanBackground)
 		playerData->currentFrameNumber = PLAYER_RUN_FRAME_2_JUMP;
 		playerData->cantMoveCounter = PLAYER_MIDAIR_DEATH_PAUSE_TIME;
 		playerData->jumpAirCounter = 0;
-		playerData->safeLanding = FALSE;
+		playerData->preserveAirMomentum = FALSE;
 	}
 }
 
@@ -305,7 +305,7 @@ void Player_RoomInit(PlayerData* playerData, const Resources* resources)
 	playerData->speedx = 0;
 	playerData->speedy = 0;
 
-	playerData->safeLanding = TRUE;
+	playerData->preserveAirMomentum = FALSE;
 	playerData->ignoreRopesCounter = 0;
 
 	playerData->currentSpriteNumber = computeSpriteNumber(playerData->facingDirection, playerData->currentFrameNumber);
@@ -382,6 +382,10 @@ void Player_Update(PlayerData* playerData,
 #ifdef DEV_MODE
 	if (joystickState->debugStatePressed)
 	{
+		Sound_Stop(SOUND_RUN);
+		Sound_Stop(SOUND_CLIMB_UP);
+		Sound_Stop(SOUND_CLIMB_DOWN);
+
 		if (playerData->state != PLAYER_STATE_DEBUG)
 		{
 			playerData->state = PLAYER_STATE_DEBUG;
@@ -396,6 +400,7 @@ void Player_Update(PlayerData* playerData,
 			playerData->state = PLAYER_STATE_JUMP;
 			playerData->currentFrameNumber = PLAYER_RUN_FRAME_2_JUMP;
 			playerData->speedy = 0;
+			playerData->preserveAirMomentum = TRUE;
 			playerData->jumpAirCounter = 1;
 		}
 	}
@@ -582,7 +587,7 @@ void Player_Update(PlayerData* playerData,
 	{
 		playerData->currentFrameNumber = PLAYER_RUN_FRAME_2_JUMP;
 		playerData->jumpAirCounter--;
-		playerData->safeLanding = TRUE;
+		playerData->preserveAirMomentum = TRUE;
 		playerData->speedy += 3; // apply gravity
 		if (!playerData->jumpAirCounter)
 		{
@@ -598,7 +603,23 @@ void Player_Update(PlayerData* playerData,
 		if (playerData->speedy > PLAYER_MAX_FALL_SPEED)
 		{
 			playerData->speedy = PLAYER_MAX_FALL_SPEED;
-			playerData->safeLanding = FALSE;
+			playerData->preserveAirMomentum = FALSE;
+		}
+
+		if (!playerData->preserveAirMomentum)
+		{
+			// when past the max fall speed, reduce the x speed
+			// like the player is losing momentum.
+			if (playerData->facingDirection == PLAYER_FACING_LEFT)
+			{
+				if (playerData->speedx != 0)
+					playerData->speedx++;
+			}
+			else
+			{
+				if (playerData->speedx > 0)
+					playerData->speedx--;
+			}
 		}
 
 		//// reduce x speed while falling by a little
@@ -611,16 +632,20 @@ void Player_Update(PlayerData* playerData,
 												 playerGroundCollisionMasks,
 												 cleanBackground)))
 		{
-			playerData->state = PLAYER_STATE_STAND;
-			playerData->speedy = 0;
-			Sound_Play(SOUND_LAND, FALSE);
-			playerData->currentFrameNumber = PLAYER_RUN_FRAME_0_STAND;
+			u8 killPlayer = (playerData->speedy == PLAYER_MAX_FALL_SPEED || playerData->isDead);
 
-			if (!playerData->safeLanding || playerData->isDead)
+			playerData->state = PLAYER_STATE_STAND;
+			playerData->preserveAirMomentum = FALSE;
+			playerData->speedy = 0;
+
+			if (killPlayer)
 			{
 				playerKill(playerData, framebuffer, cleanBackground);
 				return;
 			}
+
+			Sound_Play(SOUND_LAND, FALSE);
+			playerData->currentFrameNumber = PLAYER_RUN_FRAME_0_STAND;
 		}
 	}
 	else if (playerData->state == PLAYER_STATE_CLIMB)
@@ -642,7 +667,7 @@ void Player_Update(PlayerData* playerData,
 				playerData->speedx = PLAYER_RUN_SPEED_LEFT;
 				playerData->facingDirection = PLAYER_FACING_LEFT;
 				playerData->speedy = 0xff61;
-				playerData->safeLanding = TRUE;
+				playerData->preserveAirMomentum = FALSE;
 				playerData->jumpAirCounter = PLAYER_JUMP_AIR_COUNT;
 				playerData->state = PLAYER_STATE_JUMP;
 				playerData->currentFrameNumber = PLAYER_RUN_FRAME_2_JUMP;
@@ -656,7 +681,7 @@ void Player_Update(PlayerData* playerData,
 				playerData->speedx = PLAYER_RUN_SPEED_RIGHT;
 				playerData->facingDirection = PLAYER_FACING_RIGHT;
 				playerData->speedy = 0xff61;
-				playerData->safeLanding = TRUE;
+				playerData->preserveAirMomentum = FALSE;
 				playerData->jumpAirCounter = PLAYER_JUMP_AIR_COUNT;
 				playerData->state = PLAYER_STATE_JUMP;
 				playerData->currentFrameNumber = PLAYER_RUN_FRAME_2_JUMP;
@@ -845,7 +870,7 @@ void Player_Update(PlayerData* playerData,
 			playerData->state = PLAYER_STATE_CLIMB;
 			playerData->speedx = 0;
 			playerData->speedy = 0;
-			playerData->safeLanding = TRUE;
+			playerData->preserveAirMomentum = FALSE;
 			playerData->holdLeftCounter = 0;
 			playerData->holdRightCounter = 0;
 			playerData->currentFrameNumber = PLAYER_CLIMB_FRAME_0;

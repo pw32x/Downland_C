@@ -192,13 +192,16 @@ DONE bumping head while jumping doesn't happen
 
 jump doesn't slow down horizontally
 
+try to remove dependencies on C runtime (<memory>, <stdio>, etc)
+
+make sound files smaller
+
+don't speed up fps when transition
+    update 2 lines instead of 1 every four frames, or something.
+
 how to make a release?
 
 write a better readme file
-
-make sound files smaller
-don't speed up fps when transition
-    update 2 lines instead of 1 every four frames, or something.
 
 0.8 alpha
 0.9 beta

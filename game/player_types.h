@@ -55,7 +55,8 @@ typedef struct
 	u8 holdLeftCounter;
 	u8 holdRightCounter;
 
-	u8 safeLanding;
+	u8 preserveAirMomentum; // TRUE when jumping but FALSE when falling past
+							// max falling speed. FALSE when walking off ledges.
 
 	u32 score;
 	u8 scoreString[SCORE_STRING_SIZE];

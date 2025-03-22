@@ -212,15 +212,14 @@ DONE high score doesn't work. whoops.
 
 DONE repair solution to add x86 target
 
-how to make a release?
-
-devmode version
-release version
-
-run visual studio on the command line
-    pass defines
+DONE run visual studio on the command line
+    pass defines (DEV_MODE)
     choose folder
+    copy files to a deploy folder
+    add to zip file
 
+copy license
+copy readme.md
 
 write a better readme file
 

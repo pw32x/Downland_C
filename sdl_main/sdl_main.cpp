@@ -449,7 +449,7 @@ SDL_AppResult SDL_AppIterate(void *appstate)
         gameStartTime = currentTime;
     }
      
-#ifdef DEV_MODE
+#ifdef SHOW_DEBUG_TEXT
     // write debug text
     SDL_SetRenderScale(renderer, 1.5f, 1.5f);
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
@@ -466,6 +466,7 @@ SDL_AppResult SDL_AppIterate(void *appstate)
 
     */
 
+    /*
     if (gameData.currentPlayerData != NULL)
     {
         SDL_RenderDebugTextFormat(renderer, 20.0f, 20.0f, "x:    %x", gameData.currentPlayerData->x);
@@ -476,6 +477,7 @@ SDL_AppResult SDL_AppIterate(void *appstate)
 
         SDL_RenderDebugTextFormat(renderer, 20.0f, 80.0f, "air momentum: %x", gameData.currentPlayerData->preserveAirMomentum);
     }
+    */
     
 
     //SDL_RenderDebugTextFormat(renderer, 10.0f, 20.0f, "regen time: %x", gameData.playerData.regenerationCounter);

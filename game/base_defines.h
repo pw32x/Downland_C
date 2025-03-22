@@ -2,6 +2,7 @@
 #define BASE_DEFINES_INCLUDE_H
 
 //#define DEV_MODE
+//#define SHOW_DEBUG_TEXT
 #define START_AT_TITLESCREEN
 //#define DISABLE_ENEMIES
 

@@ -2,11 +2,11 @@
 
 ## INTRODUCTION
 
-Downland is a game for the Tandy Color Computer written by Micheal Aichlmayr. It was released in 1983 by Spectral Associates.
+**Downland** is a game for the Tandy Color Computer written by **Micheal Aichlmayr**. It was released in 1983 by Spectral Associates.
 
 Information about Downland can be found here: https://www.cocopedia.com/wiki/index.php/Downland
 
-This project, Downland_C, is a port of the original game to the C programming language. The basis of this port is from the Downland_RE project, found here: https://github.com/pw32x/Downland_RE.
+This project, **Downland_C**, is a port of the original game to the C programming language. The basis of this port is from the **Downland_RE** project, found here: https://github.com/pw32x/Downland_RE.
 
 Downland_C is intended to be a faithful reproduction of the game's graphics, physics, and gameplay. While it is not 100% accurate, it should be very close. 
 

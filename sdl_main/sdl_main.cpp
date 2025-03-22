@@ -29,6 +29,7 @@ extern "C"
 #include <vector>
 
 const char* appName = "Downland_C";
+const char* windowTitle = "Downland_C - https://github.com/pw32x/Downland_C";
 const char* appIdentifier = "com.example.Downland_C";
 
 static SDL_Window *window = NULL;
@@ -141,7 +142,7 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
         return SDL_APP_FAILURE;
     }
 
-    if (!SDL_CreateWindowAndRenderer(appName, 
+    if (!SDL_CreateWindowAndRenderer(windowTitle, 
                                      screenWidth, 
                                      screenHeight, 
                                      0 , 

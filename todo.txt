@@ -203,10 +203,19 @@ DONE move resource_loader to outside the game project
 
 DONE make sound files smaller
 
-don't speed up fps when transition
+DONE don't speed up fps when transition
     update 2 lines instead of 1 every four frames, or something.
 
+
 how to make a release?
+
+devmode version
+release version
+
+run visual studio on the command line
+    pass defines
+    choose folder
+
 
 write a better readme file
 

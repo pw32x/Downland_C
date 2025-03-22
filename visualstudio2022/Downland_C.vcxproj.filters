@@ -140,11 +140,6 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="SDL3.dll">
-      <Filter>Binaries</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="..\game\game.c">
       <Filter>game</Filter>
     </ClCompile>
@@ -240,5 +235,10 @@
     <Media Include="..\sounds\climb_down.wav">
       <Filter>sounds</Filter>
     </Media>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\binaries\windows\SDL3.dll">
+      <Filter>Binaries</Filter>
+    </None>
   </ItemGroup>
 </Project>

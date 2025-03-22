@@ -59,7 +59,6 @@ void titleScreen_draw(u8 roomNumber, GameData* gameData, Resources* resources)
 
 void titleScreen_init(Room* room, GameData* gameData, Resources* resources)
 {
-	gameData->targetFps = NORMAL_FPS;
 	u8 roomNumber = room->roomNumber;
 
 	// init drops

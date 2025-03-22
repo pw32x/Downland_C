@@ -503,9 +503,7 @@ SDL_AppResult SDL_AppIterate(void *appstate)
     elapsedSeconds = (float)(SDL_GetPerformanceCounter() - frameStartTime) / timeFrequency;
 
 
-    double targetFrameTime = 1.0 / gameData.targetFps; // the game can vary the framerate
-                                                       // to simulate performance on real
-                                                       // hardware.
+    double targetFrameTime = 1.0 / TARGET_FPS; 
     double remainingTime = targetFrameTime - elapsedSeconds;
         
     if (remainingTime > 0) 

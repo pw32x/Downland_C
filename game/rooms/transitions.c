@@ -76,49 +76,53 @@ void wipe_transition_update(Room* room, GameData* gameData, Resources* resources
 	if (!gameData->transitionCurrentLine)
 	{
 		Sound_Play(SOUND_SCREEN_TRANSITION, FALSE);
-		gameData->targetFps = 80; // simulate the lack of vsync waiting on the original game
-								  // to sync up the transition sound with the visuals.
 	}
 
-	u16 offset = gameData->transitionCurrentLine * FRAMEBUFFER_PITCH;
+	// do two lines at every four so that we
+	// can finish when the transition sound effect does.
+	u8 loopCount = gameData->transitionCurrentLine % 4 == 0 ? 2 : 1;
 
-	u8* cleanBackgroundRunner = gameData->cleanBackground + offset;
-	u8* framebufferRunner = gameData->framebuffer + offset;
-
-	// the screen is divided in six horizontal strips. Every frame,
-	// a horizontal line of every strip is revealed, copied from the
-	// cleanBuffer to the framebuffer.
-	for (int loop = 0; loop < 6; loop++)
+	for (u8 loop = 0; loop < loopCount; loop++)
 	{
-		for (int innerLoop = 0; innerLoop < FRAMEBUFFER_PITCH; innerLoop++)
-		{
-			*framebufferRunner = *cleanBackgroundRunner;
+		u16 offset = gameData->transitionCurrentLine * FRAMEBUFFER_PITCH;
 
-			// draw a dotted line underneath the pixel, but not
-			// for the last line.
-			if (gameData->transitionCurrentLine < 31)
+		u8* cleanBackgroundRunner = gameData->cleanBackground + offset;
+		u8* framebufferRunner = gameData->framebuffer + offset;
+
+		// the screen is divided in six horizontal strips. Every frame,
+		// a horizontal line of every strip is revealed, copied from the
+		// cleanBuffer to the framebuffer.
+		for (int loop = 0; loop < 6; loop++)
+		{
+			for (int innerLoop = 0; innerLoop < FRAMEBUFFER_PITCH; innerLoop++)
 			{
-				*(framebufferRunner + FRAMEBUFFER_PITCH) = CRT_EFFECT_MASK;
+				*framebufferRunner = *cleanBackgroundRunner;
+
+				// draw a dotted line underneath the pixel, but not
+				// for the last line.
+				if (gameData->transitionCurrentLine < 31)
+				{
+					*(framebufferRunner + FRAMEBUFFER_PITCH) = CRT_EFFECT_MASK;
+				}
+
+				framebufferRunner++;
+				cleanBackgroundRunner++;
 			}
 
-			framebufferRunner++;
-			cleanBackgroundRunner++;
+			// move to the next strip, 31 * 256 pixels down.
+			// which is 992 bytes over because 1 byte is 8 pixels.
+			// it's not 32 pixels down because we're already at the
+			// end of the line for this strip.
+			cleanBackgroundRunner += 0x3e0; 
+			framebufferRunner += 0x3e0;		
 		}
 
-		// move to the next strip, 31 * 256 pixels down.
-		// which is 992 bytes over because 1 byte is 8 pixels.
-		// it's not 32 pixels down because we're already at the
-		// end of the line for this strip.
-		cleanBackgroundRunner += 0x3e0; 
-		framebufferRunner += 0x3e0;		
+		gameData->transitionCurrentLine++;
 	}
-
-	gameData->transitionCurrentLine++;
 
 	// when we're done, set the fps back to normal
 	if (gameData->transitionCurrentLine == 32)
 	{
-		gameData->targetFps = NORMAL_FPS;
 		Game_EnterRoom(gameData, gameData->transitionRoomNumber, resources);
 	}
 }

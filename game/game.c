@@ -5,8 +5,6 @@
 
 void Game_Init(struct GameData* gameData, Resources* resources)
 {
-	gameData->targetFps = NORMAL_FPS;
-
 	gameData->numPlayers = 1;
 
 	// init strings

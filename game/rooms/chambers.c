@@ -134,7 +134,6 @@ void chamber_draw(u8 roomNumber, GameData* gameData, Resources* resources)
 void chamber_init(Room* room, GameData* gameData, Resources* resources)
 {
 	u8 roomNumber = room->roomNumber;
-	gameData->targetFps = NORMAL_FPS;
 	PlayerData* playerData = gameData->currentPlayerData;
 
 	// init drops

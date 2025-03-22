@@ -190,9 +190,16 @@ DONE jump isn't accurate (takes one frame too many)
 DONE bouncing off walls isn't accurate
 DONE bumping head while jumping doesn't happen
 
-jump doesn't slow down horizontally
+DONE jump doesn't slow down horizontally
 
-try to remove dependencies on C runtime (<memory>, <stdio>, etc)
+NAH try to remove dependencies on C runtime (<memory>, <stdio>, etc)
+
+    which functions do I need?
+        rand()
+        memset()
+        memcpy()
+
+move resource_loader to outside the game project
 
 make sound files smaller
 

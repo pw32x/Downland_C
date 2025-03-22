@@ -1,7 +1,5 @@
 #include "game.h"
 
-#include <memory.h>
-
 #include "draw_utils.h"
 #include "rooms\rooms.h"
 

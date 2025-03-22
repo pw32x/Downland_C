@@ -78,22 +78,15 @@ Completing the game three times will:
 
 ## SCORING SYSTEM
 
-There are exactly five pick ups per room
-	The first two are always keys, the last three are treasures
-	Treasures are randomly chosen at game start up
-	   Key:        200 points
-	   Money bag:  300 points
-	   Diamond:    400 points
+There are exactly five pick ups per room. 
+The first two are keys and the last three are treasures randomly chosen at game start up.
 
-    The scoring system also has a random-based component. The three treasures are randomly chosen at game 
-    start. When they're picked up, the player gets the base points, plus the game adds a random amount 
-    anywhere from 0 to 127. 
-    
-    In the original game, the random points depend on an wandering pointer that goes linearly along 
-    the rom's address space (c000 - df5a). When those points are needed, the value at the pointer's 
-    current location is read and the first 7 bits are returned. Here, it's just a value generated from
-    a call to the C rand() function.
+The pickups are:
+- Key:        200 points
+- Money bag:  300 points
+- Diamond:    400 points
 
+The scoring system also has a random-based component. The three treasures are randomly chosen at game . When they're picked up, the player gets the base points, plus the game adds a random amount  from 0 to 127. 
 
 ## DEBUGGING
 
@@ -105,12 +98,7 @@ For alpha testing, Downland_C has extra controls:
     
     Gamepad     B (Xbox) or O (PS5) to toggle debug movement mode
     
-    Debug movement mode disables collisions with hazards but keeps
-    collisions with treasures. 
-    
-
-
-
+Debug movement mode disables collisions with hazards but keeps collisions with treasures. 
 
 ## CONTACT
 

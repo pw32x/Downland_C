@@ -5,6 +5,16 @@
 #define START_AT_TITLESCREEN
 //#define DISABLE_ENEMIES
 
+
+
+#ifdef _WIN32
+#define _WINDOWS
+#endif
+
+#ifdef _WIN64
+#define _WINDOWS
+#endif
+
 #define TARGET_FPS 60
 
 #define FRAMEBUFFER_WIDTH  256

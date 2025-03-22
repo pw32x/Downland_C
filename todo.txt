@@ -206,6 +206,11 @@ DONE make sound files smaller
 DONE don't speed up fps when transition
     update 2 lines instead of 1 every four frames, or something.
 
+DONE add github to window title
+
+DONE high score doesn't work. whoops.
+
+DONE repair solution to add x86 target
 
 how to make a release?
 

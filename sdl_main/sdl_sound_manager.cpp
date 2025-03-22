@@ -61,7 +61,7 @@ void SDLSoundManager::play(int soundIndex, bool loop)
         throw std::runtime_error(std::format("SDLSoundManager not initialized"));
     }
 
-    if (soundIndex > m_sounds.size() - 1)
+    if (soundIndex > (int)m_sounds.size() - 1)
         throw std::runtime_error(std::format("No sound for index: {}", soundIndex));
 
     m_sounds[soundIndex]->play(loop);
@@ -74,7 +74,7 @@ void SDLSoundManager::stop(int soundIndex)
         throw std::runtime_error(std::format("SDLSoundManager not initialized"));
     }
 
-    if (soundIndex > m_sounds.size() - 1)
+    if (soundIndex > (int)m_sounds.size() - 1)
         throw std::runtime_error(std::format("No sound for index: {}", soundIndex));
 
     m_sounds[soundIndex]->stop();

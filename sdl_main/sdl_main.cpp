@@ -271,7 +271,7 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
         {
             int nextVideoFilterIndex = currentVideoFilterIndex + 1;
 
-            if (nextVideoFilterIndex >= videoFilters.size())
+            if (nextVideoFilterIndex >= (int)videoFilters.size())
                 nextVideoFilterIndex = 0;
 
             selectFilter(nextVideoFilterIndex);

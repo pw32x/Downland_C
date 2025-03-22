@@ -9,174 +9,68 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Binaries">
-      <UniqueIdentifier>{1c3c966b-7c14-4a9f-81c5-3964fc640ad3}</UniqueIdentifier>
+    <Filter Include="binaries">
+      <UniqueIdentifier>{06ce69e5-2593-46bc-8918-797b8c05c6a4}</UniqueIdentifier>
     </Filter>
     <Filter Include="game">
-      <UniqueIdentifier>{25c68a46-0917-436b-ac04-5e469f1f0c0b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="sdl_main">
-      <UniqueIdentifier>{534e03b9-7bde-413d-b0df-d4447204f737}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="sdl_main\video_filters">
-      <UniqueIdentifier>{c67945e2-8348-4105-b6aa-0e908ae970e5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="sounds">
-      <UniqueIdentifier>{58b6e2ba-4802-40fe-8670-1524ac2fee14}</UniqueIdentifier>
+      <UniqueIdentifier>{b72b7c48-84aa-4525-8fa2-1b3ff98f645a}</UniqueIdentifier>
     </Filter>
     <Filter Include="game\rooms">
-      <UniqueIdentifier>{645272e5-88c9-45ff-8ae0-62f86e92a91b}</UniqueIdentifier>
+      <UniqueIdentifier>{303f2de5-e98a-40ac-82ea-3434e43f5d02}</UniqueIdentifier>
     </Filter>
     <Filter Include="resource_loaders">
-      <UniqueIdentifier>{0df37a2b-de9a-4179-a9d0-4005d81c3acd}</UniqueIdentifier>
+      <UniqueIdentifier>{48d44954-ca9b-4639-9fda-69ee5cda73e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sdl_main">
+      <UniqueIdentifier>{d4655141-3cfa-47d3-b5fe-d37ea8d52674}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sounds">
+      <UniqueIdentifier>{02b5d9a6-1be8-480e-bd34-251f2e41134c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sdl_main\video_filters">
+      <UniqueIdentifier>{f7f12c44-e033-405f-94d2-4c81a336cba9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="binaries\x64">
+      <UniqueIdentifier>{8ce32a11-60c7-4c9f-bde3-93fb648faeeb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="binaries\x86">
+      <UniqueIdentifier>{48861716-7952-44c3-bad7-cfdaa8041002}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\game\game.h">
-      <Filter>game</Filter>
-    </ClInclude>
-    <ClInclude Include="..\game\base_types.h">
-      <Filter>game</Filter>
-    </ClInclude>
-    <ClInclude Include="..\game\base_defines.h">
-      <Filter>game</Filter>
-    </ClInclude>
-    <ClInclude Include="..\game\draw_utils.h">
-      <Filter>game</Filter>
-    </ClInclude>
-    <ClInclude Include="..\game\drops_manager.h">
-      <Filter>game</Filter>
-    </ClInclude>
-    <ClInclude Include="..\game\background_types.h">
-      <Filter>game</Filter>
-    </ClInclude>
-    <ClInclude Include="..\game\drops_types.h">
-      <Filter>game</Filter>
-    </ClInclude>
-    <ClInclude Include="..\game\joystick_types.h">
-      <Filter>game</Filter>
-    </ClInclude>
-    <ClInclude Include="..\game\game_types.h">
-      <Filter>game</Filter>
-    </ClInclude>
-    <ClInclude Include="..\game\resource_types.h">
-      <Filter>game</Filter>
-    </ClInclude>
-    <ClInclude Include="..\game\pickup_types.h">
-      <Filter>game</Filter>
-    </ClInclude>
-    <ClInclude Include="..\game\string_utils.h">
-      <Filter>game</Filter>
-    </ClInclude>
-    <ClInclude Include="..\game\ball.h">
-      <Filter>game</Filter>
-    </ClInclude>
-    <ClInclude Include="..\game\debug_utils.h">
-      <Filter>game</Filter>
-    </ClInclude>
-    <ClInclude Include="..\game\bird.h">
-      <Filter>game</Filter>
-    </ClInclude>
-    <ClInclude Include="..\game\player.h">
-      <Filter>game</Filter>
-    </ClInclude>
-    <ClInclude Include="..\game\physics_utils.h">
-      <Filter>game</Filter>
-    </ClInclude>
-    <ClInclude Include="..\game\door_types.h">
-      <Filter>game</Filter>
-    </ClInclude>
-    <ClInclude Include="..\game\door_utils.h">
-      <Filter>game</Filter>
-    </ClInclude>
-    <ClInclude Include="..\game\sound.h">
-      <Filter>game</Filter>
-    </ClInclude>
-    <ClInclude Include="..\sdl_main\sdl_sound_manager.h">
-      <Filter>sdl_main</Filter>
-    </ClInclude>
-    <ClInclude Include="..\sdl_main\sdl_sound.h">
-      <Filter>sdl_main</Filter>
-    </ClInclude>
-    <ClInclude Include="..\game\player_types.h">
-      <Filter>game</Filter>
-    </ClInclude>
-    <ClInclude Include="..\sdl_main\video_filters\sdl_video_filter_utils.h">
-      <Filter>sdl_main\video_filters</Filter>
-    </ClInclude>
-    <ClInclude Include="..\sdl_main\video_filters\sdl_video_filter_base.h">
-      <Filter>sdl_main\video_filters</Filter>
-    </ClInclude>
-    <ClInclude Include="..\sdl_main\video_filters\sdl_video_filter_basic_crt_artifacts_blue.h">
-      <Filter>sdl_main\video_filters</Filter>
-    </ClInclude>
-    <ClInclude Include="..\sdl_main\video_filters\sdl_video_filter_basic_crt_artifacts_orange.h">
-      <Filter>sdl_main\video_filters</Filter>
-    </ClInclude>
-    <ClInclude Include="..\sdl_main\video_filters\sdl_video_filter_raw.h">
-      <Filter>sdl_main\video_filters</Filter>
-    </ClInclude>
-    <ClInclude Include="..\game\rooms\rooms.h">
-      <Filter>game\rooms</Filter>
-    </ClInclude>
-    <ClInclude Include="..\game\rooms\room_types.h">
-      <Filter>game\rooms</Filter>
-    </ClInclude>
-    <ClInclude Include="..\resource_loaders\resource_loader_filesys.h">
-      <Filter>resource_loaders</Filter>
-    </ClInclude>
+    <Media Include="..\sounds\land.wav">
+      <Filter>sounds</Filter>
+    </Media>
+    <Media Include="..\sounds\pickup.wav">
+      <Filter>sounds</Filter>
+    </Media>
+    <Media Include="..\sounds\run.wav">
+      <Filter>sounds</Filter>
+    </Media>
+    <Media Include="..\sounds\splat.wav">
+      <Filter>sounds</Filter>
+    </Media>
+    <Media Include="..\sounds\transition.wav">
+      <Filter>sounds</Filter>
+    </Media>
+    <Media Include="..\sounds\climb_down.wav">
+      <Filter>sounds</Filter>
+    </Media>
+    <Media Include="..\sounds\climb_up.wav">
+      <Filter>sounds</Filter>
+    </Media>
+    <Media Include="..\sounds\jump.wav">
+      <Filter>sounds</Filter>
+    </Media>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Downland.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="resource.rc">
-      <Filter>Resource Files</Filter>
-    </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\game\game.c">
-      <Filter>game</Filter>
-    </ClCompile>
-    <ClCompile Include="..\game\draw_utils.c">
-      <Filter>game</Filter>
-    </ClCompile>
-    <ClCompile Include="..\sdl_main\sdl_main.cpp">
+    <ClCompile Include="..\sdl_main\sdl_sound.cpp">
       <Filter>sdl_main</Filter>
-    </ClCompile>
-    <ClCompile Include="..\game\drops_manager.c">
-      <Filter>game</Filter>
-    </ClCompile>
-    <ClCompile Include="..\game\string_utils.c">
-      <Filter>game</Filter>
-    </ClCompile>
-    <ClCompile Include="..\game\ball.c">
-      <Filter>game</Filter>
-    </ClCompile>
-    <ClCompile Include="..\game\debug_utils.c">
-      <Filter>game</Filter>
-    </ClCompile>
-    <ClCompile Include="..\game\bird.c">
-      <Filter>game</Filter>
-    </ClCompile>
-    <ClCompile Include="..\game\player.c">
-      <Filter>game</Filter>
-    </ClCompile>
-    <ClCompile Include="..\game\physics_utils.c">
-      <Filter>game</Filter>
-    </ClCompile>
-    <ClCompile Include="..\game\door_utils.c">
-      <Filter>game</Filter>
     </ClCompile>
     <ClCompile Include="..\sdl_main\sdl_sound_manager.cpp">
       <Filter>sdl_main</Filter>
     </ClCompile>
-    <ClCompile Include="..\sdl_main\sdl_sound.cpp">
+    <ClCompile Include="..\sdl_main\sdl_main.cpp">
       <Filter>sdl_main</Filter>
     </ClCompile>
     <ClCompile Include="..\sdl_main\video_filters\sdl_video_filter_basic_crt_artifacts_blue.cpp">
@@ -191,6 +85,45 @@
     <ClCompile Include="..\sdl_main\video_filters\sdl_video_filter_utils.cpp">
       <Filter>sdl_main\video_filters</Filter>
     </ClCompile>
+    <ClCompile Include="..\resource_loaders\resource_loader_filesys.c">
+      <Filter>resource_loaders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\game\bird.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\game\debug_utils.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\game\door_utils.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\game\draw_utils.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\game\drops_manager.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\game\game.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\game\physics_utils.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\game\player.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\game\string_utils.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\game\ball.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\game\rooms\getready.c">
+      <Filter>game\rooms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\game\rooms\rooms.c">
+      <Filter>game\rooms</Filter>
+    </ClCompile>
     <ClCompile Include="..\game\rooms\titlescreen.c">
       <Filter>game\rooms</Filter>
     </ClCompile>
@@ -200,45 +133,121 @@
     <ClCompile Include="..\game\rooms\chambers.c">
       <Filter>game\rooms</Filter>
     </ClCompile>
-    <ClCompile Include="..\game\rooms\getready.c">
-      <Filter>game\rooms</Filter>
-    </ClCompile>
-    <ClCompile Include="..\game\rooms\rooms.c">
-      <Filter>game\rooms</Filter>
-    </ClCompile>
-    <ClCompile Include="..\resource_loaders\resource_loader_filesys.c">
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\sdl_main\sdl_sound.h">
+      <Filter>sdl_main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sdl_main\sdl_sound_manager.h">
+      <Filter>sdl_main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sdl_main\video_filters\sdl_video_filter_basic_crt_artifacts_blue.h">
+      <Filter>sdl_main\video_filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sdl_main\video_filters\sdl_video_filter_basic_crt_artifacts_orange.h">
+      <Filter>sdl_main\video_filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sdl_main\video_filters\sdl_video_filter_raw.h">
+      <Filter>sdl_main\video_filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sdl_main\video_filters\sdl_video_filter_utils.h">
+      <Filter>sdl_main\video_filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sdl_main\video_filters\sdl_video_filter_base.h">
+      <Filter>sdl_main\video_filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\resource_loaders\resource_loader_filesys.h">
       <Filter>resource_loaders</Filter>
-    </ClCompile>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\game\ball.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\game\base_defines.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\game\base_types.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\game\bird.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\game\debug_utils.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\game\door_types.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\game\door_utils.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\game\draw_utils.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\game\drops_manager.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\game\drops_types.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\game\game.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\game\game_types.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\game\joystick_types.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\game\physics_utils.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\game\pickup_types.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\game\player.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\game\player_types.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\game\resource_types.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\game\sound.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\game\string_utils.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\game\background_types.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\game\rooms\room_types.h">
+      <Filter>game\rooms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\game\rooms\rooms.h">
+      <Filter>game\rooms</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Media Include="..\sounds\jump.wav">
-      <Filter>sounds</Filter>
-    </Media>
-    <Media Include="..\sounds\land.wav">
-      <Filter>sounds</Filter>
-    </Media>
-    <Media Include="..\sounds\pickup.wav">
-      <Filter>sounds</Filter>
-    </Media>
-    <Media Include="..\sounds\splat.wav">
-      <Filter>sounds</Filter>
-    </Media>
-    <Media Include="..\sounds\transition.wav">
-      <Filter>sounds</Filter>
-    </Media>
-    <Media Include="..\sounds\climb_up.wav">
-      <Filter>sounds</Filter>
-    </Media>
-    <Media Include="..\sounds\run.wav">
-      <Filter>sounds</Filter>
-    </Media>
-    <Media Include="..\sounds\climb_down.wav">
-      <Filter>sounds</Filter>
-    </Media>
+    <Image Include="Downland.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\binaries\windows\SDL3.dll">
-      <Filter>Binaries</Filter>
+    <ResourceCompile Include="resource.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\binaries\windows\x86\SDL3.dll">
+      <Filter>binaries\x86</Filter>
+    </None>
+    <None Include="..\binaries\windows\x64\SDL3.dll">
+      <Filter>binaries\x64</Filter>
     </None>
   </ItemGroup>
 </Project>

@@ -7,11 +7,13 @@
 class SDLVideoFilterBasicCrtArtifactsOrange : public SDLVideoFilterBase
 {
 public:
-	SDLVideoFilterBasicCrtArtifactsOrange(SDL_Renderer* renderer) : SDLVideoFilterBase(renderer) {}
+	SDLVideoFilterBasicCrtArtifactsOrange(SDL_Renderer* renderer, 
+										  const Resources* resources) 
+		: SDLVideoFilterBase(renderer, resources) {}
 
 	bool init() override;
 	void shutdown() override;
-	void update(unsigned char* gameFramebuffer) override;
+	void update(const GameData* gameData) override;
 
 private:
 	unsigned int m_crtFramebuffer[FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT]; // frame buffer for basic CRT artifact effects

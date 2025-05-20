@@ -2,13 +2,15 @@
 #define SDL_VIDEO_FILTER_BASE
 
 #include <SDL3/SDL.h>
+#include "..\..\game\resource_types.h"
+#include "..\..\game\game.h"
 
 class SDLVideoFilterBase
 {
 public:
-	SDLVideoFilterBase(SDL_Renderer *renderer) 
+	SDLVideoFilterBase(SDL_Renderer *renderer, const Resources* resources) 
 		: m_renderer(renderer), 
-		  m_outputTexture(nullptr) 
+		  m_outputTexture(nullptr)
 	{
 
 	}
@@ -29,7 +31,7 @@ public:
 		}
 	}
 
-	virtual void update(unsigned char* gameFramebuffer) = 0;
+	virtual void update(const GameData* gameData) = 0;
 
 	SDL_Texture* getOutputTexture() { return m_outputTexture; }
 

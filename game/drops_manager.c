@@ -6,8 +6,6 @@
 
 #include <stdlib.h>
 
-#define DROP_SPRITE_ROWS 6
-
 #define DROP_FALL_SPEED 0x200
 #define DROP_WIGGLE_START_TIME 0xa8 // wiggle timer starts at 168 which signed is -40. The value is decremented
 								    // until it reaches 127 which then gets treated as a positive number. At that

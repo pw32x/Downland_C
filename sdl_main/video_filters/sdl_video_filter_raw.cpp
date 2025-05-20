@@ -21,11 +21,11 @@ void SDLVideoFilterRaw::shutdown()
     SDLVideoFilterBase::shutdown();
 }
 
-void SDLVideoFilterRaw::update(unsigned char* gameFramebuffer)
+void SDLVideoFilterRaw::update(const GameData* gameData)
 {
     if (m_outputTexture == nullptr)
         init();
 
     // Update texture from framebuffer
-    SDLUtils_updateFramebufferTexture(gameFramebuffer, m_outputTexture); 
+    SDLUtils_updateFramebufferTexture(gameData->framebuffer, m_outputTexture); 
 }

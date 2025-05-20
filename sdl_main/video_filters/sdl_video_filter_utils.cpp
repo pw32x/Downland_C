@@ -1,7 +1,7 @@
 #include "sdl_video_filter_utils.h"
 
 // Convert the 1-bit framebuffer into a texture
-void SDLUtils_updateFramebufferTexture(u8* framebuffer, 
+void SDLUtils_updateFramebufferTexture(const u8* framebuffer, 
                                        SDL_Texture* framebufferTexture) 
 {
     void* pixels;
@@ -25,33 +25,35 @@ void SDLUtils_updateFramebufferTexture(u8* framebuffer,
 }
 
 
-void SDLUtils_updateCrtFramebufferAndTexture(u8* framebuffer,
-                                             u32* crtFramebuffer,
-                                             SDL_Texture* crtFramebufferTexture,
-                                             CrtColor crtColor,
-                                             SDL_Renderer* renderer) 
+void SDLUtils_convert1bppImageTo32bppCrtEffectImage(const u8* originalImage,
+                                                    u32* crtImage,
+                                                    u16 width,
+                                                    u16 height,
+                                                    CrtColor crtColor) 
 {
+    const u8 bytesPerRow = width / 8;
+
     // Color definitions
     const uint32_t BLACK  = 0x000000; // 00 black
     const uint32_t BLUE   = crtColor == CrtColor::Blue ? 0x0000FF : 0xFFA500; // 01 blue
     const uint32_t ORANGE = crtColor == CrtColor::Blue ? 0xFFA500 : 0x0000FF; // 10 orange
     const uint32_t WHITE  = 0xFFFFFF; // 11 white
 
-    for (int y = 0; y < FRAMEBUFFER_HEIGHT; ++y) 
+    for (int y = 0; y < height; ++y) 
     {
         // every pair of bits generates a color for the two corresponding
         // pixels of the destination texture, so:
         // source bits:        00 01 10 11
         // final pixel colors: black, black, blue, blue, orange, orange, white, white.
 
-        for (int x = 0; x < FRAMEBUFFER_WIDTH; x += 2) 
+        for (int x = 0; x < width; x += 2) 
         {
-            int byteIndex = (y * 32) + (x / 8);
+            int byteIndex = (y * bytesPerRow) + (x / 8);
             int bitOffset = 7 - (x % 8);
 
             // Read two adjacent bits
-            uint8_t bit1 = (framebuffer[byteIndex] >> bitOffset) & 1;
-            uint8_t bit2 = (framebuffer[byteIndex] >> (bitOffset - 1)) & 1;
+            uint8_t bit1 = (originalImage[byteIndex] >> bitOffset) & 1;
+            uint8_t bit2 = (originalImage[byteIndex] >> (bitOffset - 1)) & 1;
 
             // Determine base color
             uint32_t color = BLACK;
@@ -60,8 +62,8 @@ void SDLUtils_updateCrtFramebufferAndTexture(u8* framebuffer,
             else if (bit1 == 1 && bit2 == 1) color = WHITE;
 
             // Apply base color
-            crtFramebuffer[y * FRAMEBUFFER_WIDTH + x]     = color;
-            crtFramebuffer[y * FRAMEBUFFER_WIDTH + x + 1] = color;
+            crtImage[y * width + x]     = color;
+            crtImage[y * width + x + 1] = color;
         }
 
         // Apply a quick and dirty crt artifact effect
@@ -73,37 +75,34 @@ void SDLUtils_updateCrtFramebufferAndTexture(u8* framebuffer,
         //                                          Also turn off the other pixel in the pair to
         //                                          black.
         // final final:  black, black, black, white, white, black, white, white
-        for (int x = 0; x < FRAMEBUFFER_WIDTH; x += 2) 
+        for (int x = 0; x < width; x += 2) 
         {
-            uint32_t pixel1 = crtFramebuffer[y * FRAMEBUFFER_WIDTH + x];
-            uint32_t pixel2 = crtFramebuffer[y * FRAMEBUFFER_WIDTH + x + 1];
+            uint32_t leftPixel = crtImage[y * width + x];
+            uint32_t rightPixel = crtImage[y * width + x + 1];
 
-            if (pixel2 == BLUE && x < FRAMEBUFFER_WIDTH - 2)
+            if (rightPixel == BLUE && x < width - 2)
             {
-                uint32_t pixel3 = crtFramebuffer[y * FRAMEBUFFER_WIDTH + x + 2];
+                uint32_t pixel3 = crtImage[y * width + x + 2];
                 if (pixel3 == ORANGE || pixel3 == WHITE)
                 {
-                    pixel2 = WHITE;
-                    pixel1 = BLACK;
+                    rightPixel = WHITE;
+                    leftPixel = BLACK;
                 }
             }
-            else if (pixel1 == ORANGE && x > 2)
+            else if (leftPixel == ORANGE && x >= 2)
             {
-                uint32_t pixel0 = crtFramebuffer[y * FRAMEBUFFER_WIDTH + x - 1];
+                uint32_t pixel0 = crtImage[y * width + x - 1];
                 if (pixel0 == BLUE || pixel0 == WHITE)
                 {
-                    pixel1 = WHITE;
-                    pixel2 = BLACK;
+                    leftPixel = WHITE;
+                    rightPixel = BLACK;
                 }
             }
 
-            crtFramebuffer[y * FRAMEBUFFER_WIDTH + x] = pixel1;
-            crtFramebuffer[y * FRAMEBUFFER_WIDTH + x + 1] = pixel2;
+            crtImage[y * width + x] = leftPixel;
+            crtImage[y * width + x + 1] = rightPixel;
         }
     }
-
-    // Update the texture with the new data
-    SDL_UpdateTexture(crtFramebufferTexture, NULL, crtFramebuffer, FRAMEBUFFER_WIDTH * sizeof(uint32_t));
 }
 
 void SDLUtils_updateDebugFramebufferTexture(u32* debugFramebuffer, 

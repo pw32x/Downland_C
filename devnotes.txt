@@ -1,0 +1,66 @@
+Unsorted rough draft 
+
+
+Tools Used to make this
+    Visual Studio 2022
+    Ghidra for reverse engineering
+    trs80gp for rom debugging
+    Graphics Gale for frame analysis
+    GarageBand & Audacity for sound editing
+
+
+Building for Win32
+
+    what you need:
+    - sdl3
+
+
+
+
+
+DEVELOPMENT NOTES
+
+Notes about the code and its development can be found in devnotes.txt
+
+In the original game, the random points depend on an wandering pointer that goes linearly along  rom's address space (c000 - df5a). When those points are needed, the value at the pointer's  location is read and the first 7 bits are returned. Here, it's just a value generated from  call to the C rand() function.
+
+ResourceLoader for different ways of loading the game assets
+ResourceLoader_FileSys is for loading from the Downland rom on disk.
+
+
+Faking it
+- added a delay between rom changes to simulate the off-screen drawing of the room. on a modern machine this is instant.
+
+Project File Layout
+
+    There is a separation between the core game and the platform-specific front end
+
+    Folders
+
+
+        Game folder
+            - core game files
+            - renders to 1bpp framebuffer
+            
+            Code notes:
+            
+            Use of contants and unsigned variables
+            
+                with very few exceptions, all the variables are treated as signed, just 
+                like the original game
+                constants are generally kept in hex, to map them easier to the original disassembly
+                
+            
+        SDL app 
+            - handles input
+            - handles sound
+            - takes the framebuffer and renders it using basic video filters
+            
+        Sounds
+            - sound assets
+            
+        visualstudio2022
+            - Windows specific code solution
+            - uses Game core files
+            - uses SDL 
+    

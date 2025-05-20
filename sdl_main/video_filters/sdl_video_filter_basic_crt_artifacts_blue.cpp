@@ -20,15 +20,22 @@ void SDLVideoFilterBasicCrtArtifactsBlue::shutdown()
     SDLVideoFilterBase::shutdown();
 }
 
-void SDLVideoFilterBasicCrtArtifactsBlue::update(unsigned char* gameFramebuffer)
+void SDLVideoFilterBasicCrtArtifactsBlue::update(const GameData* gameData)
 {
     if (m_outputTexture == nullptr)
         init();
 
     // Update texture from gameFramebuffer
-    SDLUtils_updateCrtFramebufferAndTexture(gameFramebuffer,
-                                            m_crtFramebuffer,
-                                            m_outputTexture,
-                                            CrtColor::Blue,
-                                            m_renderer);
+    SDLUtils_convert1bppImageTo32bppCrtEffectImage(gameData->framebuffer,
+                                                   m_crtFramebuffer,
+                                                   FRAMEBUFFER_WIDTH,
+                                                   FRAMEBUFFER_HEIGHT,
+                                                   CrtColor::Blue);
+
+
+    // Update the texture with the new data
+    SDL_UpdateTexture(m_outputTexture, 
+                      NULL, 
+                      m_crtFramebuffer, 
+                      FRAMEBUFFER_WIDTH * sizeof(uint32_t));
 }

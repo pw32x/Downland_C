@@ -9,6 +9,7 @@
 #include "rooms\rooms.h"
 
 #define PLAYER_SPRITE_COUNT			10
+#define PLAYER_SPRITE_WIDTH			16
 #define PLAYER_SPRITE_ROWS			16
 #define PLAYER_SPRITE_BYTES_PER_ROW	2
 #define PLAYER_BITSHIFTED_SPRITE_FRAME_SIZE (PLAYER_SPRITE_ROWS * 3) // rows * 3 bytes per row
@@ -16,6 +17,7 @@
 #define PLAYER_COLLISION_WIDTH		8
 
 #define PLAYER_SPLAT_SPRITE_COUNT			1
+#define PLAYER_SPLAT_SPRITE_WIDTH			24
 #define PLAYER_SPLAT_SPRITE_ROWS			9
 #define PLAYER_SPLAT_SPRITE_BYTES_PER_ROW	3
 #define PLAYER_SPLAT_SPRITE_FRAME_SIZE	(PLAYER_SPLAT_SPRITE_ROWS * 3)
@@ -76,6 +78,8 @@ typedef struct
 	u16 roomTimers[NUM_ROOMS];
 
 	DoorInfo* lastDoor;
+
+	u8 splatFrameNumber;
 } PlayerData;
 
 #endif

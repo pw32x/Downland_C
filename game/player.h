@@ -10,6 +10,19 @@
 #include "rooms\rooms.h"
 #include "game.h"
 
+// all the states are mutually exclusive
+#define PLAYER_STATE_STAND			0
+#define PLAYER_STATE_RUN			1
+#define PLAYER_STATE_JUMP			2
+#define PLAYER_STATE_FALL			3
+#define PLAYER_STATE_CLIMB			4
+#define PLAYER_STATE_HANG_LEFT		5
+#define PLAYER_STATE_HANG_RIGHT		6
+#define PLAYER_STATE_REGENERATION	7
+#define PLAYER_STATE_SPLAT			8
+#define PLAYER_MIDAIR_DEATH			9
+#define PLAYER_STATE_DEBUG			0xff
+
 void Player_GameInit(PlayerData* playerData, const Resources* resources);
 void Player_RoomInit(PlayerData* playerData, const Resources* resources);
 

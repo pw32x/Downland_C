@@ -23,6 +23,7 @@ extern "C"
 #include "video_filters\sdl_video_filter_raw.h"
 #include "video_filters\sdl_video_filter_basic_crt_artifacts_blue.h"
 #include "video_filters\sdl_video_filter_basic_crt_artifacts_orange.h"
+#include "video_filters\sdl_video_filter_modern\sdl_video_filter_modern.h"
 
 #include "sdl_sound_manager.h"
 
@@ -233,11 +234,12 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
 
     // Init video filters
     // 
-    videoFilters.emplace_back(std::make_unique<SDLVideoFilterRaw>(renderer));
-    videoFilters.emplace_back(std::make_unique<SDLVideoFilterBasicCrtArtifactsBlue>(renderer));
-    videoFilters.emplace_back(std::make_unique<SDLVideoFilterBasicCrtArtifactsOrange>(renderer));
+    //videoFilters.emplace_back(std::make_unique<SDLVideoFilterRaw>(renderer, &resources));
+    videoFilters.emplace_back(std::make_unique<SDLVideoFilterBasicCrtArtifactsBlue>(renderer, &resources));
+    //videoFilters.emplace_back(std::make_unique<SDLVideoFilterBasicCrtArtifactsOrange>(renderer, &resources));
+    videoFilters.emplace_back(std::make_unique<SDLVideoFilterModern>(renderer, &resources));
 
-    selectFilter(1); // my favorite
+    selectFilter(videoFilters.size() - 1); // my favorite
 
     setFullscreen(false);
 
@@ -425,7 +427,7 @@ SDL_AppResult SDL_AppIterate(void *appstate)
 
     auto& currentVideoFilter = videoFilters[currentVideoFilterIndex];
 
-    currentVideoFilter->update(gameData.framebuffer);
+    currentVideoFilter->update(&gameData);
     SDL_RenderTexture(renderer, currentVideoFilter->getOutputTexture(), NULL, &destRect);
 
 #ifdef DEV_MODE

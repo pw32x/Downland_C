@@ -13,18 +13,7 @@
 #include "sound.h"
 
 
-// all the states are mutually exclusive
-#define PLAYER_STATE_STAND			0
-#define PLAYER_STATE_RUN			1
-#define PLAYER_STATE_JUMP			2
-#define PLAYER_STATE_FALL			3
-#define PLAYER_STATE_CLIMB			4
-#define PLAYER_STATE_HANG_LEFT		5
-#define PLAYER_STATE_HANG_RIGHT		6
-#define PLAYER_STATE_REGENERATION	7
-#define PLAYER_STATE_SPLAT			8
-#define PLAYER_MIDAIR_DEATH			9
-#define PLAYER_STATE_DEBUG			0xff
+
 
 #define PLAYER_START_LIVES 3
 
@@ -302,6 +291,8 @@ void Player_RoomInit(PlayerData* playerData, const Resources* resources)
 		playerData->y = SET_HIGH_BYTE(PLAYER_START_Y);
 	}
 
+	playerData->splatFrameNumber = 0;
+
 	playerData->speedx = 0;
 	playerData->speedy = 0;
 
@@ -349,6 +340,8 @@ void Player_Update(PlayerData* playerData,
 	{
 		if (playerData->cantMoveCounter == PLAYER_SPLAT_ANIMATION_TRIGGER_TIME)
 		{
+			playerData->splatFrameNumber = 1;
+
 			u8 x = GET_HIGH_BYTE(playerData->x);
 			u8 y = GET_HIGH_BYTE(playerData->y);
 
@@ -482,6 +475,7 @@ void Player_Update(PlayerData* playerData,
 		{
 			playerData->state = PLAYER_STATE_STAND;
 			playerData->isDead = FALSE;
+			playerData->splatFrameNumber = 0;
 		}
 	}
 

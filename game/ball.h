@@ -5,6 +5,7 @@
 #include "resource_types.h"
 
 #define BALL_SPRITE_COUNT			2
+#define BALL_SPRITE_WIDTH			16
 #define BALL_SPRITE_ROWS			8
 #define BALL_SPRITE_BYTES_PER_ROW	2
 #define BALL_COLLISION_WIDTH		8

@@ -6,11 +6,13 @@
 class SDLVideoFilterRaw : public SDLVideoFilterBase
 {
 public:
-	SDLVideoFilterRaw(SDL_Renderer* renderer) : SDLVideoFilterBase(renderer) {}
+	SDLVideoFilterRaw(SDL_Renderer* renderer, 
+					  const Resources* resources) 
+		: SDLVideoFilterBase(renderer, resources) {}
 
 	bool init() override;
 	void shutdown() override;
-	void update(unsigned char* gameFramebuffer) override;
+	void update(const GameData* gameData) override;
 };
 
 #endif

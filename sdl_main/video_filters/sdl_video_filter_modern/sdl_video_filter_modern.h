@@ -20,12 +20,16 @@ class Sprite
 {
 public:
 	Sprite(const u8* orginalSprite, u8 width, u8 height, u8 numFrames);
+
+	void updateSprite(u8 frameNumber, const u8* originalSprite);
+
 public:
 
 	u8 m_width;
 	u8 m_height;
 	u8 m_numFrames;
 	std::vector<SpriteFrame> m_frames;
+	const u8* m_originalSprite;
 };
 
 class SDLVideoFilterModern : public SDLVideoFilterBase
@@ -39,6 +43,10 @@ public:
 	void update(const GameData* gameData) override;
 
 private:
+
+	void updateRegenSprite(u8 currentPlayerSpriteNumber);
+
+private:
 	unsigned int m_crtFramebuffer[FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT]; // frame buffer for basic CRT artifact effects
 
 	// we build 32bit sprites from the raw 1bpp sprites
@@ -50,6 +58,9 @@ private:
 	Sprite m_keySprite;
 	Sprite m_diamondSprite;
 	Sprite m_moneyBagSprite;
+	Sprite m_regenSprite;
+
+	u8 m_regenSpriteBuffer[(PLAYER_SPRITE_WIDTH / 8) * PLAYER_SPRITE_ROWS];
 
 	std::vector<const Sprite*> m_pickUpSprites;
 };

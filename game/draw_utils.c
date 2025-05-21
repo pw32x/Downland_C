@@ -807,3 +807,19 @@ void drawBackground(const BackgroundDrawData* backgroundDrawData,
 		backgroundDrawCommandRunner++;
 	}
 }
+
+void drawSprite_16PixelsWide_static_IntoSpriteBuffer(const u8* spriteData, u8 numLines,	u8* spriteBuffer)
+{
+    while (numLines--)
+    {
+        // first byte
+        *spriteBuffer |= corruptByte(*spriteData);
+        spriteBuffer++;
+        spriteData++;
+
+        // second byte
+        *spriteBuffer |= corruptByte(*spriteData);
+        spriteBuffer++;
+        spriteData++;
+    }
+}

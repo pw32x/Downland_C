@@ -1,19 +1,19 @@
     
 Todo
 
-
     draw player lives icons
     draw regen player life icon
     draw timer
     draw player text
     draw score
 
-    make the regen effect the same         
+   
         
         
     handle the screen transition
         
         
-Bug
+Bugs
 
     Downland_C original renderer doesn't draw the right side of the splat sprite properly
+    

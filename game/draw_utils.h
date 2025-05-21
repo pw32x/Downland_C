@@ -17,7 +17,9 @@ void drawText(u8* text, u8* characterFont, u8* framebuffer, u16 framebufferPosit
 void drawSprite_16PixelsWide(u8* spriteData, u8 x, u8 y, u8 numLines, u8* framebuffer);
 void drawSprite_24PixelsWide(u8* spriteData, u8 x, u8 y, u8 numLines, u8* framebuffer);
 void drawSprite_24PixelsWide_noblend(u8* spriteData, u8 x, u8 y, u8 numLines, u8* framebuffer);
+
 void drawSprite_24PixelsWide_static(u8* spriteData, u8 x, u8 y, u8 numLines, u8* framebuffer);
+void drawSprite_16PixelsWide_static_IntoSpriteBuffer(const u8* spriteData, u8 numLines, u8* spriteBuffer);
 
 void eraseSprite_16PixelsWide(u8* spriteData, u8 x, u8 y, u8 numLines, u8* framebuffer, u8* cleanBackground);
 void eraseSprite_16PixelsWide_simple(u8 x, u8 y, u8 numLines, u8* framebuffer, u8* cleanBackground);

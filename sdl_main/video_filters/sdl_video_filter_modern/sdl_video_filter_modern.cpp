@@ -4,21 +4,28 @@
 #include "..\..\..\game\drops_manager.h"
 #include "..\..\..\game\drops_types.h"
 
-Sprite::Sprite(const u8* orginalSprite, 
+extern "C"
+{
+#include "..\..\..\game\draw_utils.h"
+}
+
+Sprite::Sprite(const u8* originalSprite, 
                u8 width, 
                u8 height, 
                u8 numFrames)
 {
-    const u8* spriteRunner = orginalSprite;
+    m_originalSprite = originalSprite;
+
+    const u8* spriteRunner = originalSprite;
 
     m_width = width;
     m_height = height;
 
+    std::vector<u32> spriteFrame;
+    spriteFrame.resize(width * height);
+
     for (int loop = 0; loop < numFrames; loop++)
     {
-        std::vector<u32> spriteFrame;
-        spriteFrame.resize(width * height);
-
         SDLUtils_convert1bppImageTo32bppCrtEffectImage(spriteRunner,
                                                        spriteFrame.data(),
                                                        width,
@@ -31,6 +38,17 @@ Sprite::Sprite(const u8* orginalSprite,
     }
 }
 
+void Sprite::updateSprite(u8 frameNumber, const u8* originalSprite)
+{
+    std::vector<u32>& spriteFrame = m_frames[frameNumber];
+
+    SDLUtils_convert1bppImageTo32bppCrtEffectImage(originalSprite,
+                                                   spriteFrame.data(),
+                                                   m_width,
+                                                   m_height,
+                                                   CrtColor::Blue);
+}
+
 SDLVideoFilterModern::SDLVideoFilterModern(SDL_Renderer* renderer, 
 						                   const Resources* resources) 
 	: SDLVideoFilterBase(renderer, resources),
@@ -41,7 +59,8 @@ SDLVideoFilterModern::SDLVideoFilterModern(SDL_Renderer* renderer,
       m_birdSprite(resources->sprites_bird, BIRD_SPRITE_WIDTH, BIRD_SPRITE_ROWS, BIRD_SPRITE_COUNT),
 	  m_keySprite(resources->sprite_key, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1),
 	  m_diamondSprite(resources->sprite_diamond, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1),
-	  m_moneyBagSprite(resources->sprite_moneyBag, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1)
+	  m_moneyBagSprite(resources->sprite_moneyBag, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1),
+      m_regenSprite(m_regenSpriteBuffer, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, 1)
 {
     // in the original game, the splat is animated by erasing the
     // top part of the splat on the framebuffer itself. Here, we create
@@ -55,6 +74,10 @@ SDLVideoFilterModern::SDLVideoFilterModern(SDL_Renderer* renderer,
     m_pickUpSprites.push_back(&m_diamondSprite);
     m_pickUpSprites.push_back(&m_moneyBagSprite);
     m_pickUpSprites.push_back(&m_keySprite);
+
+    
+
+
 }
 
 bool SDLVideoFilterModern::init()
@@ -106,49 +129,19 @@ void drawSprite(u32* crtFramebuffer,
     }
 }
 
-/*
-u8 corruptByte(u8 value)
+
+void SDLVideoFilterModern::updateRegenSprite(u8 currentPlayerSpriteNumber)
 {
-	return ((value << 1) | value) & (rand() % 0xff);
-}
-*/
+    const u8* originalSprite = m_playerSprite.m_originalSprite;
+    originalSprite += currentPlayerSpriteNumber * (m_playerSprite.m_width / 8) * m_playerSprite.m_height;
 
-void drawRegenSprite(u32* crtFramebuffer, 
-                     u16 framebufferWidth,
-                     u16 framebufferHeight,
-                     u16 spriteX, 
-                     u16 spriteY, 
-                     u16 frameNumber,
-                     const Sprite* sprite)
-{
-    u32 drawLocation = spriteX + (spriteY * framebufferWidth);
-    crtFramebuffer += drawLocation;
+    memset(m_regenSpriteBuffer, 0, sizeof(m_regenSpriteBuffer));
 
-    const u32* spriteRunner = sprite->m_frames[frameNumber].data();
+    drawSprite_16PixelsWide_static_IntoSpriteBuffer(originalSprite, 
+													m_playerSprite.m_height,
+													(u8*)m_regenSpriteBuffer);
 
-    for (int loopY = 0; loopY < sprite->m_height; loopY++)
-    {
-        for (int loopX = 0; loopX < sprite->m_width; loopX++)
-        {
-            u32 color = *spriteRunner;
-
-            if (color != 0)
-            {
-                switch (rand() % 4)
-                {
-                case 0: *crtFramebuffer = 0x00000000; break;
-                case 1: *crtFramebuffer = 0x0000FF; break;
-                case 2: *crtFramebuffer = 0xFFA500; break;
-                case 3: *crtFramebuffer = 0xFFFFFF; break;
-                }
-            }
-
-            crtFramebuffer++;
-            spriteRunner++;
-        }
-
-        crtFramebuffer += (framebufferWidth - sprite->m_width);
-    }
+    m_regenSprite.updateSprite(0, m_regenSpriteBuffer);
 }
 
 void SDLVideoFilterModern::update(const GameData* gameData)
@@ -221,13 +214,19 @@ void SDLVideoFilterModern::update(const GameData* gameData)
                        &m_playerSplatSprite);
             break;
         case PLAYER_STATE_REGENERATION: 
-            drawRegenSprite(m_crtFramebuffer, 
-                            FRAMEBUFFER_WIDTH, 
-                            FRAMEBUFFER_HEIGHT,
-                            (playerData->x >> 8) << 1,
-                            playerData->y >> 8,
-                            playerData->currentSpriteNumber,
-                            &m_playerSprite);
+
+            if (!gameData->paused)
+            {
+                updateRegenSprite(playerData->currentSpriteNumber);
+            }
+
+            drawSprite(m_crtFramebuffer, 
+                       FRAMEBUFFER_WIDTH, 
+                       FRAMEBUFFER_HEIGHT,
+                       (playerData->x >> 8) << 1,
+                       playerData->y >> 8,
+                       0,
+                       &m_regenSprite);
             break;
         default: 
             drawSprite(m_crtFramebuffer, 

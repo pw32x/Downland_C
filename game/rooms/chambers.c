@@ -1,3 +1,4 @@
+#include "chambers.h"
 #include "room_types.h"
 
 #include "..\game_types.h"
@@ -7,18 +8,6 @@
 #include "..\bird.h"
 #include "..\player.h"
 #include "..\door_utils.h"
-
-#define PLAYERLIVES_ICON_X	0x14
-#define PLAYERLIVES_ICON_Y	0x2
-#define PLAYERLIVES_DRAW_LOCATION  GET_FRAMEBUFFER_LOCATION(PLAYERLIVES_ICON_X, PLAYERLIVES_ICON_Y)
-#define PLAYERLIVES_TEXT_DRAW_LOCATION  (PLAYERLIVES_DRAW_LOCATION - 0x4)
-#define CHAMBER_TEXT_DRAW_LOCATION  0x55
-#define CHAMBER_NUMBER_TEXT_DRAW_LOCATION  (CHAMBER_TEXT_DRAW_LOCATION + 8)
-#define TIMER_DRAW_LOCATION 0x1716
-
-#define PLAYERLIVES_ICON_SPACING 0xc // 0x3 bytes * 4 pixels
-#define PLAYERLIVES_ICON_LINESTODRAW 0x7
-
 
 void drawPickups(Pickup* pickups, 
 				 u8 playerMask,
@@ -40,8 +29,6 @@ void drawPickups(Pickup* pickups,
 		pickups++;
 	}
 }
-
-#define PLAYERICON_NUM_SPRITE_ROWS 7
 
 void drawPlayerLives(u8 playerLives,
 					 u8 currentSpriteNumber,

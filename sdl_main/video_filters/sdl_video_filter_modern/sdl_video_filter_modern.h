@@ -59,10 +59,12 @@ private:
 	Sprite m_diamondSprite;
 	Sprite m_moneyBagSprite;
 	Sprite m_regenSprite;
+	Sprite m_characterFont;
 
 	u8 m_regenSpriteBuffer[(PLAYER_SPRITE_WIDTH / 8) * PLAYER_SPRITE_ROWS];
 
 	std::vector<const Sprite*> m_pickUpSprites;
+	const Resources* m_resources;
 };
 
 #endif

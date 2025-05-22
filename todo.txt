@@ -1,17 +1,8 @@
     
 Todo
-
-    draw player lives icons
-    draw regen player life icon
-    draw timer
-    draw player text
-    draw score
-
-   
-        
         
     handle the screen transition
-        
+       
         
 Bugs
 

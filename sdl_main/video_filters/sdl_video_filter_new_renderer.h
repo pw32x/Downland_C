@@ -1,7 +1,7 @@
-#ifndef SDL_VIDEO_FILTER_MODERN
-#define SDL_VIDEO_FILTER_MODERN
+#ifndef SDL_VIDEO_FILTER_NEW_RENDERER
+#define SDL_VIDEO_FILTER_NEW_RENDERER
 
-#include "..\sdl_video_filter_base.h"
+#include "sdl_video_filter_base.h"
 #include <vector>
 
 // This is an example of using the game state to render
@@ -11,7 +11,7 @@
 
 extern "C"
 {
-#include "..\..\..\game\base_defines.h"
+#include "..\..\game\base_defines.h"
 }
 
 typedef std::vector<u32> SpriteFrame;
@@ -32,10 +32,10 @@ public:
 	const u8* m_originalSprite;
 };
 
-class SDLVideoFilterModern : public SDLVideoFilterBase
+class SDLVideoFilterNewRenderer : public SDLVideoFilterBase
 {
 public:
-	SDLVideoFilterModern(SDL_Renderer* renderer, 
+	SDLVideoFilterNewRenderer(SDL_Renderer* renderer, 
 						 const Resources* resources);
 
 	bool init() override;
@@ -77,7 +77,7 @@ private:
 
 	const Resources* m_resources;
 
-	typedef void (SDLVideoFilterModern::*DrawRoomFunction)(const GameData* gameData, u32* framebuffer);
+	typedef void (SDLVideoFilterNewRenderer::*DrawRoomFunction)(const GameData* gameData, u32* framebuffer);
 	std::vector<DrawRoomFunction> m_drawRoomFunctions;
 };
 

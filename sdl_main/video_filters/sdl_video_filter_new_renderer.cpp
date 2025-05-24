@@ -1,13 +1,13 @@
-#include "sdl_video_filter_modern.h"
-#include "..\sdl_video_filter_utils.h"
+#include "sdl_video_filter_new_renderer.h"
+#include "sdl_video_filter_utils.h"
 
-#include "..\..\..\game\drops_manager.h"
-#include "..\..\..\game\drops_types.h"
-#include "..\..\..\game\rooms\chambers.h"
+#include "..\..\game\drops_manager.h"
+#include "..\..\game\drops_types.h"
+#include "..\..\game\rooms\chambers.h"
 
 extern "C"
 {
-#include "..\..\..\game\draw_utils.h"
+#include "..\..\game\draw_utils.h"
 }
 
 #include <algorithm>
@@ -165,7 +165,7 @@ void drawPlayerLives(u8 playerLives,
     }
 }
 
-SDLVideoFilterModern::SDLVideoFilterModern(SDL_Renderer* renderer, 
+SDLVideoFilterNewRenderer::SDLVideoFilterNewRenderer(SDL_Renderer* renderer, 
 						                   const Resources* resources) 
 	: SDLVideoFilterBase(renderer, resources),
       m_resources(resources),
@@ -205,23 +205,23 @@ SDLVideoFilterModern::SDLVideoFilterModern(SDL_Renderer* renderer,
         }
     }
 
-    m_drawRoomFunctions = { &SDLVideoFilterModern::drawChamber,
-                            &SDLVideoFilterModern::drawChamber,
-                            &SDLVideoFilterModern::drawChamber,
-                            &SDLVideoFilterModern::drawChamber,
-                            &SDLVideoFilterModern::drawChamber,
-                            &SDLVideoFilterModern::drawChamber,
-                            &SDLVideoFilterModern::drawChamber,
-                            &SDLVideoFilterModern::drawChamber,
-                            &SDLVideoFilterModern::drawChamber,
-                            &SDLVideoFilterModern::drawChamber,
-                            &SDLVideoFilterModern::drawTitleScreen,
-                            &SDLVideoFilterModern::drawTransition,
-                            &SDLVideoFilterModern::drawWipeTransition,
-                            &SDLVideoFilterModern::drawGetReadyScreen };
+    m_drawRoomFunctions = { &SDLVideoFilterNewRenderer::drawChamber,
+                            &SDLVideoFilterNewRenderer::drawChamber,
+                            &SDLVideoFilterNewRenderer::drawChamber,
+                            &SDLVideoFilterNewRenderer::drawChamber,
+                            &SDLVideoFilterNewRenderer::drawChamber,
+                            &SDLVideoFilterNewRenderer::drawChamber,
+                            &SDLVideoFilterNewRenderer::drawChamber,
+                            &SDLVideoFilterNewRenderer::drawChamber,
+                            &SDLVideoFilterNewRenderer::drawChamber,
+                            &SDLVideoFilterNewRenderer::drawChamber,
+                            &SDLVideoFilterNewRenderer::drawTitleScreen,
+                            &SDLVideoFilterNewRenderer::drawTransition,
+                            &SDLVideoFilterNewRenderer::drawWipeTransition,
+                            &SDLVideoFilterNewRenderer::drawGetReadyScreen };
 }
 
-bool SDLVideoFilterModern::init()
+bool SDLVideoFilterNewRenderer::init()
 {
     // Create the texture
     m_outputTexture = SDL_CreateTexture(m_renderer, 
@@ -235,13 +235,13 @@ bool SDLVideoFilterModern::init()
 	return true;
 }
 
-void SDLVideoFilterModern::shutdown()
+void SDLVideoFilterNewRenderer::shutdown()
 {
     SDLVideoFilterBase::shutdown();
 }
 
 
-void SDLVideoFilterModern::updateRegenSprite(u8 currentPlayerSpriteNumber)
+void SDLVideoFilterNewRenderer::updateRegenSprite(u8 currentPlayerSpriteNumber)
 {
     const u8* originalSprite = m_playerSprite.m_originalSprite;
     originalSprite += currentPlayerSpriteNumber * (m_playerSprite.m_width / 8) * m_playerSprite.m_height;
@@ -255,7 +255,7 @@ void SDLVideoFilterModern::updateRegenSprite(u8 currentPlayerSpriteNumber)
     m_regenSprite.updateSprite(0, m_regenSpriteBuffer);
 }
 
-void SDLVideoFilterModern::roomChanged(const GameData* gameData, 
+void SDLVideoFilterNewRenderer::roomChanged(const GameData* gameData, 
                                        u8 roomNumber, 
                                        s8 transitionType)
 {
@@ -271,7 +271,7 @@ void SDLVideoFilterModern::roomChanged(const GameData* gameData,
     }
 }
 
-void SDLVideoFilterModern::drawDrops(const GameData* gameData, u32* framebuffer)
+void SDLVideoFilterNewRenderer::drawDrops(const GameData* gameData, u32* framebuffer)
 {
     // draw drops
     const Drop* dropsRunner = gameData->dropData.drops;
@@ -294,7 +294,7 @@ void SDLVideoFilterModern::drawDrops(const GameData* gameData, u32* framebuffer)
     }
 }
 
-void SDLVideoFilterModern::drawChamber(const GameData* gameData, u32* framebuffer)
+void SDLVideoFilterNewRenderer::drawChamber(const GameData* gameData, u32* framebuffer)
 {
     // Update texture from gameFramebuffer
     SDLUtils_convert1bppImageTo32bppCrtEffectImage(gameData->cleanBackground,
@@ -444,7 +444,7 @@ void SDLVideoFilterModern::drawChamber(const GameData* gameData, u32* framebuffe
 			    SCORE_DRAW_LOCATION);
 }
 
-void SDLVideoFilterModern::drawTitleScreen(const GameData* gameData, u32* framebuffer)
+void SDLVideoFilterNewRenderer::drawTitleScreen(const GameData* gameData, u32* framebuffer)
 {
     SDLUtils_convert1bppImageTo32bppCrtEffectImage(gameData->cleanBackground,
                                                    framebuffer,
@@ -467,12 +467,12 @@ void SDLVideoFilterModern::drawTitleScreen(const GameData* gameData, u32* frameb
 
 }
 
-void SDLVideoFilterModern::drawTransition(const GameData* gameData, u32* framebuffer)
+void SDLVideoFilterNewRenderer::drawTransition(const GameData* gameData, u32* framebuffer)
 {
 	memset(framebuffer, 0, FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT * sizeof(u32));
 }
 
-void SDLVideoFilterModern::drawWipeTransition(const GameData* gameData, u32* framebuffer)
+void SDLVideoFilterNewRenderer::drawWipeTransition(const GameData* gameData, u32* framebuffer)
 {
     // not the most efficient as it updates the whole framebuffer
     // instead of what changed per frame during the wipe, but at the 
@@ -500,7 +500,7 @@ void SDLVideoFilterModern::drawWipeTransition(const GameData* gameData, u32* fra
 	}
 }
 
-void SDLVideoFilterModern::drawGetReadyScreen(const GameData* gameData, u32* framebuffer)
+void SDLVideoFilterNewRenderer::drawGetReadyScreen(const GameData* gameData, u32* framebuffer)
 {
     SDLUtils_convert1bppImageTo32bppCrtEffectImage(gameData->cleanBackground,
                                                    framebuffer,
@@ -511,7 +511,7 @@ void SDLVideoFilterModern::drawGetReadyScreen(const GameData* gameData, u32* fra
     drawDrops(gameData, framebuffer);
 }
 
-void SDLVideoFilterModern::update(const GameData* gameData)
+void SDLVideoFilterNewRenderer::update(const GameData* gameData)
 {
     if (m_outputTexture == nullptr)
         init();

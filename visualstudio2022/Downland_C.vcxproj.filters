@@ -39,9 +39,6 @@
     <Filter Include="thirdparty\SDL3\x86">
       <UniqueIdentifier>{48861716-7952-44c3-bad7-cfdaa8041002}</UniqueIdentifier>
     </Filter>
-    <Filter Include="sdl_main\video_filters\sdl_video_filter_modern">
-      <UniqueIdentifier>{bb1bc0a4-e272-46e2-8540-84906486206e}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Media Include="..\sounds\land.wav">
@@ -139,8 +136,8 @@
     <ClCompile Include="..\game\rooms\chambers.c">
       <Filter>game\rooms</Filter>
     </ClCompile>
-    <ClCompile Include="..\sdl_main\video_filters\sdl_video_filter_modern\sdl_video_filter_modern.cpp">
-      <Filter>sdl_main\video_filters\sdl_video_filter_modern</Filter>
+    <ClCompile Include="..\sdl_main\video_filters\sdl_video_filter_new_renderer.cpp">
+      <Filter>sdl_main\video_filters</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -243,8 +240,8 @@
     <ClInclude Include="..\game\rooms\chambers.h">
       <Filter>game\rooms</Filter>
     </ClInclude>
-    <ClInclude Include="..\sdl_main\video_filters\sdl_video_filter_modern\sdl_video_filter_modern.h">
-      <Filter>sdl_main\video_filters\sdl_video_filter_modern</Filter>
+    <ClInclude Include="..\sdl_main\video_filters\sdl_video_filter_new_renderer.h">
+      <Filter>sdl_main\video_filters</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

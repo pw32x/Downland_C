@@ -240,11 +240,11 @@
     <ClInclude Include="..\game\rooms\rooms.h">
       <Filter>game\rooms</Filter>
     </ClInclude>
-    <ClInclude Include="..\sdl_main\video_filters\sdl_video_filter_modern\sdl_video_filter_modern.h">
-      <Filter>sdl_main\video_filters\sdl_video_filter_modern</Filter>
-    </ClInclude>
     <ClInclude Include="..\game\rooms\chambers.h">
       <Filter>game\rooms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sdl_main\video_filters\sdl_video_filter_modern\sdl_video_filter_modern.h">
+      <Filter>sdl_main\video_filters\sdl_video_filter_modern</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

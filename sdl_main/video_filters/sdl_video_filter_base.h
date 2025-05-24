@@ -31,6 +31,7 @@ public:
 		}
 	}
 
+	virtual void roomChanged(u8 roomNumber, s8 transitionType) {};
 	virtual void update(const GameData* gameData) = 0;
 
 	SDL_Texture* getOutputTexture() { return m_outputTexture; }

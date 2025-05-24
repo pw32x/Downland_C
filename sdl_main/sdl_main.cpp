@@ -130,6 +130,12 @@ void setFullscreen(bool fullscreen)
     updateDestRect();
 }
 
+void gameRoomChanged(u8 roomNumber, s8 transitionType)
+{
+    auto& currentVideoFilter = videoFilters[currentVideoFilterIndex];
+    currentVideoFilter->roomChanged(roomNumber, transitionType);
+}
+
 SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
 {
     // Init the app and main window
@@ -208,6 +214,7 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
     soundManager.loadSound("climb_down.wav");
 
     // Init Game
+
     Game_Init(&gameData, &resources);
 
     // Init timers and random numbers
@@ -240,6 +247,8 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
     videoFilters.emplace_back(std::make_unique<SDLVideoFilterModern>(renderer, &resources));
 
     selectFilter(videoFilters.size() - 1); // my favorite
+
+    Game_ChangedRoomCallback = gameRoomChanged;
 
     setFullscreen(false);
 
@@ -300,13 +309,27 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
         {
             Game_Init(&gameData, &resources);
             u8 roomNumber = event->key.key - SDLK_1;
+
+            if (gameData.currentPlayerData == NULL)
+            {
+                Game_InitPlayers(&gameData, &resources);
+            }
+
             gameData.currentPlayerData->lastDoor = &resources.roomResources[roomNumber].doorInfoData.doorInfos[0];
+
             Game_TransitionToRoom(&gameData, roomNumber, &resources);
         }
         else if (event->key.key == SDLK_0)
         {
             Game_Init(&gameData, &resources);
+
+            if (gameData.currentPlayerData == NULL)
+            {
+                Game_InitPlayers(&gameData, &resources);
+            }
+
             gameData.currentPlayerData->lastDoor = &resources.roomResources[9].doorInfoData.doorInfos[0];
+
             Game_TransitionToRoom(&gameData, 9, &resources);
         }
 #endif

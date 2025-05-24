@@ -41,10 +41,19 @@ public:
 	bool init() override;
 	void shutdown() override;
 	void update(const GameData* gameData) override;
+	void roomChanged(u8 roomNumber, s8 transitionType);
 
 private:
 
 	void updateRegenSprite(u8 currentPlayerSpriteNumber);
+
+	void drawDrops(const GameData* gameData, u32* framebuffer);
+
+	void drawChamber(const GameData* gameData, u32* framebuffer);
+	void drawTitleScreen(const GameData* gameData, u32* framebuffer);
+	void drawTransition(const GameData* gameData, u32* framebuffer);
+	void drawWipeTransition(const GameData* gameData, u32* framebuffer);
+	void drawGetReadyScreen(const GameData* gameData, u32* framebuffer);
 
 private:
 	unsigned int m_crtFramebuffer[FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT]; // frame buffer for basic CRT artifact effects
@@ -64,7 +73,11 @@ private:
 	u8 m_regenSpriteBuffer[(PLAYER_SPRITE_WIDTH / 8) * PLAYER_SPRITE_ROWS];
 
 	std::vector<const Sprite*> m_pickUpSprites;
+
 	const Resources* m_resources;
+
+	typedef void (SDLVideoFilterModern::*DrawRoomFunction)(const GameData* gameData, u32* framebuffer);
+	std::vector<DrawRoomFunction> m_drawRoomFunctions;
 };
 
 #endif

@@ -107,15 +107,7 @@ void titleScreen_update(Room* room, GameData* gameData, Resources* resources)
 	// press button to start
 	if (gameData->joystickState.jumpPressed)
 	{
-		gameData->currentPlayerData = &gameData->playerData[PLAYER_ONE];
-
-		gameData->otherPlayerData = gameData->numPlayers > 1 ? &gameData->playerData[PLAYER_TWO] : NULL;
-
-		for (u8 loop = 0; loop < gameData->numPlayers; loop++)
-		{
-			Player_GameInit(&gameData->playerData[loop], resources);
-		}
-
+		Game_InitPlayers(gameData, resources);
 
 		memset(gameData->framebuffer, 0, FRAMEBUFFER_SIZE_IN_BYTES);		
 		Game_WipeTransitionToRoom(gameData, 0, resources);

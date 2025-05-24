@@ -3,6 +3,8 @@
 #include "draw_utils.h"
 #include "rooms\rooms.h"
 
+Game_ChangedRoomCallbackType Game_ChangedRoomCallback = NULL;
+
 void Game_Init(struct GameData* gameData, Resources* resources)
 {
 	gameData->numPlayers = 1;
@@ -33,6 +35,18 @@ void Game_Init(struct GameData* gameData, Resources* resources)
 #endif
 }
 
+void Game_InitPlayers(struct GameData* gameData, Resources* resources)
+{
+	gameData->currentPlayerData = &gameData->playerData[PLAYER_ONE];
+
+	gameData->otherPlayerData = gameData->numPlayers > 1 ? &gameData->playerData[PLAYER_TWO] : NULL;
+
+	for (u8 loop = 0; loop < gameData->numPlayers; loop++)
+	{
+		Player_GameInit(&gameData->playerData[loop], resources);
+	}
+}
+
 void Game_Update(struct GameData* gameData, Resources* resources)
 {
 	gameData->currentRoom->update((struct Room*)gameData->currentRoom, 
@@ -50,6 +64,9 @@ void Game_EnterRoom(struct GameData* gameData, u8 roomNumber, Resources* resourc
 	gameData->currentRoom->init(gameData->currentRoom, 
 								(struct GameData*)gameData, 
 								resources);
+
+	if (Game_ChangedRoomCallback != NULL)
+		Game_ChangedRoomCallback(roomNumber, -1);
 }
 
 void Game_TransitionToRoom(struct GameData* gameData, u8 roomNumber, Resources* resources)
@@ -65,6 +82,9 @@ void Game_TransitionToRoom(struct GameData* gameData, u8 roomNumber, Resources* 
 	gameData->currentRoom->init(g_rooms[roomNumber], 
 								(struct GameData*)gameData, 
 								resources);
+
+	if (Game_ChangedRoomCallback != NULL)
+		Game_ChangedRoomCallback(roomNumber, TRANSITION_ROOM_INDEX);
 }
 
 void Game_WipeTransitionToRoom(struct GameData* gameData, u8 roomNumber, Resources* resources)
@@ -80,6 +100,9 @@ void Game_WipeTransitionToRoom(struct GameData* gameData, u8 roomNumber, Resourc
 	gameData->currentRoom->init(g_rooms[roomNumber], 
 								(struct GameData*)gameData, 
 								resources);
+
+	if (Game_ChangedRoomCallback != NULL)
+		Game_ChangedRoomCallback(roomNumber, WIPE_TRANSITION_ROOM_INDEX);
 }
 
 void Game_Shutdown(struct GameData* gameData)

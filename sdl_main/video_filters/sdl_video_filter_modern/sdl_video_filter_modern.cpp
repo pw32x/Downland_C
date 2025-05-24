@@ -204,6 +204,21 @@ SDLVideoFilterModern::SDLVideoFilterModern(SDL_Renderer* renderer,
                 frame[counter] = 0x0000FF;
         }
     }
+
+    m_drawRoomFunctions = { &SDLVideoFilterModern::drawChamber,
+                            &SDLVideoFilterModern::drawChamber,
+                            &SDLVideoFilterModern::drawChamber,
+                            &SDLVideoFilterModern::drawChamber,
+                            &SDLVideoFilterModern::drawChamber,
+                            &SDLVideoFilterModern::drawChamber,
+                            &SDLVideoFilterModern::drawChamber,
+                            &SDLVideoFilterModern::drawChamber,
+                            &SDLVideoFilterModern::drawChamber,
+                            &SDLVideoFilterModern::drawChamber,
+                            &SDLVideoFilterModern::drawTitleScreen,
+                            &SDLVideoFilterModern::drawTransition,
+                            &SDLVideoFilterModern::drawWipeTransition,
+                            &SDLVideoFilterModern::drawGetReadyScreen };
 }
 
 bool SDLVideoFilterModern::init()
@@ -240,203 +255,235 @@ void SDLVideoFilterModern::updateRegenSprite(u8 currentPlayerSpriteNumber)
     m_regenSprite.updateSprite(0, m_regenSpriteBuffer);
 }
 
+void SDLVideoFilterModern::roomChanged(u8 roomNumber, s8 transitionType)
+{
+
+}
+
+void SDLVideoFilterModern::drawDrops(const GameData* gameData, u32* framebuffer)
+{
+    // draw drops
+    const Drop* dropsRunner = gameData->dropData.drops;
+
+    for (int loop = 0; loop < NUM_DROPS; loop++)
+    {
+        if (dropsRunner->wiggleTimer)
+        {
+            drawSprite(framebuffer, 
+                       FRAMEBUFFER_WIDTH, 
+                       FRAMEBUFFER_HEIGHT,
+                       dropsRunner->x << 1,
+                       dropsRunner->y >> 8,
+                       0,
+                       &m_dropSprite);
+        }
+
+        dropsRunner++;
+    }
+}
+
+void SDLVideoFilterModern::drawChamber(const GameData* gameData, u32* framebuffer)
+{
+    // Update texture from gameFramebuffer
+    SDLUtils_convert1bppImageTo32bppCrtEffectImage(gameData->cleanBackground,
+                                                   framebuffer,
+                                                   FRAMEBUFFER_WIDTH,
+                                                   FRAMEBUFFER_HEIGHT,
+                                                   CrtColor::Blue);
+
+    // draw drops
+    drawDrops(gameData, framebuffer);
+
+
+
+    const PlayerData* playerData = gameData->currentPlayerData;
+
+    u16 currentTimer = playerData->roomTimers[playerData->currentRoom->roomNumber];
+
+    const Pickup* pickups = playerData->gamePickups[gameData->currentRoom->roomNumber];
+    for (int loop = 0; loop < NUM_PICKUPS_PER_ROOM; loop++)
+    {
+		if ((pickups->state & playerData->playerMask))
+		{
+            drawSprite(framebuffer, 
+                        FRAMEBUFFER_WIDTH, 
+                        FRAMEBUFFER_HEIGHT,
+                        pickups->x << 1,
+                        pickups->y,
+                        0,
+                        m_pickUpSprites[pickups->type]);
+        }
+
+        pickups++;
+    }
+
+
+    switch (playerData->state)
+    {
+    case PLAYER_STATE_SPLAT: 
+        drawSprite(framebuffer, 
+                    FRAMEBUFFER_WIDTH, 
+                    FRAMEBUFFER_HEIGHT,
+                    (playerData->x >> 8) << 1,
+                    (playerData->y >> 8) + 7,
+                    playerData->splatFrameNumber,
+                    &m_playerSplatSprite);
+        break;
+    case PLAYER_STATE_REGENERATION: 
+
+        if (!gameData->paused)
+        {
+            updateRegenSprite(playerData->currentSpriteNumber);
+        }
+
+        drawSprite(framebuffer, 
+                    FRAMEBUFFER_WIDTH, 
+                    FRAMEBUFFER_HEIGHT,
+                    (playerData->x >> 8) << 1,
+                    playerData->y >> 8,
+                    0,
+                    &m_regenSprite);
+        break;
+    default: 
+        drawSprite(framebuffer, 
+                    FRAMEBUFFER_WIDTH, 
+                    FRAMEBUFFER_HEIGHT,
+                    (playerData->x >> 8) << 1,
+                    playerData->y >> 8,
+                    playerData->currentSpriteNumber,
+                    &m_playerSprite);
+    }
+
+    // draw ball
+    if (gameData->ballData.enabled)
+    {
+        const BallData* ballData = &gameData->ballData;
+
+        drawSprite(framebuffer, 
+                    FRAMEBUFFER_WIDTH, 
+                    FRAMEBUFFER_HEIGHT,
+                    (ballData->x >> 8) << 1,
+                    ballData->y >> 8,
+                    ((s8)ballData->fallStateCounter < 0),
+                    &m_ballSprite);
+
+    }
+
+    // draw bird
+    if (gameData->birdData.state && currentTimer == 0)
+    {
+        const BirdData* birdData = &gameData->birdData;
+
+        drawSprite(framebuffer, 
+                    FRAMEBUFFER_WIDTH, 
+                    FRAMEBUFFER_HEIGHT,
+                    (birdData->x >> 8) << 1,
+                    birdData->y >> 8,
+                    birdData->animationFrame,
+                    &m_birdSprite);
+    }
+
+    // draw player lives icons
+    drawPlayerLives(gameData->currentPlayerData->lives,
+                    playerData->currentSpriteNumber,
+                    &m_playerSprite,
+                    &m_regenSprite,
+                    playerData->state == PLAYER_STATE_REGENERATION,
+                    framebuffer);
+
+
+
+    // draw timer
+	drawText(framebuffer,
+                FRAMEBUFFER_WIDTH,
+                FRAMEBUFFER_HEIGHT,
+                gameData->string_timer, 
+			    &m_characterFont, 
+                TIMER_DRAW_LOCATION);
+
+    // draw player text
+	drawText(framebuffer,
+                FRAMEBUFFER_WIDTH,
+                FRAMEBUFFER_HEIGHT,
+                m_resources->text_pl1, 
+			    &m_characterFont, 
+                PLAYERLIVES_TEXT_DRAW_LOCATION);
+
+    // draw chamber text
+	drawText(framebuffer,
+                FRAMEBUFFER_WIDTH,
+                FRAMEBUFFER_HEIGHT,
+                m_resources->text_chamber, 
+			    &m_characterFont, 
+			    CHAMBER_TEXT_DRAW_LOCATION);
+
+    // room number chamber text
+	drawText(framebuffer,
+                FRAMEBUFFER_WIDTH,
+                FRAMEBUFFER_HEIGHT,
+                gameData->string_roomNumber, 
+			    &m_characterFont, 
+			    CHAMBER_NUMBER_TEXT_DRAW_LOCATION);
+
+    // draw score
+	drawText(framebuffer,
+                FRAMEBUFFER_WIDTH,
+                FRAMEBUFFER_HEIGHT,
+                playerData->scoreString, 
+			    &m_characterFont, 
+			    SCORE_DRAW_LOCATION);
+}
+
+void SDLVideoFilterModern::drawTitleScreen(const GameData* gameData, u32* framebuffer)
+{
+    SDLUtils_convert1bppImageTo32bppCrtEffectImage(gameData->cleanBackground,
+                                                   framebuffer,
+                                                   FRAMEBUFFER_WIDTH,
+                                                   FRAMEBUFFER_HEIGHT,
+                                                   CrtColor::Blue);
+
+    // draw drops
+    drawDrops(gameData, framebuffer);
+
+	// draw the cursor
+	u16 drawLocation = gameData->numPlayers == 1 ? 0xf64 : 0xf70;  // hardcoded locations in the frambuffer
+
+    framebuffer = framebuffer + (drawLocation * 8);
+    for (int loop = 0; loop < 8; loop++)
+    {
+        *framebuffer = 0xffffffff;
+        framebuffer++;
+    }
+
+}
+
+void SDLVideoFilterModern::drawTransition(const GameData* gameData, u32* framebuffer)
+{
+	memset(framebuffer, 0, FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT * sizeof(u32));
+}
+
+void SDLVideoFilterModern::drawWipeTransition(const GameData* gameData, u32* framebuffer)
+{
+
+}
+
+void SDLVideoFilterModern::drawGetReadyScreen(const GameData* gameData, u32* framebuffer)
+{
+    SDLUtils_convert1bppImageTo32bppCrtEffectImage(gameData->cleanBackground,
+                                                   framebuffer,
+                                                   FRAMEBUFFER_WIDTH,
+                                                   FRAMEBUFFER_HEIGHT,
+                                                   CrtColor::Blue);
+
+    drawDrops(gameData, framebuffer);
+}
+
 void SDLVideoFilterModern::update(const GameData* gameData)
 {
     if (m_outputTexture == nullptr)
         init();
 
-    if (gameData->currentRoom->roomNumber == TRANSITION_ROOM_INDEX)
-    {
-        memset(m_crtFramebuffer, 0, FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT * sizeof(u32));
-    }
-    else
-    {
-        // Update texture from gameFramebuffer
-        SDLUtils_convert1bppImageTo32bppCrtEffectImage(gameData->cleanBackground,
-                                                       m_crtFramebuffer,
-                                                       FRAMEBUFFER_WIDTH,
-                                                       FRAMEBUFFER_HEIGHT,
-                                                       CrtColor::Blue);
-
-        if (gameData->currentRoom->roomNumber <= TITLESCREEN_ROOM_INDEX ||
-            gameData->currentRoom->roomNumber == GET_READY_ROOM_INDEX)
-        {
-
-            // draw drops
-            const Drop* dropsRunner = gameData->dropData.drops;
-
-            for (int loop = 0; loop < NUM_DROPS; loop++)
-            {
-                if (dropsRunner->wiggleTimer)
-                {
-                    drawSprite(m_crtFramebuffer, 
-                               FRAMEBUFFER_WIDTH, 
-                               FRAMEBUFFER_HEIGHT,
-                               dropsRunner->x << 1,
-                               dropsRunner->y >> 8,
-                               0,
-                               &m_dropSprite);
-                }
-
-                dropsRunner++;
-            }
-        }
-
-        u16 currentTimer = 0xffff;
-
-        // draw player and pickups
-        if (gameData->currentRoom->roomNumber < TITLESCREEN_ROOM_INDEX)
-        {
-            const PlayerData* playerData = gameData->currentPlayerData;
-
-            currentTimer = playerData->roomTimers[playerData->currentRoom->roomNumber];
-
-            const Pickup* pickups = playerData->gamePickups[gameData->currentRoom->roomNumber];
-            for (int loop = 0; loop < NUM_PICKUPS_PER_ROOM; loop++)
-            {
-		        if ((pickups->state & playerData->playerMask))
-		        {
-                    drawSprite(m_crtFramebuffer, 
-                               FRAMEBUFFER_WIDTH, 
-                               FRAMEBUFFER_HEIGHT,
-                               pickups->x << 1,
-                               pickups->y,
-                               0,
-                               m_pickUpSprites[pickups->type]);
-                }
-
-                pickups++;
-            }
-
-
-            switch (playerData->state)
-            {
-            case PLAYER_STATE_SPLAT: 
-                drawSprite(m_crtFramebuffer, 
-                           FRAMEBUFFER_WIDTH, 
-                           FRAMEBUFFER_HEIGHT,
-                           (playerData->x >> 8) << 1,
-                           (playerData->y >> 8) + 7,
-                           playerData->splatFrameNumber,
-                           &m_playerSplatSprite);
-                break;
-            case PLAYER_STATE_REGENERATION: 
-
-                if (!gameData->paused)
-                {
-                    updateRegenSprite(playerData->currentSpriteNumber);
-                }
-
-                drawSprite(m_crtFramebuffer, 
-                           FRAMEBUFFER_WIDTH, 
-                           FRAMEBUFFER_HEIGHT,
-                           (playerData->x >> 8) << 1,
-                           playerData->y >> 8,
-                           0,
-                           &m_regenSprite);
-                break;
-            default: 
-                drawSprite(m_crtFramebuffer, 
-                           FRAMEBUFFER_WIDTH, 
-                           FRAMEBUFFER_HEIGHT,
-                           (playerData->x >> 8) << 1,
-                           playerData->y >> 8,
-                           playerData->currentSpriteNumber,
-                           &m_playerSprite);
-            }
-
-            // draw ball
-            if (gameData->ballData.enabled)
-            {
-                const BallData* ballData = &gameData->ballData;
-
-                drawSprite(m_crtFramebuffer, 
-                           FRAMEBUFFER_WIDTH, 
-                           FRAMEBUFFER_HEIGHT,
-                           (ballData->x >> 8) << 1,
-                           ballData->y >> 8,
-                           ((s8)ballData->fallStateCounter < 0),
-                           &m_ballSprite);
-
-            }
-
-            // draw bird
-            if (gameData->birdData.state && currentTimer == 0)
-            {
-                const BirdData* birdData = &gameData->birdData;
-
-                drawSprite(m_crtFramebuffer, 
-                           FRAMEBUFFER_WIDTH, 
-                           FRAMEBUFFER_HEIGHT,
-                           (birdData->x >> 8) << 1,
-                           birdData->y >> 8,
-                           birdData->animationFrame,
-                           &m_birdSprite);
-            }
-
-            // draw player lives icons
-            drawPlayerLives(gameData->currentPlayerData->lives,
-                            playerData->currentSpriteNumber,
-                            &m_playerSprite,
-                            &m_regenSprite,
-                            playerData->state == PLAYER_STATE_REGENERATION,
-                            m_crtFramebuffer);
-
-
-
-            // draw timer
-	        drawText(m_crtFramebuffer,
-                     FRAMEBUFFER_WIDTH,
-                     FRAMEBUFFER_HEIGHT,
-                     gameData->string_timer, 
-			         &m_characterFont, 
-                     TIMER_DRAW_LOCATION);
-
-            // draw player text
-	        drawText(m_crtFramebuffer,
-                     FRAMEBUFFER_WIDTH,
-                     FRAMEBUFFER_HEIGHT,
-                     m_resources->text_pl1, 
-			         &m_characterFont, 
-                     PLAYERLIVES_TEXT_DRAW_LOCATION);
-
-            // draw chamber text
-	        drawText(m_crtFramebuffer,
-                     FRAMEBUFFER_WIDTH,
-                     FRAMEBUFFER_HEIGHT,
-                     m_resources->text_chamber, 
-			         &m_characterFont, 
-			         CHAMBER_TEXT_DRAW_LOCATION);
-
-            // room number chamber text
-	        drawText(m_crtFramebuffer,
-                     FRAMEBUFFER_WIDTH,
-                     FRAMEBUFFER_HEIGHT,
-                     gameData->string_roomNumber, 
-			         &m_characterFont, 
-			         CHAMBER_NUMBER_TEXT_DRAW_LOCATION);
-
-            // draw score
-	        drawText(m_crtFramebuffer,
-                     FRAMEBUFFER_WIDTH,
-                     FRAMEBUFFER_HEIGHT,
-                     playerData->scoreString, 
-			         &m_characterFont, 
-			         SCORE_DRAW_LOCATION);
-        }
-        else if (gameData->currentRoom->roomNumber == TITLESCREEN_ROOM_INDEX)
-        {
-	        // draw the cursor
-	        u16 drawLocation = gameData->numPlayers == 1 ? 0xf64 : 0xf70;  // hardcoded locations in the frambuffer
-
-            u32* crtFramebuffer = m_crtFramebuffer + (drawLocation * 8);
-            for (int loop = 0; loop < 8; loop++)
-            {
-                *crtFramebuffer = 0xffffffff;
-                crtFramebuffer++;
-            }
-        }
-    }
+    (this->*m_drawRoomFunctions[gameData->currentRoom->roomNumber])(gameData, m_crtFramebuffer);
 
     // to make it easier to tell this filter is on
     drawSprite(m_crtFramebuffer, 

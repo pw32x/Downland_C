@@ -1,7 +1,9 @@
     
 Todo
         
-    handle the screen transition
+    DONE handle the screen transition
+    
+    DONE drops are off on the first frame
        
         
 Bugs

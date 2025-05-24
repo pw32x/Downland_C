@@ -255,9 +255,20 @@ void SDLVideoFilterModern::updateRegenSprite(u8 currentPlayerSpriteNumber)
     m_regenSprite.updateSprite(0, m_regenSpriteBuffer);
 }
 
-void SDLVideoFilterModern::roomChanged(u8 roomNumber, s8 transitionType)
+void SDLVideoFilterModern::roomChanged(const GameData* gameData, 
+                                       u8 roomNumber, 
+                                       s8 transitionType)
 {
+    if (transitionType == WIPE_TRANSITION_ROOM_INDEX)
+    {
+        SDLUtils_convert1bppImageTo32bppCrtEffectImage(gameData->cleanBackground,
+                                                       m_wipeFramebuffer,
+                                                       FRAMEBUFFER_WIDTH,
+                                                       FRAMEBUFFER_HEIGHT,
+                                                       CrtColor::Blue);
 
+        memset(m_framebuffer, 0, FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT * sizeof(u32));
+    }
 }
 
 void SDLVideoFilterModern::drawDrops(const GameData* gameData, u32* framebuffer)
@@ -267,7 +278,8 @@ void SDLVideoFilterModern::drawDrops(const GameData* gameData, u32* framebuffer)
 
     for (int loop = 0; loop < NUM_DROPS; loop++)
     {
-        if (dropsRunner->wiggleTimer)
+        if (dropsRunner->wiggleTimer < 0 || // wiggling
+            dropsRunner->wiggleTimer > 1)   // falling
         {
             drawSprite(framebuffer, 
                        FRAMEBUFFER_WIDTH, 
@@ -293,8 +305,6 @@ void SDLVideoFilterModern::drawChamber(const GameData* gameData, u32* framebuffe
 
     // draw drops
     drawDrops(gameData, framebuffer);
-
-
 
     const PlayerData* playerData = gameData->currentPlayerData;
 
@@ -464,7 +474,30 @@ void SDLVideoFilterModern::drawTransition(const GameData* gameData, u32* framebu
 
 void SDLVideoFilterModern::drawWipeTransition(const GameData* gameData, u32* framebuffer)
 {
+    // not the most efficient as it updates the whole framebuffer
+    // instead of what changed per frame during the wipe, but at the 
+    // moment we're not worried about performance. Different platforms
+    // will have to handle this in different ways.
+	for (int sectionCounter = 0; sectionCounter < 6; sectionCounter++)
+	{
+        u32 offset = (sectionCounter * 32 * FRAMEBUFFER_WIDTH);
+	    u32* framebufferRunner = framebuffer + offset;
+	    u32* wipeFramebufferRunner = m_wipeFramebuffer + offset;
 
+        for (int lineCounter = 0; lineCounter < gameData->transitionCurrentLine; lineCounter++)
+        {
+		    for (int innerLoop = 0; innerLoop < FRAMEBUFFER_WIDTH; innerLoop++)
+		    {
+			    *framebufferRunner = *wipeFramebufferRunner;
+
+			    // draw a solid line underneath the pixel
+				*(framebufferRunner + FRAMEBUFFER_WIDTH) = 0x000000ff;
+
+			    framebufferRunner++;
+			    wipeFramebufferRunner++;
+		    }
+        }
+	}
 }
 
 void SDLVideoFilterModern::drawGetReadyScreen(const GameData* gameData, u32* framebuffer)
@@ -483,10 +516,10 @@ void SDLVideoFilterModern::update(const GameData* gameData)
     if (m_outputTexture == nullptr)
         init();
 
-    (this->*m_drawRoomFunctions[gameData->currentRoom->roomNumber])(gameData, m_crtFramebuffer);
+    (this->*m_drawRoomFunctions[gameData->currentRoom->roomNumber])(gameData, m_framebuffer);
 
     // to make it easier to tell this filter is on
-    drawSprite(m_crtFramebuffer, 
+    drawSprite(m_framebuffer, 
                FRAMEBUFFER_WIDTH, 
                FRAMEBUFFER_HEIGHT,
                240,
@@ -497,6 +530,6 @@ void SDLVideoFilterModern::update(const GameData* gameData)
     // Update the texture with the new data
     SDL_UpdateTexture(m_outputTexture, 
                       NULL, 
-                      m_crtFramebuffer, 
+                      m_framebuffer, 
                       FRAMEBUFFER_WIDTH * sizeof(uint32_t));
 }

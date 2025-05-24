@@ -130,10 +130,10 @@ void setFullscreen(bool fullscreen)
     updateDestRect();
 }
 
-void gameRoomChanged(u8 roomNumber, s8 transitionType)
+void gameRoomChanged(const GameData* gameData, u8 roomNumber, s8 transitionType)
 {
     auto& currentVideoFilter = videoFilters[currentVideoFilterIndex];
-    currentVideoFilter->roomChanged(roomNumber, transitionType);
+    currentVideoFilter->roomChanged(gameData, roomNumber, transitionType);
 }
 
 SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
@@ -246,7 +246,7 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
     //videoFilters.emplace_back(std::make_unique<SDLVideoFilterBasicCrtArtifactsOrange>(renderer, &resources));
     videoFilters.emplace_back(std::make_unique<SDLVideoFilterModern>(renderer, &resources));
 
-    selectFilter(videoFilters.size() - 1); // my favorite
+    selectFilter((int)videoFilters.size() - 1); // my favorite
 
     Game_ChangedRoomCallback = gameRoomChanged;
 

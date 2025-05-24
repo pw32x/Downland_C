@@ -82,7 +82,7 @@ void wipe_transition_update(Room* room, GameData* gameData, Resources* resources
 	// can finish when the transition sound effect does.
 	u8 loopCount = gameData->transitionCurrentLine % 4 == 0 ? 2 : 1;
 
-	for (u8 loop = 0; loop < loopCount; loop++)
+	for (u8 loopCounter = 0; loopCounter < loopCount; loopCounter++)
 	{
 		u16 offset = gameData->transitionCurrentLine * FRAMEBUFFER_PITCH;
 
@@ -120,7 +120,7 @@ void wipe_transition_update(Room* room, GameData* gameData, Resources* resources
 		gameData->transitionCurrentLine++;
 	}
 
-	// when we're done, set the fps back to normal
+	// we're done
 	if (gameData->transitionCurrentLine == 32)
 	{
 		Game_EnterRoom(gameData, gameData->transitionRoomNumber, resources);

@@ -66,7 +66,7 @@ void Game_EnterRoom(struct GameData* gameData, u8 roomNumber, Resources* resourc
 								resources);
 
 	if (Game_ChangedRoomCallback != NULL)
-		Game_ChangedRoomCallback(roomNumber, -1);
+		Game_ChangedRoomCallback(gameData, roomNumber, -1);
 }
 
 void Game_TransitionToRoom(struct GameData* gameData, u8 roomNumber, Resources* resources)
@@ -84,7 +84,7 @@ void Game_TransitionToRoom(struct GameData* gameData, u8 roomNumber, Resources* 
 								resources);
 
 	if (Game_ChangedRoomCallback != NULL)
-		Game_ChangedRoomCallback(roomNumber, TRANSITION_ROOM_INDEX);
+		Game_ChangedRoomCallback(gameData, roomNumber, TRANSITION_ROOM_INDEX);
 }
 
 void Game_WipeTransitionToRoom(struct GameData* gameData, u8 roomNumber, Resources* resources)
@@ -102,7 +102,7 @@ void Game_WipeTransitionToRoom(struct GameData* gameData, u8 roomNumber, Resourc
 								resources);
 
 	if (Game_ChangedRoomCallback != NULL)
-		Game_ChangedRoomCallback(roomNumber, WIPE_TRANSITION_ROOM_INDEX);
+		Game_ChangedRoomCallback(gameData, roomNumber, WIPE_TRANSITION_ROOM_INDEX);
 }
 
 void Game_Shutdown(struct GameData* gameData)

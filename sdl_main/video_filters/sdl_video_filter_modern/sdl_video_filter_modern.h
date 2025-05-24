@@ -41,7 +41,7 @@ public:
 	bool init() override;
 	void shutdown() override;
 	void update(const GameData* gameData) override;
-	void roomChanged(u8 roomNumber, s8 transitionType);
+	void roomChanged(const GameData* gameData, u8 roomNumber, s8 transitionType);
 
 private:
 
@@ -56,7 +56,8 @@ private:
 	void drawGetReadyScreen(const GameData* gameData, u32* framebuffer);
 
 private:
-	unsigned int m_crtFramebuffer[FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT]; // frame buffer for basic CRT artifact effects
+	unsigned int m_framebuffer[FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT];
+	unsigned int m_wipeFramebuffer[FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT];
 
 	// we build 32bit sprites from the raw 1bpp sprites
 	Sprite m_dropSprite;

@@ -12,7 +12,7 @@ void Game_TransitionToRoom(struct GameData* gameData, u8 roomNumber, Resources* 
 void Game_WipeTransitionToRoom(struct GameData* gameData, u8 roomNumber, Resources* resources);
 void Game_Shutdown(struct GameData* gameData);
 
-typedef void (*Game_ChangedRoomCallbackType)(u8 roomNumber, s8 transitionType);
+typedef void (*Game_ChangedRoomCallbackType)(const struct GameData* gameData, u8 roomNumber, s8 transitionType);
 
 extern Game_ChangedRoomCallbackType Game_ChangedRoomCallback;
 

@@ -19,49 +19,49 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <Media Include="..\sounds\climb_down.wav">
+    <Media Include="..\..\sounds\climb_down.wav">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
     </Media>
-    <Media Include="..\sounds\climb_up.wav">
+    <Media Include="..\..\sounds\climb_up.wav">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
     </Media>
-    <Media Include="..\sounds\jump.wav">
+    <Media Include="..\..\sounds\jump.wav">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
     </Media>
-    <Media Include="..\sounds\land.wav">
+    <Media Include="..\..\sounds\land.wav">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
     </Media>
-    <Media Include="..\sounds\pickup.wav">
+    <Media Include="..\..\sounds\pickup.wav">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
     </Media>
-    <Media Include="..\sounds\run.wav">
+    <Media Include="..\..\sounds\run.wav">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
     </Media>
-    <Media Include="..\sounds\splat.wav">
+    <Media Include="..\..\sounds\splat.wav">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
     </Media>
-    <Media Include="..\sounds\transition.wav">
+    <Media Include="..\..\sounds\transition.wav">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
@@ -69,65 +69,65 @@
     </Media>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\game\ball.c" />
-    <ClCompile Include="..\game\bird.c" />
-    <ClCompile Include="..\game\debug_utils.c" />
-    <ClCompile Include="..\game\door_utils.c" />
-    <ClCompile Include="..\game\draw_utils.c" />
-    <ClCompile Include="..\game\drops_manager.c" />
-    <ClCompile Include="..\game\game.c" />
-    <ClCompile Include="..\game\physics_utils.c" />
-    <ClCompile Include="..\game\player.c" />
-    <ClCompile Include="..\game\rooms\chambers.c" />
-    <ClCompile Include="..\game\rooms\getready.c" />
-    <ClCompile Include="..\game\rooms\rooms.c" />
-    <ClCompile Include="..\game\rooms\titlescreen.c" />
-    <ClCompile Include="..\game\rooms\transitions.c" />
-    <ClCompile Include="..\game\string_utils.c" />
-    <ClCompile Include="..\resource_loaders\resource_loader_filesys.c" />
-    <ClCompile Include="..\sdl_main\sdl_main.cpp" />
-    <ClCompile Include="..\sdl_main\sdl_sound.cpp" />
-    <ClCompile Include="..\sdl_main\sdl_sound_manager.cpp" />
-    <ClCompile Include="..\sdl_main\video_filters\sdl_video_filter_basic_crt_artifacts_blue.cpp" />
-    <ClCompile Include="..\sdl_main\video_filters\sdl_video_filter_basic_crt_artifacts_orange.cpp" />
-    <ClCompile Include="..\sdl_main\video_filters\sdl_video_filter_new_renderer.cpp" />
-    <ClCompile Include="..\sdl_main\video_filters\sdl_video_filter_raw.cpp" />
-    <ClCompile Include="..\sdl_main\video_filters\sdl_video_filter_utils.cpp" />
+    <ClCompile Include="..\..\game\ball.c" />
+    <ClCompile Include="..\..\game\bird.c" />
+    <ClCompile Include="..\..\game\debug_utils.c" />
+    <ClCompile Include="..\..\game\door_utils.c" />
+    <ClCompile Include="..\..\game\draw_utils.c" />
+    <ClCompile Include="..\..\game\drops_manager.c" />
+    <ClCompile Include="..\..\game\game.c" />
+    <ClCompile Include="..\..\game\physics_utils.c" />
+    <ClCompile Include="..\..\game\player.c" />
+    <ClCompile Include="..\..\game\rooms\chambers.c" />
+    <ClCompile Include="..\..\game\rooms\getready.c" />
+    <ClCompile Include="..\..\game\rooms\rooms.c" />
+    <ClCompile Include="..\..\game\rooms\titlescreen.c" />
+    <ClCompile Include="..\..\game\rooms\transitions.c" />
+    <ClCompile Include="..\..\game\string_utils.c" />
+    <ClCompile Include="..\..\resource_loaders\resource_loader_filesys.c" />
+    <ClCompile Include="..\..\sdl_main\sdl_main.cpp" />
+    <ClCompile Include="..\..\sdl_main\sdl_sound.cpp" />
+    <ClCompile Include="..\..\sdl_main\sdl_sound_manager.cpp" />
+    <ClCompile Include="..\..\sdl_main\video_filters\sdl_video_filter_basic_crt_artifacts_blue.cpp" />
+    <ClCompile Include="..\..\sdl_main\video_filters\sdl_video_filter_basic_crt_artifacts_orange.cpp" />
+    <ClCompile Include="..\..\sdl_main\video_filters\sdl_video_filter_new_renderer.cpp" />
+    <ClCompile Include="..\..\sdl_main\video_filters\sdl_video_filter_raw.cpp" />
+    <ClCompile Include="..\..\sdl_main\video_filters\sdl_video_filter_utils.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\game\background_types.h" />
-    <ClInclude Include="..\game\ball.h" />
-    <ClInclude Include="..\game\base_defines.h" />
-    <ClInclude Include="..\game\base_types.h" />
-    <ClInclude Include="..\game\bird.h" />
-    <ClInclude Include="..\game\debug_utils.h" />
-    <ClInclude Include="..\game\door_types.h" />
-    <ClInclude Include="..\game\door_utils.h" />
-    <ClInclude Include="..\game\draw_utils.h" />
-    <ClInclude Include="..\game\drops_manager.h" />
-    <ClInclude Include="..\game\drops_types.h" />
-    <ClInclude Include="..\game\game.h" />
-    <ClInclude Include="..\game\game_types.h" />
-    <ClInclude Include="..\game\joystick_types.h" />
-    <ClInclude Include="..\game\physics_utils.h" />
-    <ClInclude Include="..\game\pickup_types.h" />
-    <ClInclude Include="..\game\player.h" />
-    <ClInclude Include="..\game\player_types.h" />
-    <ClInclude Include="..\game\resource_types.h" />
-    <ClInclude Include="..\game\rooms\chambers.h" />
-    <ClInclude Include="..\game\rooms\rooms.h" />
-    <ClInclude Include="..\game\rooms\room_types.h" />
-    <ClInclude Include="..\game\sound.h" />
-    <ClInclude Include="..\game\string_utils.h" />
-    <ClInclude Include="..\resource_loaders\resource_loader_filesys.h" />
-    <ClInclude Include="..\sdl_main\sdl_sound.h" />
-    <ClInclude Include="..\sdl_main\sdl_sound_manager.h" />
-    <ClInclude Include="..\sdl_main\video_filters\sdl_video_filter_base.h" />
-    <ClInclude Include="..\sdl_main\video_filters\sdl_video_filter_basic_crt_artifacts_blue.h" />
-    <ClInclude Include="..\sdl_main\video_filters\sdl_video_filter_basic_crt_artifacts_orange.h" />
-    <ClInclude Include="..\sdl_main\video_filters\sdl_video_filter_new_renderer.h" />
-    <ClInclude Include="..\sdl_main\video_filters\sdl_video_filter_raw.h" />
-    <ClInclude Include="..\sdl_main\video_filters\sdl_video_filter_utils.h" />
+    <ClInclude Include="..\..\game\background_types.h" />
+    <ClInclude Include="..\..\game\ball.h" />
+    <ClInclude Include="..\..\game\base_defines.h" />
+    <ClInclude Include="..\..\game\base_types.h" />
+    <ClInclude Include="..\..\game\bird.h" />
+    <ClInclude Include="..\..\game\debug_utils.h" />
+    <ClInclude Include="..\..\game\door_types.h" />
+    <ClInclude Include="..\..\game\door_utils.h" />
+    <ClInclude Include="..\..\game\draw_utils.h" />
+    <ClInclude Include="..\..\game\drops_manager.h" />
+    <ClInclude Include="..\..\game\drops_types.h" />
+    <ClInclude Include="..\..\game\game.h" />
+    <ClInclude Include="..\..\game\game_types.h" />
+    <ClInclude Include="..\..\game\joystick_types.h" />
+    <ClInclude Include="..\..\game\physics_utils.h" />
+    <ClInclude Include="..\..\game\pickup_types.h" />
+    <ClInclude Include="..\..\game\player.h" />
+    <ClInclude Include="..\..\game\player_types.h" />
+    <ClInclude Include="..\..\game\resource_types.h" />
+    <ClInclude Include="..\..\game\rooms\chambers.h" />
+    <ClInclude Include="..\..\game\rooms\rooms.h" />
+    <ClInclude Include="..\..\game\rooms\room_types.h" />
+    <ClInclude Include="..\..\game\sound.h" />
+    <ClInclude Include="..\..\game\string_utils.h" />
+    <ClInclude Include="..\..\resource_loaders\resource_loader_filesys.h" />
+    <ClInclude Include="..\..\sdl_main\sdl_sound.h" />
+    <ClInclude Include="..\..\sdl_main\sdl_sound_manager.h" />
+    <ClInclude Include="..\..\sdl_main\video_filters\sdl_video_filter_base.h" />
+    <ClInclude Include="..\..\sdl_main\video_filters\sdl_video_filter_basic_crt_artifacts_blue.h" />
+    <ClInclude Include="..\..\sdl_main\video_filters\sdl_video_filter_basic_crt_artifacts_orange.h" />
+    <ClInclude Include="..\..\sdl_main\video_filters\sdl_video_filter_new_renderer.h" />
+    <ClInclude Include="..\..\sdl_main\video_filters\sdl_video_filter_raw.h" />
+    <ClInclude Include="..\..\sdl_main\video_filters\sdl_video_filter_utils.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
@@ -137,11 +137,11 @@
     <ResourceCompile Include="resource.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\thirdparty\sdl3\x64\SDL3.dll">
+    <None Include="..\..\thirdparty\sdl3\x64\SDL3.dll">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
     </None>
-    <None Include="..\thirdparty\sdl3\x86\SDL3.dll">
+    <None Include="..\..\thirdparty\sdl3\x86\SDL3.dll">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
     </None>
@@ -216,13 +216,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;$(DownlandDefines);%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\..\SDL3-3.2.2\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\SDL3-3.2.2\include;</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>..\..\SDL3-3.2.2\lib\x86\sdl3.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\..\..\SDL3-3.2.2\lib\x86\sdl3.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -233,7 +233,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;$(DownlandDefines);%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\..\SDL3-3.2.2\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\SDL3-3.2.2\include;</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -241,7 +241,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>..\..\SDL3-3.2.2\lib\x86\sdl3.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\..\..\SDL3-3.2.2\lib\x86\sdl3.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -250,13 +250,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;$(DownlandDefines);%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\..\SDL3-3.2.2\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\SDL3-3.2.2\include;</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>..\..\SDL3-3.2.2\lib\x64\sdl3.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\..\..\SDL3-3.2.2\lib\x64\sdl3.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -267,7 +267,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;$(DownlandDefines);%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\..\SDL3-3.2.2\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\SDL3-3.2.2\include;</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -275,7 +275,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>..\..\SDL3-3.2.2\lib\x64\sdl3.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\..\..\SDL3-3.2.2\lib\x64\sdl3.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

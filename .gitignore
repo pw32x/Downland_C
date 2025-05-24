@@ -35,6 +35,7 @@ bld/
 # Allow specific exceptions
 !thirdparty/sdl3/x64/
 !thirdparty/sdl3/x86/
+!platforms/win32
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/

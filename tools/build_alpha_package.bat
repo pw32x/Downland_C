@@ -8,7 +8,7 @@ REM Set up the Visual Studio 2022 environment
 call "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools\VsDevCmd.bat"
 
 REM Build the solution using MSBuild
-msbuild ..\visualstudio2022\Downland_C.sln /p:Configuration=Release /p:Platform=x86 /p:OutDir=%OUTPUT_DIR%\ /p:DownlandDefines=DEV_MODE
+msbuild ..\platfforms\win32\Downland_C.sln /p:Configuration=Release /p:Platform=x86 /p:OutDir=%OUTPUT_DIR%\ /p:DownlandDefines=DEV_MODE
 
 echo Build completed.
 

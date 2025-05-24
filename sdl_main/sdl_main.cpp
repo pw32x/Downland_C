@@ -241,12 +241,12 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
 
     // Init video filters
     // 
-    //videoFilters.emplace_back(std::make_unique<SDLVideoFilterRaw>(renderer, &resources));
+    videoFilters.emplace_back(std::make_unique<SDLVideoFilterRaw>(renderer, &resources));
     videoFilters.emplace_back(std::make_unique<SDLVideoFilterBasicCrtArtifactsBlue>(renderer, &resources));
-    //videoFilters.emplace_back(std::make_unique<SDLVideoFilterBasicCrtArtifactsOrange>(renderer, &resources));
+    videoFilters.emplace_back(std::make_unique<SDLVideoFilterBasicCrtArtifactsOrange>(renderer, &resources));
     videoFilters.emplace_back(std::make_unique<SDLVideoFilterModern>(renderer, &resources));
 
-    selectFilter((int)videoFilters.size() - 1); // my favorite
+    selectFilter((int)videoFilters.size() - 1);
 
     Game_ChangedRoomCallback = gameRoomChanged;
 

@@ -249,7 +249,6 @@ void chamber_update(Room* room, GameData* gameData, Resources* resources)
 	{
 		// compute collisions
 		// pick up item or die
-		int a = 3;
 		Player_PerformCollisions((struct GameData*)gameData, resources);
 	}
 

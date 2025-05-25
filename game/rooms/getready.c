@@ -24,8 +24,6 @@ void get_ready_room_draw(u8 roomNumber, GameData* gameData, Resources* resources
 
 void get_ready_room_init(Room* room, GameData* gameData, Resources* resources)
 {
-	u8 roomNumber = room->roomNumber;
-
 	// init drops
 	gameData->dropData.dropSpawnPositions = &resources->roomResources[TITLESCREEN_ROOM_INDEX].dropSpawnPositions;
 	DropsManager_Init(&gameData->dropData, TITLESCREEN_ROOM_INDEX, 1 /*gameCompletionCount*/);

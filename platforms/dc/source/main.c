@@ -29,6 +29,8 @@
 #include <dc/maple/controller.h>
 
 #include <assert.h>
+#include <string.h>
+#include <stdlib.h>
 
 #include <kos/fs.h>
 
@@ -140,6 +142,7 @@ void convert1bppImageTo16bppCrtEffectImage(const u8* originalImage,
         // pixels of the destination texture, so:
         // source bits:        00 01 10 11
         // final pixel colors: black, black, blue, blue, orange, orange, white, white.
+        u32 yOffset = (y + 24) * 320;
 
         for (int x = 0; x < FRAMEBUFFER_WIDTH; x += 2) 
         {
@@ -157,8 +160,8 @@ void convert1bppImageTo16bppCrtEffectImage(const u8* originalImage,
             else if (bit1 == 1 && bit2 == 1) color = WHITE;
 
             // Apply base color
-            crtImage[((y + 24) * 320) + (x + 32)]     = color;
-            crtImage[((y + 24) * 320) + (x + 32) + 1] = color;
+            crtImage[yOffset + (x + 32)]     = color;
+            crtImage[yOffset + (x + 32) + 1] = color;
         }
 
         // Apply a quick and dirty crt artifact effect
@@ -170,8 +173,6 @@ void convert1bppImageTo16bppCrtEffectImage(const u8* originalImage,
         //                                          Also turn off the other pixel in the pair to
         //                                          black.
         // final final:  black, black, black, white, white, black, white, white
-        u16 yOffset = (y + 24) * 320;
-
         for (int x = 32; x < (FRAMEBUFFER_WIDTH + 32); x += 2) 
         {
             uint32_t leftPixel = crtImage[yOffset + x];
@@ -220,6 +221,10 @@ int main(int argc, char **argv)
 
     Game_Init(&gameData, &resources);
 
+    u16* crtFramebuffer = malloc(320*240);
+    memset(crtFramebuffer, 0, 320*240*2);
+    
+
     while (1) 
     {
         Update_Controls(&gameData.joystickState);
@@ -240,9 +245,10 @@ int main(int argc, char **argv)
         //updateFramebufferTexture(gameData.framebuffer, vram_s);
 
         convert1bppImageTo16bppCrtEffectImage(gameData.framebuffer,
-                                              vram_s,
+                                              crtFramebuffer,
                                               CrtColor_Blue);
 
+        memcpy(vram_s, crtFramebuffer, 320*240*2);
 
         vid_flip(-1);
     }

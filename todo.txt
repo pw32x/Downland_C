@@ -1,7 +1,14 @@
     
 Todo
-        
-       
+
+    DONE render the game
+    DONE joystick
+    DONE add color
+    sound
+    two player support?
+
+    move the romdisk to somewhere configurable        
+
         
 Bugs
 

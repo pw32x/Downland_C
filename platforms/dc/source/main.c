@@ -58,26 +58,153 @@ void Sound_Stop(u8 soundindex)
 {
 }
 
+
+void Update_Controls(JoystickState* joystickState)
+{
+    maple_device_t* cont = maple_enum_type(0, MAPLE_FUNC_CONTROLLER);
+
+    if (cont == NULL) 
+        return;
+        
+    cont_state_t *state = (cont_state_t *)maple_dev_status(cont);
+
+    if (state == NULL)
+        return;
+
+    bool leftDown = (state->buttons & CONT_DPAD_LEFT) || (state->joyx < -64);
+    bool rightDown = (state->buttons & CONT_DPAD_RIGHT) || (state->joyx > 64);
+    bool upDown = (state->buttons & CONT_DPAD_UP) || (state->joyy < -64);
+    bool downDown = (state->buttons & CONT_DPAD_DOWN) || (state->joyy > 64);
+    bool jumpDown = state->buttons & CONT_A;
+    bool startDown = state->buttons & CONT_START;
+
+    joystickState->leftPressed = !joystickState->leftDown & leftDown;
+    joystickState->rightPressed = !joystickState->rightDown & rightDown;
+    joystickState->upPressed = !joystickState->upDown & upDown;
+    joystickState->downPressed =  !joystickState->downDown & downDown;
+    joystickState->jumpPressed =  !joystickState->jumpDown & jumpDown;
+    joystickState->startDownPressed = !joystickState->startDown & startDown;
+
+    joystickState->leftReleased = joystickState->leftDown & !leftDown;
+    joystickState->rightReleased = joystickState->rightDown & !rightDown;
+    joystickState->upReleased = joystickState->upDown & !upDown;
+    joystickState->downReleased =  joystickState->downDown & !downDown;
+    joystickState->jumpReleased =  joystickState->jumpDown & !jumpDown;
+    joystickState->startDownReleased = joystickState->startDownPressed & !startDown;
+
+    joystickState->leftDown = leftDown;
+    joystickState->rightDown = rightDown;
+    joystickState->upDown = upDown;
+    joystickState->downDown = downDown;
+    joystickState->jumpDown = jumpDown;
+    joystickState->startDown = startDown;
+}
+
+void updateFramebufferTexture(const u8* gameFramebuffer, 
+                              u16* dcFramebuffer) 
+{
+    // Convert 1-bit buffer to 16-bit pixels
+    for (int y = 0; y < FRAMEBUFFER_HEIGHT; y++) 
+    {
+        for (int x = 0; x < FRAMEBUFFER_WIDTH; x++) 
+        {
+            u8 bit = (gameFramebuffer[(x / 8) + (y * FRAMEBUFFER_PITCH)] >> (7 - (x % 8))) & 1;
+            dcFramebuffer[(y + 24) * 320 + (x + 32)] = bit ? 0xFFFF : 0x0000; // White or Black
+        }
+    }
+}
+
+// take the framebuffer and apply basic CRT artifacts, updating a
+// second framebuffer and a texture for it.
+enum CrtColor
+{
+    CrtColor_Blue,
+    CrtColor_Orange
+};
+
+void convert1bppImageTo16bppCrtEffectImage(const u8* originalImage,
+                                           u16* crtImage,
+                                           enum CrtColor crtColor) 
+{
+    const u8 bytesPerRow = FRAMEBUFFER_WIDTH / 8;
+
+    // Color definitions
+    const u16 BLACK  = 0x0000; // 00 black
+    const u16 BLUE   = crtColor == CrtColor_Blue ? 0x001F : 0xFC80; // 01 blue
+    const u16 ORANGE = crtColor == CrtColor_Blue ? 0xFC80 : 0x001F; // 10 orange
+    const u16 WHITE  = 0xFFFF; // 11 white
+
+    for (int y = 0; y < FRAMEBUFFER_HEIGHT; ++y) 
+    {
+        // every pair of bits generates a color for the two corresponding
+        // pixels of the destination texture, so:
+        // source bits:        00 01 10 11
+        // final pixel colors: black, black, blue, blue, orange, orange, white, white.
+
+        for (int x = 0; x < FRAMEBUFFER_WIDTH; x += 2) 
+        {
+            int byteIndex = (y * bytesPerRow) + (x / 8);
+            int bitOffset = 7 - (x % 8);
+
+            // Read two adjacent bits
+            uint8_t bit1 = (originalImage[byteIndex] >> bitOffset) & 1;
+            uint8_t bit2 = (originalImage[byteIndex] >> (bitOffset - 1)) & 1;
+
+            // Determine base color
+            uint32_t color = BLACK;
+            if (bit1 == 0 && bit2 == 1) color = BLUE;
+            else if (bit1 == 1 && bit2 == 0) color = ORANGE;
+            else if (bit1 == 1 && bit2 == 1) color = WHITE;
+
+            // Apply base color
+            crtImage[((y + 24) * 320) + (x + 32)]     = color;
+            crtImage[((y + 24) * 320) + (x + 32) + 1] = color;
+        }
+
+        // Apply a quick and dirty crt artifact effect
+        // pixels whose original bits are adjacent are converted to white
+        // source colors: black, black, blue, blue, orange, orange, white, white.
+        // source bits:  00 01 10 11
+        // seen as:      00 00 01 01 10 10 11 11 // forth and fifth pairs have adjacent bits. 
+        //                                          Turn both corresponding pixels to white.
+        //                                          Also turn off the other pixel in the pair to
+        //                                          black.
+        // final final:  black, black, black, white, white, black, white, white
+        u16 yOffset = (y + 24) * 320;
+
+        for (int x = 32; x < (FRAMEBUFFER_WIDTH + 32); x += 2) 
+        {
+            uint32_t leftPixel = crtImage[yOffset + x];
+            uint32_t rightPixel = crtImage[yOffset + x + 1];
+
+            if (rightPixel == BLUE && x < 320 - 2)
+            {
+                uint32_t pixel3 = crtImage[yOffset + x + 2];
+                if (pixel3 == ORANGE || pixel3 == WHITE)
+                {
+                    rightPixel = WHITE;
+                    leftPixel = BLACK;
+                }
+            }
+            else if (leftPixel == ORANGE && x >= 2)
+            {
+                uint32_t pixel0 = crtImage[yOffset + x - 1];
+                if (pixel0 == BLUE || pixel0 == WHITE)
+                {
+                    leftPixel = WHITE;
+                    rightPixel = BLACK;
+                }
+            }
+
+            crtImage[yOffset + x] = leftPixel;
+            crtImage[yOffset + x + 1] = rightPixel;
+        }
+    }
+}
+
 int main(int argc, char **argv) 
 {
-    uint8_t r, g, b;
-    uint32_t t = 0;
-    //char filename[256];
-
-    /* Adjust frequency for faster or slower transitions */
-    float frequency = 0.01; 
-    
-    //maple_device_t *cont;
-    //cont_state_t *state;
-
-    /* Set the video mode */
     vid_set_mode(DM_320x240, PM_RGB565);
-
-/*
-    file_t fd = 0;
-    fd = fs_open("/rd/Downland V1.1 (1983) (26-3046) (Tandy) [a1].ccc", O_RDONLY);
-    assert(fd);
-*/
 
     bool romFoundAndLoaded = false;
     for (int loop = 0; loop < romFileNamesCount; loop++)
@@ -95,40 +222,26 @@ int main(int argc, char **argv)
 
     while (1) 
     {
-        /*
-        if ((cont = maple_enum_type(0, MAPLE_FUNC_CONTROLLER)) != NULL) 
+        Update_Controls(&gameData.joystickState);
+
+        if (gameData.joystickState.startDownPressed)
         {
-            state = (cont_state_t *)maple_dev_status(cont);
-
-            if(state == NULL)
-                break;
-
-            if(state->buttons & CONT_START)
-                break;
-
-            if(state->buttons & CONT_A) {
-                sprintf(filename, "/pc/screenshot%03d.ppm", counter);
-                vid_screen_shot(filename);
-                counter = (counter + 1) % 1000;
-            }
+            gameData.paused = !gameData.paused;
         }
-        */
 
-        Game_Update(&gameData, &resources);
+        if (!gameData.paused)
+        {
+            Game_Update(&gameData, &resources);
+        }
 
         /* Wait for VBlank */
         vid_waitvbl();
         
-        /* Calculate next background color */
-        r = (uint8_t)((fsin(frequency * t + 0) * 127.5) + 127.5);
-        g = (uint8_t)((fsin(frequency * t + 2 * F_PI / 3) * 127.5) + 127.5);
-        b = (uint8_t)((fsin(frequency * t + 4 * F_PI / 3) * 127.5) + 127.5);
+        //updateFramebufferTexture(gameData.framebuffer, vram_s);
 
-        /* Increment t to change color in the next cycle */
-        t = (t + 1) % INT32_MAX;
-
-        /* Draw Background */
-        vid_clear(r, g, b);
+        convert1bppImageTo16bppCrtEffectImage(gameData.framebuffer,
+                                              vram_s,
+                                              CrtColor_Blue);
 
 
         vid_flip(-1);

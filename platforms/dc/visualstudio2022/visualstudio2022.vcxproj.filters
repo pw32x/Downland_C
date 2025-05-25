@@ -1,0 +1,139 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{0e354f0e-28a3-4ba9-b996-6cc8fbb6ccdc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Rooms">
+      <UniqueIdentifier>{4157fa5b-93e6-406e-9477-62b26911d40b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\game\drops_manager.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\drops_types.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\game.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\game_types.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\joystick_types.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\physics_utils.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\pickup_types.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\player.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\player_types.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\resource_types.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\sound.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\string_utils.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\background_types.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\ball.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\base_defines.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\base_types.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\bird.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\debug_utils.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\door_types.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\door_utils.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\draw_utils.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\rooms\chambers.h">
+      <Filter>Game\Rooms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\rooms\room_types.h">
+      <Filter>Game\Rooms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\rooms\rooms.h">
+      <Filter>Game\Rooms</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\game\ball.c">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game\bird.c">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game\debug_utils.c">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game\door_utils.c">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game\draw_utils.c">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game\drops_manager.c">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game\game.c">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game\physics_utils.c">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game\player.c">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game\string_utils.c">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game\rooms\getready.c">
+      <Filter>Game\Rooms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game\rooms\rooms.c">
+      <Filter>Game\Rooms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game\rooms\titlescreen.c">
+      <Filter>Game\Rooms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game\rooms\transitions.c">
+      <Filter>Game\Rooms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game\rooms\chambers.c">
+      <Filter>Game\Rooms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\main.c">
+      <Filter>Source</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

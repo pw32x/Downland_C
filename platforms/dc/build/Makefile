@@ -1,8 +1,4 @@
 # KallistiOS ##version##
-#
-# video/screenshot/Makefile
-# Copyright (C) 2024 Andy Barajas
-#
 
 PROJECT = downland
 
@@ -10,6 +6,7 @@ PROJECT = downland
 SRC_ROOT = ..
 GAME_ROOT = $(SRC_ROOT)/../../game
 ROOMS_ROOT = $(GAME_ROOT)/rooms
+RESOURCELOADERS_ROOT = $(SRC_ROOT)/../../resource_loaders
 OUT_DIR = $(SRC_ROOT)/out
 CDROOT = $(OUT_DIR)/cd_root
 
@@ -19,6 +16,7 @@ SCRAMBLED = $(CDROOT)/1ST_READ.BIN
 IP_BIN = $(OUT_DIR)/IP.BIN
 CDI = $(OUT_DIR)/$(PROJECT).cdi
 
+KOS_ROMDISK_DIR = romdisk
 
 # Compiler flags
 CFLAGS = -Werror
@@ -27,17 +25,19 @@ CFLAGS = -Werror
 LOCAL_SRCS = $(wildcard $(SRC_ROOT)/source/*.c)
 GAME_SRCS = $(wildcard $(GAME_ROOT)/*.c)
 ROOM_SRCS = $(wildcard $(ROOMS_ROOT)/*.c)
+RESOURCELOADERS_SRCS = $(wildcard $(RESOURCELOADERS_ROOT)/*.c)
 
 # Object file output mapping
 LOCAL_OBJS = $(patsubst $(SRC_ROOT)/source/%.c,$(OUT_DIR)/source/%.o,$(LOCAL_SRCS))
 GAME_OBJS = $(patsubst $(GAME_ROOT)/%.c,$(OUT_DIR)/game/%.o,$(GAME_SRCS))
 ROOM_OBJS = $(patsubst $(ROOMS_ROOT)/%.c,$(OUT_DIR)/game/rooms/%.o,$(ROOM_SRCS))
+RESOURCELOADERS_OBJS = $(patsubst $(RESOURCELOADERS_ROOT)/%.c,$(OUT_DIR)/resource_loaders/%.o,$(RESOURCELOADERS_SRCS))
+ROMDISK_OBJ = romdisk.o
 
-
-OBJS = $(LOCAL_OBJS) $(GAME_OBJS) $(ROOM_OBJS)
+OBJS = $(LOCAL_OBJS) $(GAME_OBJS) $(ROOM_OBJS) $(ROMDISK_OBJ) $(RESOURCELOADERS_OBJS)
 
 # Include paths
-INCLUDES = -I$(SRC_ROOT)/source -I$(GAME_ROOT) -I$(ROOMS_ROOT)
+INCLUDES = -I$(SRC_ROOT)/source -I$(GAME_ROOT) -I$(ROOMS_ROOT) -I$(RESOURCELOADERS_ROOT)
 
 all: rm-elf prepare_dirs $(CDI)
 
@@ -55,7 +55,7 @@ rm-elf:
 	-rm -f $(TARGET)
 
 # Ensure directory structure exists
-prepare_dirs: $(OUT_DIR) $(OUT_DIR)/source $(OUT_DIR)/game $(OUT_DIR)/game/rooms $(CDROOT)
+prepare_dirs: $(OUT_DIR) $(OUT_DIR)/source $(OUT_DIR)/game $(OUT_DIR)/game/rooms $(OUT_DIR)/resource_loaders $(CDROOT)
 
 $(OUT_DIR):
 	mkdir -p $@
@@ -65,6 +65,9 @@ $(OUT_DIR)/source:
 
 $(OUT_DIR)/game:
 	mkdir -p $@
+	
+$(OUT_DIR)/resource_loaders:
+	mkdir -p $@	
 
 $(OUT_DIR)/game/rooms:
 	mkdir -p $@
@@ -78,6 +81,9 @@ $(OUT_DIR)/source/%.o: $(SRC_ROOT)/source/%.c | $(OUT_DIR)/source
 
 $(OUT_DIR)/game/%.o: $(GAME_ROOT)/%.c | $(OUT_DIR)/game
 	kos-cc $(CFLAGS) $(INCLUDES) -c $< -o $@
+	
+$(OUT_DIR)/resource_loaders/%.o: $(RESOURCELOADERS_ROOT)/%.c | $(OUT_DIR)/resource_loaders
+	kos-cc $(CFLAGS) $(INCLUDES) -c $< -o $@	
 
 $(OUT_DIR)/game/rooms/%.o: $(ROOMS_ROOT)/%.c | $(OUT_DIR)/game/rooms
 	kos-cc $(CFLAGS) $(INCLUDES) -c $< -o $@

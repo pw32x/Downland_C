@@ -11,6 +11,9 @@
     <Filter Include="Game\Rooms">
       <UniqueIdentifier>{4157fa5b-93e6-406e-9477-62b26911d40b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="resource_loaders">
+      <UniqueIdentifier>{667fd75f-63ad-429c-8b5d-52478edb778c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\game\drops_manager.h">
@@ -85,6 +88,9 @@
     <ClInclude Include="..\..\..\game\rooms\rooms.h">
       <Filter>Game\Rooms</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\resource_loaders\resource_loader_filesys.h">
+      <Filter>resource_loaders</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\game\ball.c">
@@ -134,6 +140,9 @@
     </ClCompile>
     <ClCompile Include="..\source\main.c">
       <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\resource_loaders\resource_loader_filesys.c">
+      <Filter>resource_loaders</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

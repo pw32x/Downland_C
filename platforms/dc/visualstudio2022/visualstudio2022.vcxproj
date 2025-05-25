@@ -67,6 +67,7 @@
     <NMakeCleanCommandLine>clean.bat</NMakeCleanCommandLine>
     <NMakeReBuildCommandLine>rebuild.bat</NMakeReBuildCommandLine>
     <NMakePreprocessorDefinitions>_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+    <IncludePath>C:\DreamSDK\msys\1.0\opt\toolchains\dc\sh-elf\sh-elf\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <NMakeBuildCommandLine>..\build\build.bat</NMakeBuildCommandLine>
@@ -113,6 +114,7 @@
     <ClInclude Include="..\..\..\game\rooms\room_types.h" />
     <ClInclude Include="..\..\..\game\sound.h" />
     <ClInclude Include="..\..\..\game\string_utils.h" />
+    <ClInclude Include="..\..\..\resource_loaders\resource_loader_filesys.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\game\ball.c" />
@@ -130,6 +132,7 @@
     <ClCompile Include="..\..\..\game\rooms\titlescreen.c" />
     <ClCompile Include="..\..\..\game\rooms\transitions.c" />
     <ClCompile Include="..\..\..\game\string_utils.c" />
+    <ClCompile Include="..\..\..\resource_loaders\resource_loader_filesys.c" />
     <ClCompile Include="..\source\main.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

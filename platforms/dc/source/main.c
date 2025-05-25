@@ -28,29 +28,76 @@
 #include <dc/biosfont.h>
 #include <dc/maple/controller.h>
 
+#include <assert.h>
+
+#include <kos/fs.h>
+
 #include <kos/thread.h>
 
-#define SHOW_BLACK_BG  true
+#include "game_types.h"
+#include "game.h"
+#include "resource_types.h"
+#include "../resource_loaders/resource_loader_filesys.h"
 
-/* Keeps track of the amount of screenshots you have taken */
-static int counter = 0;
+GameData gameData;
+Resources resources;
 
-int main(int argc, char **argv) {
+const char* romFileNames[] = 
+{
+    "/rd/downland.bin",
+    "/rd/downland.rom",
+    "/rd/Downland V1.1 (1983) (26-3046) (Tandy) [a1].ccc"
+};
+int romFileNamesCount = sizeof(romFileNames) / sizeof(romFileNames[0]);
+
+void Sound_Play(u8 soundIndex, u8 loop)
+{
+}
+
+void Sound_Stop(u8 soundindex)
+{
+}
+
+int main(int argc, char **argv) 
+{
     uint8_t r, g, b;
     uint32_t t = 0;
-    char filename[256];
+    //char filename[256];
 
     /* Adjust frequency for faster or slower transitions */
     float frequency = 0.01; 
     
-    maple_device_t *cont;
-    cont_state_t *state;
+    //maple_device_t *cont;
+    //cont_state_t *state;
 
     /* Set the video mode */
-    vid_set_mode(DM_640x480, PM_RGB565);
+    vid_set_mode(DM_320x240, PM_RGB565);
 
-    while(1) {
-        if((cont = maple_enum_type(0, MAPLE_FUNC_CONTROLLER)) != NULL) {
+/*
+    file_t fd = 0;
+    fd = fs_open("/rd/Downland V1.1 (1983) (26-3046) (Tandy) [a1].ccc", O_RDONLY);
+    assert(fd);
+*/
+
+    bool romFoundAndLoaded = false;
+    for (int loop = 0; loop < romFileNamesCount; loop++)
+    {
+        if (ResourceLoaderFileSys_Init(romFileNames[loop], &resources))
+        {
+            romFoundAndLoaded = true;
+            break;
+        }
+    }
+
+    assert(romFoundAndLoaded);
+
+    Game_Init(&gameData, &resources);
+
+    while (1) 
+    {
+        /*
+        if ((cont = maple_enum_type(0, MAPLE_FUNC_CONTROLLER)) != NULL) 
+        {
             state = (cont_state_t *)maple_dev_status(cont);
 
             if(state == NULL)
@@ -65,6 +112,9 @@ int main(int argc, char **argv) {
                 counter = (counter + 1) % 1000;
             }
         }
+        */
+
+        Game_Update(&gameData, &resources);
 
         /* Wait for VBlank */
         vid_waitvbl();
@@ -80,9 +130,6 @@ int main(int argc, char **argv) {
         /* Draw Background */
         vid_clear(r, g, b);
 
-        /* Draw Foreground */
-        bfont_draw_str_vram_fmt(24, 336, SHOW_BLACK_BG, 
-            "Press Start to exit\n\nPress A to take a screen shot");
 
         vid_flip(-1);
     }

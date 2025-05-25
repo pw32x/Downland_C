@@ -4,6 +4,8 @@
 # Copyright (C) 2024 Andy Barajas
 #
 
+PROJECT = downland
+
 # Paths relative to this Makefile (inside build/)
 SRC_ROOT = ..
 GAME_ROOT = $(SRC_ROOT)/../../game
@@ -11,11 +13,11 @@ ROOMS_ROOT = $(GAME_ROOT)/rooms
 OUT_DIR = $(SRC_ROOT)/out
 CDROOT = $(OUT_DIR)/cd_root
 
-TARGET = $(OUT_DIR)/main.elf
-BIN = $(OUT_DIR)/main.bin
+TARGET = $(OUT_DIR)/$(PROJECT).elf
+BIN = $(OUT_DIR)/$(PROJECT).bin
 SCRAMBLED = $(CDROOT)/1ST_READ.BIN
 IP_BIN = $(OUT_DIR)/IP.BIN
-CDI = $(OUT_DIR)/main.cdi
+CDI = $(OUT_DIR)/$(PROJECT).cdi
 
 
 # Compiler flags
@@ -98,7 +100,7 @@ $(IP_BIN): | $(OUT_DIR)
 
 # CDI image creation
 $(CDI): $(SCRAMBLED) $(IP_BIN)
-	makedisc $@ $(CDROOT) $(IP_BIN) main
+	makedisc $@ $(CDROOT) $(IP_BIN) $(PROJECT)
 
 # Run ELF via loader
 run: $(TARGET)

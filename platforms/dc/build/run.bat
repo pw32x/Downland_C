@@ -1,1 +1,1 @@
-"..\..\..\..\..\..\DreamcastDev\Emulators\redream.x86_64-windows-v1.5.0\redream.exe" ..\out\main.cdi
+"..\..\..\..\..\..\DreamcastDev\Emulators\redream.x86_64-windows-v1.5.0\redream.exe" ..\out\downland.cdi

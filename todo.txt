@@ -6,6 +6,11 @@ Todo
     DONE add color
     sound
     two player support?
+    
+    add doc about DC version
+        where to get DreamSDK
+        how to compile
+            need rom
 
     move the romdisk to somewhere configurable        
 

@@ -26,6 +26,8 @@
 #include <dc/fmath.h>
 #include <dc/maple.h>
 #include <dc/biosfont.h>
+#include <dc/sound/sound.h>
+#include <dc/sound/sfxmgr.h>
 #include <dc/maple/controller.h>
 
 #include <assert.h>
@@ -38,11 +40,14 @@
 
 #include "game_types.h"
 #include "game.h"
+#include "sound.h"
 #include "resource_types.h"
 #include "../resource_loaders/resource_loader_filesys.h"
 
 GameData gameData;
 Resources resources;
+
+sfxhnd_t sounds[SOUND_NUM_SOUNDS];
 
 const char* romFileNames[] = 
 {
@@ -52,12 +57,29 @@ const char* romFileNames[] =
 };
 int romFileNamesCount = sizeof(romFileNames) / sizeof(romFileNames[0]);
 
+uint8_t volume = 128;
+#define LEFT 0
+#define CENTER 128
+#define RIGHT 255
+
 void Sound_Play(u8 soundIndex, u8 loop)
 {
+    sfx_play_data_t data;
+    data.chn = soundIndex;
+    data.idx = sounds[soundIndex];
+    data.vol = volume;
+    data.pan = CENTER;
+    data.loop = loop;
+    data.freq = 0;
+    data.loopstart = 0;
+    data.loopend = 0;
+
+    snd_sfx_play_ex(&data);
 }
 
-void Sound_Stop(u8 soundindex)
+void Sound_Stop(u8 soundIndex)
 {
+    snd_sfx_stop(soundIndex);
 }
 
 
@@ -206,6 +228,7 @@ void convert1bppImageTo16bppCrtEffectImage(const u8* originalImage,
 int main(int argc, char **argv) 
 {
     vid_set_mode(DM_320x240, PM_RGB565);
+    snd_init();
 
     bool romFoundAndLoaded = false;
     for (int loop = 0; loop < romFileNamesCount; loop++)
@@ -218,6 +241,19 @@ int main(int argc, char **argv)
     }
 
     assert(romFoundAndLoaded);
+
+    // Load wav files found in romdisk
+    sounds[SOUND_JUMP] = snd_sfx_load("/rd/jump_hq.wav");
+    sounds[SOUND_LAND] = snd_sfx_load("/rd/land_hq.wav");
+    sounds[SOUND_SCREEN_TRANSITION] = snd_sfx_load("/rd/transition_hq.wav");
+    sounds[SOUND_SPLAT] = snd_sfx_load("/rd/splat_hq.wav");
+    sounds[SOUND_PICKUP] = snd_sfx_load("/rd/pickup_hq.wav");
+    sounds[SOUND_RUN] = snd_sfx_load("/rd/run_hq.wav");
+    sounds[SOUND_CLIMB_UP] = snd_sfx_load("/rd/climb_up_hq.wav");
+    sounds[SOUND_CLIMB_DOWN] = snd_sfx_load("/rd/climb_down_hq.wav");
+
+    for (int loop = 0; loop < SOUND_NUM_SOUNDS; loop++)
+        assert(sounds[loop] != SFXHND_INVALID);
 
     Game_Init(&gameData, &resources);
 

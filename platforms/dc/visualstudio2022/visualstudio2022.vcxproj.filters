@@ -14,6 +14,9 @@
     <Filter Include="resource_loaders">
       <UniqueIdentifier>{667fd75f-63ad-429c-8b5d-52478edb778c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="build">
+      <UniqueIdentifier>{717e57ce-9a4d-4dab-bdb2-8ef136acb6fb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\game\drops_manager.h">
@@ -144,5 +147,10 @@
     <ClCompile Include="..\..\..\resource_loaders\resource_loader_filesys.c">
       <Filter>resource_loaders</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\build\Makefile">
+      <Filter>build</Filter>
+    </None>
   </ItemGroup>
 </Project>

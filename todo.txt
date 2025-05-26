@@ -4,16 +4,30 @@ Todo
     DONE render the game
     DONE joystick
     DONE add color
-    sound
-    two player support?
+    DONE initial sound support
+    DONE fix looping sounds
+    DONE two player support
+    
+    move the romdisk to somewhere configurable        
+
+    sound on landing not being heard?
+    
+
     
     add doc about DC version
         where to get DreamSDK
         how to compile
             need rom
 
-    move the romdisk to somewhere configurable        
+DC Features
 
+    Rumble
+    
+    VMU animations
+    
+    Store high score
+
+    
         
 Bugs
 

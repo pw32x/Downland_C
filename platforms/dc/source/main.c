@@ -48,6 +48,7 @@ GameData gameData;
 Resources resources;
 
 sfxhnd_t sounds[SOUND_NUM_SOUNDS];
+int playing[SOUND_NUM_SOUNDS];
 
 const char* romFileNames[] = 
 {
@@ -64,28 +65,45 @@ uint8_t volume = 128;
 
 void Sound_Play(u8 soundIndex, u8 loop)
 {
-    sfx_play_data_t data;
-    data.chn = soundIndex;
-    data.idx = sounds[soundIndex];
-    data.vol = volume;
-    data.pan = CENTER;
-    data.loop = loop;
-    data.freq = 0;
-    data.loopstart = 0;
-    data.loopend = 0;
+    int channel = soundIndex * 2;
 
-    snd_sfx_play_ex(&data);
+    if (!loop)
+    {
+        snd_sfx_play_chn(channel, sounds[soundIndex], volume, CENTER);
+        return;
+    }
+
+    if (playing[soundIndex] == FALSE)
+    {
+        sfx_play_data_t data;
+        data.chn = channel;
+        data.idx = sounds[soundIndex];
+        data.vol = volume;
+        data.pan = CENTER;
+        data.loop = loop;
+        data.freq = 0;
+        data.loopstart = 0;
+        data.loopend = 0;
+
+        snd_sfx_play_ex(&data);
+
+        playing[soundIndex] = TRUE;
+    }
 }
 
 void Sound_Stop(u8 soundIndex)
 {
-    snd_sfx_stop(soundIndex);
+    int channel = soundIndex * 2;
+    playing[soundIndex] = FALSE;
+
+    snd_sfx_stop(channel);
+    snd_sfx_stop(channel + 1);
 }
 
 
-void Update_Controls(JoystickState* joystickState)
+void Update_Controls(u8 playerIndex, JoystickState* joystickState)
 {
-    maple_device_t* cont = maple_enum_type(0, MAPLE_FUNC_CONTROLLER);
+    maple_device_t* cont = maple_enum_type(playerIndex, MAPLE_FUNC_CONTROLLER);
 
     if (cont == NULL) 
         return;
@@ -253,6 +271,9 @@ int main(int argc, char **argv)
     sounds[SOUND_CLIMB_DOWN] = snd_sfx_load("/rd/climb_down_hq.wav");
 
     for (int loop = 0; loop < SOUND_NUM_SOUNDS; loop++)
+        playing[loop] = FALSE;
+
+    for (int loop = 0; loop < SOUND_NUM_SOUNDS; loop++)
         assert(sounds[loop] != SFXHND_INVALID);
 
     Game_Init(&gameData, &resources);
@@ -263,7 +284,13 @@ int main(int argc, char **argv)
 
     while (1) 
     {
-        Update_Controls(&gameData.joystickState);
+        int controllerIndex = 0;
+        if (gameData.currentPlayerData != NULL)
+        {
+            controllerIndex = gameData.currentPlayerData->playerNumber;
+        }
+
+        Update_Controls(controllerIndex, &gameData.joystickState);
 
         if (gameData.joystickState.startDownPressed)
         {

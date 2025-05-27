@@ -8,9 +8,7 @@ Todo
     DONE fix looping sounds
     DONE two player support
     DONE move the romdisk to somewhere configurable        
-
-
-    sound on landing not being heard?
+    DONE sound on landing not being heard?
     
     add doc about DC version
         where to get DreamSDK

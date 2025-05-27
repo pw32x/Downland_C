@@ -7,17 +7,16 @@ Todo
     DONE initial sound support
     DONE fix looping sounds
     DONE two player support
-    
-    move the romdisk to somewhere configurable        
+    DONE move the romdisk to somewhere configurable        
+
 
     sound on landing not being heard?
-    
-
     
     add doc about DC version
         where to get DreamSDK
         how to compile
             need rom
+            where to put it
 
 DC Features
 
@@ -31,5 +30,6 @@ DC Features
         
 Bugs
 
-    Downland_C original renderer doesn't draw the right side of the splat sprite properly
+    PC: Downland_C original renderer doesn't draw the right side of the splat sprite properly
     
+    DC: walking against the wall makes sound

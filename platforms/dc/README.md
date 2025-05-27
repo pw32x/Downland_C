@@ -7,6 +7,7 @@ This is the Dreamcast port of Downland_C.
 ## BUILDING THE GAME
 
 You will need: 
+- This repository
 - An install of the DreamSDK (https://dreamsdk.org/)
 - A copy of the Downland V1.1 rom located in the romdisk folder
 

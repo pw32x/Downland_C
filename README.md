@@ -15,7 +15,7 @@ The project is based on the original Downland, version 1.1. This version was a l
 ## SUPPORTED PLATFORMS
 
 - Windows
-- Dreamcast (see platforms\cd\README.md)
+- Dreamcast (see platforms\dc\README.md)
 
 ## RUNNING THE GAME
 

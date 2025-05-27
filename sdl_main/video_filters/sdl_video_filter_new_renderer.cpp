@@ -518,6 +518,7 @@ void SDLVideoFilterNewRenderer::update(const GameData* gameData)
 
     (this->*m_drawRoomFunctions[gameData->currentRoom->roomNumber])(gameData, m_framebuffer);
 
+    /*
     // to make it easier to tell this filter is on
     drawSprite(m_framebuffer, 
                FRAMEBUFFER_WIDTH, 
@@ -526,6 +527,7 @@ void SDLVideoFilterNewRenderer::update(const GameData* gameData)
                176,
                0,
                &m_ballSprite);
+    */
 
     // Update the texture with the new data
     SDL_UpdateTexture(m_outputTexture, 

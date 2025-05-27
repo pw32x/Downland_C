@@ -18,14 +18,14 @@ typedef struct
 	u8 upPressed;
 	u8 downPressed;
 	u8 jumpPressed;
-	u8 startDownPressed;
+	u8 startPressed;
 
 	u8 leftReleased;
 	u8 rightReleased;
 	u8 upReleased;
 	u8 downReleased;
 	u8 jumpReleased;
-	u8 startDownReleased;
+	u8 startReleased;
 
 #ifdef DEV_MODE
 	u8 debugStateDown;

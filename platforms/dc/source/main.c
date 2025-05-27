@@ -1,43 +1,20 @@
 /* KallistiOS ##version##
-
-   screenshot.c
-   Copyright (C) 2024 Andy Barajas
-
 */
 
-/* 
-   This program demonstrates how to use the vid_screen_shot() function
-   to capture and save a screenshot in the PPM format to your computer
-   using the DC Tool. This tool requires the '-c "."' command-line argument
-   to operate correctly.
-
-   The program cycles through a color gradient background and allows user
-   interaction to capture screenshots or exit the program.
-
-   Usage:
-   Ensure the '/pc/' directory path is correctly specified in the vid_screen_shot()
-   function call so that the screenshot.ppm file is saved in the appropriate
-   directory on your computer.
-*/
-
+// standard headers
 #include <stdio.h>
-
-#include <dc/video.h>
-#include <dc/fmath.h>
-#include <dc/maple.h>
-#include <dc/biosfont.h>
-#include <dc/sound/sound.h>
-#include <dc/sound/sfxmgr.h>
-#include <dc/maple/controller.h>
-
 #include <assert.h>
 #include <string.h>
 #include <stdlib.h>
 
-#include <kos/fs.h>
+// dc headers
+#include <dc/video.h>
+#include <dc/maple.h>
+#include <dc/sound/sound.h>
+#include <dc/sound/sfxmgr.h>
+#include <dc/maple/controller.h>
 
-#include <kos/thread.h>
-
+// downland headers
 #include "game_types.h"
 #include "game.h"
 #include "sound.h"
@@ -59,9 +36,7 @@ const char* romFileNames[] =
 int romFileNamesCount = sizeof(romFileNames) / sizeof(romFileNames[0]);
 
 uint8_t volume = 128;
-#define LEFT 0
 #define CENTER 128
-#define RIGHT 255
 
 void Sound_Play(u8 soundIndex, u8 loop)
 {
@@ -125,14 +100,14 @@ void Update_Controls(u8 playerIndex, JoystickState* joystickState)
     joystickState->upPressed = !joystickState->upDown & upDown;
     joystickState->downPressed =  !joystickState->downDown & downDown;
     joystickState->jumpPressed =  !joystickState->jumpDown & jumpDown;
-    joystickState->startDownPressed = !joystickState->startDown & startDown;
+    joystickState->startPressed = !joystickState->startDown & startDown;
 
     joystickState->leftReleased = joystickState->leftDown & !leftDown;
     joystickState->rightReleased = joystickState->rightDown & !rightDown;
     joystickState->upReleased = joystickState->upDown & !upDown;
     joystickState->downReleased =  joystickState->downDown & !downDown;
     joystickState->jumpReleased =  joystickState->jumpDown & !jumpDown;
-    joystickState->startDownReleased = joystickState->startDownPressed & !startDown;
+    joystickState->startReleased = joystickState->startPressed & !startDown;
 
     joystickState->leftDown = leftDown;
     joystickState->rightDown = rightDown;
@@ -292,7 +267,7 @@ int main(int argc, char **argv)
 
         Update_Controls(controllerIndex, &gameData.joystickState);
 
-        if (gameData.joystickState.startDownPressed)
+        if (gameData.joystickState.startPressed)
         {
             gameData.paused = !gameData.paused;
         }

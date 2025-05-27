@@ -372,14 +372,14 @@ void Update_Controls(JoystickState* joystickState)
     joystickState->upPressed = !joystickState->upDown & upDown;
     joystickState->downPressed =  !joystickState->downDown & downDown;
     joystickState->jumpPressed =  !joystickState->jumpDown & jumpDown;
-    joystickState->startDownPressed = !joystickState->startDown & startDown;
+    joystickState->startPressed = !joystickState->startDown & startDown;
 
     joystickState->leftReleased = joystickState->leftDown & !leftDown;
     joystickState->rightReleased = joystickState->rightDown & !rightDown;
     joystickState->upReleased = joystickState->upDown & !upDown;
     joystickState->downReleased =  joystickState->downDown & !downDown;
     joystickState->jumpReleased =  joystickState->jumpDown & !jumpDown;
-    joystickState->startDownReleased = joystickState->startDownPressed & !startDown;
+    joystickState->startReleased = joystickState->startPressed & !startDown;
 
     joystickState->leftDown = leftDown;
     joystickState->rightDown = rightDown;
@@ -421,7 +421,7 @@ SDL_AppResult SDL_AppIterate(void *appstate)
 
     Update_Controls(&gameData.joystickState);
 
-    if (gameData.joystickState.startDownPressed)
+    if (gameData.joystickState.startPressed)
     {
         gameData.paused = !gameData.paused;
 

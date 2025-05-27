@@ -9,6 +9,7 @@ ROOMS_ROOT = $(GAME_ROOT)/rooms
 RESOURCELOADERS_ROOT = $(SRC_ROOT)/../../resource_loaders
 OUT_DIR = $(SRC_ROOT)/out
 CDROOT = $(OUT_DIR)/cd_root
+ROMDISK_ROOT = $(SRC_ROOT)/romdisk
 
 TARGET = $(OUT_DIR)/$(PROJECT).elf
 BIN = $(OUT_DIR)/$(PROJECT).bin
@@ -16,7 +17,7 @@ SCRAMBLED = $(CDROOT)/1ST_READ.BIN
 IP_BIN = $(OUT_DIR)/IP.BIN
 CDI = $(OUT_DIR)/$(PROJECT).cdi
 
-KOS_ROMDISK_DIR = romdisk
+
 
 # Compiler flags
 CFLAGS = -Werror
@@ -32,16 +33,28 @@ LOCAL_OBJS = $(patsubst $(SRC_ROOT)/source/%.c,$(OUT_DIR)/source/%.o,$(LOCAL_SRC
 GAME_OBJS = $(patsubst $(GAME_ROOT)/%.c,$(OUT_DIR)/game/%.o,$(GAME_SRCS))
 ROOM_OBJS = $(patsubst $(ROOMS_ROOT)/%.c,$(OUT_DIR)/game/rooms/%.o,$(ROOM_SRCS))
 RESOURCELOADERS_OBJS = $(patsubst $(RESOURCELOADERS_ROOT)/%.c,$(OUT_DIR)/resource_loaders/%.o,$(RESOURCELOADERS_SRCS))
-ROMDISK_OBJ = romdisk.o
+ROMDISK_OBJ = $(OUT_DIR)/romdisk.o
 
 OBJS = $(LOCAL_OBJS) $(GAME_OBJS) $(ROOM_OBJS) $(ROMDISK_OBJ) $(RESOURCELOADERS_OBJS)
 
 # Include paths
 INCLUDES = -I$(SRC_ROOT)/source -I$(GAME_ROOT) -I$(ROOMS_ROOT) -I$(RESOURCELOADERS_ROOT)
 
+
+
 all: rm-elf prepare_dirs $(CDI)
 
 include $(KOS_BASE)/Makefile.rules
+
+#custom romdisk and output location
+$(OUT_DIR)/romdisk.img:
+	$(KOS_GENROMFS) -f $(OUT_DIR)/romdisk.img -d $(ROMDISK_ROOT) -v -x .keepme -x .DS_Store -x Thumbs.db
+
+$(OUT_DIR)/romdisk.o: $(OUT_DIR)/romdisk.img
+	$(KOS_BASE)/utils/bin2c/bin2c $(OUT_DIR)/romdisk.img $(OUT_DIR)/romdisk_tmp.c romdisk
+	$(KOS_CC) $(KOS_CFLAGS) -o $(OUT_DIR)/romdisk_tmp.o -c $(OUT_DIR)/romdisk_tmp.c
+	$(KOS_CC) -o $(OUT_DIR)/romdisk.o -r $(OUT_DIR)/romdisk_tmp.o $(KOS_LIB_PATHS) -Wl,--whole-archive -lromdiskbase
+	rm $(OUT_DIR)/romdisk_tmp.c $(OUT_DIR)/romdisk_tmp.o
 
 clean: rm-elf
 	-rm -f $(OBJS)

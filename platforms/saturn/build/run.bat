@@ -1,1 +1,1 @@
-"C:\Shawn\development\SaturnDev\SaturnRingLib\emulators\mednafen\mednafen.exe" out\Downland.cue
+"C:\Shawn\development\SaturnDev\SaturnRingLib\emulators\mednafen\mednafen.exe" ..\out\Downland.cue

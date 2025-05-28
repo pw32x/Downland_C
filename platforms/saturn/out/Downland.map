@@ -1,0 +1,2307 @@
+Archive member included to satisfy reference by file (symbol)
+
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS.O)
+                              ./source/main.o (GFS_Init)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS_BUF.O)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS.O) (GFBF_GetNumData)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS_CDB.O)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS.O) (GFCB_Close)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS_CDC.O)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS.O) (GFCD_SetCdbfs)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS_CDF.O)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS.O) (GFCF_Init)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS_DIR.O)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS.O) (GFDR_SetupDirTbl)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS_TRN.O)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS.O) (GFTR_Setup)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(CDC_CMN.O)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS_CDC.O) (CDC_GetCurStat)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(CDC_DRV.O)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS_CDC.O) (CDC_CdPlay)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(CDC_DEV.O)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS_CDC.O) (CDC_CdSetCon)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(CDC_SEL.O)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS_CDC.O) (CDC_SetFiltRange)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(CDC_BIF.O)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS_CDC.O) (CDC_GetBufSiz)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(CDC_BIO.O)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS_CDC.O) (CDC_SetSctLen)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(CDC_CFS.O)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS_CDC.O) (CDC_ChgDir)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(CDC_REG.O)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS_CDB.O) (CDC_GetDataPtr)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(CDC_SUB.O)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(CDC_CMN.O) (CDSUB_UpdStatus)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB001.o)
+                              ./source/main.o (slTVOn)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB002.o)
+                              ./source/main.o (slColRAMMode)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB014.o)
+                              ./source/main.o (slScrTransparent)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB015.o)
+                              ./source/main.o (slScrAutoDisp)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB016.o)
+                              ./source/main.o (slBack1ColSet)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB021.o)
+                              ./source/main.o (slColorCalcOn)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB023.o)
+                              ./source/main.o (slColRate)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB031.o)
+                              ./source/main.o (slMapNbg0)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB032.o)
+                              ./source/main.o (slMapNbg1)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB033.o)
+                              ./source/main.o (slMapNbg2)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB034.o)
+                              ./source/main.o (slMapNbg3)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB038.o)
+                              ./source/main.o (slRparaInitSet)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB055.o)
+                              ./source/main.o (slPlaneNbg0)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB056.o)
+                              ./source/main.o (slPlaneNbg1)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB057.o)
+                              ./source/main.o (slPlaneNbg2)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB058.o)
+                              ./source/main.o (slPlaneNbg3)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB063.o)
+                              ./source/main.o (slPriority)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB070.o)
+                              ./source/main.o (slScrPosNbg0)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB071.o)
+                              ./source/main.o (slScrPosNbg1)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB072.o)
+                              ./source/main.o (slScrPosNbg2)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB200.o)
+                              ./source/main.o (slCharNbg0)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglC04.o)
+                              ./source/main.o (slZdspLevel)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglD00.o)
+                              ./source/main.o (slDMACopy)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglD01.o)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS_TRN.O) (slDMAXCopy)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglD03.o)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS_TRN.O) (slDMAStatus)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglD15.o)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS_TRN.O) (CSH_Purge)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglD16.o)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS_TRN.O) (DMA_ScuSetPrm)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglD17.o)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS_TRN.O) (DMA_ScuStart)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglD18.o)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS_TRN.O) (DMA_ScuGetStatus)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglH00.o)
+                              ./source/main.o (slSetPortDir1)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglH02.o)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglH00.o) (smpc_pfr_tbl)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglH04.o)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglH00.o) (slComPrmIntBack)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglI01.o)
+                              ./source/main.o (slSynch)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglI04.o)
+                              ./source/main.o (slIntFunction)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglIc0.o)
+                              ./source/main.o (slInitSystem)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglJ00.o)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglIc0.o) (InitSlaveSH)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglJ01.o)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglIc0.o) (SlaveControl)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglJ02.o)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglJ01.o) (sbMakePolygon)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglJ03.o)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglJ01.o) (sbMakeDMATable)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglJ04.o)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglJ01.o) (sbMakeSprite)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglJ05.o)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglJ01.o) (sbSortEntry)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglK01.o)
+                              ./source/main.o (SynchCount)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglM01.o)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglJ02.o) (DepthWorkArea)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglA00.o)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglIc0.o) (_builtin_set_imask)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglA20.o)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglIc0.o) (slInitMatrix)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB000.o)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglIc0.o) (slInitScroll)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB035.o)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB200.o) (rbank_set)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglC00.o)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglIc0.o) (slInitSprite)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglI00.o)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglIc0.o) (slInitInterrupt)
+C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglH03.o)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglI00.o) (slSmpcIntBack)
+C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0\libgcc.a(_ashiftrt.o)
+                              ./source/main.o (__ashiftrt_r4_11)
+C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0\libgcc.a(_ashiftrt_n.o)
+                              ./source/main.o (__ashrsi3)
+C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0\libgcc.a(_ashiftlt.o)
+                              ./source/main.o (__ashlsi3_r0)
+C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0\libgcc.a(_movmem.o)
+                              ./source/main.o (__movmemSI16)
+C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0\libgcc.a(_sdivsi3.o)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS.O) (__sdivsi3)
+C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0\libgcc.a(_udivsi3.o)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS.O) (__udivsi3)
+C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-abort.o)
+                              ./source/main.o (abort)
+C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-memcmp.o)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS.O) (memcmp)
+C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-strncmp.o)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS_DIR.O) (strncmp)
+C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-strncpy.o)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS_DIR.O) (strncpy)
+C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-signal.o)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-abort.o) (raise)
+C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-impure.o)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-signal.o) (_impure_ptr)
+C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-signalr.o)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-signal.o) (_kill_r)
+C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-memcpy.o)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS_DIR.O) (memcpy)
+C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-memset.o)
+                              ./source/main.o (memset)
+C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-mallocr.o)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-signal.o) (_malloc_r)
+C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-mlock.o)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-mallocr.o) (__malloc_lock)
+C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-findfp.o)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-impure.o) (__sf)
+C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-fwalk.o)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-findfp.o) (_fwalk_sglue)
+C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-stdio.o)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-findfp.o) (__sread)
+C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-closer.o)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-stdio.o) (_close_r)
+C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-reent.o)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-signalr.o) (errno)
+C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-lseekr.o)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-stdio.o) (_lseek_r)
+C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-readr.o)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-stdio.o) (_read_r)
+C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-sbrkr.o)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-mallocr.o) (_sbrk_r)
+C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-writer.o)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-stdio.o) (_write_r)
+C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-freer.o)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-reent.o) (_free_r)
+C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-fflush.o)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-findfp.o) (_fflush_r)
+C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0\libgcc.a(_lshiftrt.o)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-fflush.o) (__lshrsi3_r0)
+C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(close.o)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-closer.o) (_close)
+C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(getpid.o)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-signalr.o) (_getpid)
+C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(kill.o)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-signalr.o) (_kill)
+C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(lseek.o)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-lseekr.o) (_lseek)
+C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(read.o)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-readr.o) (_read)
+C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(sbrk.o)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-sbrkr.o) (_sbrk)
+C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(write.o)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-writer.o) (_write)
+C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(_exit.o)
+                              C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-abort.o) (_exit)
+
+Allocating common symbols
+Common symbol       size              file
+
+GFMC_base           0x4               C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS.O)
+gfs_mng_ptr         0x4               C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS.O)
+gfcf_fad            0x4               C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS_CDF.O)
+gfcd_fatal_err      0x4               C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS_CDC.O)
+gfs_use_scudma      0x4               C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS.O)
+gfcd_work           0x4               C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS_CDC.O)
+gfcf_stat           0x4               C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS_CDF.O)
+gfcd_playflag       0x4               C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS_CDC.O)
+
+Discarded input sections
+
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000       0x14 ./source/main.o
+ .group         0x00000000       0x14 ./source/main.o
+ .group         0x00000000        0xc ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0xc ./source/main.o
+ .group         0x00000000        0xc ./source/main.o
+ .group         0x00000000        0xc ./source/main.o
+ .group         0x00000000        0xc ./source/main.o
+ .group         0x00000000        0xc ./source/main.o
+ .group         0x00000000        0xc ./source/main.o
+ .group         0x00000000        0xc ./source/main.o
+ .group         0x00000000        0xc ./source/main.o
+ .group         0x00000000        0xc ./source/main.o
+ .group         0x00000000        0xc ./source/main.o
+ .group         0x00000000        0xc ./source/main.o
+ .group         0x00000000        0xc ./source/main.o
+ .group         0x00000000        0xc ./source/main.o
+ .group         0x00000000        0xc ./source/main.o
+ .group         0x00000000        0xc ./source/main.o
+ .group         0x00000000        0xc ./source/main.o
+ .group         0x00000000        0xc ./source/main.o
+ .group         0x00000000        0xc ./source/main.o
+ .group         0x00000000        0xc ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0xc ./source/main.o
+ .group         0x00000000        0xc ./source/main.o
+ .group         0x00000000        0xc ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .group         0x00000000        0x8 ./source/main.o
+ .gnu.warning._close
+                0x00000000        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(close.o)
+ .gnu.warning._getpid
+                0x00000000        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(getpid.o)
+ .gnu.warning._kill
+                0x00000000        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(kill.o)
+ .gnu.warning._lseek
+                0x00000000        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(lseek.o)
+ .gnu.warning._read
+                0x00000000        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(read.o)
+ .gnu.warning._write
+                0x00000000        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(write.o)
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+
+SLSTART         0x06004000       0x30
+                0x06004000                        ___Start = .
+ *(SLSTART)
+ SLSTART        0x06004000       0x28 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglI00.o)
+                0x06004000                SGL_Start
+                0x06004002                slStartSGL
+
+.text           0x06004040     0x7c10
+ *(.text)
+ .text          0x06004040        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/../SRC/workarea.o
+ .text          0x06004040        0x8 ./source/main.o
+ *fill*         0x06004048        0x8 
+ .text          0x06004050     0x1adc C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS.O)
+                0x06004050                gfs_version
+                0x06004070                GFS_Init
+                0x06004158                GFS_LoadDir
+                0x06004200                GFS_SetDir
+                0x06004268                GFS_NameToId
+                0x060042cc                GFS_IdToName
+                0x06004338                GFS_GetDirInfo
+                0x060043a8                GFS_Reset
+                0x0600442c                GFS_Open
+                0x060044e0                GFS_Close
+                0x06004518                GFS_Seek
+                0x060045cc                GFS_Tell
+                0x0600461c                GFS_IsEof
+                0x06004670                GFS_ByteToSct
+                0x060046cc                GFS_GetFileSize
+                0x06004728                GFS_GetFileInfo
+                0x0600479c                GFS_GetNumCdbuf
+                0x060047c4                GFS_Load
+                0x06004888                GFS_Fread
+                0x06004924                gfs_waitRead
+                0x060049cc                GFS_NwFread
+                0x06004ad8                GFS_NwCdRead
+                0x06004b50                GFS_NwIsComplete
+                0x06004b88                GFS_NwStop
+                0x06004bf4                GFS_NwGetStat
+                0x06004c70                gfs_recovRdErr
+                0x06004ca0                GFS_NwExecOne
+                0x06004d60                GFS_NwExecServer
+                0x06004ddc                GFS_SetGmode
+                0x06004e40                GFS_SetTmode
+                0x06004eac                GFS_SetReadPara
+                0x06004f10                GFS_SetTransPara
+                0x06004f7c                GFS_SetTrFunc
+                0x06004fe0                GFS_StartTrans
+                0x0600502c                GFS_CdMovePickup
+                0x06005098                GFS_SetErrFunc
+                0x060050c4                GFS_GetErrStat
+                0x060050e8                GFS_ConvTno
+                0x06005110                gfs_chgRoot
+                0x060051dc                gfs_aborttrans
+                0x060051e8                gfs_mngSetupFuncTbl
+                0x0600521c                gfs_mngInitWork
+                0x060052c0                gfs_mngGetNumFile
+                0x06005328                GFS_mngAllocGrp
+                0x06005370                gfs_mngFreeGrp
+                0x0600537c                gfs_mngTermAccess
+                0x06005400                gfs_mngSetErrCode
+                0x06005480                gfs_svrSearchHndl
+                0x060054c0                gfs_svrAddHndl
+                0x060054fc                gfs_svrRemoveHndl
+                0x06005558                GFS_OpenSub
+                0x060055b0                gfs_loadVol
+                0x06005674                gfs_getRootDir
+                0x06005770                gfs_loadRootDir
+                0x060057f8                gfs_flowIn
+                0x060058a0                gfs_transData
+                0x06005944                GFS_GetFad
+                0x0600599c                gfs_SetSct
+                0x060059dc                gfs_GetFinfo
+                0x06005a1c                gfs_closeSub
+                0x06005a58                gfs_getGmode
+                0x06005a64                gfs_isTaskDone
+                0x06005ab8                gfs_convFinStat
+ *fill*         0x06005b2c        0x4 
+ .text          0x06005b30      0x106 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS_BUF.O)
+                0x06005b60                GFBF_GetTranData
+                0x06005b88                GFBF_GetNumData
+                0x06005bb8                GFBF_GetSrcPk
+                0x06005be0                GFBF_GetSctData
+                0x06005c04                GFBF_RtnPk
+                0x06005c2c                gfbf_getSctDt
+ *fill*         0x06005c36        0xa 
+ .text          0x06005c40      0x600 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS_CDB.O)
+                0x06005c40                GFCB_Setup
+                0x06005d60                GFCB_Close
+                0x06005d88                GFCB_GetLenData
+                0x06005e34                GFCB_GetLenRoom
+                0x06005e40                GFCB_SetFilt
+                0x06005ea8                GFCB_DeleteAllData
+                0x06005ed0                GFCB_Tell
+                0x06005ee0                gfcb_getSctNum
+                0x06005f30                GFCB_Seek
+                0x0600602c                GFCB_GetSrcPack
+                0x0600610c                GFCB_GetSctData
+                0x06006144                GFCB_GetDstPack
+                0x06006150                GFCB_RtnPk
+                0x06006198                GFCB_MovePickup
+                0x060061b4                GFCB_SetCon
+                0x060061e8                GFCB_GetPickup
+                0x06006210                GFCB_IsPuOwner
+                0x06006228                GFCB_UngetPickup
+ .text          0x06006240     0x1a10 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS_CDC.O)
+                0x06006240                GFCD_SetCdbfs
+                0x0600626c                GFCD_Init
+                0x06006470                GFCD_AllocFilt
+                0x060064ac                GFCD_FreeFilt
+                0x060064dc                GFCD_AllocBuf
+                0x06006510                GFCD_FreeBuf
+                0x060065b4                GFCD_GetBaseFad
+                0x060065e8                GFCD_GetPickup
+                0x0600661c                GFCD_UngetPickup
+                0x06006648                GFCD_IsPuOwner
+                0x0600666c                GFCD_SetFilt
+                0x06006730                GFCD_GetFilt
+                0x06006778                GFCD_SetCon
+                0x060067d0                GFCD_Play
+                0x06006830                GFCD_GetLenData
+                0x06006898                GFCD_ReqData
+                0x060068f4                GFCD_EndData
+                0x0600693c                GFCD_DelSctData
+                0x06006994                GFCD_CheckDelSctData
+                0x060069c4                GFCD_GetStat
+                0x06006a78                GFCD_MovePickup
+                0x06006ac4                GFCD_MoveSctData
+                0x06006b38                GFCD_CheckMove
+                0x06006b5c                GFCD_GetSctInfo
+                0x06006ba4                GFCD_ChgDir
+                0x06006c18                GFCD_SetFiltCon
+                0x06006d00                GFCD_GetFileInfo
+                0x06006ddc                GFCD_GetBufSiz
+                0x06006e14                GFCD_ExecServer
+                0x06006ee8                gfcd_isIdleTask
+                0x06006f74                gfcd_doTask
+                0x06007020                GFCD_SetTimer
+                0x06007034                GFCD_WaitServer
+                0x06007070                gfcd_doSetFiltTsk
+                0x06007234                gfcd_doSetConTsk
+                0x060072c4                gfcd_doGetLenDataTsk
+                0x06007418                gfcd_doReqDataTsk
+                0x060074b8                gfcd_doDelSctDataTsk
+                0x060075ec                gfcd_doMoveSctTsk
+                0x06007750                gfcd_doChgDirTsk
+                0x0600794c                gfcd_doSetFiltConTsk
+                0x06007a90                gfcd_checkEflag
+                0x06007ab4                gfcd_initCdbMng
+                0x06007b34                gfcd_setStat
+                0x06007b60                GFCD_SetCsctFunc
+                0x06007b7c                GFCD_ChkScdqFlag
+                0x06007ba0                GFCD_ClrScdqFlag
+                0x06007bbc                GFCD_WaitScdqFlag
+                0x06007c00                GFCD_WaitPause
+ .text          0x06007c50      0x8d8 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS_CDF.O)
+                0x06007c50                GFCF_Init
+                0x06007cf0                GFCF_Setup
+                0x06007e38                GFCF_SetSct
+                0x06007e7c                GFCF_GetFileInfo
+                0x06007ef0                GFCF_FlowInBuf
+                0x06008044                GFCF_StopInBuf
+                0x060080e4                GFCF_Recover
+                0x0600812c                GFCF_Tell
+                0x06008144                GFCF_Seek
+                0x0600815c                GFCF_MovePickup
+                0x060081f8                GFCF_cnvIntlvOfs
+                0x0600824c                GFCF_GetStat
+                0x060082e4                gfcf_getSctSize
+                0x06008320                gfcf_isCdOk
+                0x060083e0                gfcf_getPlayRange
+ *fill*         0x06008528        0x8 
+ .text          0x06008530      0x92c C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS_DIR.O)
+                0x06008530                GFDR_SetupDirTbl
+                0x060085a4                GFDR_NameToId
+                0x06008604                GFDR_GetInfoDirId
+                0x06008618                GFDR_GetInfoDirName
+                0x0600862c                GFDR_GetAtrDirId
+                0x06008644                GFDR_GetAtrDirName
+                0x0600865c                GFDR_ChgRoot
+                0x06008674                GFDR_ChgDir
+                0x060086e8                gfdr_setupDirIdTbl
+                0x0600876c                gfdr_setupDirNameTbl
+                0x06008818                gfdr_open
+                0x06008840                gfdr_read
+                0x06008900                gfdr_readByte
+                0x0600892c                gfdr_readWord
+                0x06008958                gfdr_readWordNB
+                0x060089ac                gfdr_readLongNB
+                0x060089f8                gfdr_readLongNM
+                0x06008a20                gfdr_setNextRec
+                0x06008aa4                gfdr_readDirEnt
+                0x06008e20                gfdr_setDirrecCd
+ *fill*         0x06008e5c        0x4 
+ .text          0x06008e60      0x9c6 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS_TRN.O)
+                0x06008e90                GFTR_Setup
+                0x06008ed4                GFTR_SetMode
+                0x06008ee8                GFTR_SetUnit
+                0x06008ef4                GFTR_SetTransPara
+                0x06008f28                GFTR_GetTransPara
+                0x06008f34                GFTR_GetNumTrans
+                0x06008f40                GFTR_SetTransMax
+                0x06008f4c                GFTR_Start
+                0x06008f58                GFTR_Pause
+                0x06008f64                GFTR_Stop
+                0x0600901c                GFTR_Exec
+                0x060090a0                GFTR_Idle
+                0x06009118                GFTR_ExecSvr
+                0x06009220                gftr_getSrcPack
+                0x060092a8                gftr_getDstPack
+                0x06009304                gftr_reqScu
+                0x06009310                gftr_execScu
+                0x060093ac                gftr_remScu
+                0x060093e0                gfdma_canUse
+                0x060093ec                gfdma_exec
+                0x0600945c                gfdma_getBytecnt
+                0x06009494                gftr_reqDma0
+                0x060094ac                gftr_execSdma0
+                0x060094d0                gftr_remDma0
+                0x060094e8                gftr_reqDma1
+                0x06009500                gftr_execSdma1
+                0x06009524                gftr_remDma1
+                0x0600953c                gftr_reqCpu
+                0x06009548                gftr_execCpu
+                0x06009588                gftr_remCpu
+                0x06009594                gftr_reqTrn
+                0x06009604                gftr_execTrn
+                0x060096dc                gftr_remTrn
+                0x06009750                gftr_copyFrac
+                0x06009778                GFTR_GetLenData
+                0x06009784                GFTR_GetLenRoom
+                0x0600979c                GFTR_GetDstPack
+                0x060097d0                GFTR_RtnDstPk
+                0x060097ec                GFTR_GetData
+                0x06009800                GFTR_SetData
+                0x06009814                GFTR_SetTransFunc
+ *fill*         0x06009826        0xa 
+ .text          0x06009830      0x3a0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(CDC_CMN.O)
+                0x06009830                CDC_GetCurStat
+                0x06009880                CDC_GetLastStat
+                0x06009898                CDC_GetPeriStat
+                0x0600996c                CDC_GetHwInfo
+                0x060099d4                CDC_TgetToc
+                0x06009a24                CDC_GetSes
+                0x06009a60                CDC_CdInit
+                0x06009ae4                CDC_CdOpen
+                0x06009b0c                CDC_DataReady
+                0x06009b78                CDC_DataEnd
+ .text          0x06009bd0      0x130 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(CDC_DRV.O)
+                0x06009bd0                CDC_CdPlay
+                0x06009c9c                CDC_CdSeek
+                0x06009cd0                CDC_CdScan
+ .text          0x06009d00       0xa8 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(CDC_DEV.O)
+                0x06009d00                CDC_CdSetCon
+                0x06009d30                CDC_CdGetCon
+                0x06009d6c                CDC_CdGetLastBuf
+ *fill*         0x06009da8        0x8 
+ .text          0x06009db0      0x2b8 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(CDC_SEL.O)
+                0x06009db0                CDC_SetFiltRange
+                0x06009de4                CDC_GetFiltRange
+                0x06009e3c                CDC_SetFiltSubh
+                0x06009eac                CDC_GetFiltSubh
+                0x06009f28                CDC_SetFiltMode
+                0x06009f5c                CDC_GetFiltMode
+                0x06009fa0                CDC_SetFiltCon
+                0x06009fe0                CDC_GetFiltCon
+                0x0600a034                CDC_ResetSelector
+ *fill*         0x0600a068        0x8 
+ .text          0x0600a070      0x270 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(CDC_BIF.O)
+                0x0600a070                CDC_GetBufSiz
+                0x0600a0cc                CDC_GetSctNum
+                0x0600a110                CDC_CalActSiz
+                0x0600a14c                CDC_GetActSiz
+                0x0600a1cc                CDC_GetSctInfo
+                0x0600a24c                CDC_ExeFadSearch
+                0x0600a284                CDC_GetFadSearch
+ .text          0x0600a2e0      0x1e4 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(CDC_BIO.O)
+                0x0600a2e0                CDC_SetSctLen
+                0x0600a314                CDC_GetSctData
+                0x0600a350                CDC_DelSctData
+                0x0600a38c                CDC_GetdelSctData
+                0x0600a3c8                CDC_PutSctData
+                0x0600a400                CDC_CopySctData
+                0x0600a444                CDC_MoveSctData
+                0x0600a488                CDC_GetCopyErr
+ *fill*         0x0600a4c4        0xc 
+ .text          0x0600a4d0      0x194 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(CDC_CFS.O)
+                0x0600a4d0                CDC_ChgDir
+                0x0600a504                CDC_ReadDir
+                0x0600a538                CDC_GetFileScope
+                0x0600a598                CDC_TgetFileInfo
+                0x0600a5f4                CDC_ReadFile
+                0x0600a628                CDC_AbortFile
+ *fill*         0x0600a664        0xc 
+ .text          0x0600a670      0x2dc C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(CDC_REG.O)
+                0x0600a670                CDC_GetDataPtr
+                0x0600a680                CDC_GetHirqReq
+                0x0600a694                CDC_ClrHirqReq
+                0x0600a6c4                CDREG_ClrHirqReq
+                0x0600a6d4                CDREG_InitHirqReq
+                0x0600a6fc                CDREG_SetHirqFlag
+                0x0600a710                CDC_GetHirqMsk
+                0x0600a724                CDC_SetHirqMsk
+                0x0600a734                CDC_GetMpegPtr
+                0x0600a744                CDREG_TgetData
+                0x0600a7a0                CDREG_CmdRsp
+                0x0600a8a0                CDREG_WaitHirq
+                0x0600a910                CDREG_ReadRsp
+ *fill*         0x0600a94c        0x4 
+ .text          0x0600a950      0x152 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(CDC_SUB.O)
+                0x0600a950                CDSUB_UpdStatus
+                0x0600a968                CDSUB_UpdCdstat
+                0x0600a988                CDSUB_CdCmd
+                0x0600a9f8                CDSUB_GetCdstat
+                0x0600aa38                CDSUB_RspToCdstat
+                0x0600aa80                CDSUB_SoftTimer
+ *fill*         0x0600aaa2        0xe 
+ .text          0x0600aab0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB001.o)
+ .text          0x0600aab0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB002.o)
+ .text          0x0600aab0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB014.o)
+ .text          0x0600aab0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB015.o)
+ .text          0x0600aab0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB016.o)
+ .text          0x0600aab0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB021.o)
+ .text          0x0600aab0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB023.o)
+ .text          0x0600aab0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB031.o)
+ .text          0x0600aab0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB032.o)
+ .text          0x0600aab0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB033.o)
+ .text          0x0600aab0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB034.o)
+ .text          0x0600aab0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB038.o)
+ .text          0x0600aab0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB055.o)
+ .text          0x0600aab0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB056.o)
+ .text          0x0600aab0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB057.o)
+ .text          0x0600aab0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB058.o)
+ .text          0x0600aab0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB063.o)
+ .text          0x0600aab0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB070.o)
+ .text          0x0600aab0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB071.o)
+ .text          0x0600aab0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB072.o)
+ .text          0x0600aab0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB200.o)
+ .text          0x0600aab0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglC04.o)
+ .text          0x0600aab0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglD00.o)
+ .text          0x0600aab0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglD01.o)
+ .text          0x0600aab0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglD03.o)
+ .text          0x0600aab0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglD15.o)
+ .text          0x0600aab0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglD16.o)
+ .text          0x0600aab0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglD17.o)
+ .text          0x0600aab0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglD18.o)
+ .text          0x0600aab0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglH00.o)
+ .text          0x0600aab0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglH02.o)
+ .text          0x0600aab0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglH04.o)
+ .text          0x0600aab0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglI01.o)
+ .text          0x0600aab0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglI04.o)
+ .text          0x0600aab0      0x128 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglIc0.o)
+                0x0600aab0                slInitSystem
+ *fill*         0x0600abd8        0x8 
+ .text          0x0600abe0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglJ00.o)
+ .text          0x0600abe0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglJ01.o)
+ .text          0x0600abe0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglJ02.o)
+ .text          0x0600abe0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglJ03.o)
+ .text          0x0600abe0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglJ04.o)
+ .text          0x0600abe0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglJ05.o)
+ .text          0x0600abe0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglK01.o)
+ .text          0x0600abe0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglM01.o)
+ .text          0x0600abe0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglA00.o)
+ .text          0x0600abe0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglA20.o)
+ .text          0x0600abe0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB000.o)
+ .text          0x0600abe0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB035.o)
+ .text          0x0600abe0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglC00.o)
+ .text          0x0600abe0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglI00.o)
+ .text          0x0600abe0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglH03.o)
+ .text          0x0600abe0       0x52 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0\libgcc.a(_ashiftrt.o)
+                0x0600abe0                __ashiftrt_r4_31
+                0x0600abe0                __ashiftrt_r4_32
+                0x0600abe6                __ashiftrt_r4_30
+                0x0600abe8                __ashiftrt_r4_29
+                0x0600abea                __ashiftrt_r4_28
+                0x0600abec                __ashiftrt_r4_27
+                0x0600abee                __ashiftrt_r4_26
+                0x0600abf0                __ashiftrt_r4_25
+                0x0600abf2                __ashiftrt_r4_24
+                0x0600abfa                __ashiftrt_r4_23
+                0x0600abfc                __ashiftrt_r4_22
+                0x0600abfe                __ashiftrt_r4_21
+                0x0600ac00                __ashiftrt_r4_20
+                0x0600ac02                __ashiftrt_r4_19
+                0x0600ac04                __ashiftrt_r4_18
+                0x0600ac06                __ashiftrt_r4_17
+                0x0600ac08                __ashiftrt_r4_16
+                0x0600ac0e                __ashiftrt_r4_15
+                0x0600ac10                __ashiftrt_r4_14
+                0x0600ac12                __ashiftrt_r4_13
+                0x0600ac14                __ashiftrt_r4_12
+                0x0600ac16                __ashiftrt_r4_11
+                0x0600ac18                __ashiftrt_r4_10
+                0x0600ac1a                __ashiftrt_r4_9
+                0x0600ac1c                __ashiftrt_r4_8
+                0x0600ac1e                __ashiftrt_r4_7
+                0x0600ac20                __ashiftrt_r4_6
+                0x0600ac22                __ashiftrt_r4_5
+                0x0600ac24                __ashiftrt_r4_4
+                0x0600ac26                __ashiftrt_r4_3
+                0x0600ac28                __ashiftrt_r4_2
+                0x0600ac2a                __ashiftrt_r4_1
+                0x0600ac2e                __ashiftrt_r4_0
+ *fill*         0x0600ac32        0x2 
+ .text          0x0600ac34       0x80 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0\libgcc.a(_ashiftrt_n.o)
+                0x0600ac34                __ashrsi3
+ .text          0x0600acb4       0xbc C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0\libgcc.a(_ashiftlt.o)
+                0x0600acb4                __ashlsi3
+                0x0600acb8                __ashlsi3_r0
+ .text          0x0600ad70       0x78 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0\libgcc.a(_movmem.o)
+                0x0600ad70                __movmem
+                0x0600ad70                __movstr
+                0x0600ada4                __movstrSI64
+                0x0600ada4                __movmemSI64
+                0x0600ada8                __movstrSI60
+                0x0600ada8                __movmemSI60
+                0x0600adac                __movstrSI56
+                0x0600adac                __movmemSI56
+                0x0600adb0                __movstrSI52
+                0x0600adb0                __movmemSI52
+                0x0600adb4                __movstrSI48
+                0x0600adb4                __movmemSI48
+                0x0600adb8                __movmemSI44
+                0x0600adb8                __movstrSI44
+                0x0600adbc                __movstrSI40
+                0x0600adbc                __movmemSI40
+                0x0600adc0                __movmemSI36
+                0x0600adc0                __movstrSI36
+                0x0600adc4                __movmemSI32
+                0x0600adc4                __movstrSI32
+                0x0600adc8                __movstrSI28
+                0x0600adc8                __movmemSI28
+                0x0600adcc                __movmemSI24
+                0x0600adcc                __movstrSI24
+                0x0600add0                __movstrSI20
+                0x0600add0                __movmemSI20
+                0x0600add4                __movstrSI16
+                0x0600add4                __movmemSI16
+                0x0600add8                __movstrSI12
+                0x0600add8                __movmemSI12
+                0x0600addc                __movmemSI8
+                0x0600addc                __movstrSI8
+                0x0600ade0                __movmemSI4
+                0x0600ade0                __movstrSI4
+ .text          0x0600ade8       0xa0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0\libgcc.a(_sdivsi3.o)
+                0x0600ade8                __sdivsi3
+ .text          0x0600ae88       0x6c C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0\libgcc.a(_udivsi3.o)
+                0x0600aeaa                __udivsi3
+ .text          0x0600aef4       0x18 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-abort.o)
+                0x0600aef4                abort
+ .text          0x0600af0c       0x1e C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-memcmp.o)
+                0x0600af0c                memcmp
+ .text          0x0600af2a       0x26 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-strncmp.o)
+                0x0600af2a                strncmp
+ .text          0x0600af50       0x32 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-strncpy.o)
+                0x0600af50                strncpy
+ *fill*         0x0600af82        0x2 
+ .text          0x0600af84      0x1a8 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-signal.o)
+                0x0600af84                _init_signal_r
+                0x0600afc4                _signal_r
+                0x0600b010                _raise_r
+                0x0600b080                __sigtramp_r
+                0x0600b0e0                raise
+                0x0600b0f4                signal
+                0x0600b108                _init_signal
+                0x0600b118                __sigtramp
+ .text          0x0600b12c        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-impure.o)
+ .text          0x0600b12c       0x40 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-signalr.o)
+                0x0600b12c                _kill_r
+                0x0600b160                _getpid_r
+ .text          0x0600b16c       0x94 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-memcpy.o)
+                0x0600b16c                memcpy
+ .text          0x0600b200       0x40 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-memset.o)
+                0x0600b200                memset
+ .text          0x0600b240      0x194 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-mallocr.o)
+                0x0600b29c                _malloc_r
+ .text          0x0600b3d4        0x8 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-mlock.o)
+                0x0600b3d4                __malloc_lock
+                0x0600b3d8                __malloc_unlock
+ .text          0x0600b3dc      0x1fc C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-findfp.o)
+                0x0600b4e4                __sfp
+                0x0600b5b0                __sinit
+ .text          0x0600b5d8       0x58 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-fwalk.o)
+                0x0600b5d8                _fwalk_sglue
+ .text          0x0600b630       0xdc C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-stdio.o)
+                0x0600b630                __sread
+                0x0600b668                __seofread
+                0x0600b66c                __swrite
+                0x0600b6bc                __sseek
+                0x0600b6fc                __sclose
+ .text          0x0600b70c       0x30 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-closer.o)
+                0x0600b70c                _close_r
+ .text          0x0600b73c       0xa4 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-reent.o)
+                0x0600b73c                _reclaim_reent
+ .text          0x0600b7e0       0x34 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-lseekr.o)
+                0x0600b7e0                _lseek_r
+ .text          0x0600b814       0x34 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-readr.o)
+                0x0600b814                _read_r
+ .text          0x0600b848       0x30 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-sbrkr.o)
+                0x0600b848                _sbrk_r
+ .text          0x0600b878       0x34 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-writer.o)
+                0x0600b878                _write_r
+ .text          0x0600b8ac       0xc4 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-freer.o)
+                0x0600b8ac                _free_r
+ .text          0x0600b970      0x1a8 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-fflush.o)
+                0x0600b970                __sflush_r
+                0x0600baa8                _fflush_r
+                0x0600bae8                fflush
+ .text          0x0600bb18       0xbc C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0\libgcc.a(_lshiftrt.o)
+                0x0600bb18                __lshrsi3
+                0x0600bb1c                __lshrsi3_r0
+ .text          0x0600bbd4       0x10 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(close.o)
+                0x0600bbd4                _close
+ .text          0x0600bbe4       0x10 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(getpid.o)
+                0x0600bbe4                _getpid
+ .text          0x0600bbf4       0x10 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(kill.o)
+                0x0600bbf4                _kill
+ .text          0x0600bc04       0x10 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(lseek.o)
+                0x0600bc04                _lseek
+ .text          0x0600bc14       0x10 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(read.o)
+                0x0600bc14                _read
+ .text          0x0600bc24       0x18 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(sbrk.o)
+                0x0600bc24                _sbrk
+ .text          0x0600bc3c       0x10 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(write.o)
+                0x0600bc3c                _write
+ .text          0x0600bc4c        0x4 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(_exit.o)
+                0x0600bc4c                _exit
+ *(.strings)
+ *(SEGA_P)
+ *(.eh_frame_hdr)
+ *(.eh_frame)
+                0x0600bc50                        __etext = .
+
+.text._ZN3SRL7Tilemap10Interfaces8Bmp2Tile11GetCellDataEv
+                0x0600bc50       0x10
+ .text._ZN3SRL7Tilemap10Interfaces8Bmp2Tile11GetCellDataEv
+                0x0600bc50        0x4 ./source/main.o
+                0x0600bc50                SRL::Tilemap::Interfaces::Bmp2Tile::GetCellData()
+
+.text._ZN3SRL7Tilemap10Interfaces8Bmp2Tile10GetMapDataEv
+                0x0600bc60       0x10
+ .text._ZN3SRL7Tilemap10Interfaces8Bmp2Tile10GetMapDataEv
+                0x0600bc60        0x4 ./source/main.o
+                0x0600bc60                SRL::Tilemap::Interfaces::Bmp2Tile::GetMapData()
+
+.text._ZN3SRL7Tilemap10Interfaces8Bmp2Tile10GetPalDataEv
+                0x0600bc70       0x10
+ .text._ZN3SRL7Tilemap10Interfaces8Bmp2Tile10GetPalDataEv
+                0x0600bc70        0x4 ./source/main.o
+                0x0600bc70                SRL::Tilemap::Interfaces::Bmp2Tile::GetPalData()
+
+.text._ZN3SRL7Tilemap10Interfaces8Bmp2Tile7GetInfoEv
+                0x0600bc80       0x20
+ .text._ZN3SRL7Tilemap10Interfaces8Bmp2Tile7GetInfoEv
+                0x0600bc80       0x18 ./source/main.o
+                0x0600bc80                SRL::Tilemap::Interfaces::Bmp2Tile::GetInfo()
+
+.text._ZN3SRL7Tilemap10Interfaces8CubeTile11GetCellDataEv
+                0x0600bca0       0x10
+ .text._ZN3SRL7Tilemap10Interfaces8CubeTile11GetCellDataEv
+                0x0600bca0        0x4 ./source/main.o
+                0x0600bca0                SRL::Tilemap::Interfaces::CubeTile::GetCellData()
+
+.text._ZN3SRL7Tilemap10Interfaces8CubeTile10GetMapDataEv
+                0x0600bcb0       0x10
+ .text._ZN3SRL7Tilemap10Interfaces8CubeTile10GetMapDataEv
+                0x0600bcb0        0x4 ./source/main.o
+                0x0600bcb0                SRL::Tilemap::Interfaces::CubeTile::GetMapData()
+
+.text._ZN3SRL7Tilemap10Interfaces8CubeTile10GetPalDataEv
+                0x0600bcc0       0x10
+ .text._ZN3SRL7Tilemap10Interfaces8CubeTile10GetPalDataEv
+                0x0600bcc0        0x4 ./source/main.o
+                0x0600bcc0                SRL::Tilemap::Interfaces::CubeTile::GetPalData()
+
+.text._ZN3SRL7Tilemap10Interfaces8CubeTile7GetInfoEv
+                0x0600bcd0       0x20
+ .text._ZN3SRL7Tilemap10Interfaces8CubeTile7GetInfoEv
+                0x0600bcd0       0x18 ./source/main.o
+                0x0600bcd0                SRL::Tilemap::Interfaces::CubeTile::GetInfo()
+
+.text._ZN3SRL6Bitmap3TGA7GetDataEv
+                0x0600bcf0       0x10
+ .text._ZN3SRL6Bitmap3TGA7GetDataEv
+                0x0600bcf0        0x4 ./source/main.o
+                0x0600bcf0                SRL::Bitmap::TGA::GetData()
+
+.text._ZN3SRL6Bitmap3TGA7GetInfoEv
+                0x0600bd00       0x40
+ .text._ZN3SRL6Bitmap3TGA7GetInfoEv
+                0x0600bd00       0x34 ./source/main.o
+                0x0600bd00                SRL::Bitmap::TGA::GetInfo()
+
+.text._ZNK3SRL4Math5Types3FxpgeERKS2_.isra.0
+                0x0600bd40       0x10
+ .text._ZNK3SRL4Math5Types3FxpgeERKS2_.isra.0
+                0x0600bd40        0x8 ./source/main.o
+
+.text._ZNK3SRL4Math5Types3FxpltERKS2_.isra.0
+                0x0600bd50       0x10
+ .text._ZNK3SRL4Math5Types3FxpltERKS2_.isra.0
+                0x0600bd50        0x8 ./source/main.o
+
+.text._ZN3SRL7Tilemap10Interfaces8Bmp2Tile13ConvertBitmapERNS0_11TilemapInfoERNS_6Bitmap7IBitmapEib.isra.0
+                0x0600bd60      0x3d0
+ .text._ZN3SRL7Tilemap10Interfaces8Bmp2Tile13ConvertBitmapERNS0_11TilemapInfoERNS_6Bitmap7IBitmapEib.isra.0
+                0x0600bd60      0x3cc ./source/main.o
+
+.text._ZN3SRL4Core14VblankHandlingEv
+                0x0600c130      0x1c0
+ .text._ZN3SRL4Core14VblankHandlingEv
+                0x0600c130      0x1b4 ./source/main.o
+                0x0600c130                SRL::Core::VblankHandling()
+
+.text._ZN3SRL4Math5Types3FxpC2ERKS2_
+                0x0600c2f0       0x10
+ .text._ZN3SRL4Math5Types3FxpC2ERKS2_
+                0x0600c2f0        0x8 ./source/main.o
+                0x0600c2f0                SRL::Math::Types::Fxp::Fxp(SRL::Math::Types::Fxp const&)
+                0x0600c2f0                SRL::Math::Types::Fxp::Fxp(SRL::Math::Types::Fxp const&)
+
+.text._ZNK3SRL4Math5Types3Fxp8RawValueEv
+                0x0600c300       0x10
+ .text._ZNK3SRL4Math5Types3Fxp8RawValueEv
+                0x0600c300        0x4 ./source/main.o
+                0x0600c300                SRL::Math::Types::Fxp::RawValue() const
+
+.text.unlikely  0x0600c310       0x10
+ .text.unlikely
+                0x0600c310        0x4 ./source/main.o
+                0x0600c310                std::__throw_length_error(char const*)
+
+.text._ZN3SRL6Memory12SimpleMalloc6MallocERKNS0_10MemoryZoneEj
+                0x0600c320       0xe0
+ .text._ZN3SRL6Memory12SimpleMalloc6MallocERKNS0_10MemoryZoneEj
+                0x0600c320       0xdc ./source/main.o
+                0x0600c320                SRL::Memory::SimpleMalloc::Malloc(SRL::Memory::MemoryZone const&, unsigned int)
+
+.text._ZN3SRL6Memory4FreeEPv
+                0x0600c400      0x120
+ .text._ZN3SRL6Memory4FreeEPv
+                0x0600c400      0x114 ./source/main.o
+                0x0600c400                SRL::Memory::Free(void*)
+
+.text._ZN3SRL6Memory15PlacementMallocEjm
+                0x0600c520      0x1a0
+ .text._ZN3SRL6Memory15PlacementMallocEjm
+                0x0600c520      0x19c ./source/main.o
+                0x0600c520                SRL::Memory::PlacementMalloc(unsigned int, unsigned long)
+
+.text._ZN3SRL7Tilemap10Interfaces8Bmp2TileC2ERNS_6Bitmap7IBitmapEh
+                0x0600c6c0      0x540
+ .text._ZN3SRL7Tilemap10Interfaces8Bmp2TileC2ERNS_6Bitmap7IBitmapEh
+                0x0600c6c0      0x534 ./source/main.o
+                0x0600c6c0                SRL::Tilemap::Interfaces::Bmp2Tile::Bmp2Tile(SRL::Bitmap::IBitmap&, unsigned char)
+                0x0600c6c0                SRL::Tilemap::Interfaces::Bmp2Tile::Bmp2Tile(SRL::Bitmap::IBitmap&, unsigned char)
+
+.text._ZN3SRL7Tilemap10Interfaces8CubeTile8LoadDataEPNS_2Cd4FileE
+                0x0600cc00      0x630
+ .text._ZN3SRL7Tilemap10Interfaces8CubeTile8LoadDataEPNS_2Cd4FileE
+                0x0600cc00      0x628 ./source/main.o
+                0x0600cc00                SRL::Tilemap::Interfaces::CubeTile::LoadData(SRL::Cd::File*)
+
+.text._ZN3SRL7Tilemap10Interfaces8CubeTileC2EPKc
+                0x0600d230      0x120
+ .text._ZN3SRL7Tilemap10Interfaces8CubeTileC2EPKc
+                0x0600d230      0x11c ./source/main.o
+                0x0600d230                SRL::Tilemap::Interfaces::CubeTile::CubeTile(char const*)
+                0x0600d230                SRL::Tilemap::Interfaces::CubeTile::CubeTile(char const*)
+
+.text._ZN3SRL7Tilemap10Interfaces8CubeTileD2Ev
+                0x0600d350       0x40
+ .text._ZN3SRL7Tilemap10Interfaces8CubeTileD2Ev
+                0x0600d350       0x40 ./source/main.o
+                0x0600d350                SRL::Tilemap::Interfaces::CubeTile::~CubeTile()
+                0x0600d350                SRL::Tilemap::Interfaces::CubeTile::~CubeTile()
+
+.text._ZN3SRL4VDP24VRAM16AutoAllocateCellERNS_7Tilemap11TilemapInfoEt
+                0x0600d390      0x200
+ .text._ZN3SRL4VDP24VRAM16AutoAllocateCellERNS_7Tilemap11TilemapInfoEt
+                0x0600d390      0x1fc ./source/main.o
+                0x0600d390                SRL::VDP2::VRAM::AutoAllocateCell(SRL::Tilemap::TilemapInfo&, unsigned short)
+
+.text._ZN3SRL4VDP210InitializeERKNS_5Types9HighColorE
+                0x0600d590      0x1b0
+ .text._ZN3SRL4VDP210InitializeERKNS_5Types9HighColorE
+                0x0600d590      0x1ac ./source/main.o
+                0x0600d590                SRL::VDP2::Initialize(SRL::Types::HighColor const&)
+
+.text._ZN3SRL5Input3Gun11SynchronizeEv
+                0x0600d740      0x1d0
+ .text._ZN3SRL5Input3Gun11SynchronizeEv
+                0x0600d740      0x1d0 ./source/main.o
+                0x0600d740                SRL::Input::Gun::Synchronize()
+
+.text._ZN3SRL4Core10InitializeERKNS_5Types9HighColorE
+                0x0600d910      0x120
+ .text._ZN3SRL4Core10InitializeERKNS_5Types9HighColorE
+                0x0600d910      0x114 ./source/main.o
+                0x0600d910                SRL::Core::Initialize(SRL::Types::HighColor const&)
+
+.text._ZN3SRL6Bitmap3TGA13DecodePaletteEPhPKNS1_9TgaHeaderEl
+                0x0600da30      0x4c0
+ .text._ZN3SRL6Bitmap3TGA13DecodePaletteEPhPKNS1_9TgaHeaderEl
+                0x0600da30      0x4b8 ./source/main.o
+                0x0600da30                SRL::Bitmap::TGA::DecodePalette(unsigned char*, SRL::Bitmap::TGA::TgaHeader const*, long)
+
+.text._ZN3SRL6Bitmap3TGA17DecodeRlePalettedEPhPKNS1_9TgaHeaderERNS1_8ForRangeES7_
+                0x0600def0      0x330
+ .text._ZN3SRL6Bitmap3TGA17DecodeRlePalettedEPhPKNS1_9TgaHeaderERNS1_8ForRangeES7_
+                0x0600def0      0x330 ./source/main.o
+                0x0600def0                SRL::Bitmap::TGA::DecodeRlePaletted(unsigned char*, SRL::Bitmap::TGA::TgaHeader const*, SRL::Bitmap::TGA::ForRange&, SRL::Bitmap::TGA::ForRange&)
+
+.text._ZN3SRL6Bitmap3TGA8LoadDataEPNS_2Cd4FileEPNS1_14LoaderSettingsE
+                0x0600e220      0xf90
+ .text._ZN3SRL6Bitmap3TGA8LoadDataEPNS_2Cd4FileEPNS1_14LoaderSettingsE
+                0x0600e220      0xf88 ./source/main.o
+                0x0600e220                SRL::Bitmap::TGA::LoadData(SRL::Cd::File*, SRL::Bitmap::TGA::LoaderSettings*)
+
+.text._ZN3SRL5Types5EventIJEEC2Ev
+                0x0600f1b0      0x180
+ .text._ZN3SRL5Types5EventIJEEC2Ev
+                0x0600f1b0      0x17c ./source/main.o
+                0x0600f1b0                SRL::Types::Event<>::Event()
+                0x0600f1b0                SRL::Types::Event<>::Event()
+
+.text._ZN3SRL4VDP212ScrollScreenINS0_4NBG1ELs0ELt2EE10SetOpacityENS_4Math5Types3FxpE
+                0x0600f330       0x90
+ .text._ZN3SRL4VDP212ScrollScreenINS0_4NBG1ELs0ELt2EE10SetOpacityENS_4Math5Types3FxpE
+                0x0600f330       0x90 ./source/main.o
+                0x0600f330                SRL::VDP2::ScrollScreen<SRL::VDP2::NBG1, (short)0, (unsigned short)2>::SetOpacity(SRL::Math::Types::Fxp)
+
+.text._ZN3SRL4VDP212ScrollScreenINS0_4NBG0ELs1ELt1EE12SetMapLayoutEhhhh
+                0x0600f3c0      0x210
+ .text._ZN3SRL4VDP212ScrollScreenINS0_4NBG0ELs1ELt1EE12SetMapLayoutEhhhh
+                0x0600f3c0      0x210 ./source/main.o
+                0x0600f3c0                SRL::VDP2::ScrollScreen<SRL::VDP2::NBG0, (short)1, (unsigned short)1>::SetMapLayout(unsigned char, unsigned char, unsigned char, unsigned char)
+
+.text._ZN3SRL4VDP212ScrollScreenINS0_4NBG0ELs1ELt1EE11LoadTilemapERNS_7Tilemap8ITilemapE
+                0x0600f5d0      0x510
+ .text._ZN3SRL4VDP212ScrollScreenINS0_4NBG0ELs1ELt1EE11LoadTilemapERNS_7Tilemap8ITilemapE
+                0x0600f5d0      0x510 ./source/main.o
+                0x0600f5d0                SRL::VDP2::ScrollScreen<SRL::VDP2::NBG0, (short)1, (unsigned short)1>::LoadTilemap(SRL::Tilemap::ITilemap&)
+
+.text._ZN3SRL4VDP212ScrollScreenINS0_4NBG1ELs0ELt2EE12SetMapLayoutEhhhh
+                0x0600fae0      0x210
+ .text._ZN3SRL4VDP212ScrollScreenINS0_4NBG1ELs0ELt2EE12SetMapLayoutEhhhh
+                0x0600fae0      0x210 ./source/main.o
+                0x0600fae0                SRL::VDP2::ScrollScreen<SRL::VDP2::NBG1, (short)0, (unsigned short)2>::SetMapLayout(unsigned char, unsigned char, unsigned char, unsigned char)
+
+.text._ZN3SRL4VDP212ScrollScreenINS0_4NBG1ELs0ELt2EE11LoadTilemapERNS_7Tilemap8ITilemapE
+                0x0600fcf0      0x510
+ .text._ZN3SRL4VDP212ScrollScreenINS0_4NBG1ELs0ELt2EE11LoadTilemapERNS_7Tilemap8ITilemapE
+                0x0600fcf0      0x510 ./source/main.o
+                0x0600fcf0                SRL::VDP2::ScrollScreen<SRL::VDP2::NBG1, (short)0, (unsigned short)2>::LoadTilemap(SRL::Tilemap::ITilemap&)
+
+.text._ZN3SRL4VDP212ScrollScreenINS0_4NBG2ELs3ELt4EE12SetMapLayoutEhhhh
+                0x06010200      0x210
+ .text._ZN3SRL4VDP212ScrollScreenINS0_4NBG2ELs3ELt4EE12SetMapLayoutEhhhh
+                0x06010200      0x210 ./source/main.o
+                0x06010200                SRL::VDP2::ScrollScreen<SRL::VDP2::NBG2, (short)3, (unsigned short)4>::SetMapLayout(unsigned char, unsigned char, unsigned char, unsigned char)
+
+.text._ZN3SRL4VDP212ScrollScreenINS0_4NBG2ELs3ELt4EE11LoadTilemapERNS_7Tilemap8ITilemapE
+                0x06010410      0x510
+ .text._ZN3SRL4VDP212ScrollScreenINS0_4NBG2ELs3ELt4EE11LoadTilemapERNS_7Tilemap8ITilemapE
+                0x06010410      0x510 ./source/main.o
+                0x06010410                SRL::VDP2::ScrollScreen<SRL::VDP2::NBG2, (short)3, (unsigned short)4>::LoadTilemap(SRL::Tilemap::ITilemap&)
+
+.text.startup   0x06010920      0x590
+ .text.startup  0x06010920      0x58c ./source/main.o
+                0x06010920                main
+
+.text.exit      0x06010eb0       0x60
+ .text.exit     0x06010eb0       0x54 ./source/main.o
+
+SLPROG          0x06010f20     0x5d00
+                0x06010f20                        __slprog_start = .
+ *(SLPROG)
+ SLPROG         0x06010f20       0x20 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB001.o)
+                0x06010f20                slTVOn
+                0x06010f2a                slTVOff
+ SLPROG         0x06010f40       0x1e C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB002.o)
+                0x06010f40                slColRAMMode
+ *fill*         0x06010f5e        0x2 
+ SLPROG         0x06010f60        0x8 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB014.o)
+                0x06010f60                slScrTransparent
+ *fill*         0x06010f68        0x8 
+ SLPROG         0x06010f70      0x40c C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB015.o)
+                0x06010f70                slScrAutoDisp
+ *fill*         0x0601137c        0x4 
+ SLPROG         0x06011380        0xc C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB016.o)
+                0x06011380                slBack1ColSet
+ *fill*         0x0601138c        0x4 
+ SLPROG         0x06011390        0xc C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB021.o)
+                0x06011390                slColorCalcOn
+ *fill*         0x0601139c        0x4 
+ SLPROG         0x060113a0        0xc C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB023.o)
+                0x060113a0                slColRate
+ *fill*         0x060113ac        0x4 
+ SLPROG         0x060113b0       0xb0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB031.o)
+                0x060113b0                slMapNbg0
+ SLPROG         0x06011460       0xb4 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB032.o)
+                0x06011460                slMapNbg1
+ *fill*         0x06011514        0xc 
+ SLPROG         0x06011520       0xb0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB033.o)
+                0x06011520                slMapNbg2
+ SLPROG         0x060115d0       0xb4 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB034.o)
+                0x060115d0                slMapNbg3
+ *fill*         0x06011684        0xc 
+ SLPROG         0x06011690       0x70 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB038.o)
+                0x06011690                slRparaInitSet
+ SLPROG         0x06011700        0xc C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB055.o)
+                0x06011700                slPlaneNbg0
+ *fill*         0x0601170c        0x4 
+ SLPROG         0x06011710        0xc C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB056.o)
+                0x06011710                slPlaneNbg1
+ *fill*         0x0601171c        0x4 
+ SLPROG         0x06011720       0x10 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB057.o)
+                0x06011720                slPlaneNbg2
+ SLPROG         0x06011730       0x10 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB058.o)
+                0x06011730                slPlaneNbg3
+ SLPROG         0x06011740        0xc C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB063.o)
+                0x06011740                slPriority
+ *fill*         0x0601174c        0x4 
+ SLPROG         0x06011750       0x34 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB070.o)
+                0x06011750                slScrPosNbg0
+ *fill*         0x06011784        0xc 
+ SLPROG         0x06011790        0xc C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB071.o)
+                0x06011790                slScrPosNbg1
+ *fill*         0x0601179c        0x4 
+ SLPROG         0x060117a0       0x10 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB072.o)
+                0x060117a0                slScrPosNbg2
+ SLPROG         0x060117b0      0x114 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB200.o)
+                0x060117b0                slCharRbg0
+                0x060117bc                slCharNbg0
+                0x060117c8                slCharNbg1
+                0x060117d4                slCharNbg2
+                0x060117ea                slCharNbg3
+                0x06011802                slPageRbg0
+                0x06011818                slPageNbg1
+                0x06011820                slPageNbg2
+                0x06011828                slPageNbg3
+                0x06011834                slPageNbg0
+ *fill*         0x060118c4        0xc 
+ SLPROG         0x060118d0       0x2c C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglC04.o)
+                0x060118d0                slZdspLevel
+ *fill*         0x060118fc        0x4 
+ SLPROG         0x06011900       0x84 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglD00.o)
+                0x06011900                slCpuDMACopy
+                0x06011900                slDMACopy
+                0x0601195a                CSH_AllClr
+                0x0601195a                slCashPurge
+ *fill*         0x06011984        0xc 
+ SLPROG         0x06011990       0xa0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglD01.o)
+                0x06011990                slDMAXCopy
+ SLPROG         0x06011a30        0xc C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglD03.o)
+                0x06011a30                slDMAStatus
+ *fill*         0x06011a3c        0x4 
+ SLPROG         0x06011a40       0x20 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglD15.o)
+                0x06011a40                CSH_Purge
+ SLPROG         0x06011a60       0x84 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglD16.o)
+                0x06011a60                DMA_ScuSetPrm
+                0x06011aa8                DMA_SCU_PRM0
+ *fill*         0x06011ae4        0xc 
+ SLPROG         0x06011af0       0x88 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglD17.o)
+                0x06011af0                DMA_ScuStart
+ *fill*         0x06011b78        0x8 
+ SLPROG         0x06011b80       0x34 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglD18.o)
+                0x06011b80                DMA_ScuGetStatus
+ *fill*         0x06011bb4        0xc 
+ SLPROG         0x06011bc0      0xfc8 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglH00.o)
+                0x06011bd8                slGetPortDir1
+                0x06011be0                slGetPortDir2
+                0x06011be8                slSetPortDir1
+                0x06011c12                slSetPortDir2
+                0x06011c4c                slGetPortData1
+                0x06011c54                slGetPortData2
+                0x06011c5c                slSetPortData1
+                0x06011c66                slSetPortData2
+                0x06011c78                slGetPortSelect1
+                0x06011c82                slGetPortSelect2
+                0x06011c8c                slSetPortSelect1
+                0x06011cc0                slSetPortSelect2
+                0x06011cfc                slGetPortExt1
+                0x06011d06                slGetPortExt2
+                0x06011d10                slSetPortExt1
+                0x06011d40                slSetPortExt2
+                0x06011eb4                slSmpcDirectAccess
+                0x06011f34                slInitPeripheral
+                0x06011fc6                slSetResultBuffer
+                0x06012052                slCheckIntBackSet
+                0x0601205e                slIntBackCancel
+                0x06012088                slCheckReset
+                0x06012092                slClearReset
+                0x06012258                slSmpcCashSend
+                0x06012314                slSmpcCashBlow
+                0x060123f0                slGetOptimize
+                0x060123fa                slSetOptimize
+                0x06012420                slGetPortMode1
+                0x0601242c                slGetPortMode2
+                0x0601243a                slSetPortMode1
+                0x06012478                slSetPortMode2
+                0x06012604                slRequestCommand
+                0x06012674                Smpc_Status
+                0x06012678                Smpc_Result
+                0x0601267c                Smpc_Peripheral
+                0x06012682                Per_Connect1
+                0x06012683                Per_Connect2
+                0x060126a4                SmpcStatusBuf
+ *fill*         0x06012b88        0x8 
+ SLPROG         0x06012b90      0x470 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglH02.o)
+                0x06012f80                smpc_pfr_tbl
+                0x06012fc0                smpc_ptf_tbl
+ SLPROG         0x06013000       0x60 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglH04.o)
+                0x06013000                slComPrmIntBack
+                0x06013014                slComPrmSetMemory
+                0x0601302a                slComPrmSetTime
+ SLPROG         0x06013060      0x3a4 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglI01.o)
+                0x06013060                slInitSynch
+                0x0601307a                slSynch
+                0x06013170                slRandom
+                0x0601318e                PCM_EndCheck
+                0x0601324a                RetPCMBuf
+                0x060132e4                PCM_Buf
+                0x06013384                Sound_Buf
+ *fill*         0x06013404        0xc 
+ SLPROG         0x06013410       0x10 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglI04.o)
+                0x06013410                slIntFunction
+ SLPROG         0x06013420       0x74 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglJ00.o)
+                0x06013420                InitSlaveSH
+                0x06013488                SlaveCommand
+ *fill*         0x06013494        0xc 
+ SLPROG         0x060134a0      0x3d0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglJ01.o)
+                0x060134a0                SlaveControl
+                0x0601385c                ErasePolygonData
+ SLPROG         0x06013870     0x12b8 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglJ02.o)
+                0x06013870                sbMakePolygon
+                0x06013a58                sbCalcPolygon
+                0x06014790                SetTexture
+                0x0601479c                SetPolygon
+                0x060147a4                SetPosition
+                0x060147dc                stvtc_4
+                0x06014894                stvtc_3
+                0x06014aa4                stvtc_1
+                0x06014ab8                stvtc_2
+                0x06014acc                stvtc_0
+ *fill*         0x06014b28        0x8 
+ SLPROG         0x06014b30      0x140 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglJ03.o)
+                0x06014b30                sbMakeDMATable
+ SLPROG         0x06014c70      0x470 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglJ04.o)
+                0x06014cce                sbMakeSprite
+                0x06014d34                sbMakeRotSprite
+ SLPROG         0x060150e0       0x3c C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglJ05.o)
+                0x060150e0                sbSortEntry
+ *fill*         0x0601511c        0x4 
+ SLPROG         0x06015120       0x6a C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglM01.o)
+                0x06015120                slSetDepthLimit
+                0x0601514c                slSetDepthTbl
+                0x0601517c                DepthWorkArea
+ *fill*         0x0601518a        0x6 
+ SLPROG         0x06015190       0x20 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglA00.o)
+                0x06015190                set_imask
+                0x06015190                _builtin_set_imask
+                0x060151a4                _builtin_get_imask
+                0x060151a4                get_imask
+ SLPROG         0x060151b0      0x42c C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglA20.o)
+                0x060151b0                slInitMatrix
+                0x060151ba                slPushUnitMatrix
+                0x060151ce                slUnitMatrix
+ *fill*         0x060155dc        0x4 
+ SLPROG         0x060155e0      0xbd0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB000.o)
+                0x060155e0                slInitScroll
+                0x06015700                setASC_1to8
+                0x06015730                setASC_4to8
+                0x06015840                TVSizeTbl
+                0x060158c0                TVModeTbl
+                0x06015a98                SGL_ASCII_CG
+ SLPROG         0x060161b0       0xd4 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB035.o)
+                0x060161b0                sl1MapRA
+                0x06016242                rbank_set
+ *fill*         0x06016284        0xc 
+ SLPROG         0x06016290      0x134 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglC00.o)
+                0x06016290                slInitSprite
+ *fill*         0x060163c4        0xc 
+ SLPROG         0x060163d0      0x75c C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglI00.o)
+                0x060166c0                slInitInterrupt
+ *fill*         0x06016b2c        0x4 
+ SLPROG         0x06016b30       0xf0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglH03.o)
+                0x06016b94                slSmpcIntBack
+                0x06016c20                        __slprog_end = .
+
+.tors           0x06016c20       0x10
+                0x06016c20                        ___ctors = .
+ *(.ctors)
+ .ctors         0x06016c20        0x4 ./source/main.o
+                0x06016c24                        ___ctors_end = .
+                0x06016c24                        ___dtors = .
+ *(.dtors)
+ .dtors         0x06016c24        0x4 ./source/main.o
+                0x06016c28                        ___dtors_end = .
+
+.data           0x06016c30      0x1e0
+ *(.data)
+ .data          0x06016c30       0x28 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/../SRC/workarea.o
+                0x06016c30                CommandBuf
+                0x06016c34                CLOfstBuf
+                0x06016c38                Pbuffer
+                0x06016c3c                SpriteBuf
+                0x06016c40                Zbuffer
+                0x06016c44                SortList
+                0x06016c48                MasterStack
+                0x06016c4c                TransList
+                0x06016c50                SlaveStack
+                0x06016c54                PCM_Work
+ .data          0x06016c58        0x0 ./source/main.o
+ *fill*         0x06016c58        0x8 
+ .data          0x06016c60        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS.O)
+ .data          0x06016c60        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS_BUF.O)
+ .data          0x06016c60        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS_CDB.O)
+ .data          0x06016c60        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS_CDC.O)
+ .data          0x06016c60        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS_CDF.O)
+ .data          0x06016c60        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS_DIR.O)
+ .data          0x06016c60        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS_TRN.O)
+ .data          0x06016c60        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(CDC_CMN.O)
+ .data          0x06016c60        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(CDC_DRV.O)
+ .data          0x06016c60        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(CDC_DEV.O)
+ .data          0x06016c60        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(CDC_SEL.O)
+ .data          0x06016c60        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(CDC_BIF.O)
+ .data          0x06016c60        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(CDC_BIO.O)
+ .data          0x06016c60        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(CDC_CFS.O)
+ .data          0x06016c60        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(CDC_REG.O)
+ .data          0x06016c60        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(CDC_SUB.O)
+ .data          0x06016c60        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB001.o)
+ .data          0x06016c60        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB002.o)
+ .data          0x06016c60        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB014.o)
+ .data          0x06016c60        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB015.o)
+ .data          0x06016c60        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB016.o)
+ .data          0x06016c60        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB021.o)
+ .data          0x06016c60        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB023.o)
+ .data          0x06016c60        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB031.o)
+ .data          0x06016c60        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB032.o)
+ .data          0x06016c60        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB033.o)
+ .data          0x06016c60        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB034.o)
+ .data          0x06016c60        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB038.o)
+ .data          0x06016c60        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB055.o)
+ .data          0x06016c60        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB056.o)
+ .data          0x06016c60        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB057.o)
+ .data          0x06016c60        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB058.o)
+ .data          0x06016c60        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB063.o)
+ .data          0x06016c60        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB070.o)
+ .data          0x06016c60        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB071.o)
+ .data          0x06016c60        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB072.o)
+ .data          0x06016c60        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB200.o)
+ .data          0x06016c60        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglC04.o)
+ .data          0x06016c60        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglD00.o)
+ .data          0x06016c60        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglD01.o)
+ .data          0x06016c60        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglD03.o)
+ .data          0x06016c60        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglD15.o)
+ .data          0x06016c60        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglD16.o)
+ .data          0x06016c60        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglD17.o)
+ .data          0x06016c60        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglD18.o)
+ .data          0x06016c60        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglH00.o)
+ .data          0x06016c60        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglH02.o)
+ .data          0x06016c60        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglH04.o)
+ .data          0x06016c60        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglI01.o)
+ .data          0x06016c60        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglI04.o)
+ .data          0x06016c60       0x80 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglIc0.o)
+                0x06016c60                IntPrioMask
+ .data          0x06016ce0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglJ00.o)
+ .data          0x06016ce0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglJ01.o)
+ .data          0x06016ce0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglJ02.o)
+ .data          0x06016ce0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglJ03.o)
+ .data          0x06016ce0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglJ04.o)
+ .data          0x06016ce0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglJ05.o)
+ .data          0x06016ce0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglK01.o)
+ .data          0x06016ce0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglM01.o)
+ .data          0x06016ce0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglA00.o)
+ .data          0x06016ce0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglA20.o)
+ .data          0x06016ce0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB000.o)
+ .data          0x06016ce0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB035.o)
+ .data          0x06016ce0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglC00.o)
+ .data          0x06016ce0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglI00.o)
+ .data          0x06016ce0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglH03.o)
+ .data          0x06016ce0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0\libgcc.a(_ashiftrt.o)
+ .data          0x06016ce0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0\libgcc.a(_ashiftrt_n.o)
+ .data          0x06016ce0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0\libgcc.a(_ashiftlt.o)
+ .data          0x06016ce0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0\libgcc.a(_movmem.o)
+ .data          0x06016ce0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0\libgcc.a(_sdivsi3.o)
+ .data          0x06016ce0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0\libgcc.a(_udivsi3.o)
+ .data          0x06016ce0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-abort.o)
+ .data          0x06016ce0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-memcmp.o)
+ .data          0x06016ce0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-strncmp.o)
+ .data          0x06016ce0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-strncpy.o)
+ .data          0x06016ce0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-signal.o)
+ .data          0x06016ce0      0x120 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-impure.o)
+                0x06016ce0                _impure_ptr
+                0x06016ce4                _impure_data
+ .data          0x06016e00        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-signalr.o)
+ .data          0x06016e00        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-memcpy.o)
+ .data          0x06016e00        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-memset.o)
+ .data          0x06016e00        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-mallocr.o)
+ .data          0x06016e00        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-mlock.o)
+ .data          0x06016e00        0xc C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-findfp.o)
+                0x06016e00                __sglue
+ .data          0x06016e0c        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-fwalk.o)
+ .data          0x06016e0c        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-stdio.o)
+ .data          0x06016e0c        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-closer.o)
+ .data          0x06016e0c        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-reent.o)
+ .data          0x06016e0c        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-lseekr.o)
+ .data          0x06016e0c        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-readr.o)
+ .data          0x06016e0c        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-sbrkr.o)
+ .data          0x06016e0c        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-writer.o)
+ .data          0x06016e0c        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-freer.o)
+ .data          0x06016e0c        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-fflush.o)
+ .data          0x06016e0c        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0\libgcc.a(_lshiftrt.o)
+ .data          0x06016e0c        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(close.o)
+ .data          0x06016e0c        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(getpid.o)
+ .data          0x06016e0c        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(kill.o)
+ .data          0x06016e0c        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(lseek.o)
+ .data          0x06016e0c        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(read.o)
+ .data          0x06016e0c        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(sbrk.o)
+ .data          0x06016e0c        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(write.o)
+ .data          0x06016e0c        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(_exit.o)
+                0x06016e0c                        __edata = .
+
+.data._ZZN3SRL5Input3Gun11SynchronizeEvE14secondPlayerId
+                0x06016e10       0x10
+ .data._ZZN3SRL5Input3Gun11SynchronizeEvE14secondPlayerId
+                0x06016e10        0x1 ./source/main.o
+                0x06016e10                SRL::Input::Gun::Synchronize()::secondPlayerId
+
+.data._ZZN3SRL5Input3Gun11SynchronizeEvE13firstPlayerId
+                0x06016e20       0x10
+ .data._ZZN3SRL5Input3Gun11SynchronizeEvE13firstPlayerId
+                0x06016e20        0x1 ./source/main.o
+                0x06016e20                SRL::Input::Gun::Synchronize()::firstPlayerId
+
+.data._ZN3SRL5Input10Management11PeripheralsE
+                0x06016e30      0x120
+ .data._ZN3SRL5Input10Management11PeripheralsE
+                0x06016e30      0x120 ./source/main.o
+                0x06016e30                SRL::Input::Management::Peripherals
+
+.data._ZN3SRL5Input10Management24PeripheralsPreviousStateE
+                0x06016f50      0x120
+ .data._ZN3SRL5Input10Management24PeripheralsPreviousStateE
+                0x06016f50      0x120 ./source/main.o
+                0x06016f50                SRL::Input::Management::PeripheralsPreviousState
+
+.data._ZN3SRL4VDP212ScrollScreenINS0_4NBG2ELs3ELt4EE12MapAllocSizeE
+                0x06017070       0x10
+ .data._ZN3SRL4VDP212ScrollScreenINS0_4NBG2ELs3ELt4EE12MapAllocSizeE
+                0x06017070        0x4 ./source/main.o
+                0x06017070                SRL::VDP2::ScrollScreen<SRL::VDP2::NBG2, (short)3, (unsigned short)4>::MapAllocSize
+
+.data._ZN3SRL4VDP212ScrollScreenINS0_4NBG2ELs3ELt4EE13CellAllocSizeE
+                0x06017080       0x10
+ .data._ZN3SRL4VDP212ScrollScreenINS0_4NBG2ELs3ELt4EE13CellAllocSizeE
+                0x06017080        0x4 ./source/main.o
+                0x06017080                SRL::VDP2::ScrollScreen<SRL::VDP2::NBG2, (short)3, (unsigned short)4>::CellAllocSize
+
+.data._ZN3SRL4VDP212ScrollScreenINS0_4NBG2ELs3ELt4EE4InfoE
+                0x06017090       0x20
+ .data._ZN3SRL4VDP212ScrollScreenINS0_4NBG2ELs3ELt4EE4InfoE
+                0x06017090       0x14 ./source/main.o
+                0x06017090                SRL::VDP2::ScrollScreen<SRL::VDP2::NBG2, (short)3, (unsigned short)4>::Info
+
+.data._ZN3SRL4VDP212ScrollScreenINS0_4NBG2ELs3ELt4EE10MapAddressE
+                0x060170b0       0x10
+ .data._ZN3SRL4VDP212ScrollScreenINS0_4NBG2ELs3ELt4EE10MapAddressE
+                0x060170b0        0x4 ./source/main.o
+                0x060170b0                SRL::VDP2::ScrollScreen<SRL::VDP2::NBG2, (short)3, (unsigned short)4>::MapAddress
+
+.data._ZN3SRL4VDP212ScrollScreenINS0_4NBG2ELs3ELt4EE11CellAddressE
+                0x060170c0       0x10
+ .data._ZN3SRL4VDP212ScrollScreenINS0_4NBG2ELs3ELt4EE11CellAddressE
+                0x060170c0        0x4 ./source/main.o
+                0x060170c0                SRL::VDP2::ScrollScreen<SRL::VDP2::NBG2, (short)3, (unsigned short)4>::CellAddress
+
+.data._ZN3SRL4VDP212ScrollScreenINS0_4NBG1ELs0ELt2EE12MapAllocSizeE
+                0x060170d0       0x10
+ .data._ZN3SRL4VDP212ScrollScreenINS0_4NBG1ELs0ELt2EE12MapAllocSizeE
+                0x060170d0        0x4 ./source/main.o
+                0x060170d0                SRL::VDP2::ScrollScreen<SRL::VDP2::NBG1, (short)0, (unsigned short)2>::MapAllocSize
+
+.data._ZN3SRL4VDP212ScrollScreenINS0_4NBG1ELs0ELt2EE13CellAllocSizeE
+                0x060170e0       0x10
+ .data._ZN3SRL4VDP212ScrollScreenINS0_4NBG1ELs0ELt2EE13CellAllocSizeE
+                0x060170e0        0x4 ./source/main.o
+                0x060170e0                SRL::VDP2::ScrollScreen<SRL::VDP2::NBG1, (short)0, (unsigned short)2>::CellAllocSize
+
+.data._ZN3SRL4VDP212ScrollScreenINS0_4NBG1ELs0ELt2EE4InfoE
+                0x060170f0       0x20
+ .data._ZN3SRL4VDP212ScrollScreenINS0_4NBG1ELs0ELt2EE4InfoE
+                0x060170f0       0x14 ./source/main.o
+                0x060170f0                SRL::VDP2::ScrollScreen<SRL::VDP2::NBG1, (short)0, (unsigned short)2>::Info
+
+.data._ZN3SRL4VDP212ScrollScreenINS0_4NBG1ELs0ELt2EE10MapAddressE
+                0x06017110       0x10
+ .data._ZN3SRL4VDP212ScrollScreenINS0_4NBG1ELs0ELt2EE10MapAddressE
+                0x06017110        0x4 ./source/main.o
+                0x06017110                SRL::VDP2::ScrollScreen<SRL::VDP2::NBG1, (short)0, (unsigned short)2>::MapAddress
+
+.data._ZN3SRL4VDP212ScrollScreenINS0_4NBG1ELs0ELt2EE11CellAddressE
+                0x06017120       0x10
+ .data._ZN3SRL4VDP212ScrollScreenINS0_4NBG1ELs0ELt2EE11CellAddressE
+                0x06017120        0x4 ./source/main.o
+                0x06017120                SRL::VDP2::ScrollScreen<SRL::VDP2::NBG1, (short)0, (unsigned short)2>::CellAddress
+
+.data._ZN3SRL4VDP212ScrollScreenINS0_4NBG0ELs1ELt1EE12MapAllocSizeE
+                0x06017130       0x10
+ .data._ZN3SRL4VDP212ScrollScreenINS0_4NBG0ELs1ELt1EE12MapAllocSizeE
+                0x06017130        0x4 ./source/main.o
+                0x06017130                SRL::VDP2::ScrollScreen<SRL::VDP2::NBG0, (short)1, (unsigned short)1>::MapAllocSize
+
+.data._ZN3SRL4VDP212ScrollScreenINS0_4NBG0ELs1ELt1EE13CellAllocSizeE
+                0x06017140       0x10
+ .data._ZN3SRL4VDP212ScrollScreenINS0_4NBG0ELs1ELt1EE13CellAllocSizeE
+                0x06017140        0x4 ./source/main.o
+                0x06017140                SRL::VDP2::ScrollScreen<SRL::VDP2::NBG0, (short)1, (unsigned short)1>::CellAllocSize
+
+.data._ZN3SRL4VDP212ScrollScreenINS0_4NBG0ELs1ELt1EE4InfoE
+                0x06017150       0x20
+ .data._ZN3SRL4VDP212ScrollScreenINS0_4NBG0ELs1ELt1EE4InfoE
+                0x06017150       0x14 ./source/main.o
+                0x06017150                SRL::VDP2::ScrollScreen<SRL::VDP2::NBG0, (short)1, (unsigned short)1>::Info
+
+.data._ZN3SRL4VDP212ScrollScreenINS0_4NBG0ELs1ELt1EE10MapAddressE
+                0x06017170       0x10
+ .data._ZN3SRL4VDP212ScrollScreenINS0_4NBG0ELs1ELt1EE10MapAddressE
+                0x06017170        0x4 ./source/main.o
+                0x06017170                SRL::VDP2::ScrollScreen<SRL::VDP2::NBG0, (short)1, (unsigned short)1>::MapAddress
+
+.data._ZN3SRL4VDP212ScrollScreenINS0_4NBG0ELs1ELt1EE11CellAddressE
+                0x06017180       0x10
+ .data._ZN3SRL4VDP212ScrollScreenINS0_4NBG0ELs1ELt1EE11CellAddressE
+                0x06017180        0x4 ./source/main.o
+                0x06017180                SRL::VDP2::ScrollScreen<SRL::VDP2::NBG0, (short)1, (unsigned short)1>::CellAddress
+
+.data._ZN3SRL4VDP216ColorCalcScrollsE
+                0x06017190       0x10
+ .data._ZN3SRL4VDP216ColorCalcScrollsE
+                0x06017190        0x2 ./source/main.o
+                0x06017190                SRL::VDP2::ColorCalcScrolls
+
+.data._ZN3SRL4VDP213ActiveScrollsE
+                0x060171a0       0x10
+ .data._ZN3SRL4VDP213ActiveScrollsE
+                0x060171a0        0x2 ./source/main.o
+                0x060171a0                SRL::VDP2::ActiveScrolls
+
+.data._ZN3SRL4VDP24VRAM10bankCyclesE
+                0x060171b0       0x10
+ .data._ZN3SRL4VDP24VRAM10bankCyclesE
+                0x060171b0        0x4 ./source/main.o
+                0x060171b0                SRL::VDP2::VRAM::bankCycles
+
+.data._ZN3SRL4VDP24VRAM10currentTopE
+                0x060171c0       0x10
+ .data._ZN3SRL4VDP24VRAM10currentTopE
+                0x060171c0       0x10 ./source/main.o
+                0x060171c0                SRL::VDP2::VRAM::currentTop
+
+.data._ZN3SRL4VDP24VRAM10currentBotE
+                0x060171d0       0x10
+ .data._ZN3SRL4VDP24VRAM10currentBotE
+                0x060171d0       0x10 ./source/main.o
+                0x060171d0                SRL::VDP2::VRAM::currentBot
+
+.data._ZN3SRL5ASCII7maxFontE
+                0x060171e0       0x10
+ .data._ZN3SRL5ASCII7maxFontE
+                0x060171e0        0x1 ./source/main.o
+                0x060171e0                SRL::ASCII::maxFont
+
+.data._ZN3SRL5ASCII12maxYPositionE
+                0x060171f0       0x10
+ .data._ZN3SRL5ASCII12maxYPositionE
+                0x060171f0        0x1 ./source/main.o
+                0x060171f0                SRL::ASCII::maxYPosition
+
+.data._ZN3SRL5ASCII12maxXPositionE
+                0x06017200       0x10
+ .data._ZN3SRL5ASCII12maxXPositionE
+                0x06017200        0x1 ./source/main.o
+                0x06017200                SRL::ASCII::maxXPosition
+
+.data._ZN3SRL5ASCII8fontBankE
+                0x06017210       0x10
+ .data._ZN3SRL5ASCII8fontBankE
+                0x06017210        0x2 ./source/main.o
+                0x06017210                SRL::ASCII::fontBank
+
+.data._ZN3SRL5ASCII9colorBankE
+                0x06017220       0x10
+ .data._ZN3SRL5ASCII9colorBankE
+                0x06017220        0x2 ./source/main.o
+                0x06017220                SRL::ASCII::colorBank
+
+.data._ZN3SRL5ASCII7tileMapE
+                0x06017230       0x10
+ .data._ZN3SRL5ASCII7tileMapE
+                0x06017230        0x4 ./source/main.o
+                0x06017230                SRL::ASCII::tileMap
+
+.data._ZN3SRL4CRAM11BaseAddressE
+                0x06017240       0x10
+ .data._ZN3SRL4CRAM11BaseAddressE
+                0x06017240        0x4 ./source/main.o
+                0x06017240                SRL::CRAM::BaseAddress
+
+.rodata         0x06017260       0x20
+ *(.rodata)
+ .rodata        0x06017260       0x18 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/../SRC/workarea.o
+                0x06017260                MaxWorks
+                0x06017262                WorkSize
+                0x06017264                MaxEvents
+                0x06017266                EventSize
+                0x06017268                SpriteBufSize
+                0x0601726c                SortListSize
+                0x06017270                MaxPolygons
+                0x06017272                MaxVertices
+                0x06017274                PCM_WkSize
+ .rodata        0x06017278        0x6 ./source/main.o
+
+.rodata.str1.4  0x06017280       0x40
+ .rodata.str1.4
+                0x06017280       0x3d ./source/main.o
+
+.rodata._ZTVN3SRL7Tilemap10Interfaces8Bmp2TileE
+                0x060172c0       0x20
+ .rodata._ZTVN3SRL7Tilemap10Interfaces8Bmp2TileE
+                0x060172c0       0x18 ./source/main.o
+                0x060172c0                vtable for SRL::Tilemap::Interfaces::Bmp2Tile
+
+.rodata._ZTVN3SRL7Tilemap10Interfaces8CubeTileE
+                0x060172e0       0x20
+ .rodata._ZTVN3SRL7Tilemap10Interfaces8CubeTileE
+                0x060172e0       0x18 ./source/main.o
+                0x060172e0                vtable for SRL::Tilemap::Interfaces::CubeTile
+
+.rodata._ZTVN3SRL6Bitmap3TGAE
+                0x06017300       0x10
+ .rodata._ZTVN3SRL6Bitmap3TGAE
+                0x06017300       0x10 ./source/main.o
+                0x06017300                vtable for SRL::Bitmap::TGA
+
+.rodata._ZZN3SRL7Tilemap11TilemapInfo12SGLColorModeEvE8sglColor
+                0x06017310       0x10
+ .rodata._ZZN3SRL7Tilemap11TilemapInfo12SGLColorModeEvE8sglColor
+                0x06017310        0x7 ./source/main.o
+                0x06017310                SRL::Tilemap::TilemapInfo::SGLColorMode()::sglColor
+
+.bss            0x06017320      0x260
+                0x06017320                        __bstart = .
+ *(.bss)
+ .bss           0x06017320       0xc8 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/../SRC/workarea.o
+                0x06017320                RemainWork
+                0x06017324                WorkBuf
+                0x06017364                RemainEvent
+                0x06017368                EventBuf
+ .bss           0x060173e8        0x0 ./source/main.o
+ *fill*         0x060173e8        0x8 
+ .bss           0x060173f0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS.O)
+ .bss           0x060173f0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS_BUF.O)
+ .bss           0x060173f0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS_CDB.O)
+ .bss           0x060173f0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS_CDC.O)
+ .bss           0x060173f0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS_CDF.O)
+ .bss           0x060173f0        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS_DIR.O)
+ .bss           0x060173f0        0xc C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS_TRN.O)
+ *fill*         0x060173fc        0x4 
+ .bss           0x06017400        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(CDC_CMN.O)
+ .bss           0x06017400        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(CDC_DRV.O)
+ .bss           0x06017400        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(CDC_DEV.O)
+ .bss           0x06017400        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(CDC_SEL.O)
+ .bss           0x06017400        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(CDC_BIF.O)
+ .bss           0x06017400        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(CDC_BIO.O)
+ .bss           0x06017400        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(CDC_CFS.O)
+ .bss           0x06017400        0x2 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(CDC_REG.O)
+ *fill*         0x06017402        0xe 
+ .bss           0x06017410        0xc C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(CDC_SUB.O)
+ *fill*         0x0601741c        0x4 
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB001.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB002.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB014.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB015.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB016.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB021.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB023.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB031.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB032.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB033.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB034.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB038.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB055.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB056.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB057.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB058.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB063.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB070.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB071.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB072.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB200.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglC04.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglD00.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglD01.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglD03.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglD15.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglD16.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglD17.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglD18.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglH00.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglH02.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglH04.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglI01.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglI04.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglIc0.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglJ00.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglJ01.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglJ02.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglJ03.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglJ04.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglJ05.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglK01.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglM01.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglA00.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglA20.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB000.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglB035.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglC00.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglI00.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A(sglH03.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0\libgcc.a(_ashiftrt.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0\libgcc.a(_ashiftrt_n.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0\libgcc.a(_ashiftlt.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0\libgcc.a(_movmem.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0\libgcc.a(_sdivsi3.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0\libgcc.a(_udivsi3.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-abort.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-memcmp.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-strncmp.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-strncpy.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-signal.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-impure.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-signalr.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-memcpy.o)
+ .bss           0x06017420        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-memset.o)
+ .bss           0x06017420        0x8 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-mallocr.o)
+                0x06017420                __malloc_sbrk_start
+                0x06017424                __malloc_free_list
+ .bss           0x06017428        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-mlock.o)
+ .bss           0x06017428      0x130 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-findfp.o)
+                0x06017428                __sf
+                0x06017554                __stdio_exit_handler
+ .bss           0x06017558        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-fwalk.o)
+ .bss           0x06017558        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-stdio.o)
+ .bss           0x06017558        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-closer.o)
+ .bss           0x06017558        0x4 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-reent.o)
+                0x06017558                errno
+ .bss           0x0601755c        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-lseekr.o)
+ .bss           0x0601755c        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-readr.o)
+ .bss           0x0601755c        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-sbrkr.o)
+ .bss           0x0601755c        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-writer.o)
+ .bss           0x0601755c        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-freer.o)
+ .bss           0x0601755c        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-fflush.o)
+ .bss           0x0601755c        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0\libgcc.a(_lshiftrt.o)
+ .bss           0x0601755c        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(close.o)
+ .bss           0x0601755c        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(getpid.o)
+ .bss           0x0601755c        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(kill.o)
+ .bss           0x0601755c        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(lseek.o)
+ .bss           0x0601755c        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(read.o)
+ .bss           0x0601755c        0x4 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(sbrk.o)
+ .bss           0x06017560        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(write.o)
+ .bss           0x06017560        0x0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(_exit.o)
+ *(COMMON)
+ COMMON         0x06017560        0xc C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS.O)
+                0x06017560                GFMC_base
+                0x06017564                gfs_mng_ptr
+                0x06017568                gfs_use_scudma
+ COMMON         0x0601756c        0xc C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS_CDC.O)
+                0x0601756c                gfcd_fatal_err
+                0x06017570                gfcd_work
+                0x06017574                gfcd_playflag
+ COMMON         0x06017578        0x8 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A(GFS_CDF.O)
+                0x06017578                gfcf_fad
+                0x0601757c                gfcf_stat
+                0x06017580                        __bend = .
+                0x06017580                        _end = .
+
+.bss._ZGVN3SRL4Core8OnVblankE
+                0x06017320        0x8
+ .bss._ZGVN3SRL4Core8OnVblankE
+                0x06017320        0x8 ./source/main.o
+                0x06017320                guard variable for SRL::Core::OnVblank
+
+.bss._ZGVN3SRL4VDP212ScrollScreenINS0_4RBG0ELs5ELt16EE11TilePaletteE
+                0x06017330        0x8
+ .bss._ZGVN3SRL4VDP212ScrollScreenINS0_4RBG0ELs5ELt16EE11TilePaletteE
+                0x06017330        0x8 ./source/main.o
+                0x06017330                guard variable for SRL::VDP2::ScrollScreen<SRL::VDP2::RBG0, (short)5, (unsigned short)16>::TilePalette
+
+.bss._ZGVN3SRL4VDP212ScrollScreenINS0_4NBG3ELs2ELt8EE11TilePaletteE
+                0x06017340        0x8
+ .bss._ZGVN3SRL4VDP212ScrollScreenINS0_4NBG3ELs2ELt8EE11TilePaletteE
+                0x06017340        0x8 ./source/main.o
+                0x06017340                guard variable for SRL::VDP2::ScrollScreen<SRL::VDP2::NBG3, (short)2, (unsigned short)8>::TilePalette
+
+.bss._ZGVN3SRL4VDP212ScrollScreenINS0_4NBG2ELs3ELt4EE11TilePaletteE
+                0x06017350        0x8
+ .bss._ZGVN3SRL4VDP212ScrollScreenINS0_4NBG2ELs3ELt4EE11TilePaletteE
+                0x06017350        0x8 ./source/main.o
+                0x06017350                guard variable for SRL::VDP2::ScrollScreen<SRL::VDP2::NBG2, (short)3, (unsigned short)4>::TilePalette
+
+.bss._ZGVN3SRL4VDP212ScrollScreenINS0_4NBG1ELs0ELt2EE11TilePaletteE
+                0x06017360        0x8
+ .bss._ZGVN3SRL4VDP212ScrollScreenINS0_4NBG1ELs0ELt2EE11TilePaletteE
+                0x06017360        0x8 ./source/main.o
+                0x06017360                guard variable for SRL::VDP2::ScrollScreen<SRL::VDP2::NBG1, (short)0, (unsigned short)2>::TilePalette
+
+.bss._ZGVN3SRL4VDP212ScrollScreenINS0_4NBG0ELs1ELt1EE11TilePaletteE
+                0x06017370        0x8
+ .bss._ZGVN3SRL4VDP212ScrollScreenINS0_4NBG0ELs1ELt1EE11TilePaletteE
+                0x06017370        0x8 ./source/main.o
+                0x06017370                guard variable for SRL::VDP2::ScrollScreen<SRL::VDP2::NBG0, (short)1, (unsigned short)1>::TilePalette
+
+.bss._ZGVN3SRL4VDP18MetadataE
+                0x06017380        0x8
+ .bss._ZGVN3SRL4VDP18MetadataE
+                0x06017380        0x8 ./source/main.o
+                0x06017380                guard variable for SRL::VDP1::Metadata
+
+.bss._ZGVN3SRL4VDP18TexturesE
+                0x06017390        0x8
+ .bss._ZGVN3SRL4VDP18TexturesE
+                0x06017390        0x8 ./source/main.o
+                0x06017390                guard variable for SRL::VDP1::Textures
+
+.bss._ZN3SRL4Core8OnVblankE
+                0x060173a0       0x18
+ .bss._ZN3SRL4Core8OnVblankE
+                0x060173a0       0x18 ./source/main.o
+                0x060173a0                SRL::Core::OnVblank
+
+.bss._ZN3SRL5Input3Gun26Player2MegadriveGunControlE
+                0x060173c0        0x1
+ .bss._ZN3SRL5Input3Gun26Player2MegadriveGunControlE
+                0x060173c0        0x1 ./source/main.o
+                0x060173c0                SRL::Input::Gun::Player2MegadriveGunControl
+
+.bss._ZN3SRL5Input3Gun26Player1MegadriveGunControlE
+                0x060173d0        0x1
+ .bss._ZN3SRL5Input3Gun26Player1MegadriveGunControlE
+                0x060173d0        0x1 ./source/main.o
+                0x060173d0                SRL::Input::Gun::Player1MegadriveGunControl
+
+.bss._ZN3SRL4VDP212ScrollScreenINS0_4RBG0ELs5ELt16EE11TilePaletteE
+                0x060173e0        0x8
+ .bss._ZN3SRL4VDP212ScrollScreenINS0_4RBG0ELs5ELt16EE11TilePaletteE
+                0x060173e0        0x8 ./source/main.o
+                0x060173e0                SRL::VDP2::ScrollScreen<SRL::VDP2::RBG0, (short)5, (unsigned short)16>::TilePalette
+
+.bss._ZN3SRL4VDP212ScrollScreenINS0_4NBG3ELs2ELt8EE11TilePaletteE
+                0x060173f0        0x8
+ .bss._ZN3SRL4VDP212ScrollScreenINS0_4NBG3ELs2ELt8EE11TilePaletteE
+                0x060173f0        0x8 ./source/main.o
+                0x060173f0                SRL::VDP2::ScrollScreen<SRL::VDP2::NBG3, (short)2, (unsigned short)8>::TilePalette
+
+.bss._ZN3SRL4VDP212ScrollScreenINS0_4NBG2ELs3ELt4EE11TilePaletteE
+                0x06017400        0x8
+ .bss._ZN3SRL4VDP212ScrollScreenINS0_4NBG2ELs3ELt4EE11TilePaletteE
+                0x06017400        0x8 ./source/main.o
+                0x06017400                SRL::VDP2::ScrollScreen<SRL::VDP2::NBG2, (short)3, (unsigned short)4>::TilePalette
+
+.bss._ZN3SRL4VDP212ScrollScreenINS0_4NBG1ELs0ELt2EE11TilePaletteE
+                0x06017410        0x8
+ .bss._ZN3SRL4VDP212ScrollScreenINS0_4NBG1ELs0ELt2EE11TilePaletteE
+                0x06017410        0x8 ./source/main.o
+                0x06017410                SRL::VDP2::ScrollScreen<SRL::VDP2::NBG1, (short)0, (unsigned short)2>::TilePalette
+
+.bss._ZN3SRL4VDP212ScrollScreenINS0_4NBG0ELs1ELt1EE11TilePaletteE
+                0x06017420        0x8
+ .bss._ZN3SRL4VDP212ScrollScreenINS0_4NBG0ELs1ELt1EE11TilePaletteE
+                0x06017420        0x8 ./source/main.o
+                0x06017420                SRL::VDP2::ScrollScreen<SRL::VDP2::NBG0, (short)1, (unsigned short)1>::TilePalette
+
+.bss._ZN3SRL4VDP218TransparentScrollsE
+                0x06017430        0x2
+ .bss._ZN3SRL4VDP218TransparentScrollsE
+                0x06017430        0x2 ./source/main.o
+                0x06017430                SRL::VDP2::TransparentScrolls
+
+.bss._ZN3SRL4VDP18MetadataE
+                0x06017440      0x320
+ .bss._ZN3SRL4VDP18MetadataE
+                0x06017440      0x320 ./source/main.o
+                0x06017440                SRL::VDP1::Metadata
+
+.bss._ZN3SRL4VDP18TexturesE
+                0x06017760      0x320
+ .bss._ZN3SRL4VDP18TexturesE
+                0x06017760      0x320 ./source/main.o
+                0x06017760                SRL::VDP1::Textures
+
+.bss._ZN3SRL4CRAM14AllocationMaskE
+                0x06017a80       0x10
+ .bss._ZN3SRL4CRAM14AllocationMaskE
+                0x06017a80       0x10 ./source/main.o
+                0x06017a80                SRL::CRAM::AllocationMask
+
+.bss._ZN3SRL2Cd13isInitializedE
+                0x06017a90        0x1
+ .bss._ZN3SRL2Cd13isInitializedE
+                0x06017a90        0x1 ./source/main.o
+                0x06017a90                SRL::Cd::isInitialized
+
+.bss._ZN3SRL2Cd7GfsWorkE
+                0x06017aa0      0xd08
+ .bss._ZN3SRL2Cd7GfsWorkE
+                0x06017aa0      0xd08 ./source/main.o
+                0x06017aa0                SRL::Cd::GfsWork
+
+.bss._ZN3SRL2Cd17GfsDirectoryNamesE
+                0x060187b0     0x1800
+ .bss._ZN3SRL2Cd17GfsDirectoryNamesE
+                0x060187b0     0x1800 ./source/main.o
+                0x060187b0                SRL::Cd::GfsDirectoryNames
+
+.bss._ZN3SRL2Cd14GfsDirectoriesE
+                0x06019fb0        0xc
+ .bss._ZN3SRL2Cd14GfsDirectoriesE
+                0x06019fb0        0xc ./source/main.o
+                0x06019fb0                SRL::Cd::GfsDirectories
+
+.bss._ZN3SRL6Memory10LowWorkRam4zoneE
+                0x06019fc0        0x8
+ .bss._ZN3SRL6Memory10LowWorkRam4zoneE
+                0x06019fc0        0x8 ./source/main.o
+                0x06019fc0                SRL::Memory::LowWorkRam::zone
+
+.bss._ZN3SRL6Memory11HighWorkRam4zoneE
+                0x06019fd0        0x8
+ .bss._ZN3SRL6Memory11HighWorkRam4zoneE
+                0x06019fd0        0x8 ./source/main.o
+                0x06019fd0                SRL::Memory::HighWorkRam::zone
+
+HEAP            0x06019fe0        0x0
+                0x06019fe0                        __heap_start = .
+
+WORK_AREA_DUMMY
+                0x00000000    0x36960
+ *(WORK_AREA_DUMMY)
+ WORK_AREA_DUMMY
+                0x00000000    0x36958 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/../SRC/workarea.o
+                0x00000000                WORK_AREA_DUMMY
+
+WORK_AREA       0x060c0000    0x37000
+                0x060c0000                        __heap_end = .
+ *(WORK_AREA)
+ WORK_AREA      0x060c0000    0x36958 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/../SRC/workarea.o
+                0x060c0000                WorkArea
+                0x060f6958                        __work_area_end = .
+LOAD C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/../SRC/workarea.o
+LOAD ./source/main.o
+LOAD C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCPK.A
+LOAD C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/SEGA_SYS.A
+LOAD C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBCD.A
+LOAD C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/LIBSGL.A
+LOAD C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0\libgcc.a
+LOAD C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0\libgcc-Os-4-200.a
+LOAD C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a
+LOAD C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0\libgcc.a
+LOAD C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0\libgcc-Os-4-200.a
+START GROUP
+LOAD C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0\libgcc.a
+LOAD C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0\libgcc-Os-4-200.a
+LOAD C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a
+LOAD C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a
+END GROUP
+OUTPUT(./out/Downland.elf coff-sh)
+
+.comment        0x00000000      0x240
+ .comment       0x00000000       0x13 C:/Shawn/development/SaturnDev/SaturnRingLib/saturnringlib/../modules/sgl/LIB/../SRC/workarea.o
+ .comment       0x00000013       0x13 ./source/main.o
+ .comment       0x00000026       0x13 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-abort.o)
+ .comment       0x00000039       0x13 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-memcmp.o)
+ .comment       0x0000004c       0x13 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-strncmp.o)
+ .comment       0x0000005f       0x13 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-strncpy.o)
+ .comment       0x00000072       0x13 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-signal.o)
+ .comment       0x00000085       0x13 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-impure.o)
+ .comment       0x00000098       0x13 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-signalr.o)
+ .comment       0x000000ab       0x13 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-mallocr.o)
+ .comment       0x000000be       0x13 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-mlock.o)
+ .comment       0x000000d1       0x13 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-findfp.o)
+ .comment       0x000000e4       0x13 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-fwalk.o)
+ .comment       0x000000f7       0x13 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-stdio.o)
+ .comment       0x0000010a       0x13 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-closer.o)
+ .comment       0x0000011d       0x13 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-reent.o)
+ .comment       0x00000130       0x13 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-lseekr.o)
+ .comment       0x00000143       0x13 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-readr.o)
+ .comment       0x00000156       0x13 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-sbrkr.o)
+ .comment       0x00000169       0x13 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-writer.o)
+ .comment       0x0000017c       0x13 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-freer.o)
+ .comment       0x0000018f       0x13 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-fflush.o)
+ .comment       0x000001a2       0x13 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(close.o)
+ .comment       0x000001b5       0x13 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(getpid.o)
+ .comment       0x000001c8       0x13 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(kill.o)
+ .comment       0x000001db       0x13 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(lseek.o)
+ .comment       0x000001ee       0x13 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(read.o)
+ .comment       0x00000201       0x13 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(sbrk.o)
+ .comment       0x00000214       0x13 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(write.o)
+ .comment       0x00000227       0x13 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(_exit.o)
+
+.debug_info     0x00000000     0x90f0
+ .debug_info    0x00000000       0xd8 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-abort.o)
+ .debug_info    0x000000d8       0xf0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-memcmp.o)
+ .debug_info    0x000001c8       0xd2 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-strncmp.o)
+ .debug_info    0x0000029a      0x101 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-strncpy.o)
+ .debug_info    0x0000039b      0x9d1 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-signal.o)
+ .debug_info    0x00000d6c      0x704 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-impure.o)
+ .debug_info    0x00001470      0x7c2 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-signalr.o)
+ .debug_info    0x00001c32      0x985 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-mallocr.o)
+ .debug_info    0x000025b7      0x708 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-mlock.o)
+ .debug_info    0x00002cbf      0xcc2 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-findfp.o)
+ .debug_info    0x00003981      0x7a7 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-fwalk.o)
+ .debug_info    0x00004128      0xa28 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-stdio.o)
+ .debug_info    0x00004b50      0x73d C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-closer.o)
+ .debug_info    0x0000528d      0x7f0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-reent.o)
+ .debug_info    0x00005a7d      0x781 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-lseekr.o)
+ .debug_info    0x000061fe      0x798 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-readr.o)
+ .debug_info    0x00006996      0x763 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-sbrkr.o)
+ .debug_info    0x000070f9      0x79e C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-writer.o)
+ .debug_info    0x00007897      0x83a C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-freer.o)
+ .debug_info    0x000080d1      0x973 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-fflush.o)
+ .debug_info    0x00008a44       0xd8 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(close.o)
+ .debug_info    0x00008b1c       0xc9 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(getpid.o)
+ .debug_info    0x00008be5       0xe4 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(kill.o)
+ .debug_info    0x00008cc9       0xf0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(lseek.o)
+ .debug_info    0x00008db9       0xf6 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(read.o)
+ .debug_info    0x00008eaf       0xa4 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(sbrk.o)
+ .debug_info    0x00008f53       0xf6 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(write.o)
+ .debug_info    0x00009049       0x9e C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(_exit.o)
+
+.debug_abbrev   0x00000000     0x2a60
+ .debug_abbrev  0x00000000       0x99 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-abort.o)
+ .debug_abbrev  0x00000099       0x8a C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-memcmp.o)
+ .debug_abbrev  0x00000123       0x76 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-strncmp.o)
+ .debug_abbrev  0x00000199       0xa1 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-strncpy.o)
+ .debug_abbrev  0x0000023a      0x28a C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-signal.o)
+ .debug_abbrev  0x000004c4      0x185 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-impure.o)
+ .debug_abbrev  0x00000649      0x233 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-signalr.o)
+ .debug_abbrev  0x0000087c      0x27f C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-mallocr.o)
+ .debug_abbrev  0x00000afb      0x1bd C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-mlock.o)
+ .debug_abbrev  0x00000cb8      0x3a4 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-findfp.o)
+ .debug_abbrev  0x0000105c      0x1d0 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-fwalk.o)
+ .debug_abbrev  0x0000122c      0x255 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-stdio.o)
+ .debug_abbrev  0x00001481      0x1e6 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-closer.o)
+ .debug_abbrev  0x00001667      0x22d C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-reent.o)
+ .debug_abbrev  0x00001894      0x1f7 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-lseekr.o)
+ .debug_abbrev  0x00001a8b      0x1e6 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-readr.o)
+ .debug_abbrev  0x00001c71      0x20d C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-sbrkr.o)
+ .debug_abbrev  0x00001e7e      0x1eb C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-writer.o)
+ .debug_abbrev  0x00002069      0x26c C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-freer.o)
+ .debug_abbrev  0x000022d5      0x2db C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-fflush.o)
+ .debug_abbrev  0x000025b0       0x93 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(close.o)
+ .debug_abbrev  0x00002643       0x82 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(getpid.o)
+ .debug_abbrev  0x000026c5       0x94 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(kill.o)
+ .debug_abbrev  0x00002759       0xa6 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(lseek.o)
+ .debug_abbrev  0x000027ff       0xaf C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(read.o)
+ .debug_abbrev  0x000028ae       0x9b C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(sbrk.o)
+ .debug_abbrev  0x00002949       0xaf C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(write.o)
+ .debug_abbrev  0x000029f8       0x66 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(_exit.o)
+
+.debug_aranges  0x00000000      0x380
+ .debug_aranges
+                0x00000000       0x20 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-abort.o)
+ .debug_aranges
+                0x00000020       0x20 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-memcmp.o)
+ .debug_aranges
+                0x00000040       0x20 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-strncmp.o)
+ .debug_aranges
+                0x00000060       0x20 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-strncpy.o)
+ .debug_aranges
+                0x00000080       0x20 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-signal.o)
+ .debug_aranges
+                0x000000a0       0x18 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-impure.o)
+ .debug_aranges
+                0x000000b8       0x20 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-signalr.o)
+ .debug_aranges
+                0x000000d8       0x20 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-mallocr.o)
+ .debug_aranges
+                0x000000f8       0x20 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-mlock.o)
+ .debug_aranges
+                0x00000118       0x20 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-findfp.o)
+ .debug_aranges
+                0x00000138       0x20 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-fwalk.o)
+ .debug_aranges
+                0x00000158       0x20 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-stdio.o)
+ .debug_aranges
+                0x00000178       0x20 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-closer.o)
+ .debug_aranges
+                0x00000198       0x20 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-reent.o)
+ .debug_aranges
+                0x000001b8       0x20 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-lseekr.o)
+ .debug_aranges
+                0x000001d8       0x20 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-readr.o)
+ .debug_aranges
+                0x000001f8       0x20 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-sbrkr.o)
+ .debug_aranges
+                0x00000218       0x20 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-writer.o)
+ .debug_aranges
+                0x00000238       0x20 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-freer.o)
+ .debug_aranges
+                0x00000258       0x20 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-fflush.o)
+ .debug_aranges
+                0x00000278       0x20 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(close.o)
+ .debug_aranges
+                0x00000298       0x20 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(getpid.o)
+ .debug_aranges
+                0x000002b8       0x20 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(kill.o)
+ .debug_aranges
+                0x000002d8       0x20 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(lseek.o)
+ .debug_aranges
+                0x000002f8       0x20 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(read.o)
+ .debug_aranges
+                0x00000318       0x20 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(sbrk.o)
+ .debug_aranges
+                0x00000338       0x20 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(write.o)
+ .debug_aranges
+                0x00000358       0x20 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(_exit.o)
+
+.debug_line     0x00000000     0x3410
+ .debug_line    0x00000000      0x164 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-abort.o)
+ .debug_line    0x00000164      0x167 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-memcmp.o)
+ .debug_line    0x000002cb      0x17c C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-strncmp.o)
+ .debug_line    0x00000447      0x181 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-strncpy.o)
+ .debug_line    0x000005c8      0x3d7 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-signal.o)
+ .debug_line    0x0000099f      0x138 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-impure.o)
+ .debug_line    0x00000ad7      0x21c C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-signalr.o)
+ .debug_line    0x00000cf3      0x4d1 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-mallocr.o)
+ .debug_line    0x000011c4      0x1af C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-mlock.o)
+ .debug_line    0x00001373      0x46e C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-findfp.o)
+ .debug_line    0x000017e1      0x20e C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-fwalk.o)
+ .debug_line    0x000019ef      0x27b C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-stdio.o)
+ .debug_line    0x00001c6a      0x1f5 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-closer.o)
+ .debug_line    0x00001e5f      0x252 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-reent.o)
+ .debug_line    0x000020b1      0x1fb C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-lseekr.o)
+ .debug_line    0x000022ac      0x1fa C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-readr.o)
+ .debug_line    0x000024a6      0x1f5 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-sbrkr.o)
+ .debug_line    0x0000269b      0x1fb C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-writer.o)
+ .debug_line    0x00002896      0x2ef C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-freer.o)
+ .debug_line    0x00002b85      0x3b7 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-fflush.o)
+ .debug_line    0x00002f3c       0x9a C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(close.o)
+ .debug_line    0x00002fd6       0x9b C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(getpid.o)
+ .debug_line    0x00003071       0x99 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(kill.o)
+ .debug_line    0x0000310a       0x9a C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(lseek.o)
+ .debug_line    0x000031a4       0x99 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(read.o)
+ .debug_line    0x0000323d       0xa3 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(sbrk.o)
+ .debug_line    0x000032e0       0x9a C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(write.o)
+ .debug_line    0x0000337a       0x8c C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(_exit.o)
+
+.debug_str      0x00000000     0x5af0
+ .debug_str     0x00000000      0x168 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-abort.o)
+ .debug_str     0x00000168      0x165 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-memcmp.o)
+ .debug_str     0x000002cd      0x167 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-strncmp.o)
+ .debug_str     0x00000434      0x183 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-strncpy.o)
+ .debug_str     0x000005b7      0x4de C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-signal.o)
+ .debug_str     0x00000a95      0x45c C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-impure.o)
+ .debug_str     0x00000ef1      0x473 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-signalr.o)
+ .debug_str     0x00001364      0x538 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-mallocr.o)
+ .debug_str     0x0000189c      0x45c C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-mlock.o)
+ .debug_str     0x00001cf8      0x5ef C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-findfp.o)
+ .debug_str     0x000022e7      0x467 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-fwalk.o)
+ .debug_str     0x0000274e      0x4c4 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-stdio.o)
+ .debug_str     0x00002c12      0x44d C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-closer.o)
+ .debug_str     0x0000305f      0x476 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-reent.o)
+ .debug_str     0x000034d5      0x45b C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-lseekr.o)
+ .debug_str     0x00003930      0x45b C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-readr.o)
+ .debug_str     0x00003d8b      0x460 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-sbrkr.o)
+ .debug_str     0x000041eb      0x45d C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-writer.o)
+ .debug_str     0x00004648      0x4d7 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-freer.o)
+ .debug_str     0x00004b1f      0x4de C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-fflush.o)
+ .debug_str     0x00004ffd      0x176 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(close.o)
+ .debug_str     0x00005173      0x172 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(getpid.o)
+ .debug_str     0x000052e5      0x16c C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(kill.o)
+ .debug_str     0x00005451      0x174 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(lseek.o)
+ .debug_str     0x000055c5      0x171 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(read.o)
+ .debug_str     0x00005736       0xfb C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(sbrk.o)
+ .debug_str     0x00005831      0x174 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(write.o)
+ .debug_str     0x000059a5      0x147 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(_exit.o)
+
+.debug_frame    0x00000000      0x870
+ .debug_frame   0x00000000       0x28 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-abort.o)
+ .debug_frame   0x00000028       0x20 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-memcmp.o)
+ .debug_frame   0x00000048       0x20 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-strncmp.o)
+ .debug_frame   0x00000068       0x20 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-strncpy.o)
+ .debug_frame   0x00000088      0x118 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-signal.o)
+ .debug_frame   0x000001a0       0x4c C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-signalr.o)
+ .debug_frame   0x000001ec       0xac C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-mallocr.o)
+ .debug_frame   0x00000298       0x30 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-mlock.o)
+ .debug_frame   0x000002c8       0xec C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-findfp.o)
+ .debug_frame   0x000003b4       0x6c C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-fwalk.o)
+ .debug_frame   0x00000420       0xb8 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-stdio.o)
+ .debug_frame   0x000004d8       0x3c C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-closer.o)
+ .debug_frame   0x00000514       0x70 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-reent.o)
+ .debug_frame   0x00000584       0x3c C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-lseekr.o)
+ .debug_frame   0x000005c0       0x3c C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-readr.o)
+ .debug_frame   0x000005fc       0x3c C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-sbrkr.o)
+ .debug_frame   0x00000638       0x3c C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-writer.o)
+ .debug_frame   0x00000674       0x58 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-freer.o)
+ .debug_frame   0x000006cc       0x9c C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-fflush.o)
+ .debug_frame   0x00000768       0x20 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(close.o)
+ .debug_frame   0x00000788       0x20 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(getpid.o)
+ .debug_frame   0x000007a8       0x20 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(kill.o)
+ .debug_frame   0x000007c8       0x20 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(lseek.o)
+ .debug_frame   0x000007e8       0x20 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(read.o)
+ .debug_frame   0x00000808       0x20 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(sbrk.o)
+ .debug_frame   0x00000828       0x20 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(write.o)
+ .debug_frame   0x00000848       0x20 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(_exit.o)
+
+.debug_loclists
+                0x00000000      0xfa0
+ .debug_loclists
+                0x00000000       0xbb C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-memcmp.o)
+ .debug_loclists
+                0x000000bb       0x92 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-strncmp.o)
+ .debug_loclists
+                0x0000014d       0x4f C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-strncpy.o)
+ .debug_loclists
+                0x0000019c      0x289 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-signal.o)
+ .debug_loclists
+                0x00000425       0x66 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-signalr.o)
+ .debug_loclists
+                0x0000048b      0x1aa C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-mallocr.o)
+ .debug_loclists
+                0x00000635      0x177 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-findfp.o)
+ .debug_loclists
+                0x000007ac       0x8c C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-fwalk.o)
+ .debug_loclists
+                0x00000838      0x249 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-stdio.o)
+ .debug_loclists
+                0x00000a81       0x39 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-closer.o)
+ .debug_loclists
+                0x00000aba       0x71 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-reent.o)
+ .debug_loclists
+                0x00000b2b       0x6b C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-lseekr.o)
+ .debug_loclists
+                0x00000b96       0x6b C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-readr.o)
+ .debug_loclists
+                0x00000c01       0x39 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-sbrkr.o)
+ .debug_loclists
+                0x00000c3a       0x6b C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-writer.o)
+ .debug_loclists
+                0x00000ca5       0xb8 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-freer.o)
+ .debug_loclists
+                0x00000d5d      0x210 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-fflush.o)
+ .debug_loclists
+                0x00000f6d       0x2a C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libnosys.a(sbrk.o)
+
+.debug_rnglists
+                0x00000000       0xd0
+ .debug_rnglists
+                0x00000000       0x26 C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-mallocr.o)
+ .debug_rnglists
+                0x00000026       0x4c C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-findfp.o)
+ .debug_rnglists
+                0x00000072       0x1e C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-reent.o)
+ .debug_rnglists
+                0x00000090       0x3e C:/Shawn/development/SaturnDev/SaturnRingLib/Compiler/sh2eb-elf/bin/../lib/gcc/sh-elf/14.2.0/../../../../sh-elf/lib\libc.a(libc_a-fflush.o)

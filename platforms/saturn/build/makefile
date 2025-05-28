@@ -260,7 +260,7 @@ compile_objects : $(OBJECTS) $(SYSOBJECTS)
 	$(CC) $(LDFLAGS) $(SYSOBJECTS) $(OBJECTS) $(LIBS) -o $(BUILD_ELF)
 
 convert_binary : compile_objects
-	$(OBJCOPY) -O binary $(BUILD_ELF) ./cd/data/0.bin
+	$(OBJCOPY) -O binary $(BUILD_ELF) $(OUT_DIR)/0.bin
 
 create_iso : convert_binary
 ifeq ($(strip ${SRL_USE_SGL_SOUND_DRIVER}),1)
@@ -272,7 +272,7 @@ endif
 	xorrisofs --norock -quiet -sysid "SEGA SATURN" -volid "SaturnApp" -volset "SaturnApp" \
 	-publisher "SEGA ENTERPRISES, LTD." -preparer "SEGA ENTERPRISES, LTD." -appid "SaturnApp" \
 	-abstract "$(ASSETS_DIR)/ABS.TXT" -copyright "$(ASSETS_DIR)/CPY.TXT" -biblio "$(ASSETS_DIR)/BIB.TXT" -generic-boot $(IPFILE) \
-	-full-iso9660-filenames -o $(BUILD_ISO) $(ASSETS_DIR) $(ENTRYPOINT)
+	-full-iso9660-filenames -o $(BUILD_ISO) $(ASSETS_DIR) $(OUT_DIR)/0.bin $(ENTRYPOINT)
 
 # Create CUE sheet
 create_bin_cue: create_iso

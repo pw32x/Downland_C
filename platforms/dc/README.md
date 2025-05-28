@@ -1,65 +1,41 @@
-# Downland_C: Version Alpha
+# Downland_C: Dreamcast
 
 ## INTRODUCTION
 
-**Downland** is a game for the Tandy Color Computer written by **Micheal Aichlmayr**. It was released in 1983 by Spectral Associates.
+This is the Dreamcast port of Downland_C.
 
-Information about Downland can be found here: https://www.cocopedia.com/wiki/index.php/Downland
+## BUILDING THE GAME
 
-This project, **Downland_C**, is a port of the original game to the C programming language. The basis of this port is from the **Downland_RE** project, found here: https://github.com/pw32x/Downland_RE.
+You will need: 
+- This repository
+- An install of the DreamSDK (https://dreamsdk.org/)
+- A copy of the Downland V1.1 rom located in the romdisk folder
 
-Downland_C is intended to be a faithful reproduction of the game's graphics, physics, and gameplay. While it is not 100% accurate, it should be very close. 
+Instructions:
 
-The project is based on the original Downland, version 1.1. This version was a later release to support the Tandy Color Computer 3.
-
-## SUPPORTED PLATFORMS
-
-- Windows
+- Install the DreamSDK as usual. No extra libraries should be needed. 
+- Run the build.bat in the build folder or use the provided Visual Studio solution.
+- The built downland.cdi image will be found in the out folder.
 
 ## RUNNING THE GAME
 
 You will need: 
-- A copy of the Downland V1.1 rom.
-- Install it in the same folder as the Downland_C exe.
+- a Dreamcast, or
+- an emulator like Redream or Flycast
+- a copy of the generated downland.cdi
 
-The project loads resources from the Downland rom. If the rom isn't present the game will not run.
+You can use the .cdi on a sdcard if you have a TerraOnion or you can burn it to a CDR with an app like ImgBurn.
 
-Downland_C supports multiple rom names:
-- downland.bin
-- downland.rom
-- Downland V1.1 (1983) (26-3046) (Tandy) [a1].ccc
-
-
-## CONTROLING THE GAME
-
-You will need:
-- A keyboard
-- (optionally) A gamepad. Xbox Series X/S and PS5 gamepads are supported (as they're the ones I have)
-
-Currently only supports one gamepad. For two players you'll have to share!
-
+Open the downland.cdi in the emulator, or
+Insert the burned disk in the Dreamcast, power on and enjoy!
 
 ## CONTROLS
-    
-    Keyboard    Arrow keys for Movement
-                Left Shift/LeftCtrl/Z for jump
+
+    The game supports two players. 
     
     Gamepad     Dpad or Left Analog Stick for Movement
-                A (Xbox) or X (PS5) for jump
-                
-    Escape      Pause/Unpause
-    Space       Step Pause
-    F1          Cycle through video filters (see below)
-    Alt+Enter   Toggle Fullscreen
-    Alt+F4      Close the application
-
-## VIDEO FILTERS
-
-The game has basic support for different graphics looks. 
-The F1 key cycles through:
-- A basic blue CRT artifact mode.
-- A basic orange CRT artifact mode.
-- A raw 1bpp mode.
+                A for Jump
+                Start to Pause
 
 ## GAMEPLAY NOTES
 
@@ -88,22 +64,6 @@ The pickups are:
 
 The scoring system also has a random-based component. The three treasures are randomly chosen at game . When they're picked up, the player gets the base points, plus the game adds a random amount from 0 to 127. 
 
-## DEBUGGING
-
-For alpha testing, Downland_C has extra controls:
-    
-    Keyboard    Tab to toggle debug movement mode
-                Tilde Key to return to the title screen
-                1 to 0 keys to jump to a room
-    
-    Gamepad     B (Xbox) or O (PS5) to toggle debug movement mode
-    
-Debug movement mode disables collisions with hazards but keeps collisions with pickups. 
-
 ## CONTACT
 
 Send questions, comments, & bugs about Downland_C to pw32x at jump@puffweet.com
-
-
-
-

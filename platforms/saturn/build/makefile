@@ -43,6 +43,7 @@ IPFILE = $(SGLDIR)/IP.BIN
 LDFILE = $(SGLDIR)/sgl.linker
 SGLLDIR = $(SGLDIR)/LIB
 SGLIDIR = $(SGLDIR)/INC
+SGLSDIR = $(SGLDIR)/SRC
 
 LIBS = $(SGLLDIR)/LIBCPK.A $(SGLLDIR)/SEGA_SYS.A $(SGLLDIR)/LIBCD.A $(SGLLDIR)/LIBSGL.A
 
@@ -192,7 +193,7 @@ TLSFDIR = $(MODDIR)/tlsf
 DUMMYIDIR = $(MODDIR)/dummy
 SATURNMATHPPDIR = $(MODDIR)/SaturnMathPP
 
-SYSSOURCES += $(SGLLDIR)/../SRC/workarea.c
+SYSSOURCES += $(SGLSDIR)/workarea.c
 
 ifdef SRL_MALLOC_METHOD
 	ifeq ($(SRL_MALLOC_METHOD), TLSF)
@@ -201,7 +202,7 @@ ifdef SRL_MALLOC_METHOD
 	endif
 endif
 
-SYSOBJECTS = $(SYSSOURCES:.c=.o)
+SYSOBJECTS = $(patsubst $(SGLSDIR)/%.c,$(OUT_DIR)/modules/sgl/SRC/%.o,$(SYSSOURCES))
 
 # General compilation flags
 CCFLAGS += $(SYSFLAGS) -W -m2 -c -O2 -Wno-strict-aliasing \
@@ -243,7 +244,8 @@ $(OUT_DIR)/source/%.o : $(SRC_ROOT)/source/%.cxx
 	@mkdir -p $(dir $@)
 	$(CXX) -c $< $(CCFLAGS) -std=c++23 -fpermissive -fno-exceptions -fno-rtti -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-threadsafe-statics -fno-use-cxa-atexit -o $@
 
-$(SYSOBJECTS): %.o : %.c
+$(OUT_DIR)/modules/sgl/SRC/%.o: $(SGLSDIR)/%.c
+	@mkdir -p $(dir $@)
 	$(CC) -c $< $(CCFLAGS) -std=c2x -o $@
 
 compile_objects : $(OBJECTS) $(SYSOBJECTS)
@@ -313,7 +315,7 @@ build_bin_cue: create_bin_cue add_audio_to_bin_cue
 
 
 clean:
-	rm -f $(SGLLDIR)/../SRC/*.o
+	rm -f $(SGLSDIR)/*.o
 	rm -f $(OBJECTS) $(BUILD_ELF) $(BUILD_ISO) $(BUILD_MAP) $(ASSETS_DIR)/0.bin
 	rm -f $(AUDIO_FILES_RAW)
 ifeq ($(strip ${SRL_USE_SGL_SOUND_DRIVER}),1)

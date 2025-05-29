@@ -25,11 +25,19 @@ SGL_MAX_WORKS = 1             	# Number of works that can be used
 CD_NAME = Downland
 
 SRC_ROOT = .
+GAME_ROOT = $(SRC_ROOT)/../../game
+ROOMS_ROOT = $(GAME_ROOT)/rooms
+RESOURCELOADERS_ROOT = $(SRC_ROOT)/../../resource_loaders
+
 OUT_DIR = ./out
 
 # Find all .c and .cxx files
 LOCAL_SRCS = $(wildcard $(SRC_ROOT)/source/*.c)
 LOCAL_SRCS += $(wildcard $(SRC_ROOT)/source/*.cxx)
+
+GAME_SRCS = $(wildcard $(GAME_ROOT)/*.c)
+ROOM_SRCS = $(wildcard $(ROOMS_ROOT)/*.c)
+RESOURCELOADERS_SRCS = $(wildcard $(RESOURCELOADERS_ROOT)/*.c)
 
 COMPILER_DIR=$(SRL_SDK_ROOT)/../Compiler
 
@@ -60,7 +68,13 @@ ifneq ($(strip $(MODULES_EXTRA)),)
 endif
 
 COBJECTS = $(patsubst $(SRC_ROOT)/source/%.c,$(OUT_DIR)/source/%.o,$(LOCAL_SRCS))
-OBJECTS += $(patsubst $(SRC_ROOT)/source/%.cxx,$(OUT_DIR)/source/%.o,$(LOCAL_SRCS))
+LOCAL_OBJS += $(patsubst $(SRC_ROOT)/source/%.cxx,$(OUT_DIR)/source/%.o,$(LOCAL_SRCS))
+GAME_OBJS = $(patsubst $(GAME_ROOT)/%.c,$(OUT_DIR)/game/%.o,$(GAME_SRCS))
+ROOM_OBJS = $(patsubst $(ROOMS_ROOT)/%.c,$(OUT_DIR)/game/rooms/%.o,$(ROOM_SRCS))
+RESOURCELOADERS_OBJS = $(patsubst $(RESOURCELOADERS_ROOT)/%.c,$(OUT_DIR)/resource_loaders/%.o,$(RESOURCELOADERS_SRCS))
+
+OBJECTS = $(LOCAL_OBJS) $(GAME_OBJS) $(ROOM_OBJS) $(ROMDISK_OBJ) $(RESOURCELOADERS_OBJS)
+
 
 ifdef OS
    CC = sh2eb-elf-gcc.exe
@@ -208,7 +222,6 @@ SYSOBJECTS = $(patsubst $(SGLSDIR)/%.c,$(OUT_DIR)/modules/sgl/SRC/%.o,$(SYSSOURC
 CCFLAGS += $(SYSFLAGS) -W -m2 -c -O2 -Wno-strict-aliasing \
 					-I$(DUMMYIDIR) -I$(SATURNMATHPPDIR) -I$(SGLIDIR) -I$(STDDIR) -I$(TLSFDIR) -I$(SRL_SDK_ROOT) $(MODULE_EXTRA_INC)
 LDFLAGS = -m2 -L$(SGLLDIR) -Xlinker -T$(LDFILE) -Xlinker -Map \
-					-Xlinker $(BUILD_MAP) -Xlinker -e -Xlinker ___Start -nostartfiles
 
 ifeq "$(GCCMAJORVERSION)" "14"
     LDFLAGS += -specs=nosys.specs
@@ -243,6 +256,19 @@ $(OUT_DIR)/source/%.o : $(SRC_ROOT)/source/%.c
 $(OUT_DIR)/source/%.o : $(SRC_ROOT)/source/%.cxx
 	@mkdir -p $(dir $@)
 	$(CXX) -c $< $(CCFLAGS) -std=c++23 -fpermissive -fno-exceptions -fno-rtti -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-threadsafe-statics -fno-use-cxa-atexit -o $@
+
+$(OUT_DIR)/game/%.o: $(GAME_ROOT)/%.c
+	@mkdir -p $(dir $@)
+	$(CC) -c $< $(CCFLAGS) -std=c2x -o $@
+	
+$(OUT_DIR)/resource_loaders/%.o: $(RESOURCELOADERS_ROOT)/%.c
+	@mkdir -p $(dir $@)
+	$(CC) -c $< $(CCFLAGS) -std=c2x -o $@
+
+$(OUT_DIR)/game/rooms/%.o: $(ROOMS_ROOT)/%.c
+	@mkdir -p $(dir $@)
+	$(CC) -c $< $(CCFLAGS) -std=c2x -o $@
+
 
 $(OUT_DIR)/modules/sgl/SRC/%.o: $(SGLSDIR)/%.c
 	@mkdir -p $(dir $@)

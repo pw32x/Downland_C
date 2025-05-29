@@ -93,6 +93,22 @@
   <ItemDefinitionGroup>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\game\ball.c" />
+    <ClCompile Include="..\..\..\game\bird.c" />
+    <ClCompile Include="..\..\..\game\debug_utils.c" />
+    <ClCompile Include="..\..\..\game\door_utils.c" />
+    <ClCompile Include="..\..\..\game\draw_utils.c" />
+    <ClCompile Include="..\..\..\game\drops_manager.c" />
+    <ClCompile Include="..\..\..\game\game.c" />
+    <ClCompile Include="..\..\..\game\physics_utils.c" />
+    <ClCompile Include="..\..\..\game\player.c" />
+    <ClCompile Include="..\..\..\game\rooms\chambers.c" />
+    <ClCompile Include="..\..\..\game\rooms\getready.c" />
+    <ClCompile Include="..\..\..\game\rooms\rooms.c" />
+    <ClCompile Include="..\..\..\game\rooms\titlescreen.c" />
+    <ClCompile Include="..\..\..\game\rooms\transitions.c" />
+    <ClCompile Include="..\..\..\game\string_utils.c" />
+    <ClCompile Include="..\..\..\resource_loaders\resource_loader_filesys.c" />
     <ClCompile Include="..\source\main.cxx" />
   </ItemGroup>
   <ItemGroup>
@@ -101,6 +117,33 @@
     <None Include="..\build\makefile" />
     <None Include="..\build\rebuild.bat" />
     <None Include="..\build\run.bat" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\game\background_types.h" />
+    <ClInclude Include="..\..\..\game\ball.h" />
+    <ClInclude Include="..\..\..\game\base_defines.h" />
+    <ClInclude Include="..\..\..\game\base_types.h" />
+    <ClInclude Include="..\..\..\game\bird.h" />
+    <ClInclude Include="..\..\..\game\debug_utils.h" />
+    <ClInclude Include="..\..\..\game\door_types.h" />
+    <ClInclude Include="..\..\..\game\door_utils.h" />
+    <ClInclude Include="..\..\..\game\draw_utils.h" />
+    <ClInclude Include="..\..\..\game\drops_manager.h" />
+    <ClInclude Include="..\..\..\game\drops_types.h" />
+    <ClInclude Include="..\..\..\game\game.h" />
+    <ClInclude Include="..\..\..\game\game_types.h" />
+    <ClInclude Include="..\..\..\game\joystick_types.h" />
+    <ClInclude Include="..\..\..\game\physics_utils.h" />
+    <ClInclude Include="..\..\..\game\pickup_types.h" />
+    <ClInclude Include="..\..\..\game\player.h" />
+    <ClInclude Include="..\..\..\game\player_types.h" />
+    <ClInclude Include="..\..\..\game\resource_types.h" />
+    <ClInclude Include="..\..\..\game\rooms\chambers.h" />
+    <ClInclude Include="..\..\..\game\rooms\rooms.h" />
+    <ClInclude Include="..\..\..\game\rooms\room_types.h" />
+    <ClInclude Include="..\..\..\game\sound.h" />
+    <ClInclude Include="..\..\..\game\string_utils.h" />
+    <ClInclude Include="..\..\..\resource_loaders\resource_loader_filesys.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

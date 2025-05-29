@@ -58,8 +58,8 @@ ifneq ($(strip $(MODULES_EXTRA)),)
 	OBJECTS += $(MODULE_OBJECTS:.cxx=.o)
 endif
 
-COBJECTS = $(LOCAL_SRCS:.c=.o)
-OBJECTS += $(COBJECTS:.cxx=.o)
+COBJECTS = $(patsubst $(SRC_ROOT)/source/%.c,$(OUT_DIR)/source/%.o,$(LOCAL_SRCS))
+OBJECTS += $(patsubst $(SRC_ROOT)/source/%.cxx,$(OUT_DIR)/source/%.o,$(LOCAL_SRCS))
 
 ifdef OS
    CC = sh2eb-elf-gcc.exe
@@ -235,11 +235,16 @@ post_build:
 endif
 
 # Compilation tasks
-%.o : %.c
-	$(CC) $< $(CCFLAGS) -std=c2x -o $@
+$(OUT_DIR)/source/%.o : $(SRC_ROOT)/source/%.c
+	@mkdir -p $(dir $@)
+	$(CC) -c $< $(CCFLAGS) -std=c2x -o $@
 
-%.o : %.cxx
-	$(CXX) $< $(CCFLAGS) -std=c++23 -fpermissive -fno-exceptions -fno-rtti -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-threadsafe-statics -fno-use-cxa-atexit -o $@
+$(OUT_DIR)/source/%.o : $(SRC_ROOT)/source/%.cxx
+	@mkdir -p $(dir $@)
+	$(CXX) -c $< $(CCFLAGS) -std=c++23 -fpermissive -fno-exceptions -fno-rtti -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-threadsafe-statics -fno-use-cxa-atexit -o $@
+
+$(SYSOBJECTS): %.o : %.c
+	$(CC) -c $< $(CCFLAGS) -std=c2x -o $@
 
 compile_objects : $(OBJECTS) $(SYSOBJECTS)
 	$(info ****** Info ******)

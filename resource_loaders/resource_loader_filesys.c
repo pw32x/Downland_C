@@ -255,7 +255,6 @@ void buildBitShiftedSprites(u8* spriteData,
 							u8 bytesPerRow, 
 							u8* bitShiftedSprites)
 {
-	u16 bitShiftedSpriteBufferSize = spriteCount * rowCount * DESTINATION_BYTES_PER_ROW * NUM_BIT_SHIFTS;
 	u8* bitShiftedSpritesRunner = bitShiftedSprites;
 
 	u32 workBuffer;

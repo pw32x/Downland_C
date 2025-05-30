@@ -3,8 +3,6 @@
 #include "debug_utils.h"
 #include "utils.h"
 
-#include <stdlib.h>
-
 #define BIRD_INACTIVE			0
 #define BIRD_ACTIVE				1
 

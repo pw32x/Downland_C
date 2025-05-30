@@ -13,6 +13,7 @@ extern "C"
 #include "../game/debug_utils.h"
 #include "../game/draw_utils.h"
 #include "../game/sound.h"
+ #include "../game/utils.h"
 }
 
 #include <SDL3/SDL.h>
@@ -223,7 +224,7 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
     gameStartTime = SDL_GetPerformanceCounter();
     timeFrequency = SDL_GetPerformanceFrequency();
 
-    srand((unsigned int)gameStartTime);
+    dl_srand((unsigned int)gameStartTime);
 
     // Init joystick
     // 

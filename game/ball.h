@@ -4,13 +4,6 @@
 #include "base_types.h"
 #include "resource_types.h"
 
-#define BALL_SPRITE_COUNT			2
-#define BALL_SPRITE_WIDTH			16
-#define BALL_SPRITE_ROWS			8
-#define BALL_SPRITE_BYTES_PER_ROW	2
-#define BALL_COLLISION_WIDTH		8
-#define BALL_WALL_SENSOR_YOFFSET	5
-
 typedef struct
 {
 	u8 enabled;
@@ -22,7 +15,7 @@ typedef struct
 	u16 y; // high resolution position 256 pixels, 256 subpixels
 	u16 speedx;
 	u16 speedy; // high resolution
-	u8* currentSprite;
+	const u8* currentSprite;
 	u8* bitShiftedSprites;
 	u8 fallStateCounter;
 } BallData;

@@ -1,10 +1,10 @@
 #include "draw_utils.h"
 
 #include "base_defines.h"
+#include "utils.h"
 #include <memory.h>
-#include <stdlib.h>
 
-void setPixel(u8* framebuffer, u8 x, u8 y, u8 value) 
+void setPixel(u8* framebuffer, s16 x, s16 y, u8 value) 
 {
     if (x < 0 || x >= FRAMEBUFFER_WIDTH || y < 0 || y >= FRAMEBUFFER_HEIGHT) 
         return;
@@ -18,7 +18,7 @@ void setPixel(u8* framebuffer, u8 x, u8 y, u8 value)
         framebuffer[index] &= ~pixel; // clear bit/pixel
 }
 
-void drawText(u8* text, u8* characterFont, u8* framebuffer, u16 framebufferPosition)
+void drawText(const u8* text, const u8* characterFont, u8* framebuffer, u16 framebufferPosition)
 {
     u8 rowsPerCharacter = 7;
     framebuffer += framebufferPosition;
@@ -27,7 +27,7 @@ void drawText(u8* text, u8* characterFont, u8* framebuffer, u16 framebufferPosit
     while (*text != 0xff)
     {
         // find the corresponding character in the font
-        u8* character = &characterFont[*text * rowsPerCharacter]; // index of the character * 7 bytes per character if font
+        const u8* character = &characterFont[*text * rowsPerCharacter]; // index of the character * 7 bytes per character if font
 
         for (int loop = 0; loop < rowsPerCharacter; loop++)
         {
@@ -41,7 +41,7 @@ void drawText(u8* text, u8* characterFont, u8* framebuffer, u16 framebufferPosit
     }
 }
 
-void drawSprite_16PixelsWide(u8* spriteData, 
+void drawSprite_16PixelsWide(const u8* spriteData, 
                              u8 x, 
                              u8 y, 
                              u8 numLines,
@@ -66,7 +66,7 @@ void drawSprite_16PixelsWide(u8* spriteData,
     }
 }
 
-void drawSprite_24PixelsWide(u8* spriteData, 
+void drawSprite_24PixelsWide(const u8* spriteData, 
                              u8 x, 
                              u8 y, 
                              u8 numLines,
@@ -96,7 +96,7 @@ void drawSprite_24PixelsWide(u8* spriteData,
     }
 }
 
-void drawSprite_24PixelsWide_noblend(u8* spriteData, 
+void drawSprite_24PixelsWide_noblend(const u8* spriteData, 
 									 u8 x, 
 									 u8 y, 
 									 u8 numLines,
@@ -128,10 +128,10 @@ void drawSprite_24PixelsWide_noblend(u8* spriteData,
 
 u8 corruptByte(u8 value)
 {
-	return ((value << 1) | value) & (rand() % 0xff);
+	return ((value << 1) | value) & (dl_rand() % 0xff);
 }
 
-void drawSprite_24PixelsWide_static(u8* spriteData, 
+void drawSprite_24PixelsWide_static(const u8* spriteData, 
 									u8 x, 
 									u8 y, 
 									u8 numLines,
@@ -162,7 +162,7 @@ void drawSprite_24PixelsWide_static(u8* spriteData,
 }
 
 
-void eraseSprite_16PixelsWide(u8* spriteData, 
+void eraseSprite_16PixelsWide(const u8* spriteData, 
 							  u8 x, 
 							  u8 y, 
 							  u8 numLines, 
@@ -222,7 +222,7 @@ void eraseSprite_16PixelsWide_simple(u8 x,
 	}
 }
 
-void eraseSprite_24PixelsWide(u8* spriteData, 
+void eraseSprite_24PixelsWide(const u8* spriteData, 
 							  u8 x, 
 							  u8 y, 
 							  u8 numLines, 
@@ -291,7 +291,7 @@ void eraseSprite_24PixelsWide_simple(u8 x,
 	}
 }
 
-u8* getBitShiftedSprite(u8* bitShiftedSpriteData, u8 frameNumber, u8 x, u8 spriteFrameSize)
+const u8* getBitShiftedSprite(const u8* bitShiftedSpriteData, u8 frameNumber, u8 x, u8 spriteFrameSize)
 {
 	// x will be 0 to 3
 	return bitShiftedSpriteData + (frameNumber * (spriteFrameSize * 4)) + (x * spriteFrameSize);
@@ -302,7 +302,7 @@ u8* getBitShiftedSprite(u8* bitShiftedSpriteData, u8 frameNumber, u8 x, u8 sprit
 void eraseSprite(u8* framebuffer, 
 				 u8* cleanBackground,
 				 u16 framebufferDrawLocation, 
-				 u8* spriteData, 
+				 const u8* spriteData, 
 				 u8 rowCount)
 {
 	framebuffer += framebufferDrawLocation;
@@ -331,7 +331,7 @@ void eraseSprite(u8* framebuffer,
 
 void drawSprite(u8* framebuffer, 
 				u16 framebufferDrawLocation, 
-				u8* spriteData, 
+				const u8* spriteData, 
 				u8 rowCount)
 {
 	framebuffer += framebufferDrawLocation;

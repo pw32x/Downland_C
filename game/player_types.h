@@ -8,22 +8,14 @@
 #include "string_utils.h"
 #include "rooms\rooms.h"
 
-#define PLAYER_SPRITE_COUNT			10
 #define PLAYER_SPRITE_WIDTH			16
-#define PLAYER_SPRITE_ROWS			16
-#define PLAYER_SPRITE_BYTES_PER_ROW	2
 #define PLAYER_BITSHIFTED_SPRITE_FRAME_SIZE (PLAYER_SPRITE_ROWS * 3) // rows * 3 bytes per row
 
 #define PLAYER_COLLISION_WIDTH		8
 
-#define PLAYER_SPLAT_SPRITE_COUNT			1
 #define PLAYER_SPLAT_SPRITE_WIDTH			24
-#define PLAYER_SPLAT_SPRITE_ROWS			9
-#define PLAYER_SPLAT_SPRITE_BYTES_PER_ROW	3
 #define PLAYER_SPLAT_SPRITE_FRAME_SIZE	(PLAYER_SPLAT_SPRITE_ROWS * 3)
 
-#define PLAYER_COLLISION_MASK_ROWS			5
-#define PLAYER_COLLISION_MASK_BYTES_PER_ROW 2
 #define PLAYER_BITSHIFTED_COLLISION_MASK_FRAME_SIZE (PLAYER_COLLISION_MASK_ROWS * 3) // rows * 3 bytes per row
 
 #define PLAYERONE_BITMASK 0x1
@@ -44,10 +36,10 @@ typedef struct
 	u8 playerMask;
 	u8 currentFrameNumber; // 0 to 3 for run animation (both directions), 4 to 5 for climbing animation
 	u8 currentSpriteNumber; // 0 to 3 run right, 4/5 climb, 6-9 run left
-	u8* currentSprite;
-	u8* bitShiftedSprites;
-	u8* bitShiftedCollisionMasks;
-	u8* bitShiftedSplatSprite;
+	const u8* currentSprite;
+	const u8* bitShiftedSprites;
+	const u8* bitShiftedCollisionMasks;
+	const u8* bitShiftedSplatSprite;
 
 	u8 facingDirection;
 

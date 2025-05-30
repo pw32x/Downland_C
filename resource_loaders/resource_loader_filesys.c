@@ -1,9 +1,6 @@
 #include "resource_loader_filesys.h"
 
 #include "..\game\base_defines.h"
-#include "..\game\ball.h"
-#include "..\game\bird.h"
-#include "..\game\player.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -29,7 +26,7 @@ BOOL checksumCheck(const char* romPath)
 	return accumulator == 0x84883253;
 }
 
-u8* getBytes(FILE* file, u16 start, u16 end)
+void getBytes(FILE* file, u16 start, u16 end, u8* buffer)
 {
 	// take into account that the rom starts at c000
 	start -= 0xc000; 
@@ -37,17 +34,11 @@ u8* getBytes(FILE* file, u16 start, u16 end)
 
 	u16 size = end - start;
 
-	u8* memory = (u8*)malloc(size);
-
-	if (memory == NULL)
-		return NULL;
-
 	fseek(file, start, SEEK_SET);
-	fread(memory, size, 1, file);
-
-	return memory;
+	fread(buffer, size, 1, file);
 }
 
+/*
 u8* getBytesSwapped(FILE* file, u16 start, u16 end)
 {
 	// take into account that the rom starts at c000
@@ -74,9 +65,9 @@ u8* getBytesSwapped(FILE* file, u16 start, u16 end)
 		memoryRunner += 2;
 	}
 
-
 	return memory;
 }
+*/
 
 
 u8* getBytesUntilSentinel(FILE* file, u16 start, u8 sentinelValue, u16* bufferSize)
@@ -258,13 +249,13 @@ void loadDoorInfoDataPositions(FILE* file, u16 start, DoorInfoData* doorInfoData
 #define SHIFT_COUNT 3  // Number of shifted versions
 
 // assume two bytes per row
-u8* buildBitShiftedSprites(u8* spriteData, u8 spriteCount, u8 rowCount, u8 bytesPerRow)
+void buildBitShiftedSprites(u8* spriteData, 
+							u8 spriteCount, 
+							u8 rowCount, 
+							u8 bytesPerRow, 
+							u8* bitShiftedSprites)
 {
-#define DESTINATION_BYTES_PER_ROW	3
-#define NUM_BIT_SHIFTS 4
-
 	u16 bitShiftedSpriteBufferSize = spriteCount * rowCount * DESTINATION_BYTES_PER_ROW * NUM_BIT_SHIFTS;
-	u8* bitShiftedSprites = (u8*)malloc(bitShiftedSpriteBufferSize);
 	u8* bitShiftedSpritesRunner = bitShiftedSprites;
 
 	u32 workBuffer;
@@ -288,8 +279,6 @@ u8* buildBitShiftedSprites(u8* spriteData, u8 spriteCount, u8 rowCount, u8 bytes
 			}
 		}
 	}
-
-	return bitShiftedSprites;
 }
 
 
@@ -304,51 +293,51 @@ BOOL ResourceLoaderFileSys_Init(const char* romPath, Resources* resources)
 		return FALSE;
 
 	// get character font
-	resources->characterFont = getBytes(file, 0xd908, 0xda19);
+	getBytes(file, 0xd908, 0xda19, resources->characterFont);
 
 	// get strings
-	resources->text_downland = getBytes(file, 0xda19, 0xda27);
-	resources->text_writtenBy = getBytes(file, 0xda27, 0xda33);
-	resources->text_michaelAichlmayer = getBytes(file, 0xda33, 0xda45);
-	resources->text_copyright1983 = getBytes(file, 0xda45, 0xda54);
-	resources->text_spectralAssociates = getBytes(file, 0xda54, 0xda68);
-	resources->text_licensedTo = getBytes(file, 0xda68, 0xda75);
-	resources->text_tandyCorporation = getBytes(file, 0xda75, 0xda87);
-	resources->text_allRightsReserved = getBytes(file, 0xda87, 0xda9b);
-	resources->text_onePlayer = getBytes(file, 0xda9b, 0xdaa6);
-	resources->text_twoPlayer = getBytes(file, 0xdaa6, 0xdab1);
-	resources->text_highScore = getBytes(file, 0xdab1, 0xdabc);
-	resources->text_playerOne = getBytes(file, 0xdabc, 0xdac7);
-	resources->text_playerTwo = getBytes(file, 0xdac7, 0xdad2);
-	resources->text_pl1 = getBytes(file, 0xdad2, 0xdad6);
-	resources->text_pl2 = getBytes(file, 0xdad6, 0xdada);
-	resources->text_getReadyPlayerOne = getBytes(file, 0xdada, 0xdaef);
-	resources->text_getReadyPlayerTwo = getBytes(file, 0xdaef, 0xdb04);
-	resources->text_chamber = getBytes(file, 0xdb04, 0xdb0c);
+	getBytes(file, 0xda19, 0xda27, resources->text_downland);
+	getBytes(file, 0xda27, 0xda33, resources->text_writtenBy);
+	getBytes(file, 0xda33, 0xda45, resources->text_michaelAichlmayer);
+	getBytes(file, 0xda45, 0xda54, resources->text_copyright1983);
+	getBytes(file, 0xda54, 0xda68, resources->text_spectralAssociates);
+	getBytes(file, 0xda68, 0xda75, resources->text_licensedTo);
+	getBytes(file, 0xda75, 0xda87, resources->text_tandyCorporation);
+	getBytes(file, 0xda87, 0xda9b, resources->text_allRightsReserved);
+	getBytes(file, 0xda9b, 0xdaa6, resources->text_onePlayer);
+	getBytes(file, 0xdaa6, 0xdab1, resources->text_twoPlayer);
+	getBytes(file, 0xdab1, 0xdabc, resources->text_highScore);
+	getBytes(file, 0xdabc, 0xdac7, resources->text_playerOne);
+	getBytes(file, 0xdac7, 0xdad2, resources->text_playerTwo);
+	getBytes(file, 0xdad2, 0xdad6, resources->text_pl1);
+	getBytes(file, 0xdad6, 0xdada, resources->text_pl2);
+	getBytes(file, 0xdada, 0xdaef, resources->text_getReadyPlayerOne);
+	getBytes(file, 0xdaef, 0xdb04, resources->text_getReadyPlayerTwo);
+	getBytes(file, 0xdb04, 0xdb0c, resources->text_chamber);
 
 	// get sprites
-    resources->sprites_player = getBytes(file, 0xdcd7, 0xde17);
-    resources->collisionmasks_player = getBytes(file, 0xde17, 0xde7b);
-    resources->sprites_bouncyBall = getBytes(file, 0xde7b, 0xde9b);
-    resources->sprites_bird = getBytes(file, 0xde9b, 0xdeb3);
-    resources->sprite_moneyBag = getBytes(file, 0xdeb3, 0xdec7);
-    resources->sprite_diamond = getBytes(file, 0xdec7, 0xdedb);
-    resources->sprite_key = getBytes(file, 0xdedb, 0xdeef);
-    resources->sprite_playerSplat = getBytes(file, 0xdeef, 0xdf0a);
-    resources->sprite_door = getBytes(file, 0xdf0a, 0xdf2a);
-    resources->sprites_drops = getBytes(file, 0xdf2a, 0xdf5a);
+    getBytes(file, 0xdcd7, 0xde17, resources->sprites_player);
+    getBytes(file, 0xde17, 0xde7b, resources->collisionmasks_player);
+    getBytes(file, 0xde7b, 0xde9b, resources->sprites_bouncyBall);
+    getBytes(file, 0xde9b, 0xdeb3, resources->sprites_bird);
+    getBytes(file, 0xdeb3, 0xdec7, resources->sprite_moneyBag);
+    getBytes(file, 0xdec7, 0xdedb, resources->sprite_diamond);
+    getBytes(file, 0xdedb, 0xdeef, resources->sprite_key);
+    getBytes(file, 0xdeef, 0xdf0a, resources->sprite_playerSplat);
+    getBytes(file, 0xdf0a, 0xdf2a, resources->sprite_door);
+    getBytes(file, 0xdf2a, 0xdf5a, resources->sprites_drops);
 
 	// generate bit shifted sprites
-	resources->bitShiftedSprites_player = buildBitShiftedSprites(resources->sprites_player, PLAYER_SPRITE_COUNT, PLAYER_SPRITE_ROWS, PLAYER_SPRITE_BYTES_PER_ROW);
-	resources->bitShiftedCollisionmasks_player = buildBitShiftedSprites(resources->collisionmasks_player, PLAYER_SPRITE_COUNT, PLAYER_COLLISION_MASK_ROWS, PLAYER_COLLISION_MASK_BYTES_PER_ROW);
-	resources->bitShiftedSprites_bouncyBall = buildBitShiftedSprites(resources->sprites_bouncyBall, BALL_SPRITE_COUNT, BALL_SPRITE_ROWS, BALL_SPRITE_BYTES_PER_ROW);
-	resources->bitShiftedSprites_bird = buildBitShiftedSprites(resources->sprites_bird, BIRD_SPRITE_COUNT, BIRD_SPRITE_ROWS, BIRD_SPRITE_BYTES_PER_ROW);
+	buildBitShiftedSprites(resources->sprites_player, PLAYER_SPRITE_COUNT, PLAYER_SPRITE_ROWS, PLAYER_SPRITE_BYTES_PER_ROW, resources->bitShiftedSprites_player);
+	buildBitShiftedSprites(resources->collisionmasks_player, PLAYER_SPRITE_COUNT, PLAYER_COLLISION_MASK_ROWS, PLAYER_COLLISION_MASK_BYTES_PER_ROW, resources->bitShiftedCollisionmasks_player);
+	buildBitShiftedSprites(resources->sprites_bouncyBall, BALL_SPRITE_COUNT, BALL_SPRITE_ROWS, BALL_SPRITE_BYTES_PER_ROW, resources->bitShiftedSprites_bouncyBall);
+	buildBitShiftedSprites(resources->sprites_bird, BIRD_SPRITE_COUNT, BIRD_SPRITE_ROWS, BIRD_SPRITE_BYTES_PER_ROW, resources->bitShiftedSprites_bird);
 
 	// in the original game, the player splat sprite and the door
 	// are loaded, bitshifted, and drawn on demand. Here we just 
 	// pre-build them because gigs of ram. 
-	resources->bitShiftedSprites_playerSplat = buildBitShiftedSprites(resources->sprite_playerSplat, PLAYER_SPLAT_SPRITE_COUNT, PLAYER_SPLAT_SPRITE_ROWS, PLAYER_SPLAT_SPRITE_BYTES_PER_ROW);
-	resources->bitShiftedSprites_door = buildBitShiftedSprites(resources->sprite_door, DOOR_SPRITE_COUNT, DOOR_SPRITE_ROWS, DOOR_SPRITE_BYTES_PER_ROW);
+	buildBitShiftedSprites(resources->sprite_playerSplat, PLAYER_SPLAT_SPRITE_COUNT, PLAYER_SPLAT_SPRITE_ROWS, PLAYER_SPLAT_SPRITE_BYTES_PER_ROW, resources->bitShiftedSprites_playerSplat);
+	buildBitShiftedSprites(resources->sprite_door, DOOR_SPRITE_COUNT, DOOR_SPRITE_ROWS, DOOR_SPRITE_BYTES_PER_ROW, resources->bitShiftedSprites_door);
 
 	resources->pickupSprites[0] = resources->sprite_diamond;
 	resources->pickupSprites[1] = resources->sprite_moneyBag;
@@ -417,11 +406,11 @@ BOOL ResourceLoaderFileSys_Init(const char* romPath, Resources* resources)
 	loadDoorInfoDataPositions(file, 0xd33c, &resources->roomResources[8].doorInfoData);
 	loadDoorInfoDataPositions(file, 0xd34b, &resources->roomResources[9].doorInfoData);
 
-	resources->roomPickupPositions = (PickupPosition*)getBytes(file, 0xd1ea, 0xd24e);
+	getBytes(file, 0xd1ea, 0xd24e, (u8*)resources->roomPickupPositions);
 
-	resources->keyPickUpDoorIndexes = getBytes(file, 0xd1c2, 0xd1d6); // 20 items
-    resources->keyPickUpDoorIndexesHardMode = getBytes(file, 0xd1d6, 0xd1ea); // 20 items
-	resources->offsetsToDoorsAlreadyActivated = getBytes(file, 0xceea, 0xcefa); // 16 items
+	getBytes(file, 0xd1c2, 0xd1d6, resources->keyPickUpDoorIndexes);  // 20 items
+    getBytes(file, 0xd1d6, 0xd1ea, resources->keyPickUpDoorIndexesHardMode);  // 20 items
+	getBytes(file, 0xceea, 0xcefa, resources->offsetsToDoorsAlreadyActivated);  // 16 items
 
 	u16 bufferSize;
 	resources->roomsWithBouncingBall = getBytesUntilSentinel(file, 0xceac, 0xff, &bufferSize);
@@ -433,46 +422,6 @@ BOOL ResourceLoaderFileSys_Init(const char* romPath, Resources* resources)
 
 void ResourceLoaderFileSys_Shutdown(Resources* resources)
 {
-	free(resources->characterFont);
-
-	free(resources->text_downland);
-	free(resources->text_writtenBy);
-	free(resources->text_michaelAichlmayer);
-	free(resources->text_copyright1983);
-	free(resources->text_spectralAssociates);
-	free(resources->text_licensedTo);
-	free(resources->text_tandyCorporation);
-	free(resources->text_allRightsReserved);
-	free(resources->text_onePlayer);
-	free(resources->text_twoPlayer);
-	free(resources->text_highScore);
-	free(resources->text_playerOne);
-	free(resources->text_playerTwo);
-	free(resources->text_pl1);
-	free(resources->text_pl2);
-	free(resources->text_getReadyPlayerOne);
-	free(resources->text_getReadyPlayerTwo);
-	free(resources->text_chamber);
-
-	// get sprites
-    free(resources->sprites_player);
-    free(resources->collisionmasks_player);
-    free(resources->sprites_bouncyBall);
-    free(resources->sprites_bird);
-    free(resources->sprite_moneyBag);
-    free(resources->sprite_diamond);
-    free(resources->sprite_key);
-    free(resources->sprite_playerSplat);
-    free(resources->sprite_door);
-    free(resources->sprites_drops);
-
-	free(resources->bitShiftedSprites_player);
-	free(resources->bitShiftedCollisionmasks_player);
-	free(resources->bitShiftedSprites_bouncyBall);
-	free(resources->bitShiftedSprites_bird);
-	free(resources->bitShiftedSprites_door);
-	free(resources->bitShiftedSprites_playerSplat);
-
 	// free shapes data
 	free(resources->shapeDrawData_00_Stalactite.segments);
 	free(resources->shapeDrawData_01_WallGoingDown.segments);
@@ -507,11 +456,5 @@ void ResourceLoaderFileSys_Shutdown(Resources* resources)
 		free(resources->roomResources[loop].doorInfoData.doorInfos);
 	}
 
-	free(resources->roomPickupPositions);
-	free(resources->keyPickUpDoorIndexes);
-    free(resources->keyPickUpDoorIndexesHardMode);
-	free(resources->offsetsToDoorsAlreadyActivated);
-
 	free(resources->roomsWithBouncingBall);
-
 }

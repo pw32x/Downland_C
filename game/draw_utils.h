@@ -10,23 +10,23 @@
 extern u8 pixelMasks[4];
 
 // Set or clear a pixel in the 1-bit framebuffer
-void setPixel(u8* framebuffer, u8 x, u8 y, u8 value);
+void setPixel(u8* framebuffer, s16 x, s16 y, u8 value);
 
-void drawText(u8* text, u8* characterFont, u8* framebuffer, u16 framebufferPosition);
+void drawText(const u8* text, const u8* characterFont, u8* framebuffer, u16 framebufferPosition);
 
-void drawSprite_16PixelsWide(u8* spriteData, u8 x, u8 y, u8 numLines, u8* framebuffer);
-void drawSprite_24PixelsWide(u8* spriteData, u8 x, u8 y, u8 numLines, u8* framebuffer);
-void drawSprite_24PixelsWide_noblend(u8* spriteData, u8 x, u8 y, u8 numLines, u8* framebuffer);
+void drawSprite_16PixelsWide(const u8* spriteData, u8 x, u8 y, u8 numLines, u8* framebuffer);
+void drawSprite_24PixelsWide(const u8* spriteData, u8 x, u8 y, u8 numLines, u8* framebuffer);
+void drawSprite_24PixelsWide_noblend(const u8* spriteData, u8 x, u8 y, u8 numLines, u8* framebuffer);
 
-void drawSprite_24PixelsWide_static(u8* spriteData, u8 x, u8 y, u8 numLines, u8* framebuffer);
+void drawSprite_24PixelsWide_static(const u8* spriteData, u8 x, u8 y, u8 numLines, u8* framebuffer);
 void drawSprite_16PixelsWide_static_IntoSpriteBuffer(const u8* spriteData, u8 numLines, u8* spriteBuffer);
 
-void eraseSprite_16PixelsWide(u8* spriteData, u8 x, u8 y, u8 numLines, u8* framebuffer, u8* cleanBackground);
+void eraseSprite_16PixelsWide(const u8* spriteData, u8 x, u8 y, u8 numLines, u8* framebuffer, u8* cleanBackground);
 void eraseSprite_16PixelsWide_simple(u8 x, u8 y, u8 numLines, u8* framebuffer, u8* cleanBackground);
-void eraseSprite_24PixelsWide(u8* spriteData, u8 x, u8 y, u8 numLines, u8* framebuffer, u8* cleanBackground);
+void eraseSprite_24PixelsWide(const u8* spriteData, u8 x, u8 y, u8 numLines, u8* framebuffer, u8* cleanBackground);
 void eraseSprite_24PixelsWide_simple(u8 x, u8 y, u8 numLines, u8* framebuffer, u8* cleanBackground);
 
-u8* getBitShiftedSprite(u8* bitShiftedSpriteData, u8 frameNumber, u8 x, u8 spriteFrameSize);
+const u8* getBitShiftedSprite(const u8* bitShiftedSpriteData, u8 frameNumber, u8 x, u8 spriteFrameSize);
 
 void drawBackground(const BackgroundDrawData* backgroundDrawData, 
 					const Resources* resources,

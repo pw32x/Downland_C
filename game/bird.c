@@ -1,6 +1,7 @@
 #include "bird.h"
 #include "draw_utils.h"
 #include "debug_utils.h"
+#include "utils.h"
 
 #include <stdlib.h>
 
@@ -17,13 +18,15 @@
 
 #define BITSHIFTED_SPRITE_FRAME_SIZE (BIRD_SPRITE_ROWS * 3) // rows * 3 bytes per row
 
+
+
 void initBirdPhysics(BirdData* birdData)
 {
 	birdData->state = BIRD_ACTIVE;
 	birdData->x = SET_HIGH_BYTE(BIRD_START_X);
 	birdData->y = SET_HIGH_BYTE(BIRD_START_Y);
-	birdData->speedx = 0x0100 + (rand() % 256);
-	birdData->speedy = 0x0100 + (rand() % 256);
+	birdData->speedx = 0x0100 + (dl_rand() % 256);
+	birdData->speedy = 0x0100 + (dl_rand() % 256);
 
 	birdData->currentSprite = getBitShiftedSprite(birdData->bitShiftedSprites, 
 											      0,
@@ -31,7 +34,7 @@ void initBirdPhysics(BirdData* birdData)
 											      BITSHIFTED_SPRITE_FRAME_SIZE);
 }
 
-void Bird_Init(BirdData* birdData, u8 roomNumber, Resources* resources)
+void Bird_Init(BirdData* birdData, u8 roomNumber, const Resources* resources)
 {
 	birdData->state = BIRD_INACTIVE;
 	birdData->bitShiftedSprites = resources->bitShiftedSprites_bird;

@@ -1,7 +1,6 @@
 #include "player.h"
 
 #include <memory.h>
-#include <stdlib.h>
 
 #include "base_defines.h"
 #include "draw_utils.h"
@@ -11,7 +10,7 @@
 #include "pickup_types.h"
 #include "door_utils.h"
 #include "sound.h"
-
+#include "utils.h"
 
 
 
@@ -126,7 +125,7 @@ void playerKill(PlayerData* playerData, u8* framebuffer, u8* cleanBackground)
 										framebuffer, 
 										cleanBackground);
 
-		u8* splatSprite = getBitShiftedSprite(playerData->bitShiftedSplatSprite, 
+		const u8* splatSprite = getBitShiftedSprite(playerData->bitShiftedSplatSprite, 
 											  0,
 											  x & 3, 
 											  PLAYER_SPLAT_SPRITE_FRAME_SIZE);
@@ -178,9 +177,9 @@ void initPickups(RoomPickups roomPickups,
 		Pickup* pickups = roomPickups[loop];
 
 		// the last three pickups are random between diamonds and money bags
-		pickUpTypes[2] = rand() % 2;
-		pickUpTypes[3] = rand() % 2;
-		pickUpTypes[4] = rand() % 2;
+		pickUpTypes[2] = dl_rand() % 2;
+		pickUpTypes[3] = dl_rand() % 2;
+		pickUpTypes[4] = dl_rand() % 2;
 
 		for (int innerLoop = 0; innerLoop < NUM_PICKUPS_PER_ROOM; innerLoop++)
 		{
@@ -223,7 +222,7 @@ void playerStartGameLoop(PlayerData* playerData, const Resources* resources)
 {
 	playerData->facingDirection = PLAYER_FACING_LEFT;
 
-	u8* keyPickUpDoorIndexes = playerData->gameCompletionCount == 0 ? resources->keyPickUpDoorIndexes : resources->keyPickUpDoorIndexesHardMode;
+	const u8* keyPickUpDoorIndexes = playerData->gameCompletionCount == 0 ? resources->keyPickUpDoorIndexes : resources->keyPickUpDoorIndexesHardMode;
 
 	initPickups(playerData->gamePickups, 
 				resources->roomPickupPositions,
@@ -969,10 +968,10 @@ u8 Player_HasCollision(PlayerData* playerData, u8* framebuffer, u8* cleanBackgro
 {
 	u8 sensorX = GET_HIGH_BYTE(playerData->x);
 
-	u8* currentCollisionMask = getBitShiftedSprite(playerData->bitShiftedCollisionMasks, 
-												   playerData->currentSpriteNumber,
-												   sensorX & 3, 
-												   PLAYER_BITSHIFTED_COLLISION_MASK_FRAME_SIZE);
+	const u8* currentCollisionMask = getBitShiftedSprite(playerData->bitShiftedCollisionMasks, 
+														 playerData->currentSpriteNumber,
+														 sensorX & 3, 
+														 PLAYER_BITSHIFTED_COLLISION_MASK_FRAME_SIZE);
 
 	u8 sensorY = GET_HIGH_BYTE(playerData->y) + 1; // start one line down
 	u16 location = GET_FRAMEBUFFER_LOCATION(sensorX, sensorY);
@@ -997,7 +996,7 @@ u8 Player_HasCollision(PlayerData* playerData, u8* framebuffer, u8* cleanBackgro
 		currentCollisionMask += 3;
 	}
 
-	u8* currentSprite = playerData->currentSprite + 3; // start one line down
+	const u8* currentSprite = playerData->currentSprite + 3; // start one line down
 	cleanBackgroundRunner = &cleanBackground[location];
 	collisionTestBufferRunner = collisionTestBuffer;
 
@@ -1140,7 +1139,7 @@ void Player_PerformCollisions(struct GameData* gameDataStruct,
 			}
 
 			// add a random value between 0 and 0x7f, as per the original game
-			playerData->score += rand() % 0x7f;
+			playerData->score += dl_rand() % 0x7f;
 
 			// update score and string
 			convertScoreToString(playerData->score, playerData->scoreString);

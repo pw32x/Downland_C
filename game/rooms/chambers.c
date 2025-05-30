@@ -32,7 +32,7 @@ void drawPickups(Pickup* pickups,
 
 void drawPlayerLives(u8 playerLives,
 					 u8 currentSpriteNumber,
-					 u8* playerBitShiftedSprites,
+					 const u8* playerBitShiftedSprites,
 					 u8* framebuffer,
 					 u8* cleanBackground,
 					 u8 isRegenerating)
@@ -40,7 +40,7 @@ void drawPlayerLives(u8 playerLives,
 	u8 x = PLAYERLIVES_ICON_X;
 	u8 y = PLAYERLIVES_ICON_Y;
 
-	u8* currentSprite = getBitShiftedSprite(playerBitShiftedSprites, 
+	const u8* currentSprite = getBitShiftedSprite(playerBitShiftedSprites, 
 											currentSpriteNumber, 
 											0, 
 											PLAYER_BITSHIFTED_SPRITE_FRAME_SIZE);

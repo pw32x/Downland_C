@@ -15,50 +15,59 @@ typedef struct
     DoorInfoData doorInfoData;
 } RoomResources;
 
+// computes the size from the location of the memory
+// addresses in the game rom.
+#define SIZE_FROM_RANGE(start, end) (end - start)
+
+#define DESTINATION_BYTES_PER_ROW	3
+#define NUM_BIT_SHIFTS 4
+#define BITSHIFTED_SIZE(spriteCount, rowCount) (spriteCount * rowCount * DESTINATION_BYTES_PER_ROW * NUM_BIT_SHIFTS)
+
+
 typedef struct
 {
     // font
-    u8* characterFont;                  // 0xd908
-
-    // strings
-    u8* text_downland;                  // 0xda19
-    u8* text_writtenBy;                 // 0xda27
-    u8* text_michaelAichlmayer;         // 0xda33
-    u8* text_copyright1983;             // 0xda45
-    u8* text_spectralAssociates;        // 0xda54
-    u8* text_licensedTo;                // 0xda68
-    u8* text_tandyCorporation;          // 0xda75
-    u8* text_allRightsReserved;         // 0xda87
-    u8* text_onePlayer;                 // 0xda9b
-    u8* text_twoPlayer;                 // 0xdaa6
-    u8* text_highScore;                 // 0xdab1
-    u8* text_playerOne;                 // 0xdabc
-    u8* text_playerTwo;                 // 0xdac7
-    u8* text_pl1;                       // 0xdad2
-    u8* text_pl2;                       // 0xdad6
-    u8* text_getReadyPlayerOne;         // 0xdada
-    u8* text_getReadyPlayerTwo;         // 0xdaef
-    u8* text_chamber;                   // 0xdb04
+    u8 characterFont            [SIZE_FROM_RANGE(0xd908, 0xda19)];
+                                    
+    // string
+    u8 text_downland            [SIZE_FROM_RANGE(0xda19, 0xda27)];
+    u8 text_writtenBy           [SIZE_FROM_RANGE(0xda27, 0xda33)];
+    u8 text_michaelAichlmayer   [SIZE_FROM_RANGE(0xda33, 0xda45)];
+    u8 text_copyright1983       [SIZE_FROM_RANGE(0xda45, 0xda54)];
+    u8 text_spectralAssociates  [SIZE_FROM_RANGE(0xda54, 0xda68)];
+    u8 text_licensedTo          [SIZE_FROM_RANGE(0xda68, 0xda75)];
+    u8 text_tandyCorporation    [SIZE_FROM_RANGE(0xda75, 0xda87)];
+    u8 text_allRightsReserved   [SIZE_FROM_RANGE(0xda87, 0xda9b)];
+    u8 text_onePlayer           [SIZE_FROM_RANGE(0xda9b, 0xdaa6)];
+    u8 text_twoPlayer           [SIZE_FROM_RANGE(0xdaa6, 0xdab1)];
+    u8 text_highScore           [SIZE_FROM_RANGE(0xdab1, 0xdabc)];
+    u8 text_playerOne           [SIZE_FROM_RANGE(0xdabc, 0xdac7)];
+    u8 text_playerTwo           [SIZE_FROM_RANGE(0xdac7, 0xdad2)];
+    u8 text_pl1                 [SIZE_FROM_RANGE(0xdad2, 0xdad6)];
+    u8 text_pl2                 [SIZE_FROM_RANGE(0xdad6, 0xdada)];
+    u8 text_getReadyPlayerOne   [SIZE_FROM_RANGE(0xdada, 0xdaef)];
+    u8 text_getReadyPlayerTwo   [SIZE_FROM_RANGE(0xdaef, 0xdb04)];
+    u8 text_chamber             [SIZE_FROM_RANGE(0xdb04, 0xdb0c)];
 
     // sprites
-    u8* sprites_player;                 // 0xdcd6
-    u8* collisionmasks_player;          // 0xde17
-    u8* sprites_bouncyBall;             // 0xde7b
-    u8* sprites_bird;                   // 0xde9b
-    u8* sprite_moneyBag;                // 0xdeb3
-    u8* sprite_diamond;                 // 0xdec7
-    u8* sprite_key;                     // 0xd3db
-    u8* sprite_playerSplat;             // 0xdeef
-    u8* sprite_door;                    // 0xdf0a
-    u8* sprites_drops;                  // 0xdf2a
+    u8 sprites_player          [SIZE_FROM_RANGE(0xdcd7, 0xde17)];
+    u8 collisionmasks_player   [SIZE_FROM_RANGE(0xde17, 0xde7b)];
+    u8 sprites_bouncyBall      [SIZE_FROM_RANGE(0xde7b, 0xde9b)];
+    u8 sprites_bird            [SIZE_FROM_RANGE(0xde9b, 0xdeb3)];
+    u8 sprite_moneyBag         [SIZE_FROM_RANGE(0xdeb3, 0xdec7)];
+    u8 sprite_diamond          [SIZE_FROM_RANGE(0xdec7, 0xdedb)];
+    u8 sprite_key              [SIZE_FROM_RANGE(0xdedb, 0xdeef)];
+    u8 sprite_playerSplat      [SIZE_FROM_RANGE(0xdeef, 0xdf0a)];
+    u8 sprite_door             [SIZE_FROM_RANGE(0xdf0a, 0xdf2a)];
+    u8 sprites_drops           [SIZE_FROM_RANGE(0xdf2a, 0xdf5a)];
 
     // bit shifted sprites
-    u8* bitShiftedSprites_player;
-    u8* bitShiftedCollisionmasks_player;
-    u8* bitShiftedSprites_bouncyBall;
-    u8* bitShiftedSprites_bird;
-    u8* bitShiftedSprites_playerSplat;
-    u8* bitShiftedSprites_door;
+    u8 bitShiftedSprites_player           [BITSHIFTED_SIZE(PLAYER_SPRITE_COUNT, PLAYER_SPRITE_ROWS)];
+    u8 bitShiftedCollisionmasks_player    [BITSHIFTED_SIZE(PLAYER_SPRITE_COUNT, PLAYER_COLLISION_MASK_ROWS)];
+    u8 bitShiftedSprites_bouncyBall       [BITSHIFTED_SIZE(BALL_SPRITE_COUNT, BALL_SPRITE_ROWS)];
+    u8 bitShiftedSprites_bird             [BITSHIFTED_SIZE(BIRD_SPRITE_COUNT, BIRD_SPRITE_ROWS)];
+    u8 bitShiftedSprites_playerSplat      [BITSHIFTED_SIZE(PLAYER_SPLAT_SPRITE_COUNT, PLAYER_SPLAT_SPRITE_ROWS)];
+    u8 bitShiftedSprites_door             [BITSHIFTED_SIZE(DOOR_SPRITE_COUNT, DOOR_SPRITE_ROWS)];
 
     u8* pickupSprites[3];
 
@@ -90,11 +99,10 @@ typedef struct
 
     RoomResources roomResources[NUM_ROOMS_PLUS_TITLESCREN];
 
-    PickupPosition* roomPickupPositions;
-
-    u8* keyPickUpDoorIndexes; // 20 items
-    u8* keyPickUpDoorIndexesHardMode; // 20 items
-    u8* offsetsToDoorsAlreadyActivated; // 16 items
+    PickupPosition roomPickupPositions  [SIZE_FROM_RANGE(0xd1ea, 0xd24e) / sizeof(PickupPosition)];
+    u8 keyPickUpDoorIndexes             [SIZE_FROM_RANGE(0xd1c2, 0xd1d6)]; // 20 items
+    u8 keyPickUpDoorIndexesHardMode     [SIZE_FROM_RANGE(0xd1d6, 0xd1ea)]; // 20 items
+    u8 offsetsToDoorsAlreadyActivated   [SIZE_FROM_RANGE(0xceea, 0xcefa)]; // 16 items
 
     u8* roomsWithBouncingBall;
 } Resources;

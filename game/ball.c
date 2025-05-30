@@ -11,6 +11,8 @@
 #define BALL_START_X 0x65 // 101
 #define BALL_START_Y 0x74 // 116
 
+#define BALL_WALL_SENSOR_YOFFSET	5
+
 #define BALL_GROUND_FREEZE_TIME 0xfb
 
 #define BITSHIFTED_SPRITE_FRAME_SIZE (BALL_SPRITE_ROWS * 3) // rows * 3 bytes per row

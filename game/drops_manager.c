@@ -3,8 +3,7 @@
 #include "base_defines.h"
 #include "draw_utils.h"
 #include "debug_utils.h"
-
-#include <stdlib.h>
+#include "utils.h"
 
 #define DROP_FALL_SPEED 0x200
 #define DROP_WIGGLE_START_TIME 0xa8 // wiggle timer starts at 168 which signed is -40. The value is decremented
@@ -68,11 +67,11 @@ void initDrop(Drop* drop,
 	drop->wiggleTimer = DROP_WIGGLE_START_TIME;
 
 	// randomly pick a drop spawn area
-	u8 dropSpawnAreaIndex = rand() % dropData->dropSpawnPositions->spawnAreasCount;
+	u8 dropSpawnAreaIndex = dl_rand() % dropData->dropSpawnPositions->spawnAreasCount;
 	DropSpawnArea* dropSpawnArea = &dropData->dropSpawnPositions->dropSpawnAreas[dropSpawnAreaIndex];
 
 	// randomly pick a position in the drop spawn area
-	u8 dropSpawnPointX = rand() % (dropSpawnArea->dropSpawnPointsCount + 1); // spawn points count is inclusive in the original
+	u8 dropSpawnPointX = dl_rand() % (dropSpawnArea->dropSpawnPointsCount + 1); // spawn points count is inclusive in the original
 	dropSpawnPointX *= 8; // spacing between drops. 8 pixels, not 8 bytes.
 
 	drop->x = dropSpawnPointX + dropSpawnArea->x;

@@ -2,11 +2,21 @@
 
 #include "draw_utils.h"
 #include "rooms\rooms.h"
+#include "alloc.h"
 
 Game_ChangedRoomCallbackType Game_ChangedRoomCallback = NULL;
 
+static u8 initializedFramebuffers = FALSE;
+
 void Game_Init(struct GameData* gameData, Resources* resources)
 {
+	if (!initializedFramebuffers)
+	{
+		initializedFramebuffers = TRUE;
+		gameData->framebuffer = (u8*)dl_alloc(FRAMEBUFFER_HEIGHT * FRAMEBUFFER_PITCH);
+		gameData->cleanBackground = (u8*)dl_alloc(FRAMEBUFFER_HEIGHT * FRAMEBUFFER_PITCH);
+	}
+
 	gameData->numPlayers = 1;
 
 	// init strings

@@ -119,7 +119,6 @@
     <ClInclude Include="..\..\..\resource_loaders\resource_loader_filesys.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\game\alloc.c" />
     <ClCompile Include="..\..\..\game\ball.c" />
     <ClCompile Include="..\..\..\game\bird.c" />
     <ClCompile Include="..\..\..\game\debug_utils.c" />

@@ -69,7 +69,6 @@
     </Media>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\game\alloc.c" />
     <ClCompile Include="..\..\game\ball.c" />
     <ClCompile Include="..\..\game\bird.c" />
     <ClCompile Include="..\..\game\debug_utils.c" />
@@ -95,6 +94,7 @@
     <ClCompile Include="..\..\sdl_main\video_filters\sdl_video_filter_new_renderer.cpp" />
     <ClCompile Include="..\..\sdl_main\video_filters\sdl_video_filter_raw.cpp" />
     <ClCompile Include="..\..\sdl_main\video_filters\sdl_video_filter_utils.cpp" />
+    <ClCompile Include="alloc.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\game\alloc.h" />

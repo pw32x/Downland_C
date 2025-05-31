@@ -2,22 +2,18 @@
 #include <stdlib.h>
 #include "alloc.h"
 
-u8* randRunner = NULL;
+u32 rng_state = 1;
 
-// very crappy pseudorandom number generator
-// using the memory buffer as the source of
-// random numbers.
-u8 dl_rand()
+void dl_srand(unsigned int seed)
 {
-	if (randRunner < memoryEnd - 1)
-		return *++randRunner;
-
-	randRunner = memoryBegin;
-	return *randRunner;
+    rng_state = seed;
 }
 
-void dl_srand(u32 seed)
+u8 dl_rand(void)
 {
-	//							 123456 % 6000
-	randRunner = memoryBegin + (seed % (memoryEnd - memoryBegin));
+    rng_state ^= rng_state << 13;
+    rng_state ^= rng_state >> 17;
+    rng_state ^= rng_state << 5;
+    return rng_state;
+    return (rng_state & 0xff);
 }

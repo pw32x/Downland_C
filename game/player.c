@@ -1111,7 +1111,8 @@ void Player_PerformCollisions(struct GameData* gameDataStruct,
 					{
 						if (doorInfoRunner->globalDoorIndex == doorIndex) // the key actives a door in this room
 						{
-							if (doorInfoRunner->y != 0xffff) // initial invisible game door
+							if (doorInfoRunner->x != 0xff &&
+								doorInfoRunner->y != 0xff ) // initial invisible game door
 							{
 								drawDoor(doorInfoRunner, 
 										resources->bitShiftedSprites_door, 

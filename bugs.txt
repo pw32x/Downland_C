@@ -1,6 +1,10 @@
         
 Bugs
 
+    DC: no jump sound or static
+
+    PC: wipe transitions clear the screen to black first for some reason
+
     PC: Downland_C original renderer doesn't draw the right side of the splat sprite properly
     
     DC: walking against the wall makes sound

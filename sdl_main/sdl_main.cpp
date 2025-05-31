@@ -175,8 +175,6 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
     SDL_SetTextureScaleMode(debugFramebufferTexture, SDL_SCALEMODE_NEAREST); // no smoothing
 #endif
 
-    dl_init();
-
     // Load game resources from the rom
     // 
 

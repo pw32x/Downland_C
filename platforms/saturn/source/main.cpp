@@ -1,7 +1,27 @@
-/*VDP2 Scroll Layer Demo:
-This Demo Shows how to Load Tilemaps to display on VDP2 ScrollScreens and adjust their display settings
-*/
 #include <srl.hpp>
+
+extern "C"
+{
+#include "base_types.h"
+#include "game_types.h"
+#include "game.h"
+#include "sound.h"
+#include "resource_types.h"
+#include "sound.h"
+}
+
+#include "downland_resource_loader_saturn.hpp"
+
+GameData gameData;
+Resources resources;
+
+const char* romFileNames[] = 
+{
+    "downland.bin",
+    "DOWNLAND.ROM",
+    "Downland V1.1 (1983) (26-3046) (Tandy) [a1].ccc"
+};
+int romFileNamesCount = sizeof(romFileNames) / sizeof(romFileNames[0]);
 
 extern uint16_t VDP2_CYCA0L;
 extern uint16_t VDP2_CYCA0U;
@@ -12,20 +32,18 @@ extern uint16_t VDP2_CYCB0U;
 extern uint16_t VDP2_CYCB1L;
 extern uint16_t VDP2_CYCB1U;
 
-
-
 using namespace SRL::Types;
 using namespace SRL::Input;
 using namespace SRL::Math;
 
+
 extern "C"
 {
-#include "game_types.h"
-#include "game.h"
-#include "sound.h"
-#include "resource_types.h"
-#include "resource_loader_saturn.h"
-#include "sound.h"
+
+void* dl_alloc(u32 size)
+{
+    return (void*)new u8[size];
+}
 
 void Sound_Play(u8 soundIndex, u8 loop)
 {
@@ -38,14 +56,29 @@ void Sound_Stop(u8 soundindex)
 }
 }
 
+
+
+
 int main()
 {
- 
-    
-
     SRL::Core::Initialize(HighColor(20,10,50));
     Digital port0(0); // Initialize gamepad on port 0
   
+
+    bool romFoundAndLoaded = false;
+    //for (int loop = 0; loop < romFileNamesCount; loop++)
+    //{
+    //    if (DownlandResourceLoader::Init(romFileNames[loop], &resources))
+    //    {
+    //        romFoundAndLoaded = true;
+    //        break;
+    //    }
+    //}
+
+    //assert(romFoundAndLoaded);
+
+
+
     SRL::Tilemap::Interfaces::CubeTile* TestTilebin = new SRL::Tilemap::Interfaces::CubeTile("SPACE.BIN");//Load tilemap from cd to work RAM
     SRL::VDP2::NBG0::LoadTilemap(*TestTilebin);//Transfer tilemap from work RAM to VDP2 VRAM and register with NBG0
     delete TestTilebin;//free work RAM
@@ -77,6 +110,11 @@ int main()
     SRL::VDP2::NBG2::SetPriority(SRL::VDP2::Priority::Layer4);// Set NBG2 priority between NBG0 and NBG1
     SRL::VDP2::NBG2::SetPosition(Nbg2Position);//Set the static screen position for SRL Logo
     SRL::VDP2::NBG2::ScrollEnable();//enable display of NBG2
+
+    if (romFoundAndLoaded)
+        SRL::Debug::Print(1,4,"Downland rom found");
+    else
+        SRL::Debug::Print(1,5,"Downland rom not found");
 
     SRL::Debug::Print(1,3,"VDP2 ScrollScreen Sample");
     

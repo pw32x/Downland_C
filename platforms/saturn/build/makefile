@@ -356,4 +356,4 @@ endif
 
 build : pre_build build_bin_cue post_build
 
-all: clean build
+all: build

@@ -1,7 +1,7 @@
 #include "draw_utils.h"
 
 #include "base_defines.h"
-#include "utils.h"
+#include "rand.h"
 #include <memory.h>
 
 void setPixel(u8* framebuffer, s16 x, s16 y, u8 value) 

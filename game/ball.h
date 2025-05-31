@@ -16,7 +16,7 @@ typedef struct
 	u16 speedx;
 	u16 speedy; // high resolution
 	const u8* currentSprite;
-	u8* bitShiftedSprites;
+	const u8* bitShiftedSprites;
 	u8 fallStateCounter;
 } BallData;
 

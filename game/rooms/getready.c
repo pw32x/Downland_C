@@ -17,7 +17,7 @@ void get_ready_room_draw(u8 roomNumber, GameData* gameData, Resources* resources
 				   framebuffer);
 
 	// get ready text
-	u8* getReadyString = gameData->currentPlayerData->playerNumber == PLAYER_ONE ? resources->text_getReadyPlayerOne : resources->text_getReadyPlayerTwo;
+	const u8* getReadyString = gameData->currentPlayerData->playerNumber == PLAYER_ONE ? resources->text_getReadyPlayerOne : resources->text_getReadyPlayerTwo;
 
 	drawText(getReadyString, resources->characterFont, framebuffer, 0x0b66);
 }

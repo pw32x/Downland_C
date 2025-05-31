@@ -7,4 +7,6 @@
 BOOL ResourceLoaderFileSys_Init(const char* romPath, Resources* resources);
 void ResourceLoaderFileSys_Shutdown(Resources* resources);
 
+
+
 #endif

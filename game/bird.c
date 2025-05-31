@@ -1,7 +1,7 @@
 #include "bird.h"
 #include "draw_utils.h"
 #include "debug_utils.h"
-#include "utils.h"
+#include "rand.h"
 
 #define BIRD_INACTIVE			0
 #define BIRD_ACTIVE				1

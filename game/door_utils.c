@@ -2,7 +2,7 @@
 #include "draw_utils.h"
 
 void drawDoor(DoorInfo* doorInfo, 
-			  u8* bitShiftedDoorSprites, 
+			  const u8* bitShiftedDoorSprites, 
 			  u8* framebuffer, 
 			  u8* cleanBackground,
 			  u8 drawOnFramebuffer)

@@ -69,6 +69,7 @@
     </Media>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\game\alloc.c" />
     <ClCompile Include="..\..\game\ball.c" />
     <ClCompile Include="..\..\game\bird.c" />
     <ClCompile Include="..\..\game\debug_utils.c" />
@@ -84,7 +85,7 @@
     <ClCompile Include="..\..\game\rooms\titlescreen.c" />
     <ClCompile Include="..\..\game\rooms\transitions.c" />
     <ClCompile Include="..\..\game\string_utils.c" />
-    <ClCompile Include="..\..\game\utils.c" />
+    <ClCompile Include="..\..\game\rand.c" />
     <ClCompile Include="..\..\resource_loaders\resource_loader_filesys.c" />
     <ClCompile Include="..\..\sdl_main\sdl_main.cpp" />
     <ClCompile Include="..\..\sdl_main\sdl_sound.cpp" />
@@ -96,6 +97,7 @@
     <ClCompile Include="..\..\sdl_main\video_filters\sdl_video_filter_utils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\game\alloc.h" />
     <ClInclude Include="..\..\game\background_types.h" />
     <ClInclude Include="..\..\game\ball.h" />
     <ClInclude Include="..\..\game\base_defines.h" />
@@ -120,7 +122,7 @@
     <ClInclude Include="..\..\game\rooms\room_types.h" />
     <ClInclude Include="..\..\game\sound.h" />
     <ClInclude Include="..\..\game\string_utils.h" />
-    <ClInclude Include="..\..\game\utils.h" />
+    <ClInclude Include="..\..\game\rand.h" />
     <ClInclude Include="..\..\resource_loaders\resource_loader_filesys.h" />
     <ClInclude Include="..\..\sdl_main\sdl_sound.h" />
     <ClInclude Include="..\..\sdl_main\sdl_sound_manager.h" />

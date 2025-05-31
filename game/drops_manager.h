@@ -8,7 +8,14 @@
 #define DROP_SPRITE_ROWS 6
 #define DROP_SPRITE_COUNT 1
 
-void DropsManager_Init(DropData* dropData, u8 roomNumber, u8 gameCompletionCount);
-void DropsManager_Update(DropData* dropData, u8* framebuffer, u8* cleanBackground, u8 gameCompletionCount, u8* dropSprites);
+void DropsManager_Init(DropData* dropData, 
+					   u8 roomNumber, 
+					   u8 gameCompletionCount);
+
+void DropsManager_Update(DropData* dropData, 
+						 u8* framebuffer, 
+						 u8* cleanBackground, 
+						 u8 gameCompletionCount, 
+						 const u8* dropSprites);
 
 #endif

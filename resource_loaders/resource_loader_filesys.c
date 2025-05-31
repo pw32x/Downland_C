@@ -1,8 +1,8 @@
 #include "resource_loader_filesys.h"
 
 #include "..\game\base_defines.h"
+#include "..\game\alloc.h"
 
-#include <stdlib.h>
 #include <stdio.h>
 
 // Verifies the checksum for Downland V1.1
@@ -26,7 +26,7 @@ BOOL checksumCheck(const char* romPath)
 	return accumulator == 0x84883253;
 }
 
-void getBytes(FILE* file, u16 start, u16 end, u8* buffer)
+const void* getBytes(FILE* file, u16 start, u16 end)
 {
 	// take into account that the rom starts at c000
 	start -= 0xc000; 
@@ -34,28 +34,14 @@ void getBytes(FILE* file, u16 start, u16 end, u8* buffer)
 
 	u16 size = end - start;
 
+	u8* buffer = (u8*)dl_alloc(size);
+
 	fseek(file, start, SEEK_SET);
 	fread(buffer, size, 1, file);
+
+	return buffer;
 }
 
-u8 resourceBuffer[1450];
-u8* resourceBufferRunner = NULL;
-
-u32 totalSize = 0;
-void* dl_malloc(u32 size)
-{
-	if (resourceBufferRunner == NULL)
-	{
-		resourceBufferRunner = resourceBuffer;
-	}
-
-	u8* memory = resourceBufferRunner;
-
-	resourceBufferRunner += size;
-	totalSize += size;
-
-	return (void*)memory;
-}
 
 /*
 u8* getBytesSwapped(FILE* file, u16 start, u16 end)
@@ -66,7 +52,7 @@ u8* getBytesSwapped(FILE* file, u16 start, u16 end)
 
 	u16 size = end - start;
 
-	u8* memory = (u8*)dl_malloc(size);
+	u8* memory = (u8*)dl_alloc(size);
 
 	if (memory == NULL)
 		return NULL;
@@ -143,7 +129,7 @@ void loadBackgroundDrawData(FILE* file, u16 start, BackgroundDrawData* backgroun
 	}
 
 	// create the list of background draw commands
-	BackgroundDrawCommand* backgroundDrawCommands = (BackgroundDrawCommand*)dl_malloc(drawCommandCount * sizeof(BackgroundDrawCommand));
+	BackgroundDrawCommand* backgroundDrawCommands = (BackgroundDrawCommand*)dl_alloc(drawCommandCount * sizeof(BackgroundDrawCommand));
 
 	// fill the background draw commands array
 	rawBufferRunner = rawBuffer;
@@ -182,7 +168,7 @@ void loadShapeDrawData(FILE* file, u16 start, ShapeDrawData* shapeDrawData)
 	fread(&shapeDrawData->segmentCount, sizeof(shapeDrawData->segmentCount), 1, file);
 
 	u16 bufferSize = shapeDrawData->segmentCount * sizeof(ShapeSegment);
-	ShapeSegment* segmentsMemory = (ShapeSegment*)dl_malloc(bufferSize);
+	ShapeSegment* segmentsMemory = (ShapeSegment*)dl_alloc(bufferSize);
 
 	if (segmentsMemory == NULL)
 		return;
@@ -204,7 +190,7 @@ void loadDropSpawnPositions(FILE* file, u16 start, DropSpawnPositions* dropSpawn
 	dropSpawnPositions->spawnAreasCount++;
 
 	u16 bufferSize = dropSpawnPositions->spawnAreasCount * sizeof(ShapeSegment);
-	DropSpawnArea* dropSpawnAreasMemory = (DropSpawnArea*)dl_malloc(bufferSize);
+	DropSpawnArea* dropSpawnAreasMemory = (DropSpawnArea*)dl_alloc(bufferSize);
 
 	if (dropSpawnAreasMemory == NULL)
 		return;
@@ -245,7 +231,7 @@ void loadDoorInfoDataPositions(FILE* file, u16 start, DoorInfoData* doorInfoData
 	fseek(file, start, SEEK_SET);
 
 	u16 bufferSize = doorInfosCount * sizeof(DoorInfo);
-	DoorInfo* doorInfos = (DoorInfo*)dl_malloc(bufferSize);
+	DoorInfo* doorInfos = (DoorInfo*)dl_alloc(bufferSize);
 
 	fread(doorInfos, bufferSize, 1, file);
 
@@ -258,12 +244,13 @@ void loadDoorInfoDataPositions(FILE* file, u16 start, DoorInfoData* doorInfoData
 #define SHIFT_COUNT 3  // Number of shifted versions
 
 // assume two bytes per row
-void buildBitShiftedSprites(u8* spriteData, 
-							u8 spriteCount, 
-							u8 rowCount, 
-							u8 bytesPerRow, 
-							u8* bitShiftedSprites)
+u8* buildBitShiftedSprites(const u8* spriteData, u8 spriteCount, u8 rowCount, u8 bytesPerRow)
 {
+#define DESTINATION_BYTES_PER_ROW	3
+#define NUM_BIT_SHIFTS 4
+
+	u16 bitShiftedSpriteBufferSize = spriteCount * rowCount * DESTINATION_BYTES_PER_ROW * NUM_BIT_SHIFTS;
+	u8* bitShiftedSprites = (u8*)dl_alloc(bitShiftedSpriteBufferSize);
 	u8* bitShiftedSpritesRunner = bitShiftedSprites;
 
 	u32 workBuffer;
@@ -272,7 +259,7 @@ void buildBitShiftedSprites(u8* spriteData,
 	{
 		for (int shiftAmount = 0; shiftAmount < NUM_BIT_SHIFTS; shiftAmount++)
 		{
-			u8* spriteDataRunner = spriteData + (loop * rowCount * bytesPerRow);
+			const u8* spriteDataRunner = spriteData + (loop * rowCount * bytesPerRow);
 
 			for (int rowLoop = 0; rowLoop < rowCount; rowLoop++)
 			{
@@ -287,6 +274,8 @@ void buildBitShiftedSprites(u8* spriteData,
 			}
 		}
 	}
+
+	return bitShiftedSprites;
 }
 
 
@@ -301,51 +290,51 @@ BOOL ResourceLoaderFileSys_Init(const char* romPath, Resources* resources)
 		return FALSE;
 
 	// get character font
-	getBytes(file, 0xd908, 0xda19, resources->characterFont);
+	resources->characterFont = getBytes(file, 0xd908, 0xda19);
 
 	// get strings
-	getBytes(file, 0xda19, 0xda27, resources->text_downland);
-	getBytes(file, 0xda27, 0xda33, resources->text_writtenBy);
-	getBytes(file, 0xda33, 0xda45, resources->text_michaelAichlmayer);
-	getBytes(file, 0xda45, 0xda54, resources->text_copyright1983);
-	getBytes(file, 0xda54, 0xda68, resources->text_spectralAssociates);
-	getBytes(file, 0xda68, 0xda75, resources->text_licensedTo);
-	getBytes(file, 0xda75, 0xda87, resources->text_tandyCorporation);
-	getBytes(file, 0xda87, 0xda9b, resources->text_allRightsReserved);
-	getBytes(file, 0xda9b, 0xdaa6, resources->text_onePlayer);
-	getBytes(file, 0xdaa6, 0xdab1, resources->text_twoPlayer);
-	getBytes(file, 0xdab1, 0xdabc, resources->text_highScore);
-	getBytes(file, 0xdabc, 0xdac7, resources->text_playerOne);
-	getBytes(file, 0xdac7, 0xdad2, resources->text_playerTwo);
-	getBytes(file, 0xdad2, 0xdad6, resources->text_pl1);
-	getBytes(file, 0xdad6, 0xdada, resources->text_pl2);
-	getBytes(file, 0xdada, 0xdaef, resources->text_getReadyPlayerOne);
-	getBytes(file, 0xdaef, 0xdb04, resources->text_getReadyPlayerTwo);
-	getBytes(file, 0xdb04, 0xdb0c, resources->text_chamber);
+	resources->text_downland			= getBytes(file, 0xda19, 0xda27);
+	resources->text_writtenBy			= getBytes(file, 0xda27, 0xda33);
+	resources->text_michaelAichlmayer	= getBytes(file, 0xda33, 0xda45);
+	resources->text_copyright1983		= getBytes(file, 0xda45, 0xda54);
+	resources->text_spectralAssociates	= getBytes(file, 0xda54, 0xda68);
+	resources->text_licensedTo			= getBytes(file, 0xda68, 0xda75);
+	resources->text_tandyCorporation	= getBytes(file, 0xda75, 0xda87);
+	resources->text_allRightsReserved	= getBytes(file, 0xda87, 0xda9b);
+	resources->text_onePlayer			= getBytes(file, 0xda9b, 0xdaa6);
+	resources->text_twoPlayer			= getBytes(file, 0xdaa6, 0xdab1);
+	resources->text_highScore			= getBytes(file, 0xdab1, 0xdabc);
+	resources->text_playerOne			= getBytes(file, 0xdabc, 0xdac7);
+	resources->text_playerTwo			= getBytes(file, 0xdac7, 0xdad2);
+	resources->text_pl1					= getBytes(file, 0xdad2, 0xdad6);
+	resources->text_pl2					= getBytes(file, 0xdad6, 0xdada);
+	resources->text_getReadyPlayerOne	= getBytes(file, 0xdada, 0xdaef);
+	resources->text_getReadyPlayerTwo	= getBytes(file, 0xdaef, 0xdb04);
+	resources->text_chamber				= getBytes(file, 0xdb04, 0xdb0c);
 
 	// get sprites
-    getBytes(file, 0xdcd7, 0xde17, resources->sprites_player);
-    getBytes(file, 0xde17, 0xde7b, resources->collisionmasks_player);
-    getBytes(file, 0xde7b, 0xde9b, resources->sprites_bouncyBall);
-    getBytes(file, 0xde9b, 0xdeb3, resources->sprites_bird);
-    getBytes(file, 0xdeb3, 0xdec7, resources->sprite_moneyBag);
-    getBytes(file, 0xdec7, 0xdedb, resources->sprite_diamond);
-    getBytes(file, 0xdedb, 0xdeef, resources->sprite_key);
-    getBytes(file, 0xdeef, 0xdf0a, resources->sprite_playerSplat);
-    getBytes(file, 0xdf0a, 0xdf2a, resources->sprite_door);
-    getBytes(file, 0xdf2a, 0xdf5a, resources->sprites_drops);
+    resources->sprites_player			= getBytes(file, 0xdcd7, 0xde17);
+    resources->collisionmasks_player	= getBytes(file, 0xde17, 0xde7b);
+    resources->sprites_bouncyBall		= getBytes(file, 0xde7b, 0xde9b);
+    resources->sprites_bird				= getBytes(file, 0xde9b, 0xdeb3);
+    resources->sprite_moneyBag			= getBytes(file, 0xdeb3, 0xdec7);
+    resources->sprite_diamond			= getBytes(file, 0xdec7, 0xdedb);
+    resources->sprite_key				= getBytes(file, 0xdedb, 0xdeef);
+    resources->sprite_playerSplat		= getBytes(file, 0xdeef, 0xdf0a);
+    resources->sprite_door				= getBytes(file, 0xdf0a, 0xdf2a);
+    resources->sprites_drops			= getBytes(file, 0xdf2a, 0xdf5a);
 
 	// generate bit shifted sprites
-	buildBitShiftedSprites(resources->sprites_player, PLAYER_SPRITE_COUNT, PLAYER_SPRITE_ROWS, PLAYER_SPRITE_BYTES_PER_ROW, resources->bitShiftedSprites_player);
-	buildBitShiftedSprites(resources->collisionmasks_player, PLAYER_SPRITE_COUNT, PLAYER_COLLISION_MASK_ROWS, PLAYER_COLLISION_MASK_BYTES_PER_ROW, resources->bitShiftedCollisionmasks_player);
-	buildBitShiftedSprites(resources->sprites_bouncyBall, BALL_SPRITE_COUNT, BALL_SPRITE_ROWS, BALL_SPRITE_BYTES_PER_ROW, resources->bitShiftedSprites_bouncyBall);
-	buildBitShiftedSprites(resources->sprites_bird, BIRD_SPRITE_COUNT, BIRD_SPRITE_ROWS, BIRD_SPRITE_BYTES_PER_ROW, resources->bitShiftedSprites_bird);
+	resources->bitShiftedSprites_player = buildBitShiftedSprites(resources->sprites_player, PLAYER_SPRITE_COUNT, PLAYER_SPRITE_ROWS, PLAYER_SPRITE_BYTES_PER_ROW);
+	resources->bitShiftedCollisionmasks_player = buildBitShiftedSprites(resources->collisionmasks_player, PLAYER_SPRITE_COUNT, PLAYER_COLLISION_MASK_ROWS, PLAYER_COLLISION_MASK_BYTES_PER_ROW);
+	resources->bitShiftedSprites_bouncyBall = buildBitShiftedSprites(resources->sprites_bouncyBall, BALL_SPRITE_COUNT, BALL_SPRITE_ROWS, BALL_SPRITE_BYTES_PER_ROW);
+	resources->bitShiftedSprites_bird = buildBitShiftedSprites(resources->sprites_bird, BIRD_SPRITE_COUNT, BIRD_SPRITE_ROWS, BIRD_SPRITE_BYTES_PER_ROW);
 
 	// in the original game, the player splat sprite and the door
 	// are loaded, bitshifted, and drawn on demand. Here we just 
 	// pre-build them because gigs of ram. 
-	buildBitShiftedSprites(resources->sprite_playerSplat, PLAYER_SPLAT_SPRITE_COUNT, PLAYER_SPLAT_SPRITE_ROWS, PLAYER_SPLAT_SPRITE_BYTES_PER_ROW, resources->bitShiftedSprites_playerSplat);
-	buildBitShiftedSprites(resources->sprite_door, DOOR_SPRITE_COUNT, DOOR_SPRITE_ROWS, DOOR_SPRITE_BYTES_PER_ROW, resources->bitShiftedSprites_door);
+	resources->bitShiftedSprites_playerSplat = buildBitShiftedSprites(resources->sprite_playerSplat, PLAYER_SPLAT_SPRITE_COUNT, PLAYER_SPLAT_SPRITE_ROWS, PLAYER_SPLAT_SPRITE_BYTES_PER_ROW);
+	resources->bitShiftedSprites_door = buildBitShiftedSprites(resources->sprite_door, DOOR_SPRITE_COUNT, DOOR_SPRITE_ROWS, DOOR_SPRITE_BYTES_PER_ROW);
 
 	resources->pickupSprites[0] = resources->sprite_diamond;
 	resources->pickupSprites[1] = resources->sprite_moneyBag;
@@ -414,13 +403,13 @@ BOOL ResourceLoaderFileSys_Init(const char* romPath, Resources* resources)
 	loadDoorInfoDataPositions(file, 0xd33c, &resources->roomResources[8].doorInfoData);
 	loadDoorInfoDataPositions(file, 0xd34b, &resources->roomResources[9].doorInfoData);
 
-	getBytes(file, 0xd1ea, 0xd24e, (u8*)resources->roomPickupPositions);
+	resources->roomPickupPositions = (PickupPosition*)getBytes(file, 0xd1ea, 0xd24e);
 
-	getBytes(file, 0xd1c2, 0xd1d6, resources->keyPickUpDoorIndexes);  // 20 items
-    getBytes(file, 0xd1d6, 0xd1ea, resources->keyPickUpDoorIndexesHardMode);  // 20 items
-	getBytes(file, 0xceea, 0xcefa, resources->offsetsToDoorsAlreadyActivated);  // 16 items
+	resources->keyPickUpDoorIndexes = getBytes(file, 0xd1c2, 0xd1d6);  // 20 items
+    resources->keyPickUpDoorIndexesHardMode = getBytes(file, 0xd1d6, 0xd1ea);  // 20 items
+	resources->offsetsToDoorsAlreadyActivated = getBytes(file, 0xceea, 0xcefa);  // 16 items
 
-	getBytes(file, 0xceac, 0xceb6, resources->roomsWithBouncingBall);
+	resources->roomsWithBouncingBall = getBytes(file, 0xceac, 0xceb6);
 
 	fclose(file);
 

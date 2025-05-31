@@ -13,7 +13,8 @@ extern "C"
 #include "../game/debug_utils.h"
 #include "../game/draw_utils.h"
 #include "../game/sound.h"
- #include "../game/utils.h"
+#include "../game/alloc.h"
+#include "../game/rand.h"
 }
 
 #include <SDL3/SDL.h>
@@ -173,6 +174,8 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
 
     SDL_SetTextureScaleMode(debugFramebufferTexture, SDL_SCALEMODE_NEAREST); // no smoothing
 #endif
+
+    dl_init();
 
     // Load game resources from the rom
     // 

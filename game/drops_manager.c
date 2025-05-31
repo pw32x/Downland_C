@@ -3,7 +3,7 @@
 #include "base_defines.h"
 #include "draw_utils.h"
 #include "debug_utils.h"
-#include "utils.h"
+#include "rand.h"
 
 #define DROP_FALL_SPEED 0x200
 #define DROP_WIGGLE_START_TIME 0xa8 // wiggle timer starts at 168 which signed is -40. The value is decremented
@@ -60,7 +60,7 @@ void wiggleDrop(Drop* drop)
 void initDrop(Drop* drop, 
 			  DropData* dropData, 
 			  u8 gameCompletionCount, 
-			  u8* dropSprites,
+			  const u8* dropSprites,
 			  u8* cleanBackground)
 {
 	// init drop
@@ -109,7 +109,7 @@ void DropsManager_Update(DropData* dropData,
 						 u8* framebuffer, 
 						 u8* cleanBackground, 
 						 u8 gameCompletionCount,
-						 u8* dropSprites)
+						 const u8* dropSprites)
 {
 	Drop* drops = dropData->drops;
 

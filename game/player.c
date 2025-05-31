@@ -10,7 +10,7 @@
 #include "pickup_types.h"
 #include "door_utils.h"
 #include "sound.h"
-#include "utils.h"
+#include "rand.h"
 
 
 

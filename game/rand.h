@@ -3,7 +3,7 @@
 
 #include "base_types.h"
 
-int dl_rand();
+u8 dl_rand();
 void dl_srand(u32 seed);
 
 #endif

@@ -38,6 +38,25 @@ void getBytes(FILE* file, u16 start, u16 end, u8* buffer)
 	fread(buffer, size, 1, file);
 }
 
+u8 resourceBuffer[1450];
+u8* resourceBufferRunner = NULL;
+
+u32 totalSize = 0;
+void* dl_malloc(u32 size)
+{
+	if (resourceBufferRunner == NULL)
+	{
+		resourceBufferRunner = resourceBuffer;
+	}
+
+	u8* memory = resourceBufferRunner;
+
+	resourceBufferRunner += size;
+	totalSize += size;
+
+	return (void*)memory;
+}
+
 /*
 u8* getBytesSwapped(FILE* file, u16 start, u16 end)
 {
@@ -47,7 +66,7 @@ u8* getBytesSwapped(FILE* file, u16 start, u16 end)
 
 	u16 size = end - start;
 
-	u8* memory = (u8*)malloc(size);
+	u8* memory = (u8*)dl_malloc(size);
 
 	if (memory == NULL)
 		return NULL;
@@ -69,7 +88,7 @@ u8* getBytesSwapped(FILE* file, u16 start, u16 end)
 }
 */
 
-
+u8 workBuffer[70];
 u8* getBytesUntilSentinel(FILE* file, u16 start, u8 sentinelValue, u16* bufferSize)
 {
 	// take into account that the rom starts at c000
@@ -86,17 +105,12 @@ u8* getBytesUntilSentinel(FILE* file, u16 start, u8 sentinelValue, u16* bufferSi
 		readCount++;
 		if (value == sentinelValue)
 		{
-			u8* memory = (u8*)malloc(readCount);
-
-			if (memory == NULL)
-				return NULL;
-
 			fseek(file, start, SEEK_SET);
-			fread(memory, readCount, 1, file);
+			fread(workBuffer, readCount, 1, file);
 
 			*bufferSize = readCount;
 
-			return memory;
+			return workBuffer;
 		}
 	}
 
@@ -110,9 +124,6 @@ void loadBackgroundDrawData(FILE* file, u16 start, BackgroundDrawData* backgroun
 	// get the draw buffer
 	u16 bufferSize;
 	u8* rawBuffer = getBytesUntilSentinel(file, start, sentinelValue, &bufferSize);
-
-	if (rawBuffer == NULL)
-		return;
 
 	// go through the buffer, counting the number of elements
 	// we need to create.
@@ -132,7 +143,7 @@ void loadBackgroundDrawData(FILE* file, u16 start, BackgroundDrawData* backgroun
 	}
 
 	// create the list of background draw commands
-	BackgroundDrawCommand* backgroundDrawCommands = (BackgroundDrawCommand*)malloc(drawCommandCount * sizeof(BackgroundDrawCommand));
+	BackgroundDrawCommand* backgroundDrawCommands = (BackgroundDrawCommand*)dl_malloc(drawCommandCount * sizeof(BackgroundDrawCommand));
 
 	// fill the background draw commands array
 	rawBufferRunner = rawBuffer;
@@ -160,8 +171,6 @@ void loadBackgroundDrawData(FILE* file, u16 start, BackgroundDrawData* backgroun
 
 	backgroundDrawData->drawCommandCount = drawCommandCount;
 	backgroundDrawData->backgroundDrawCommands = backgroundDrawCommands;
-
-	free(rawBuffer);
 }
 
 void loadShapeDrawData(FILE* file, u16 start, ShapeDrawData* shapeDrawData)
@@ -173,7 +182,7 @@ void loadShapeDrawData(FILE* file, u16 start, ShapeDrawData* shapeDrawData)
 	fread(&shapeDrawData->segmentCount, sizeof(shapeDrawData->segmentCount), 1, file);
 
 	u16 bufferSize = shapeDrawData->segmentCount * sizeof(ShapeSegment);
-	ShapeSegment* segmentsMemory = (ShapeSegment*)malloc(bufferSize);
+	ShapeSegment* segmentsMemory = (ShapeSegment*)dl_malloc(bufferSize);
 
 	if (segmentsMemory == NULL)
 		return;
@@ -195,7 +204,7 @@ void loadDropSpawnPositions(FILE* file, u16 start, DropSpawnPositions* dropSpawn
 	dropSpawnPositions->spawnAreasCount++;
 
 	u16 bufferSize = dropSpawnPositions->spawnAreasCount * sizeof(ShapeSegment);
-	DropSpawnArea* dropSpawnAreasMemory = (DropSpawnArea*)malloc(bufferSize);
+	DropSpawnArea* dropSpawnAreasMemory = (DropSpawnArea*)dl_malloc(bufferSize);
 
 	if (dropSpawnAreasMemory == NULL)
 		return;
@@ -236,7 +245,7 @@ void loadDoorInfoDataPositions(FILE* file, u16 start, DoorInfoData* doorInfoData
 	fseek(file, start, SEEK_SET);
 
 	u16 bufferSize = doorInfosCount * sizeof(DoorInfo);
-	DoorInfo* doorInfos = (DoorInfo*)malloc(bufferSize);
+	DoorInfo* doorInfos = (DoorInfo*)dl_malloc(bufferSize);
 
 	fread(doorInfos, bufferSize, 1, file);
 
@@ -411,8 +420,7 @@ BOOL ResourceLoaderFileSys_Init(const char* romPath, Resources* resources)
     getBytes(file, 0xd1d6, 0xd1ea, resources->keyPickUpDoorIndexesHardMode);  // 20 items
 	getBytes(file, 0xceea, 0xcefa, resources->offsetsToDoorsAlreadyActivated);  // 16 items
 
-	u16 bufferSize;
-	resources->roomsWithBouncingBall = getBytesUntilSentinel(file, 0xceac, 0xff, &bufferSize);
+	getBytes(file, 0xceac, 0xceb6, resources->roomsWithBouncingBall);
 
 	fclose(file);
 
@@ -422,38 +430,4 @@ BOOL ResourceLoaderFileSys_Init(const char* romPath, Resources* resources)
 void ResourceLoaderFileSys_Shutdown(Resources* resources)
 {
 	// free shapes data
-	free(resources->shapeDrawData_00_Stalactite.segments);
-	free(resources->shapeDrawData_01_WallGoingDown.segments);
-	free(resources->shapeDrawData_07_WallPieceGoingUp.segments);
-	free(resources->shapeDrawData_02_LeftHandCornerPiece.segments);
-	free(resources->shapeDrawData_08_CornerPieceGoingDownLeft.segments);
-	free(resources->shapeDrawData_03_TopRightHandCornerPiece.segments);
-	free(resources->shapeDrawData_04_TopRightHandCornerPiece2.segments);
-	free(resources->shapeDrawData_05_BottomRightSideOfFloatingPlatforms.segments);
-	free(resources->shapeDrawData_14_HorizontalRopeStartGoingRight.segments);
-	free(resources->shapeDrawData_15_HorizontalRopeEndGoingRight.segments);
-	free(resources->shapeDrawData_17_BlankAreaGoingRight.segments);
-	free(resources->shapeDrawData_18_BlankAreaGoingLeft.segments);
-	free(resources->shapeDrawData_19_BlankAreaGoingDownRight.segments);
-	free(resources->shapeDrawData_0b_ShortLineGoingUp.segments);
-	free(resources->shapeDrawData_0c_VeryShortRope.segments);
-	free(resources->shapeDrawData_0d_ShortRope.segments);
-	free(resources->shapeDrawData_0e_MidLengthRope.segments);
-	free(resources->shapeDrawData_0f_LongRope.segments);
-	free(resources->shapeDrawData_10_VeryLongRope.segments);
-	free(resources->shapeDrawData_11_SuperLongRope.segments);
-	free(resources->shapeDrawData_12_ExcessivelyLongRope.segments);
-	free(resources->shapeDrawData_13_RediculouslyLongRope.segments);
-	free(resources->shapeDrawData_PreRope_Maybe.segments);
-	free(resources->shapeDrawData_PostRope_Maybe.segments);
-
-	// free background resources
-	for (int loop = 0; loop < NUM_ROOMS; loop++)
-	{
-		free(resources->roomResources[loop].backgroundDrawData.backgroundDrawCommands);
-		free(resources->roomResources[loop].dropSpawnPositions.dropSpawnAreas);
-		free(resources->roomResources[loop].doorInfoData.doorInfos);
-	}
-
-	free(resources->roomsWithBouncingBall);
 }

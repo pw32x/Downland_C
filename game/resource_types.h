@@ -104,7 +104,7 @@ typedef struct
     u8 keyPickUpDoorIndexesHardMode     [SIZE_FROM_RANGE(0xd1d6, 0xd1ea)]; // 20 items
     u8 offsetsToDoorsAlreadyActivated   [SIZE_FROM_RANGE(0xceea, 0xcefa)]; // 16 items
 
-    u8* roomsWithBouncingBall;
+    u8 roomsWithBouncingBall[10];
 } Resources;
 
 #endif

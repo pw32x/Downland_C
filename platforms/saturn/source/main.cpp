@@ -18,7 +18,25 @@ using namespace SRL::Types;
 using namespace SRL::Input;
 using namespace SRL::Math;
 
+extern "C"
+{
+#include "game_types.h"
+#include "game.h"
+#include "sound.h"
+#include "resource_types.h"
+#include "resource_loader_saturn.h"
+#include "sound.h"
 
+void Sound_Play(u8 soundIndex, u8 loop)
+{
+	//soundManager.play(soundIndex, loop);
+}
+
+void Sound_Stop(u8 soundindex)
+{
+    //soundManager.stop(soundindex);
+}
+}
 
 int main()
 {

@@ -14,16 +14,13 @@
     <Filter Include="game\rooms">
       <UniqueIdentifier>{beac2d17-2378-4c5a-ac6b-59d50e2ef8c9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="resource_loaders">
+    <Filter Include="source\resource_loader">
       <UniqueIdentifier>{ae60a015-6258-4211-9fc8-4c22e92979dd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\source\main.cxx">
+    <ClCompile Include="..\source\main.cpp">
       <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\resource_loaders\resource_loader_filesys.c">
-      <Filter>resource_loaders</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\game\ball.c">
       <Filter>game</Filter>
@@ -70,6 +67,9 @@
     <ClCompile Include="..\..\..\game\rooms\getready.c">
       <Filter>game\rooms</Filter>
     </ClCompile>
+    <ClCompile Include="..\source\resource_loader_saturn.cpp">
+      <Filter>source\resource_loader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\build\build.bat">
@@ -89,9 +89,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\resource_loaders\resource_loader_filesys.h">
-      <Filter>resource_loaders</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\game\background_types.h">
       <Filter>game</Filter>
     </ClInclude>
@@ -163,6 +160,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\game\rooms\chambers.h">
       <Filter>game\rooms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\resource_loader_saturn.h">
+      <Filter>source\resource_loader</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

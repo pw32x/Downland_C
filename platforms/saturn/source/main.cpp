@@ -118,6 +118,10 @@ int main()
     SRL::Debug::Print(1,13,"GameData size %d", sizeof(GameData));
     SRL::Debug::Print(1,14,"Resources size %d", sizeof(Resources));
 
+
+    SRL::Debug::Print(1,16,"player: %d", (u8)resources.sprites_player[0]);
+    SRL::Debug::Print(1,17,"player: %d", (u8)resources.sprites_player[1]);
+
     SRL::Debug::Print(1,3,"VDP2 ScrollScreen Sample");
     
     //Main Game Loop 

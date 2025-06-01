@@ -33,43 +33,43 @@ public:
 		if (!checksumCheck(fileBuffer, fileSize))
 			return RESULT_CHECKSUMFAILED;
 
-		/*
-
 		// get character font
-		resources->characterFont = getBytes(file, 0xd908, 0xda19);
+		resources->characterFont = getBytes(fileBuffer, 0xd908);
 
 		// get strings
-		resources->text_downland			= getBytes(file, 0xda19, 0xda27);
-		resources->text_writtenBy			= getBytes(file, 0xda27, 0xda33);
-		resources->text_michaelAichlmayer	= getBytes(file, 0xda33, 0xda45);
-		resources->text_copyright1983		= getBytes(file, 0xda45, 0xda54);
-		resources->text_spectralAssociates	= getBytes(file, 0xda54, 0xda68);
-		resources->text_licensedTo			= getBytes(file, 0xda68, 0xda75);
-		resources->text_tandyCorporation	= getBytes(file, 0xda75, 0xda87);
-		resources->text_allRightsReserved	= getBytes(file, 0xda87, 0xda9b);
-		resources->text_onePlayer			= getBytes(file, 0xda9b, 0xdaa6);
-		resources->text_twoPlayer			= getBytes(file, 0xdaa6, 0xdab1);
-		resources->text_highScore			= getBytes(file, 0xdab1, 0xdabc);
-		resources->text_playerOne			= getBytes(file, 0xdabc, 0xdac7);
-		resources->text_playerTwo			= getBytes(file, 0xdac7, 0xdad2);
-		resources->text_pl1					= getBytes(file, 0xdad2, 0xdad6);
-		resources->text_pl2					= getBytes(file, 0xdad6, 0xdada);
-		resources->text_getReadyPlayerOne	= getBytes(file, 0xdada, 0xdaef);
-		resources->text_getReadyPlayerTwo	= getBytes(file, 0xdaef, 0xdb04);
-		resources->text_chamber				= getBytes(file, 0xdb04, 0xdb0c);
+		resources->text_downland			= getBytes(fileBuffer, 0xda19);
+		resources->text_writtenBy			= getBytes(fileBuffer, 0xda27);
+		resources->text_michaelAichlmayer	= getBytes(fileBuffer, 0xda33);
+		resources->text_copyright1983		= getBytes(fileBuffer, 0xda45);
+		resources->text_spectralAssociates	= getBytes(fileBuffer, 0xda54);
+		resources->text_licensedTo			= getBytes(fileBuffer, 0xda68);
+		resources->text_tandyCorporation	= getBytes(fileBuffer, 0xda75);
+		resources->text_allRightsReserved	= getBytes(fileBuffer, 0xda87);
+		resources->text_onePlayer			= getBytes(fileBuffer, 0xda9b);
+		resources->text_twoPlayer			= getBytes(fileBuffer, 0xdaa6);
+		resources->text_highScore			= getBytes(fileBuffer, 0xdab1);
+		resources->text_playerOne			= getBytes(fileBuffer, 0xdabc);
+		resources->text_playerTwo			= getBytes(fileBuffer, 0xdac7);
+		resources->text_pl1					= getBytes(fileBuffer, 0xdad2);
+		resources->text_pl2					= getBytes(fileBuffer, 0xdad6);
+		resources->text_getReadyPlayerOne	= getBytes(fileBuffer, 0xdada);
+		resources->text_getReadyPlayerTwo	= getBytes(fileBuffer, 0xdaef);
+		resources->text_chamber				= getBytes(fileBuffer, 0xdb04);
 
+		
 		// get sprites
-		resources->sprites_player			= getBytes(file, 0xdcd7, 0xde17);
-		resources->collisionmasks_player	= getBytes(file, 0xde17, 0xde7b);
-		resources->sprites_bouncyBall		= getBytes(file, 0xde7b, 0xde9b);
-		resources->sprites_bird				= getBytes(file, 0xde9b, 0xdeb3);
-		resources->sprite_moneyBag			= getBytes(file, 0xdeb3, 0xdec7);
-		resources->sprite_diamond			= getBytes(file, 0xdec7, 0xdedb);
-		resources->sprite_key				= getBytes(file, 0xdedb, 0xdeef);
-		resources->sprite_playerSplat		= getBytes(file, 0xdeef, 0xdf0a);
-		resources->sprite_door				= getBytes(file, 0xdf0a, 0xdf2a);
-		resources->sprites_drops			= getBytes(file, 0xdf2a, 0xdf5a);
-
+		resources->sprites_player			= getBytesSwapped(fileBuffer, 0xdcd7, 0xde17);
+		resources->collisionmasks_player	= getBytesSwapped(fileBuffer, 0xde17, 0xde7b);
+		resources->sprites_bouncyBall		= getBytesSwapped(fileBuffer, 0xde7b, 0xde9b);
+		resources->sprites_bird				= getBytesSwapped(fileBuffer, 0xde9b, 0xdeb3);
+		resources->sprite_moneyBag			= getBytesSwapped(fileBuffer, 0xdeb3, 0xdec7);
+		resources->sprite_diamond			= getBytesSwapped(fileBuffer, 0xdec7, 0xdedb);
+		resources->sprite_key				= getBytesSwapped(fileBuffer, 0xdedb, 0xdeef);
+		resources->sprite_playerSplat		= getBytesSwapped(fileBuffer, 0xdeef, 0xdf0a);
+		resources->sprite_door				= getBytesSwapped(fileBuffer, 0xdf0a, 0xdf2a);
+		resources->sprites_drops			= getBytesSwapped(fileBuffer, 0xdf2a, 0xdf5a);
+		
+		/*
 		// generate bit shifted sprites
 		resources->bitShiftedSprites_player = buildBitShiftedSprites(resources->sprites_player, PLAYER_SPRITE_COUNT, PLAYER_SPRITE_ROWS, PLAYER_SPRITE_BYTES_PER_ROW);
 		resources->bitShiftedCollisionmasks_player = buildBitShiftedSprites(resources->collisionmasks_player, PLAYER_SPRITE_COUNT, PLAYER_COLLISION_MASK_ROWS, PLAYER_COLLISION_MASK_BYTES_PER_ROW);
@@ -148,17 +148,16 @@ public:
 		loadDoorInfoDataPositions(file, 0xd32d, &resources->roomResources[7].doorInfoData);
 		loadDoorInfoDataPositions(file, 0xd33c, &resources->roomResources[8].doorInfoData);
 		loadDoorInfoDataPositions(file, 0xd34b, &resources->roomResources[9].doorInfoData);
-
-		resources->roomPickupPositions = (PickupPosition*)getBytes(file, 0xd1ea, 0xd24e);
-
-		resources->keyPickUpDoorIndexes = getBytes(file, 0xd1c2, 0xd1d6);  // 20 items
-		resources->keyPickUpDoorIndexesHardMode = getBytes(file, 0xd1d6, 0xd1ea);  // 20 items
-		resources->offsetsToDoorsAlreadyActivated = getBytes(file, 0xceea, 0xcefa);  // 16 items
-
-		resources->roomsWithBouncingBall = getBytes(file, 0xceac, 0xceb6);
 		*/
 
-		delete [] fileBuffer;
+
+		resources->roomPickupPositions = (PickupPosition*)getBytes(fileBuffer, 0xd1ea);
+
+		resources->keyPickUpDoorIndexes = getBytes(fileBuffer, 0xd1c2);  // 20 items
+		resources->keyPickUpDoorIndexesHardMode = getBytes(fileBuffer, 0xd1d6);  // 20 items
+		resources->offsetsToDoorsAlreadyActivated = getBytes(fileBuffer, 0xceea);  // 16 items
+
+		resources->roomsWithBouncingBall = getBytes(fileBuffer, 0xceac);
 
 		return RESULT_OK;
 	}
@@ -176,7 +175,7 @@ private:
 		*fileSize = file.Size.Bytes;
 		file.Open();
 
-		*fileBuffer = new u8[*fileSize];
+		*fileBuffer = (u8*)dl_alloc(*fileSize);
 		file.Read(*fileSize, *fileBuffer);
 
 		file.Close();
@@ -210,8 +209,15 @@ private:
 		return (accumulator == 0x84883253);
 	}
 
-	/*
-	const void* getBytes(FILE* file, u16 start, u16 end)
+	static const u8* getBytes(const u8* fileBuffer, u16 start)
+	{
+		// take into account that the rom starts at c000
+		start -= 0xc000; 
+
+		return fileBuffer + start;
+	}
+
+	static u8* getBytesSwapped(const u8* fileBuffer, u16 start, u16 end)
 	{
 		// take into account that the rom starts at c000
 		start -= 0xc000; 
@@ -220,45 +226,21 @@ private:
 		u16 size = end - start;
 
 		u8* buffer = (u8*)dl_alloc(size);
+		fileBuffer += start;
 
-		fseek(file, start, SEEK_SET);
-		fread(buffer, size, 1, file);
-	
-		return buffer;
-	}
-	*/
-
-
-	/*
-	u8* getBytesSwapped(FILE* file, u16 start, u16 end)
-	{
-		// take into account that the rom starts at c000
-		start -= 0xc000; 
-		end -= 0xc000;
-
-		u16 size = end - start;
-
-		u8* memory = (u8*)dl_alloc(size);
-
-		if (memory == NULL)
-			return NULL;
-
-		fseek(file, start, SEEK_SET);
-		fread(memory, size, 1, file);
-
-		// swap bytes because endianness difference between 6809 and x86
-		u8* memoryRunner = memory;
+		// swap bytes because endianness difference
+		u8* bufferRunner = buffer;
 		for (int loop = 0; loop < size / 2; loop++)
 		{
-			u8 temp = memoryRunner[0];
-			memoryRunner[0] = memoryRunner[1];
-			memoryRunner[1] = temp;
-			memoryRunner += 2;
+			bufferRunner[0] = fileBuffer[1];
+			bufferRunner[1] = fileBuffer[0];
+			bufferRunner += 2;
+			fileBuffer += 2;
 		}
 
-		return memory;
+		return buffer;
 	}
-	*/
+
 	/*
 	u8 workBuffer[70];
 	u8* getBytesUntilSentinel(FILE* file, u16 start, u8 sentinelValue, u16* bufferSize)

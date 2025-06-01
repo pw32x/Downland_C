@@ -11,19 +11,29 @@ extern "C"
 #include "alloc.h"
 }
 
+#define RESULT_OK				0
+#define RESULT_FILENOTFOUND		1
+#define RESULT_CHECKSUMFAILED	2
+#define RESULT_UNKNOWNFAILURE	0xff
+
 class DownlandResourceLoader
 {
 public:
-	static BOOL Init(const char* romPath, Resources* resources)
+	static int LoadResources(const char* romPath, Resources* resources)
 	{
-		if (!checksumCheck(romPath))
-			return FALSE;
+		u8* fileBuffer = NULL;
+		u32 fileSize = 0;
+		
+		if (!loadFile(romPath, &fileBuffer, &fileSize))
+			return RESULT_FILENOTFOUND;
+
+		if (fileBuffer == NULL)
+			return RESULT_FILENOTFOUND;
+
+		if (!checksumCheck(fileBuffer, fileSize))
+			return RESULT_CHECKSUMFAILED;
 
 		/*
-		FILE* file = fopen(romPath, "rb");
-
-		if (file == NULL)
-			return FALSE;
 
 		// get character font
 		resources->characterFont = getBytes(file, 0xd908, 0xda19);
@@ -146,33 +156,58 @@ public:
 		resources->offsetsToDoorsAlreadyActivated = getBytes(file, 0xceea, 0xcefa);  // 16 items
 
 		resources->roomsWithBouncingBall = getBytes(file, 0xceac, 0xceb6);
-
-		fclose(file);
 		*/
 
-		return TRUE;
+		delete [] fileBuffer;
+
+		return RESULT_OK;
 	}
 
 private:
-	// Verifies the checksum for Downland V1.1
-	static BOOL checksumCheck(const char* romPath) 
+	static bool loadFile(const char* romPath, u8** fileBuffer, u32* fileSize)
 	{
-		u32 accumulator = 0;
-		u32 value;
-
 		SRL::Cd::File file = SRL::Cd::File(romPath);
 
 		if (!file.Exists())
-			return FALSE;
-
-		while (file.Read(sizeof(value), &value))
-		{ 
-			accumulator += value;
+		{
+			return false;
 		}
+
+		*fileSize = file.Size.Bytes;
+		file.Open();
+
+		*fileBuffer = new u8[*fileSize];
+		file.Read(*fileSize, *fileBuffer);
 
 		file.Close();
 
-		return accumulator == 0x84883253;
+		return true;
+	}
+
+	static u32 swap_endian_32(u32 val) 
+	{
+		return ((val >> 24) & 0xFF) | 
+			   ((val >> 8) & 0xFF00) | 
+			   ((val << 8) & 0xFF0000) | 
+			   ((val << 24) & 0xFF000000);
+	}
+
+	// Verifies the checksum for Downland V1.1
+	static bool checksumCheck(const u8* fileBuffer, u32 fileSize) 
+	{
+		u32 accumulator = 0;
+		u32 value = 0;
+		const u32* fileBufferRunner = (const u32*)fileBuffer;
+
+		int loopCount = fileSize / sizeof(value);
+		for (int loop = 0; loop < loopCount; loop++)
+		{
+			value = swap_endian_32(*fileBufferRunner);
+			accumulator += value;
+			fileBufferRunner++;
+		}
+		
+		return (accumulator == 0x84883253);
 	}
 
 	/*

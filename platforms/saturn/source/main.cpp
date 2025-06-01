@@ -12,14 +12,13 @@ extern "C"
 
 #include "downland_resource_loader_saturn.hpp"
 
-GameData gameData;
+//GameData gameData;
 Resources resources;
 
 const char* romFileNames[] = 
 {
-    "downland.bin",
+    "DOWNLAND.BIN",
     "DOWNLAND.ROM",
-    "Downland V1.1 (1983) (26-3046) (Tandy) [a1].ccc"
 };
 int romFileNamesCount = sizeof(romFileNames) / sizeof(romFileNames[0]);
 
@@ -57,27 +56,24 @@ void Sound_Stop(u8 soundindex)
 }
 
 
-
-
 int main()
 {
     SRL::Core::Initialize(HighColor(20,10,50));
     Digital port0(0); // Initialize gamepad on port 0
   
+    int result = RESULT_UNKNOWNFAILURE;
 
-    bool romFoundAndLoaded = false;
-    //for (int loop = 0; loop < romFileNamesCount; loop++)
-    //{
-    //    if (DownlandResourceLoader::Init(romFileNames[loop], &resources))
-    //    {
-    //        romFoundAndLoaded = true;
-    //        break;
-    //    }
-    //}
+    for (int loop = 0; loop < romFileNamesCount; loop++)
+    {
+        result = DownlandResourceLoader::LoadResources(romFileNames[loop], &resources);
+
+        if (result == RESULT_OK)
+        {
+            break;
+        }
+     }
 
     //assert(romFoundAndLoaded);
-
-
 
     SRL::Tilemap::Interfaces::CubeTile* TestTilebin = new SRL::Tilemap::Interfaces::CubeTile("SPACE.BIN");//Load tilemap from cd to work RAM
     SRL::VDP2::NBG0::LoadTilemap(*TestTilebin);//Transfer tilemap from work RAM to VDP2 VRAM and register with NBG0
@@ -93,7 +89,6 @@ int main()
     SRL::VDP2::NBG2::LoadTilemap(*TestTilebmp);//Transfer tilemap from work RAM to VDP2 VRAM and register with NBG2
     delete TestTilebmp;//free tilemap from work ram 
     delete logo;//free original bitmap from work ram
-    
     //store XY screen positions of Background scrolls:
     Vector2D Nbg0Position(0.0, 0.0);
     Vector2D Nbg1Position(0.0, 0.0);
@@ -111,10 +106,17 @@ int main()
     SRL::VDP2::NBG2::SetPosition(Nbg2Position);//Set the static screen position for SRL Logo
     SRL::VDP2::NBG2::ScrollEnable();//enable display of NBG2
 
-    if (romFoundAndLoaded)
-        SRL::Debug::Print(1,4,"Downland rom found");
+    if (result == RESULT_OK)
+    {
+        SRL::Debug::Print(1,10,"Loading rom all good");
+    }
     else
-        SRL::Debug::Print(1,5,"Downland rom not found");
+    {
+        SRL::Debug::Print(1,10,"Loading failed %d", result);
+    }
+
+    SRL::Debug::Print(1,13,"GameData size %d", sizeof(GameData));
+    SRL::Debug::Print(1,14,"Resources size %d", sizeof(Resources));
 
     SRL::Debug::Print(1,3,"VDP2 ScrollScreen Sample");
     

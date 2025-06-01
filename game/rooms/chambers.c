@@ -100,7 +100,7 @@ void chamber_draw(u8 roomNumber, GameData* gameData, Resources* resources)
 
 	// draw active doors in the room
 	DoorInfoData* doorInfoData = &resources->roomResources[roomNumber].doorInfoData;
-	DoorInfo* doorInfoRunner = doorInfoData->doorInfos;
+	const DoorInfo* doorInfoRunner = doorInfoData->doorInfos;
 	for (u8 loop = 0; loop < doorInfoData->drawInfosCount; loop++)
 	{
 		if ((doorInfoRunner->y != 0xff) &&
@@ -177,7 +177,7 @@ void chamber_update(Room* room, GameData* gameData, Resources* resources)
 						resources->sprites_drops);	
 #endif
 
-	DoorInfo* lastDoor = playerData->lastDoor;
+	const DoorInfo* lastDoor = playerData->lastDoor;
 
 	u8 playerLives = playerData->lives;
 

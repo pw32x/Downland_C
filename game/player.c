@@ -941,7 +941,7 @@ void Player_Update(PlayerData* playerData,
 	}
 
 	// door touching check
-	DoorInfo* doorInfoRunner = doorInfoData->doorInfos;
+	const DoorInfo* doorInfoRunner = doorInfoData->doorInfos;
 	for (u8 loop = 0; loop < doorInfoData->drawInfosCount; loop++)
 	{
 		if (GET_HIGH_BYTE(playerData->y) == doorInfoRunner->y &&
@@ -1105,7 +1105,7 @@ void Player_PerformCollisions(struct GameData* gameDataStruct,
 
 					// check if we need to activate a door in the room
 					DoorInfoData* doorInfoData = &resources->roomResources[roomNumber].doorInfoData;
-					DoorInfo* doorInfoRunner = doorInfoData->doorInfos;
+					const DoorInfo* doorInfoRunner = doorInfoData->doorInfos;
 
 					for (u8 loop = 0; loop < doorInfoData->drawInfosCount; loop++)
 					{

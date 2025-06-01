@@ -85,33 +85,32 @@ public:
 		resources->pickupSprites[1] = resources->sprite_moneyBag;
 		resources->pickupSprites[2] = resources->sprite_key;
 
-		/*
 		// get shapes data
-		loadShapeDrawData(file, 0xd5f7, &resources->shapeDrawData_00_Stalactite);
-		loadShapeDrawData(file, 0xd60c, &resources->shapeDrawData_01_WallGoingDown);
-		loadShapeDrawData(file, 0xd616, &resources->shapeDrawData_07_WallPieceGoingUp);
-		loadShapeDrawData(file, 0xd625, &resources->shapeDrawData_02_LeftHandCornerPiece);
-		loadShapeDrawData(file, 0xd635, &resources->shapeDrawData_08_CornerPieceGoingDownLeft);
-		loadShapeDrawData(file, 0xd644, &resources->shapeDrawData_03_TopRightHandCornerPiece);
-		loadShapeDrawData(file, 0xd654, &resources->shapeDrawData_04_TopRightHandCornerPiece2);
-		loadShapeDrawData(file, 0xd663, &resources->shapeDrawData_05_BottomRightSideOfFloatingPlatforms);
-		loadShapeDrawData(file, 0xd67b, &resources->shapeDrawData_14_HorizontalRopeStartGoingRight);
-		loadShapeDrawData(file, 0xd68d, &resources->shapeDrawData_15_HorizontalRopeEndGoingRight);
-		loadShapeDrawData(file, 0xd697, &resources->shapeDrawData_17_BlankAreaGoingRight);
-		loadShapeDrawData(file, 0xd6a0, &resources->shapeDrawData_18_BlankAreaGoingLeft);
-		loadShapeDrawData(file, 0xd6a9, &resources->shapeDrawData_19_BlankAreaGoingDownRight);
-		loadShapeDrawData(file, 0xd6b2, &resources->shapeDrawData_0b_ShortLineGoingUp);
-		loadShapeDrawData(file, 0xd6d9, &resources->shapeDrawData_0c_VeryShortRope);
-		loadShapeDrawData(file, 0xd6e5, &resources->shapeDrawData_0d_ShortRope);
-		loadShapeDrawData(file, 0xd6f1, &resources->shapeDrawData_0e_MidLengthRope);
-		loadShapeDrawData(file, 0xd6fd, &resources->shapeDrawData_0f_LongRope);
-		loadShapeDrawData(file, 0xd709, &resources->shapeDrawData_10_VeryLongRope);
-		loadShapeDrawData(file, 0xd715, &resources->shapeDrawData_11_SuperLongRope);
-		loadShapeDrawData(file, 0xd721, &resources->shapeDrawData_12_ExcessivelyLongRope);
-		loadShapeDrawData(file, 0xd72d, &resources->shapeDrawData_13_RediculouslyLongRope);
-		loadShapeDrawData(file, 0xd74c, &resources->shapeDrawData_PreRope_Maybe);
-		loadShapeDrawData(file, 0xd750, &resources->shapeDrawData_PostRope_Maybe);
-
+		loadShapeDrawData(fileBuffer, 0xd5f7, &resources->shapeDrawData_00_Stalactite);
+		loadShapeDrawData(fileBuffer, 0xd60c, &resources->shapeDrawData_01_WallGoingDown);
+		loadShapeDrawData(fileBuffer, 0xd616, &resources->shapeDrawData_07_WallPieceGoingUp);
+		loadShapeDrawData(fileBuffer, 0xd625, &resources->shapeDrawData_02_LeftHandCornerPiece);
+		loadShapeDrawData(fileBuffer, 0xd635, &resources->shapeDrawData_08_CornerPieceGoingDownLeft);
+		loadShapeDrawData(fileBuffer, 0xd644, &resources->shapeDrawData_03_TopRightHandCornerPiece);
+		loadShapeDrawData(fileBuffer, 0xd654, &resources->shapeDrawData_04_TopRightHandCornerPiece2);
+		loadShapeDrawData(fileBuffer, 0xd663, &resources->shapeDrawData_05_BottomRightSideOfFloatingPlatforms);
+		loadShapeDrawData(fileBuffer, 0xd67b, &resources->shapeDrawData_14_HorizontalRopeStartGoingRight);
+		loadShapeDrawData(fileBuffer, 0xd68d, &resources->shapeDrawData_15_HorizontalRopeEndGoingRight);
+		loadShapeDrawData(fileBuffer, 0xd697, &resources->shapeDrawData_17_BlankAreaGoingRight);
+		loadShapeDrawData(fileBuffer, 0xd6a0, &resources->shapeDrawData_18_BlankAreaGoingLeft);
+		loadShapeDrawData(fileBuffer, 0xd6a9, &resources->shapeDrawData_19_BlankAreaGoingDownRight);
+		loadShapeDrawData(fileBuffer, 0xd6b2, &resources->shapeDrawData_0b_ShortLineGoingUp);
+		loadShapeDrawData(fileBuffer, 0xd6d9, &resources->shapeDrawData_0c_VeryShortRope);
+		loadShapeDrawData(fileBuffer, 0xd6e5, &resources->shapeDrawData_0d_ShortRope);
+		loadShapeDrawData(fileBuffer, 0xd6f1, &resources->shapeDrawData_0e_MidLengthRope);
+		loadShapeDrawData(fileBuffer, 0xd6fd, &resources->shapeDrawData_0f_LongRope);
+		loadShapeDrawData(fileBuffer, 0xd709, &resources->shapeDrawData_10_VeryLongRope);
+		loadShapeDrawData(fileBuffer, 0xd715, &resources->shapeDrawData_11_SuperLongRope);
+		loadShapeDrawData(fileBuffer, 0xd721, &resources->shapeDrawData_12_ExcessivelyLongRope);
+		loadShapeDrawData(fileBuffer, 0xd72d, &resources->shapeDrawData_13_RediculouslyLongRope);
+		loadShapeDrawData(fileBuffer, 0xd74c, &resources->shapeDrawData_PreRope_Maybe);
+		loadShapeDrawData(fileBuffer, 0xd750, &resources->shapeDrawData_PostRope_Maybe);
+		/*
 
 		// get background resources
 		loadBackgroundDrawData(file, 0xd35e, &resources->roomResources[0].backgroundDrawData);
@@ -138,19 +137,16 @@ public:
 		loadDropSpawnPositions(fileBuffer, 0xd10c, &resources->roomResources[9].dropSpawnPositions);
 		loadDropSpawnPositions(fileBuffer, 0xd116, &resources->roomResources[10].dropSpawnPositions);
 
-		/*
-		loadDoorInfoDataPositions(file, 0xd270, &resources->roomResources[0].doorInfoData);
-		loadDoorInfoDataPositions(file, 0xd27f, &resources->roomResources[1].doorInfoData);
-		loadDoorInfoDataPositions(file, 0xd29a, &resources->roomResources[2].doorInfoData);
-		loadDoorInfoDataPositions(file, 0xd2c1, &resources->roomResources[3].doorInfoData);
-		loadDoorInfoDataPositions(file, 0xd2ee, &resources->roomResources[4].doorInfoData);
-		loadDoorInfoDataPositions(file, 0xd309, &resources->roomResources[5].doorInfoData);
-		loadDoorInfoDataPositions(file, 0xd31e, &resources->roomResources[6].doorInfoData);
-		loadDoorInfoDataPositions(file, 0xd32d, &resources->roomResources[7].doorInfoData);
-		loadDoorInfoDataPositions(file, 0xd33c, &resources->roomResources[8].doorInfoData);
-		loadDoorInfoDataPositions(file, 0xd34b, &resources->roomResources[9].doorInfoData);
-		*/
-
+		loadDoorInfoDataPositions(fileBuffer, 0xd270, &resources->roomResources[0].doorInfoData);
+		loadDoorInfoDataPositions(fileBuffer, 0xd27f, &resources->roomResources[1].doorInfoData);
+		loadDoorInfoDataPositions(fileBuffer, 0xd29a, &resources->roomResources[2].doorInfoData);
+		loadDoorInfoDataPositions(fileBuffer, 0xd2c1, &resources->roomResources[3].doorInfoData);
+		loadDoorInfoDataPositions(fileBuffer, 0xd2ee, &resources->roomResources[4].doorInfoData);
+		loadDoorInfoDataPositions(fileBuffer, 0xd309, &resources->roomResources[5].doorInfoData);
+		loadDoorInfoDataPositions(fileBuffer, 0xd31e, &resources->roomResources[6].doorInfoData);
+		loadDoorInfoDataPositions(fileBuffer, 0xd32d, &resources->roomResources[7].doorInfoData);
+		loadDoorInfoDataPositions(fileBuffer, 0xd33c, &resources->roomResources[8].doorInfoData);
+		loadDoorInfoDataPositions(fileBuffer, 0xd34b, &resources->roomResources[9].doorInfoData);
 
 		resources->roomPickupPositions = (PickupPosition*)getBytes(fileBuffer, 0xd1ea);
 
@@ -327,26 +323,23 @@ private:
 		backgroundDrawData->drawCommandCount = drawCommandCount;
 		backgroundDrawData->backgroundDrawCommands = backgroundDrawCommands;
 	}
-
-	void loadShapeDrawData(FILE* file, u16 start, ShapeDrawData* shapeDrawData)
+	*/
+	static void loadShapeDrawData(const u8* fileBuffer, 
+								  u16 start, 
+								  ShapeDrawData* shapeDrawData)
 	{
 		// take into account that the rom starts at c000
 		start -= 0xc000; 
 
-		fseek(file, start, SEEK_SET);
-		fread(&shapeDrawData->segmentCount, sizeof(shapeDrawData->segmentCount), 1, file);
+		fileBuffer += start;
 
-		u16 bufferSize = shapeDrawData->segmentCount * sizeof(ShapeSegment);
-		ShapeSegment* segmentsMemory = (ShapeSegment*)dl_alloc(bufferSize);
+		shapeDrawData->segmentCount = *fileBuffer;
 
-		if (segmentsMemory == NULL)
-			return;
+		fileBuffer++;
 
-		fread(segmentsMemory, bufferSize, 1, file);
-
-		shapeDrawData->segments = segmentsMemory;
+		shapeDrawData->segments = (const ShapeSegment*)fileBuffer;
 	}
-	*/
+	
 	static void loadDropSpawnPositions(const u8* fileBuffer, 
 									   u16 start, 
 									   DropSpawnPositions* dropSpawnPositions)
@@ -364,46 +357,41 @@ private:
 
 		dropSpawnPositions->dropSpawnAreas = (const DropSpawnArea*)fileBuffer;
 	}
-	/*
-	void loadDoorInfoDataPositions(FILE* file, u16 start, DoorInfoData* doorInfoData)
+	
+	static void loadDoorInfoDataPositions(const u8* fileBuffer, u16 start, DoorInfoData* doorInfoData)
 	{
 		// take into account that the rom starts at c000
 		start -= 0xc000; 
-		fseek(file, start, SEEK_SET);
+		fileBuffer += start;
 
 		u8 doorInfosCount = 0;
 		u8 sentinelValue = 1; // some initial non-zero value
+
+		const u8* fileBufferRunner = fileBuffer;
 
 		// get the number of doors by going through
 		// the file until we hit 0
 		while (sentinelValue)
 		{
-			fread(&sentinelValue, 1, 1, file);
+			sentinelValue = *fileBufferRunner;
 
 			if (!sentinelValue)
 			{
 				break;
 			}
 
-			// move ahead by one DoorInfo (minus one because of the sentinel value)
-			fseek(file, sizeof(DoorInfo) - 1, SEEK_CUR); 
+			// move ahead by one DoorInfo
+			fileBufferRunner += sizeof(DoorInfo); 
 			doorInfosCount++;
 		}
 
 		if (!doorInfosCount) // this would be weird
 			return;
 
-		fseek(file, start, SEEK_SET);
-
-		u16 bufferSize = doorInfosCount * sizeof(DoorInfo);
-		DoorInfo* doorInfos = (DoorInfo*)dl_alloc(bufferSize);
-
-		fread(doorInfos, bufferSize, 1, file);
-
 		doorInfoData->drawInfosCount = doorInfosCount;
-		doorInfoData->doorInfos = doorInfos;
+		doorInfoData->doorInfos = (const DoorInfo*)fileBuffer;
 	}
-	*/
+	
 	#define WIDTH_BYTES 2  // Original sprite width in bytes
 	#define HEIGHT 10      // Number of rows
 	#define SHIFT_COUNT 3  // Number of shifted versions

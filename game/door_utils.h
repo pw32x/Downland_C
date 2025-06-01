@@ -4,7 +4,7 @@
 #include "base_types.h"
 #include "door_types.h"
 
-void drawDoor(DoorInfo* doorInfo, 
+void drawDoor(const DoorInfo* doorInfo, 
 			  const u8* bitShiftedDoorSprites, 
 			  u8* framebuffer, 
 			  u8* cleanBackground,

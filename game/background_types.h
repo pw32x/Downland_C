@@ -13,7 +13,7 @@ typedef struct
 typedef struct
 {
     u8 segmentCount;
-    ShapeSegment* segments;
+    const ShapeSegment* segments;
 } ShapeDrawData;
 
 typedef struct

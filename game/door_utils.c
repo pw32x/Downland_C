@@ -1,7 +1,7 @@
 #include "door_utils.h"
 #include "draw_utils.h"
 
-void drawDoor(DoorInfo* doorInfo, 
+void drawDoor(const DoorInfo* doorInfo, 
 			  const u8* bitShiftedDoorSprites, 
 			  u8* framebuffer, 
 			  u8* cleanBackground,

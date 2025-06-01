@@ -69,7 +69,7 @@ typedef struct
 
 	u16 roomTimers[NUM_ROOMS];
 
-	DoorInfo* lastDoor;
+	const DoorInfo* lastDoor;
 
 	u8 splatFrameNumber;
 } PlayerData;

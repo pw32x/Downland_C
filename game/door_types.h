@@ -26,7 +26,7 @@ typedef struct
 typedef struct
 {
     u8 drawInfosCount;
-    DoorInfo* doorInfos;
+    const DoorInfo* doorInfos;
 } DoorInfoData;
 
 #endif

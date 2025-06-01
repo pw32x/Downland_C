@@ -28,7 +28,7 @@ typedef struct
 typedef struct
 {
 	u8 spawnAreasCount;
-	DropSpawnArea* dropSpawnAreas;
+	const DropSpawnArea* dropSpawnAreas;
 } DropSpawnPositions;
 
 typedef struct

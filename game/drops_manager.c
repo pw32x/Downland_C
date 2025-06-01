@@ -68,7 +68,7 @@ void initDrop(Drop* drop,
 
 	// randomly pick a drop spawn area
 	u8 dropSpawnAreaIndex = dl_rand() % dropData->dropSpawnPositions->spawnAreasCount;
-	DropSpawnArea* dropSpawnArea = &dropData->dropSpawnPositions->dropSpawnAreas[dropSpawnAreaIndex];
+	const DropSpawnArea* dropSpawnArea = &dropData->dropSpawnPositions->dropSpawnAreas[dropSpawnAreaIndex];
 
 	// randomly pick a position in the drop spawn area
 	u8 dropSpawnPointX = dl_rand() % (dropSpawnArea->dropSpawnPointsCount + 1); // spawn points count is inclusive in the original

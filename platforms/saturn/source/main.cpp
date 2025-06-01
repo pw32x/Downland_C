@@ -12,8 +12,8 @@ extern "C"
 
 #include "downland_resource_loader_saturn.hpp"
 
-//GameData gameData;
-Resources resources;
+GameData* gameData = NULL;
+Resources* resources = NULL;
 
 const char* romFileNames[] = 
 {
@@ -61,11 +61,14 @@ int main()
     SRL::Core::Initialize(HighColor(20,10,50));
     Digital port0(0); // Initialize gamepad on port 0
   
+    gameData = (GameData*)dl_alloc(sizeof(GameData));
+    resources = (Resources*)dl_alloc(sizeof(Resources));
+
     int result = RESULT_UNKNOWNFAILURE;
 
     for (int loop = 0; loop < romFileNamesCount; loop++)
     {
-        result = DownlandResourceLoader::LoadResources(romFileNames[loop], &resources);
+        result = DownlandResourceLoader::LoadResources(romFileNames[loop], resources);
 
         if (result == RESULT_OK)
         {
@@ -73,7 +76,7 @@ int main()
         }
      }
 
-    //assert(romFoundAndLoaded);
+    Game_Init(gameData, resources);
 
     SRL::Tilemap::Interfaces::CubeTile* TestTilebin = new SRL::Tilemap::Interfaces::CubeTile("SPACE.BIN");//Load tilemap from cd to work RAM
     SRL::VDP2::NBG0::LoadTilemap(*TestTilebin);//Transfer tilemap from work RAM to VDP2 VRAM and register with NBG0
@@ -115,25 +118,31 @@ int main()
         SRL::Debug::Print(1,10,"Loading failed %d", result);
     }
 
-    SRL::Debug::Print(1,13,"GameData size %d", sizeof(GameData));
-    SRL::Debug::Print(1,14,"Resources size %d", sizeof(Resources));
+    //SRL::Debug::Print(1,13,"GameData size %d", sizeof(GameData));
+    //SRL::Debug::Print(1,14,"Resources size %d", sizeof(Resources));
+
+    SRL::Debug::Print(1,17,"player: %d", (u8)resources->roomResources[0].backgroundDrawData.drawCommandCount);
+    SRL::Debug::Print(1,18,"player: %d", (u8)resources->roomResources[1].backgroundDrawData.drawCommandCount);
+    SRL::Debug::Print(1,19,"player: %d", (u8)resources->roomResources[2].backgroundDrawData.drawCommandCount);
+    SRL::Debug::Print(1,20,"player: %d", (u8)resources->roomResources[3].backgroundDrawData.drawCommandCount);
+    SRL::Debug::Print(1,21,"player: %d", (u8)resources->roomResources[4].backgroundDrawData.drawCommandCount);
 
 
-    SRL::Debug::Print(1,16,"player: %d", (u8)resources.sprites_player[0]);
-    SRL::Debug::Print(1,17,"player: %d", (u8)resources.sprites_player[1]);
 
     SRL::Debug::Print(1,3,"VDP2 ScrollScreen Sample");
     
     //Main Game Loop 
     while(1)
     {
+        Game_Update(gameData, resources);
+
+        SRL::Core::Synchronize();
+
         //move positions of NBG0 and NBG1 scrolls:
         Nbg0Position += Vector2D(1.0, 1.0);
         Nbg1Position += Vector2D(-2.0, 1.0);
         SRL::VDP2::NBG0::SetPosition(Nbg0Position);
         SRL::VDP2::NBG1::SetPosition(Nbg1Position);
-        
-        SRL::Core::Synchronize();
     }
     return 0;
 }

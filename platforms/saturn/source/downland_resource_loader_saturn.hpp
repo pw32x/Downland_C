@@ -237,10 +237,17 @@ private:
 		return buffer;
 	}
 
+
+
 	static void loadBackgroundDrawData(const u8* fileBuffer, 
 									   u16 start, 
 									   BackgroundDrawData* backgroundDrawData)
 	{
+		// take into account that the rom starts at c000
+		start -= 0xc000; 
+
+		fileBuffer += start;
+
 		u8 sentinelValue = 0xff;
 
 		// go through the fileBuffer, counting the number of elements

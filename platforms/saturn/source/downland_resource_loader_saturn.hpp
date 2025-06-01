@@ -69,7 +69,6 @@ public:
 		resources->sprite_door				= getBytesSwapped(fileBuffer, 0xdf0a, 0xdf2a);
 		resources->sprites_drops			= getBytesSwapped(fileBuffer, 0xdf2a, 0xdf5a);
 		
-		/*
 		// generate bit shifted sprites
 		resources->bitShiftedSprites_player = buildBitShiftedSprites(resources->sprites_player, PLAYER_SPRITE_COUNT, PLAYER_SPRITE_ROWS, PLAYER_SPRITE_BYTES_PER_ROW);
 		resources->bitShiftedCollisionmasks_player = buildBitShiftedSprites(resources->collisionmasks_player, PLAYER_SPRITE_COUNT, PLAYER_COLLISION_MASK_ROWS, PLAYER_COLLISION_MASK_BYTES_PER_ROW);
@@ -86,6 +85,7 @@ public:
 		resources->pickupSprites[1] = resources->sprite_moneyBag;
 		resources->pickupSprites[2] = resources->sprite_key;
 
+		/*
 		// get shapes data
 		loadShapeDrawData(file, 0xd5f7, &resources->shapeDrawData_00_Stalactite);
 		loadShapeDrawData(file, 0xd60c, &resources->shapeDrawData_01_WallGoingDown);
@@ -125,19 +125,20 @@ public:
 		loadBackgroundDrawData(file, 0xd52f, &resources->roomResources[8].backgroundDrawData);
 		loadBackgroundDrawData(file, 0xd561, &resources->roomResources[9].backgroundDrawData);
 		loadBackgroundDrawData(file, 0xcec4, &resources->roomResources[10].backgroundDrawData);
+		*/
+		loadDropSpawnPositions(fileBuffer, 0xd073, &resources->roomResources[0].dropSpawnPositions);
+		loadDropSpawnPositions(fileBuffer, 0xd089, &resources->roomResources[1].dropSpawnPositions);
+		loadDropSpawnPositions(fileBuffer, 0xd09c, &resources->roomResources[2].dropSpawnPositions);
+		loadDropSpawnPositions(fileBuffer, 0xd0ac, &resources->roomResources[3].dropSpawnPositions);
+		loadDropSpawnPositions(fileBuffer, 0xd0bf, &resources->roomResources[4].dropSpawnPositions);
+		loadDropSpawnPositions(fileBuffer, 0xd0cf, &resources->roomResources[5].dropSpawnPositions);
+		loadDropSpawnPositions(fileBuffer, 0xd0df, &resources->roomResources[6].dropSpawnPositions);
+		loadDropSpawnPositions(fileBuffer, 0xd0e6, &resources->roomResources[7].dropSpawnPositions);
+		loadDropSpawnPositions(fileBuffer, 0xd0fc, &resources->roomResources[8].dropSpawnPositions);
+		loadDropSpawnPositions(fileBuffer, 0xd10c, &resources->roomResources[9].dropSpawnPositions);
+		loadDropSpawnPositions(fileBuffer, 0xd116, &resources->roomResources[10].dropSpawnPositions);
 
-		loadDropSpawnPositions(file, 0xd073, &resources->roomResources[0].dropSpawnPositions);
-		loadDropSpawnPositions(file, 0xd089, &resources->roomResources[1].dropSpawnPositions);
-		loadDropSpawnPositions(file, 0xd09c, &resources->roomResources[2].dropSpawnPositions);
-		loadDropSpawnPositions(file, 0xd0ac, &resources->roomResources[3].dropSpawnPositions);
-		loadDropSpawnPositions(file, 0xd0bf, &resources->roomResources[4].dropSpawnPositions);
-		loadDropSpawnPositions(file, 0xd0cf, &resources->roomResources[5].dropSpawnPositions);
-		loadDropSpawnPositions(file, 0xd0df, &resources->roomResources[6].dropSpawnPositions);
-		loadDropSpawnPositions(file, 0xd0e6, &resources->roomResources[7].dropSpawnPositions);
-		loadDropSpawnPositions(file, 0xd0fc, &resources->roomResources[8].dropSpawnPositions);
-		loadDropSpawnPositions(file, 0xd10c, &resources->roomResources[9].dropSpawnPositions);
-		loadDropSpawnPositions(file, 0xd116, &resources->roomResources[10].dropSpawnPositions);
-
+		/*
 		loadDoorInfoDataPositions(file, 0xd270, &resources->roomResources[0].doorInfoData);
 		loadDoorInfoDataPositions(file, 0xd27f, &resources->roomResources[1].doorInfoData);
 		loadDoorInfoDataPositions(file, 0xd29a, &resources->roomResources[2].doorInfoData);
@@ -345,29 +346,25 @@ private:
 
 		shapeDrawData->segments = segmentsMemory;
 	}
-
-	void loadDropSpawnPositions(FILE* file, u16 start, DropSpawnPositions* dropSpawnPositions)
+	*/
+	static void loadDropSpawnPositions(const u8* fileBuffer, 
+									   u16 start, 
+									   DropSpawnPositions* dropSpawnPositions)
 	{
 		// take into account that the rom starts at c000
 		start -= 0xc000; 
 
-		fseek(file, start, SEEK_SET);
-		fread(&dropSpawnPositions->spawnAreasCount, sizeof(dropSpawnPositions->spawnAreasCount), 1, file);
+		fileBuffer += start;
+		dropSpawnPositions->spawnAreasCount = *fileBuffer;
 
 		// in the data, the count is off by one.
 		dropSpawnPositions->spawnAreasCount++;
 
-		u16 bufferSize = dropSpawnPositions->spawnAreasCount * sizeof(ShapeSegment);
-		DropSpawnArea* dropSpawnAreasMemory = (DropSpawnArea*)dl_alloc(bufferSize);
+		fileBuffer++;
 
-		if (dropSpawnAreasMemory == NULL)
-			return;
-
-		fread(dropSpawnAreasMemory, bufferSize, 1, file);
-
-		dropSpawnPositions->dropSpawnAreas = dropSpawnAreasMemory;
+		dropSpawnPositions->dropSpawnAreas = (const DropSpawnArea*)fileBuffer;
 	}
-
+	/*
 	void loadDoorInfoDataPositions(FILE* file, u16 start, DoorInfoData* doorInfoData)
 	{
 		// take into account that the rom starts at c000
@@ -406,13 +403,13 @@ private:
 		doorInfoData->drawInfosCount = doorInfosCount;
 		doorInfoData->doorInfos = doorInfos;
 	}
-
+	*/
 	#define WIDTH_BYTES 2  // Original sprite width in bytes
 	#define HEIGHT 10      // Number of rows
 	#define SHIFT_COUNT 3  // Number of shifted versions
 
 	// assume two bytes per row
-	u8* buildBitShiftedSprites(const u8* spriteData, u8 spriteCount, u8 rowCount, u8 bytesPerRow)
+	static u8* buildBitShiftedSprites(const u8* spriteData, u8 spriteCount, u8 rowCount, u8 bytesPerRow)
 	{
 	#define DESTINATION_BYTES_PER_ROW	3
 	#define NUM_BIT_SHIFTS 4
@@ -445,9 +442,7 @@ private:
 
 		return bitShiftedSprites;
 	}
-	*/
 
-	
 };
 
 #endif 

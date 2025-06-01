@@ -110,21 +110,20 @@ public:
 		loadShapeDrawData(fileBuffer, 0xd72d, &resources->shapeDrawData_13_RediculouslyLongRope);
 		loadShapeDrawData(fileBuffer, 0xd74c, &resources->shapeDrawData_PreRope_Maybe);
 		loadShapeDrawData(fileBuffer, 0xd750, &resources->shapeDrawData_PostRope_Maybe);
-		/*
 
 		// get background resources
-		loadBackgroundDrawData(file, 0xd35e, &resources->roomResources[0].backgroundDrawData);
-		loadBackgroundDrawData(file, 0xd3a0, &resources->roomResources[1].backgroundDrawData);
-		loadBackgroundDrawData(file, 0xd3e4, &resources->roomResources[2].backgroundDrawData);
-		loadBackgroundDrawData(file, 0xd426, &resources->roomResources[3].backgroundDrawData);
-		loadBackgroundDrawData(file, 0xd467, &resources->roomResources[4].backgroundDrawData);
-		loadBackgroundDrawData(file, 0xd4a2, &resources->roomResources[5].backgroundDrawData);
-		loadBackgroundDrawData(file, 0xd4d9, &resources->roomResources[6].backgroundDrawData);
-		loadBackgroundDrawData(file, 0xd4f6, &resources->roomResources[7].backgroundDrawData);
-		loadBackgroundDrawData(file, 0xd52f, &resources->roomResources[8].backgroundDrawData);
-		loadBackgroundDrawData(file, 0xd561, &resources->roomResources[9].backgroundDrawData);
-		loadBackgroundDrawData(file, 0xcec4, &resources->roomResources[10].backgroundDrawData);
-		*/
+		loadBackgroundDrawData(fileBuffer, 0xd35e, &resources->roomResources[0].backgroundDrawData);
+		loadBackgroundDrawData(fileBuffer, 0xd3a0, &resources->roomResources[1].backgroundDrawData);
+		loadBackgroundDrawData(fileBuffer, 0xd3e4, &resources->roomResources[2].backgroundDrawData);
+		loadBackgroundDrawData(fileBuffer, 0xd426, &resources->roomResources[3].backgroundDrawData);
+		loadBackgroundDrawData(fileBuffer, 0xd467, &resources->roomResources[4].backgroundDrawData);
+		loadBackgroundDrawData(fileBuffer, 0xd4a2, &resources->roomResources[5].backgroundDrawData);
+		loadBackgroundDrawData(fileBuffer, 0xd4d9, &resources->roomResources[6].backgroundDrawData);
+		loadBackgroundDrawData(fileBuffer, 0xd4f6, &resources->roomResources[7].backgroundDrawData);
+		loadBackgroundDrawData(fileBuffer, 0xd52f, &resources->roomResources[8].backgroundDrawData);
+		loadBackgroundDrawData(fileBuffer, 0xd561, &resources->roomResources[9].backgroundDrawData);
+		loadBackgroundDrawData(fileBuffer, 0xcec4, &resources->roomResources[10].backgroundDrawData);
+
 		loadDropSpawnPositions(fileBuffer, 0xd073, &resources->roomResources[0].dropSpawnPositions);
 		loadDropSpawnPositions(fileBuffer, 0xd089, &resources->roomResources[1].dropSpawnPositions);
 		loadDropSpawnPositions(fileBuffer, 0xd09c, &resources->roomResources[2].dropSpawnPositions);
@@ -238,92 +237,60 @@ private:
 		return buffer;
 	}
 
-	/*
-	u8 workBuffer[70];
-	u8* getBytesUntilSentinel(FILE* file, u16 start, u8 sentinelValue, u16* bufferSize)
-	{
-		// take into account that the rom starts at c000
-		start -= 0xc000; 
-
-		fseek(file, start, SEEK_SET);
-
-		*bufferSize = 0xffff;
-		u8 readCount = 0;
-		u8 value;
-
-		while (fread(&value, sizeof(value), 1, file))
-		{
-			readCount++;
-			if (value == sentinelValue)
-			{
-				fseek(file, start, SEEK_SET);
-				fread(workBuffer, readCount, 1, file);
-
-				*bufferSize = readCount;
-
-				return workBuffer;
-			}
-		}
-
-		return FALSE;
-	}
-
-	void loadBackgroundDrawData(FILE* file, u16 start, BackgroundDrawData* backgroundDrawData)
+	static void loadBackgroundDrawData(const u8* fileBuffer, 
+									   u16 start, 
+									   BackgroundDrawData* backgroundDrawData)
 	{
 		u8 sentinelValue = 0xff;
 
-		// get the draw buffer
-		u16 bufferSize;
-		u8* rawBuffer = getBytesUntilSentinel(file, start, sentinelValue, &bufferSize);
-
-		// go through the buffer, counting the number of elements
+		// go through the fileBuffer, counting the number of elements
 		// we need to create.
 		u8 drawCommandCount = 0;
-		u8* rawBufferRunner = rawBuffer;
-		while (*rawBufferRunner != sentinelValue)
+		const u8* fileBufferRunner = fileBuffer;
+		while (*fileBufferRunner != sentinelValue)
 		{
 			drawCommandCount++;
 
 			// if the draw shape code is prefixed with 0x80, then 
 			// it's meant to be repeated. Skip the next byte because
 			// it's the count.
-			if ((*rawBufferRunner & 0x80) != 0)
-				rawBufferRunner++;
+			if ((*fileBufferRunner & 0x80) != 0)
+				fileBufferRunner++;
 
-			rawBufferRunner++;
+			fileBufferRunner++;
 		}
 
 		// create the list of background draw commands
 		BackgroundDrawCommand* backgroundDrawCommands = (BackgroundDrawCommand*)dl_alloc(drawCommandCount * sizeof(BackgroundDrawCommand));
 
 		// fill the background draw commands array
-		rawBufferRunner = rawBuffer;
+		fileBufferRunner = fileBuffer;
 		BackgroundDrawCommand* backgroundDrawCommandsRunner = backgroundDrawCommands;
 
 		u8 repeatCodeIndicator = 0x80; // a shape code with this flag means that it repeats
 
-		while (*rawBufferRunner != sentinelValue)
+		while (*fileBufferRunner != sentinelValue)
 		{
-			if ((*rawBufferRunner & repeatCodeIndicator) != 0)
+			if ((*fileBufferRunner & repeatCodeIndicator) != 0)
 			{
-				backgroundDrawCommandsRunner->shapeCode = (*rawBufferRunner) & ~repeatCodeIndicator;
-				rawBufferRunner++;		
-				backgroundDrawCommandsRunner->drawCount = *rawBufferRunner;
+				backgroundDrawCommandsRunner->shapeCode = (*fileBufferRunner) & ~repeatCodeIndicator;
+				fileBufferRunner++;		
+				backgroundDrawCommandsRunner->drawCount = *fileBufferRunner;
 			}
 			else
 			{
-				backgroundDrawCommandsRunner->shapeCode = *rawBufferRunner;
+				backgroundDrawCommandsRunner->shapeCode = *fileBufferRunner;
 				backgroundDrawCommandsRunner->drawCount = 1;
 			}
 
-			rawBufferRunner++;
+			fileBufferRunner++;
 			backgroundDrawCommandsRunner++;
 		}
 
 		backgroundDrawData->drawCommandCount = drawCommandCount;
 		backgroundDrawData->backgroundDrawCommands = backgroundDrawCommands;
 	}
-	*/
+	
 	static void loadShapeDrawData(const u8* fileBuffer, 
 								  u16 start, 
 								  ShapeDrawData* shapeDrawData)

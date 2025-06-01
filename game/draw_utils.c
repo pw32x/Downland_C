@@ -794,7 +794,7 @@ void drawBackground(const BackgroundDrawData* backgroundDrawData,
 	g_crtMaskIndexToUse = CRT_MASK_NORMAL;
 
 	int counter = backgroundDrawData->drawCommandCount;
-	BackgroundDrawCommand* backgroundDrawCommandRunner = backgroundDrawData->backgroundDrawCommands;
+	const BackgroundDrawCommand* backgroundDrawCommandRunner = backgroundDrawData->backgroundDrawCommands;
 
 	while (counter--)
 	{

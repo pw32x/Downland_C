@@ -25,7 +25,7 @@ typedef struct
 typedef struct
 {
     u8 drawCommandCount;
-    BackgroundDrawCommand* backgroundDrawCommands;
+    const BackgroundDrawCommand* backgroundDrawCommands;
 } BackgroundDrawData;
 
 #endif 

@@ -55,6 +55,148 @@ void Sound_Stop(u8 soundindex)
 }
 }
 
+// Load color palettes here
+int16_t LoadPalette(SRL::Bitmap::BitmapInfo* bitmap)
+{
+    // Get free CRAM bank
+    int32_t id = SRL::CRAM::GetFreeBank(bitmap->ColorMode);
+
+    if (id >= 0)
+    {
+        SRL::CRAM::Palette cramPalette(bitmap->ColorMode, id);
+
+        if (cramPalette.Load((HighColor*)bitmap->Palette->Colors, 
+                             bitmap->Palette->Count) >= 0)
+        {
+            // Mark bank as in use
+            SRL::CRAM::SetBankUsedState(id, bitmap->ColorMode, true);
+            return id;
+        }
+
+        return id;
+    }
+
+    // No free bank found
+    return -1;
+}
+
+#define SCREEN_WIDTH 320
+#define SCREEN_HEIGHT 240
+#define HALF_SCREEN_WIDTH (SCREEN_WIDTH / 2)
+#define HALF_SCREEN_HEIGHT (SCREEN_HEIGHT / 2)
+
+void setupQuad(SRL::Math::Types::Fxp x, 
+               SRL::Math::Types::Fxp y, 
+               SRL::Math::Types::Fxp width, 
+               SRL::Math::Types::Fxp height, 
+               SRL::Math::Types::Vector2D points[4])
+{
+    width -= 1;
+    height -= 1;
+    x -= HALF_SCREEN_WIDTH;
+    y -= HALF_SCREEN_HEIGHT;
+
+    points[0].X = x;
+    points[0].Y = y;
+    points[1].X = x + width;
+    points[1].Y = y;
+    points[2].X = x + width;
+    points[2].Y = y + height;
+    points[3].X = x;
+    points[3].Y = y + height;
+}
+
+class Sprite
+{
+public:
+    int16_t m_textureIndex;
+    int16_t m_x;
+    int16_t m_y;
+    int16_t m_width;
+    int16_t m_height;
+
+public:
+    Sprite(int16_t x, 
+           int16_t y, 
+           SRL::Bitmap::IBitmap* bitmap) 
+        : m_textureIndex(-1), 
+          m_x(x), 
+          m_y(y),
+          m_width(0),
+          m_height(0)
+    {
+        m_textureIndex = SRL::VDP1::TryLoadTexture(bitmap, LoadPalette);
+
+        m_width = bitmap->GetInfo().Width;
+        m_height = bitmap->GetInfo().Height;
+    }
+
+    Sprite(int16_t _x, int16_t _y, const char* filename) 
+        : m_textureIndex(-1), 
+          m_x(_x), 
+          m_y(_y),
+          m_width(0),
+          m_height(0)
+    {
+        // Load texture
+        SRL::Bitmap::TGA *tga = new SRL::Bitmap::TGA(filename); // Loads TGA file into main RAM
+
+        m_textureIndex = SRL::VDP1::TryLoadTexture(tga, LoadPalette);    // Loads TGA into VDP1
+
+        m_width = tga->GetInfo().Width;
+        m_height = tga->GetInfo().Height;
+
+        delete tga;
+    }
+
+    void Draw()
+    {
+        static SRL::Math::Types::Vector2D points[4];
+
+        setupQuad(m_x, 
+                  m_y, 
+                  m_width, 
+                  m_height, 
+                  points);
+
+        // Simple sprite
+        SRL::Scene2D::DrawSprite(m_textureIndex, points, 500);
+    }
+};
+
+class MyBitmap : public SRL::Bitmap::IBitmap
+{
+public:
+    MyBitmap(u8* bitmapData, 
+             int width, 
+             int height, 
+             SRL::Types::HighColor* paletteColors, 
+             size_t numColors) 
+        : m_bitmapData(bitmapData),
+          m_palette(paletteColors, numColors),
+          m_bitmapInfo(width, height, &m_palette)
+    {
+
+    }
+
+    virtual uint8_t* GetData()
+    {
+        return m_bitmapData;
+    }
+        
+    /** @brief Get bitmap info
+        * @return Bitmap info
+        */
+    virtual SRL::Bitmap::BitmapInfo GetInfo()
+    {
+        return m_bitmapInfo;
+    }
+
+public:
+    u8* m_bitmapData;
+    SRL::Bitmap::Palette m_palette;
+    SRL::Bitmap::BitmapInfo m_bitmapInfo;
+};
 
 int main()
 {
@@ -77,6 +219,57 @@ int main()
      }
 
     Game_Init(gameData, resources);
+
+    u8 customSprite[16*16] = 
+    {
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        1, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 2, 1,
+        1, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 2, 1,
+        1, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 2, 1,
+        1, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 2, 1,
+        1, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 2, 1,
+        1, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 2, 1,
+        1, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 2, 1,
+        1, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 2, 1,
+        1, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 2, 1,
+        1, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 2, 1,
+        1, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 2, 1,
+        1, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 2, 1,
+        1, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 2, 1,
+        1, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 2, 1,
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
+    };
+
+    const int numColors = 256;
+    SRL::Types::HighColor customPalette[numColors] =
+    {
+        // black, blue, orange, white
+        0x0000, 0x001F, 0xFC80, 0xFFFF, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
+        0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
+        0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
+        0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
+        0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
+        0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
+        0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
+        0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
+        0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
+        0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
+        0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
+        0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
+        0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
+        0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
+        0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
+        0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000
+    };
+
+    MyBitmap myBitmap(customSprite, 16, 16, customPalette, numColors);
+
+    Sprite mySpriteCustom(160, 40, &myBitmap);
+
+    Sprite mySprite1(0, 40, "TEST.TGA");
+    Sprite mySprite2(80, 120, "TEST8BPP.TGA");
+    Sprite mySprite3(160, 160, "TEST4BPP.TGA");
+
 
     SRL::Tilemap::Interfaces::CubeTile* TestTilebin = new SRL::Tilemap::Interfaces::CubeTile("SPACE.BIN");//Load tilemap from cd to work RAM
     SRL::VDP2::NBG0::LoadTilemap(*TestTilebin);//Transfer tilemap from work RAM to VDP2 VRAM and register with NBG0
@@ -109,34 +302,30 @@ int main()
     SRL::VDP2::NBG2::SetPosition(Nbg2Position);//Set the static screen position for SRL Logo
     SRL::VDP2::NBG2::ScrollEnable();//enable display of NBG2
 
-    if (result == RESULT_OK)
-    {
-        SRL::Debug::Print(1,10,"Loading rom all good");
-    }
-    else
-    {
-        SRL::Debug::Print(1,10,"Loading failed %d", result);
-    }
+    SRL::Debug::Print(1,13,"ColorMode %d", myBitmap.m_bitmapInfo.ColorMode);
+    SRL::Debug::Print(1,14,"Color count %d", myBitmap.m_bitmapInfo.Palette->Count);
+    SRL::Debug::Print(1,22,"Color count 2 %d", myBitmap.m_bitmapInfo.colorCount);
+    
 
     //SRL::Debug::Print(1,13,"GameData size %d", sizeof(GameData));
     //SRL::Debug::Print(1,14,"Resources size %d", sizeof(Resources));
 
-    SRL::Debug::Print(1,17,"player: %d", (u8)resources->roomResources[0].backgroundDrawData.drawCommandCount);
-    SRL::Debug::Print(1,18,"player: %d", (u8)resources->roomResources[1].backgroundDrawData.drawCommandCount);
-    SRL::Debug::Print(1,19,"player: %d", (u8)resources->roomResources[2].backgroundDrawData.drawCommandCount);
-    SRL::Debug::Print(1,20,"player: %d", (u8)resources->roomResources[3].backgroundDrawData.drawCommandCount);
-    SRL::Debug::Print(1,21,"player: %d", (u8)resources->roomResources[4].backgroundDrawData.drawCommandCount);
+    //SRL::Debug::Print(1,17,"player: %d", (u8)resources->roomResources[0].backgroundDrawData.drawCommandCount);
+    //SRL::Debug::Print(1,18,"player: %d", (u8)resources->roomResources[1].backgroundDrawData.drawCommandCount);
+    //SRL::Debug::Print(1,19,"player: %d", (u8)resources->roomResources[2].backgroundDrawData.drawCommandCount);
+    //SRL::Debug::Print(1,20,"player: %d", (u8)resources->roomResources[3].backgroundDrawData.drawCommandCount);
+    //SRL::Debug::Print(1,21,"player: %d", (u8)resources->roomResources[4].backgroundDrawData.drawCommandCount);
 
-
-
-    SRL::Debug::Print(1,3,"VDP2 ScrollScreen Sample");
-    
-    //Main Game Loop 
     while(1)
     {
         Game_Update(gameData, resources);
 
         SRL::Core::Synchronize();
+
+        mySprite1.Draw();
+        mySprite2.Draw();
+        mySprite3.Draw();
+        mySpriteCustom.Draw();
 
         //move positions of NBG0 and NBG1 scrolls:
         Nbg0Position += Vector2D(1.0, 1.0);

@@ -58,16 +58,16 @@ public:
 
 		
 		// get sprites
-		resources->sprites_player			= getBytesSwapped(fileBuffer, 0xdcd7, 0xde17);
-		resources->collisionmasks_player	= getBytesSwapped(fileBuffer, 0xde17, 0xde7b);
-		resources->sprites_bouncyBall		= getBytesSwapped(fileBuffer, 0xde7b, 0xde9b);
-		resources->sprites_bird				= getBytesSwapped(fileBuffer, 0xde9b, 0xdeb3);
-		resources->sprite_moneyBag			= getBytesSwapped(fileBuffer, 0xdeb3, 0xdec7);
-		resources->sprite_diamond			= getBytesSwapped(fileBuffer, 0xdec7, 0xdedb);
-		resources->sprite_key				= getBytesSwapped(fileBuffer, 0xdedb, 0xdeef);
-		resources->sprite_playerSplat		= getBytesSwapped(fileBuffer, 0xdeef, 0xdf0a);
-		resources->sprite_door				= getBytesSwapped(fileBuffer, 0xdf0a, 0xdf2a);
-		resources->sprites_drops			= getBytesSwapped(fileBuffer, 0xdf2a, 0xdf5a);
+		resources->sprites_player			= getBytes(fileBuffer, 0xdcd7);
+		resources->collisionmasks_player	= getBytes(fileBuffer, 0xde17);
+		resources->sprites_bouncyBall		= getBytes(fileBuffer, 0xde7b);
+		resources->sprites_bird				= getBytes(fileBuffer, 0xde9b);
+		resources->sprite_moneyBag			= getBytes(fileBuffer, 0xdeb3);
+		resources->sprite_diamond			= getBytes(fileBuffer, 0xdec7);
+		resources->sprite_key				= getBytes(fileBuffer, 0xdedb);
+		resources->sprite_playerSplat		= getBytes(fileBuffer, 0xdeef);
+		resources->sprite_door				= getBytes(fileBuffer, 0xdf0a);
+		resources->sprites_drops			= getBytes(fileBuffer, 0xdf2a);
 		
 		// generate bit shifted sprites
 		resources->bitShiftedSprites_player = buildBitShiftedSprites(resources->sprites_player, PLAYER_SPRITE_COUNT, PLAYER_SPRITE_ROWS, PLAYER_SPRITE_BYTES_PER_ROW);

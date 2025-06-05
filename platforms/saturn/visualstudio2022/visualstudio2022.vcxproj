@@ -143,7 +143,12 @@
     <ClInclude Include="..\..\..\game\rooms\room_types.h" />
     <ClInclude Include="..\..\..\game\sound.h" />
     <ClInclude Include="..\..\..\game\string_utils.h" />
+    <ClInclude Include="..\source\bitmap_utils.hpp" />
     <ClInclude Include="..\source\downland_resource_loader_saturn.hpp" />
+    <ClInclude Include="..\source\game_runner.hpp" />
+    <ClInclude Include="..\source\palette_utils.hpp" />
+    <ClInclude Include="..\source\sprite.hpp" />
+    <ClInclude Include="..\source\image_utils.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

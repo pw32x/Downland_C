@@ -53,12 +53,33 @@ public:
         Game_Update(&m_gameData, m_resources);
     }
 
-    void draw()
-    {
 
+
+    void drawDrops(const GameData* gameData)
+    {
+        // draw drops
+        const Drop* dropsRunner = gameData->dropData.drops;
+
+        for (int loop = 0; loop < NUM_DROPS; loop++)
+        {
+            if ((s8)dropsRunner->wiggleTimer < 0 || // wiggling
+                dropsRunner->wiggleTimer > 1)   // falling
+            {
+                m_dropSprite.draw(dropsRunner->x << 1,
+                                  dropsRunner->y >> 8,
+                                  0);
+            }
+
+            dropsRunner++;
+        }
     }
 
-private:
+    void draw()
+    {
+        drawDrops(&m_gameData);
+    }
+
+public:
 
     GameData m_gameData;
     Resources* m_resources;

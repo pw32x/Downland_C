@@ -146,7 +146,9 @@
     <ClInclude Include="..\source\bitmap_utils.hpp" />
     <ClInclude Include="..\source\downland_resource_loader_saturn.hpp" />
     <ClInclude Include="..\source\game_runner.hpp" />
+    <ClInclude Include="..\source\geometry_helpers.hpp" />
     <ClInclude Include="..\source\palette_utils.hpp" />
+    <ClInclude Include="..\source\saturn.hpp" />
     <ClInclude Include="..\source\sprite.hpp" />
     <ClInclude Include="..\source\image_utils.hpp" />
   </ItemGroup>

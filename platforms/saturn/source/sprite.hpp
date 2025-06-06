@@ -1,6 +1,13 @@
 #ifndef SPRITE_INCLUDE_H
 #define SPRITE_INCLUDE_H
 
+#include <srl.hpp>
+
+#include "palette_utils.hpp"
+#include "bitmap_utils.hpp"
+#include "geometry_helpers.hpp"
+#include "image_utils.hpp"
+
 extern "C"
 {
 #include "base_types.h"
@@ -12,8 +19,8 @@ class Sprite
 {
 public:
     Sprite(const u8* originalSprite, 
-           u8 width, 
-           u8 height, 
+           s16 width, 
+           s16 height, 
            u8 numFrames)
         : m_originalSprite(originalSprite),
           m_width(width),
@@ -21,25 +28,29 @@ public:
           m_numFrames(numFrames),
           m_frameTextureIndexes(NULL)
     {
-        /*
-        const u8* spriteRunner = originalSprite;
+        m_frameTextureIndexes = new s16[numFrames];
 
-        std::vector<u32> spriteFrame;
-        spriteFrame.resize(width * height);
+        u8* buffer = new u8[width * height];
+
+        ImageUtils::ImageConverter::convert1bppImageTo8bppCrtEffectImage(originalSprite,
+                                                                         buffer,
+                                                                         width,
+                                                                         height,
+                                                                         ImageUtils::ImageConverter::CrtColor::Blue);
 
         for (int loop = 0; loop < numFrames; loop++)
         {
-            SDLUtils_convert1bppImageTo32bppCrtEffectImage(spriteRunner,
-                                                           spriteFrame.data(),
-                                                           width,
-                                                           height,
-                                                           CrtColor::Blue);
+            BitmapUtils::InMemoryBitmap inMemoryBitmap(buffer, 
+                                                       width, 
+                                                       height, 
+                                                       PaletteUtils::g_downlandPalette, 
+                                                       PaletteUtils::g_downlandPaletteColorsCount);
 
-            m_frames.push_back(spriteFrame);
-
-            spriteRunner += (width / 8) * height;
+            m_frameTextureIndexes[loop] = SRL::VDP1::TryLoadTexture(&inMemoryBitmap, 
+                                                                    PaletteUtils::PaletteLoader::LoadDownlandPalette);
         }
-        */
+
+        delete [] buffer;
     }
 
     void updateSprite(u8 frameNumber, const u8* originalSprite)
@@ -55,10 +66,24 @@ public:
         */
     }
 
+    void draw(s16 x, s16 y, s16 frameNumber)
+    {
+        SRL::Math::Types::Vector2D points[4];
+
+        GeometryHelpers::Quad::setup(x, 
+                                     y, 
+                                     m_width, 
+                                     m_height, 
+                                     points);
+
+        // Simple sprite
+        SRL::Scene2D::DrawSprite(m_frameTextureIndexes[frameNumber], points, 500);
+    }
+
 public:
 
-	u8 m_width;
-	u8 m_height;
+	s16 m_width;
+	s16 m_height;
 	u8 m_numFrames;
     s16* m_frameTextureIndexes;
 	const u8* m_originalSprite;

@@ -9,6 +9,7 @@ extern "C"
 
 #include "game_runner.hpp"
 
+
 extern uint16_t VDP2_CYCA0L;
 extern uint16_t VDP2_CYCA0U;
 extern uint16_t VDP2_CYCA1L;
@@ -42,32 +43,6 @@ void Sound_Stop(u8 soundindex)
 }
 }
 
-
-#define SCREEN_WIDTH 320
-#define SCREEN_HEIGHT 240
-#define HALF_SCREEN_WIDTH (SCREEN_WIDTH / 2)
-#define HALF_SCREEN_HEIGHT (SCREEN_HEIGHT / 2)
-
-void setupQuad(SRL::Math::Types::Fxp x, 
-               SRL::Math::Types::Fxp y, 
-               SRL::Math::Types::Fxp width, 
-               SRL::Math::Types::Fxp height, 
-               SRL::Math::Types::Vector2D points[4])
-{
-    width -= 1;
-    height -= 1;
-    x -= HALF_SCREEN_WIDTH;
-    y -= HALF_SCREEN_HEIGHT;
-
-    points[0].X = x;
-    points[0].Y = y;
-    points[1].X = x + width;
-    points[1].Y = y;
-    points[2].X = x + width;
-    points[2].Y = y + height;
-    points[3].X = x;
-    points[3].Y = y + height;
-}
 
 class GameObject
 {
@@ -116,11 +91,11 @@ public:
     {
         static SRL::Math::Types::Vector2D points[4];
 
-        setupQuad(m_x, 
-                  m_y, 
-                  m_width, 
-                  m_height, 
-                  points);
+        GeometryHelpers::Quad::setup(m_x, 
+                                     m_y, 
+                                     m_width, 
+                                     m_height, 
+                                     points);
 
         // Simple sprite
         SRL::Scene2D::DrawSprite(m_textureIndex, points, 500);
@@ -183,32 +158,19 @@ int main()
                                                                      16,
                                                                      ImageUtils::ImageConverter::CrtColor::Blue);
 
-    const int numColors = 256;
-    SRL::Types::HighColor customPalette[numColors] =
-    {
-        // black, blue, orange, white
-        0x0000, 0x001F, 0xFC80, 0xFFFF, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
-        0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
-        0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
-        0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
-        0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
-        0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
-        0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
-        0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
-        0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
-        0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
-        0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
-        0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
-        0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
-        0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
-        0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
-        0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000
-    };
 
 
+    BitmapUtils::InMemoryBitmap myBitmap(customSprite, 
+                                         16, 
+                                         16, 
+                                         PaletteUtils::g_downlandPalette, 
+                                         PaletteUtils::g_downlandPaletteColorsCount);
 
-    BitmapUtils::InMemoryBitmap myBitmap(customSprite, 16, 16, customPalette, numColors);
-    BitmapUtils::InMemoryBitmap myBitmap2(playerObjectBuffer, 16, 16, customPalette, numColors);
+    BitmapUtils::InMemoryBitmap myBitmap2(playerObjectBuffer, 
+                                          16, 
+                                          16, 
+                                          PaletteUtils::g_downlandPalette, 
+                                          PaletteUtils::g_downlandPaletteColorsCount);
 
     GameObject myCustomObject(160, 40, &myBitmap);
     GameObject playerObject(220, 40, &myBitmap2);
@@ -218,6 +180,7 @@ int main()
     GameObject myObject3(160, 160, "TEST4BPP.TGA");
 
 
+    /*
     SRL::Tilemap::Interfaces::CubeTile* TestTilebin = new SRL::Tilemap::Interfaces::CubeTile("SPACE.BIN");//Load tilemap from cd to work RAM
     SRL::VDP2::NBG0::LoadTilemap(*TestTilebin);//Transfer tilemap from work RAM to VDP2 VRAM and register with NBG0
     delete TestTilebin;//free work RAM
@@ -226,6 +189,7 @@ int main()
     SRL::VDP2::NBG1::LoadTilemap(*TestTilebin);//Transfer tilemap from work RAM to VDP2 VRAM and register with NBG1
     delete TestTilebin;//free work RAM
    
+
     //Demonstrate NBG2 loading with Tilemap converted from Bitmap:
     SRL::Bitmap::TGA* logo = new SRL::Bitmap::TGA("LOGO1.TGA");//Load Bitmap image to work RAM
     SRL::Tilemap::Interfaces::Bmp2Tile* TestTilebmp = new SRL::Tilemap::Interfaces::Bmp2Tile(*logo);//convert bitmap to tilemap
@@ -248,11 +212,16 @@ int main()
     SRL::VDP2::NBG2::SetPriority(SRL::VDP2::Priority::Layer4);// Set NBG2 priority between NBG0 and NBG1
     SRL::VDP2::NBG2::SetPosition(Nbg2Position);//Set the static screen position for SRL Logo
     SRL::VDP2::NBG2::ScrollEnable();//enable display of NBG2
+    */
+    //SRL::Debug::Print(1,13,"ColorMode %d", myBitmap.m_bitmapInfo.ColorMode);
+    //SRL::Debug::Print(1,14,"Color count %d", myBitmap.m_bitmapInfo.Palette->Count);
+    //SRL::Debug::Print(1,22,"sizeof(size_t) %d", sizeof(size_t));
 
-    SRL::Debug::Print(1,13,"ColorMode %d", myBitmap.m_bitmapInfo.ColorMode);
-    SRL::Debug::Print(1,14,"Color count %d", myBitmap.m_bitmapInfo.Palette->Count);
-    SRL::Debug::Print(1,22,"sizeof(size_t) %d", sizeof(size_t));
-    
+    //SRL::Debug::Print(1,12,"width %d", g_gameRunner->m_dropSprite.m_width);
+	//SRL::Debug::Print(1,13,"height %d", g_gameRunner->m_dropSprite.m_height);
+	//SRL::Debug::Print(1,14,"num frames %d", g_gameRunner->m_dropSprite.m_numFrames);
+    //SRL::Debug::Print(1,15,"frame tex index %d", g_gameRunner->m_dropSprite.m_frameTextureIndexes[0]);
+    //SRL::Debug::Print(1,16,"frame tex index %d", g_gameRunner->m_dropSprite.m_frameTextureIndexes[1]);
 
     //SRL::Debug::Print(1,13,"GameData size %d", sizeof(GameData));
     //SRL::Debug::Print(1,14,"Resources size %d", sizeof(Resources));
@@ -269,19 +238,27 @@ int main()
 
         SRL::Core::Synchronize();
 
+        const Drop* drop = &g_gameRunner->m_gameData.dropData.drops[0];
+
+        //SRL::Debug::Print(1,17,"x %02d", drop->x << 1);
+	    //SRL::Debug::Print(1,18,"y %02d", drop->y >> 8);
+
+        //myObject1.m_x = drop->x << 1;
+        //myObject1.m_y = drop->y >> 8;
+
         g_gameRunner->draw();
 
-        myObject1.Draw();
-        myObject2.Draw();
-        myObject3.Draw();
+        //myObject1.Draw();
+        //myObject2.Draw();
+        //myObject3.Draw();
         myCustomObject.Draw();
         playerObject.Draw();
 
         //move positions of NBG0 and NBG1 scrolls:
-        Nbg0Position += Vector2D(1.0, 1.0);
-        Nbg1Position += Vector2D(-2.0, 1.0);
-        SRL::VDP2::NBG0::SetPosition(Nbg0Position);
-        SRL::VDP2::NBG1::SetPosition(Nbg1Position);
+        //Nbg0Position += Vector2D(1.0, 1.0);
+        //Nbg1Position += Vector2D(-2.0, 1.0);
+        //SRL::VDP2::NBG0::SetPosition(Nbg0Position);
+        //SRL::VDP2::NBG1::SetPosition(Nbg1Position);
     }
     return 0;
 }

@@ -180,11 +180,45 @@ int main()
     GameObject myObject3(160, 160, "TEST4BPP.TGA");
 
 
-    /*
-    SRL::Tilemap::Interfaces::CubeTile* TestTilebin = new SRL::Tilemap::Interfaces::CubeTile("SPACE.BIN");//Load tilemap from cd to work RAM
-    SRL::VDP2::NBG0::LoadTilemap(*TestTilebin);//Transfer tilemap from work RAM to VDP2 VRAM and register with NBG0
-    delete TestTilebin;//free work RAM
 
+    //SRL::Tilemap::Interfaces::CubeTile* TestTilebin = new SRL::Tilemap::Interfaces::CubeTile("SPACE.BIN");//Load tilemap from cd to work RAM
+    //SRL::VDP2::NBG0::LoadTilemap(*TestTilebin);//Transfer tilemap from work RAM to VDP2 VRAM and register with NBG0
+    //delete TestTilebin;//free work RAM
+
+    u8* frameBuffer8bpp = new u8[FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT];
+
+    ImageUtils::ImageConverter::convert1bppImageTo8bppCrtEffectImage(g_gameRunner->m_gameData.cleanBackground,
+                                                                     frameBuffer8bpp,
+                                                                     FRAMEBUFFER_WIDTH,
+                                                                     FRAMEBUFFER_HEIGHT,
+                                                                     ImageUtils::ImageConverter::CrtColor::Blue);
+
+    //for (int loop = 0; loop < FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT; loop++)
+    //    frameBuffer8bpp[loop] = 0;
+    //
+    //for (int loop = 0; loop < SCREEN_WIDTH; loop++)
+    //    frameBuffer8bpp[loop] = loop % 4;
+
+    BitmapUtils::InMemoryBitmap* framebufferBitmap = new BitmapUtils::InMemoryBitmap(frameBuffer8bpp, 
+                                                                                     FRAMEBUFFER_WIDTH, 
+                                                                                     FRAMEBUFFER_HEIGHT, 
+                                                                                     PaletteUtils::g_downlandPalette, 
+                                                                                     PaletteUtils::g_downlandPaletteColorsCount);
+
+    SRL::Bitmap::TGA* logo = new SRL::Bitmap::TGA("LOGO1.TGA");//Load Bitmap image to work RAM
+    SRL::Tilemap::Interfaces::Bmp2Tile* TestTilebmp = new SRL::Tilemap::Interfaces::Bmp2Tile(*logo);//convert bitmap to tilemap
+
+    SRL::Tilemap::Interfaces::Bmp2Tile* tileSet = new SRL::Tilemap::Interfaces::Bmp2Tile(*framebufferBitmap);
+    //SRL::VDP2::NBG0::LoadTilemap(*TestTilebmp);//Transfer tilemap from work RAM to VDP2 VRAM and register with NBG0
+    SRL::VDP2::NBG0::LoadTilemap(*tileSet);
+    
+
+    delete TestTilebmp;//free tilemap from work ram 
+    delete tileSet;//free work RAM
+    delete [] frameBuffer8bpp;
+    delete framebufferBitmap;
+
+    /*
     TestTilebin = new SRL::Tilemap::Interfaces::CubeTile("FOG256.BIN");//Load fog tilemap from cd to work RAM
     SRL::VDP2::NBG1::LoadTilemap(*TestTilebin);//Transfer tilemap from work RAM to VDP2 VRAM and register with NBG1
     delete TestTilebin;//free work RAM
@@ -197,13 +231,16 @@ int main()
     delete TestTilebmp;//free tilemap from work ram 
     delete logo;//free original bitmap from work ram
     //store XY screen positions of Background scrolls:
+    */
     Vector2D Nbg0Position(0.0, 0.0);
+    /*
     Vector2D Nbg1Position(0.0, 0.0);
     Vector2D Nbg2Position(-64.0, -16.0);
-
+    */
     SRL::VDP2::NBG0::SetPriority(SRL::VDP2::Priority::Layer2);//set NBG0 priority
     SRL::VDP2::NBG0::ScrollEnable();//enable display of NBG0 
 
+    /*
     SRL::VDP2::NBG1::SetPriority(SRL::VDP2::Priority::Layer6);//set NBG1 priority
     SRL::VDP2::NBG1::SetOpacity(0.5);//set opacity of NBG1
     SRL::VDP2::NBG1::TransparentDisable();//disable fully transparent pixels on Fog(its all half transparent)  

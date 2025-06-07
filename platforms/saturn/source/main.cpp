@@ -103,8 +103,44 @@ public:
 };
 
 
+void Update_Controls(int controllerIndex, 
+                     Digital* joystickPorts[2],
+                     JoystickState* joystickState)
+{
+    Digital* port = joystickPorts[controllerIndex];
 
+    if (!port->IsConnected())
+        return;
 
+    // Check D-Pad
+    bool leftDown = port->IsHeld(Digital::Button::Left);
+    bool rightDown = port->IsHeld(Digital::Button::Right);
+    bool upDown = port->IsHeld(Digital::Button::Up);
+    bool downDown = port->IsHeld(Digital::Button::Down);
+    bool jumpDown = port->IsHeld(Digital::Button::A) || port->IsHeld(Digital::Button::B) || port->IsHeld(Digital::Button::C);
+    bool startDown = port->IsHeld(Digital::Button::START);
+
+    joystickState->leftPressed = !joystickState->leftDown & leftDown;
+    joystickState->rightPressed = !joystickState->rightDown & rightDown;
+    joystickState->upPressed = !joystickState->upDown & upDown;
+    joystickState->downPressed =  !joystickState->downDown & downDown;
+    joystickState->jumpPressed =  !joystickState->jumpDown & jumpDown;
+    joystickState->startPressed = !joystickState->startDown & startDown;
+
+    joystickState->leftReleased = joystickState->leftDown & !leftDown;
+    joystickState->rightReleased = joystickState->rightDown & !rightDown;
+    joystickState->upReleased = joystickState->upDown & !upDown;
+    joystickState->downReleased =  joystickState->downDown & !downDown;
+    joystickState->jumpReleased =  joystickState->jumpDown & !jumpDown;
+    joystickState->startReleased = joystickState->startPressed & !startDown;
+
+    joystickState->leftDown = leftDown;
+    joystickState->rightDown = rightDown;
+    joystickState->upDown = upDown;
+    joystickState->downDown = downDown;
+    joystickState->jumpDown = jumpDown;
+    joystickState->startDown = startDown;
+}
 
 Resources* g_resources;
 GameRunner* g_gameRunner;
@@ -113,7 +149,8 @@ int main()
 {
     SRL::Core::Initialize(HighColor(20,10,50));
     Digital port0(0); // Initialize gamepad on port 0
-  
+    Digital port1(1); // Initialize gamepad on port 1
+    Digital* joystickPorts[2] = { &port0, &port1 }; // Initialize gamepad on port 0
 
     g_resources = (Resources*)dl_alloc(sizeof(Resources));
 
@@ -199,6 +236,7 @@ int main()
     //for (int loop = 0; loop < SCREEN_WIDTH; loop++)
     //    frameBuffer8bpp[loop] = loop % 4;
 
+
     BitmapUtils::InMemoryBitmap* framebufferBitmap = new BitmapUtils::InMemoryBitmap(frameBuffer8bpp, 
                                                                                      FRAMEBUFFER_WIDTH, 
                                                                                      FRAMEBUFFER_HEIGHT, 
@@ -271,11 +309,32 @@ int main()
 
     while(1)
     {
-        g_gameRunner->update();
+        int controllerIndex = 0;
+
+        GameData* gameData = &g_gameRunner->m_gameData;
+
+        if (gameData->currentPlayerData != NULL)
+        {
+            controllerIndex = gameData->currentPlayerData->playerNumber;
+        }
+
+        Update_Controls(controllerIndex, 
+                        joystickPorts,
+                        &gameData->joystickState);
+
+        if (gameData->joystickState.startPressed)
+        {
+            gameData->paused = !gameData->paused;
+        }
+
+        if (!gameData->paused)
+        {
+            g_gameRunner->update();
+        }
 
         SRL::Core::Synchronize();
 
-        const Drop* drop = &g_gameRunner->m_gameData.dropData.drops[0];
+        //const Drop* drop = &g_gameRunner->m_gameData.dropData.drops[0];
 
         //SRL::Debug::Print(1,17,"x %02d", drop->x << 1);
 	    //SRL::Debug::Print(1,18,"y %02d", drop->y >> 8);
@@ -288,8 +347,8 @@ int main()
         //myObject1.Draw();
         //myObject2.Draw();
         //myObject3.Draw();
-        myCustomObject.Draw();
-        playerObject.Draw();
+        //myCustomObject.Draw();
+        //playerObject.Draw();
 
         //move positions of NBG0 and NBG1 scrolls:
         //Nbg0Position += Vector2D(1.0, 1.0);

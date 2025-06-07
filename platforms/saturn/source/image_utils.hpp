@@ -47,7 +47,7 @@ public:
                 u8 bit2 = (originalImage[byteIndex] >> (bitOffset - 1)) & 1;
 
                 // Determine base color
-                u32 color = BLACK;
+                u8 color = BLACK;
                 if (bit1 == 0 && bit2 == 1) color = BLUE;
                 else if (bit1 == 1 && bit2 == 0) color = ORANGE;
                 else if (bit1 == 1 && bit2 == 1) color = WHITE;
@@ -68,12 +68,12 @@ public:
             // final final:  black, black, black, white, white, black, white, white
             for (int x = 0; x < width; x += 2) 
             {
-                u32 leftPixel = destinationImage[yOffset + x];
-                u32 rightPixel = destinationImage[yOffset + x + 1];
+                u8 leftPixel = destinationImage[yOffset + x];
+                u8 rightPixel = destinationImage[yOffset + x + 1];
 
-                if (rightPixel == BLUE && x < 320 - 2)
+                if (rightPixel == BLUE && x < width - 2)
                 {
-                    u32 pixel3 = destinationImage[yOffset + x + 2];
+                    u8 pixel3 = destinationImage[yOffset + x + 2];
                     if (pixel3 == ORANGE || pixel3 == WHITE)
                     {
                         rightPixel = WHITE;
@@ -82,7 +82,7 @@ public:
                 }
                 else if (leftPixel == ORANGE && x >= 2)
                 {
-                    u32 pixel0 = destinationImage[yOffset + x - 1];
+                    u8 pixel0 = destinationImage[yOffset + x - 1];
                     if (pixel0 == BLUE || pixel0 == WHITE)
                     {
                         leftPixel = WHITE;

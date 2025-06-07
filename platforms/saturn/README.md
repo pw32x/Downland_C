@@ -4,6 +4,8 @@ Required Library
     SaturnRingLib
     https://github.com/ReyeMe/SaturnRingLib
 
+    Use version XXXX
+
 Before Building
 
     Set two environment variables for the path to the SaturnRingLib

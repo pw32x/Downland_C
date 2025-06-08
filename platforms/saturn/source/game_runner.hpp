@@ -45,7 +45,10 @@ public:
 	      m_keySprite(resources->sprite_key, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1),
 	      m_diamondSprite(resources->sprite_diamond, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1),
 	      m_moneyBagSprite(resources->sprite_moneyBag, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1),
-          m_cursorSprite(&m_cursor1bppSprite, 8, 1, 1)
+          m_cursorSprite(&m_cursor1bppSprite, 8, 1, 1),
+          m_regenSprite(resources->sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, 8),
+          m_characterFont(resources->characterFont, 8, 7, 39),
+          m_regenSpriteIndex(0)
     {
         m_drawRoomFunctions = { &GameRunner::drawChamber,
                                 &GameRunner::drawChamber,
@@ -101,6 +104,7 @@ public:
     }
 
 private:
+
     void drawChamber()
     {
         /*
@@ -160,26 +164,14 @@ private:
             break;
         case PLAYER_STATE_REGENERATION: 
 
-            /*
             if (!m_gameData.paused)
             {
-                updateRegenSprite(playerData->currentSpriteNumber);
+                m_regenSpriteIndex = dl_rand() % m_regenSprite.m_numFrames;
             }
-            */
 
-            m_playerSprite.draw((playerData->x >> 8) << 1,
+            m_regenSprite.draw((playerData->x >> 8) << 1,
                                 playerData->y >> 8,
-                                playerData->currentSpriteNumber);
-
-            /*
-            drawSprite(framebuffer, 
-                        FRAMEBUFFER_WIDTH, 
-                        FRAMEBUFFER_HEIGHT,
-                        (playerData->x >> 8) << 1,
-                        playerData->y >> 8,
-                        0,
-                        &m_regenSprite);
-            */
+                                m_regenSpriteIndex /* + (playerData->facingDirection * m_regenSprite.m_numFrames)*/);
             break;
         default: 
             /*
@@ -401,13 +393,17 @@ private:
     Sprite m_diamondSprite;
     Sprite m_moneyBagSprite;
     Sprite m_cursorSprite;
+	RegenSprite m_regenSprite;
+	Sprite m_characterFont;
 
     Sprite* m_pickUpSprites[3];
 
-    bool didCopy;
+    int m_regenSpriteIndex;
 
 	typedef void (GameRunner::*DrawRoomFunction)();
 	std::vector<DrawRoomFunction> m_drawRoomFunctions;
+
+    u8 m_regenSpriteBuffer[(PLAYER_SPRITE_WIDTH / 8) * PLAYER_SPRITE_ROWS];
 };
 
 #endif

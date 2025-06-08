@@ -1,4 +1,4 @@
-#include "rand.h"
+#include "dl_rand.h"
 #include <stdlib.h>
 #include "alloc.h"
 

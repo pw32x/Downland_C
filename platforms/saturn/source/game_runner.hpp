@@ -15,6 +15,7 @@ extern "C"
 #include "drops_types.h"
 #include "pickup_types.h"
 #include "rooms\chambers.h"
+#include "dl_rand.h"
 }
 
 #include "downland_resource_loader_saturn.hpp"

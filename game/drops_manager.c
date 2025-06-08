@@ -3,7 +3,7 @@
 #include "base_defines.h"
 #include "draw_utils.h"
 #include "debug_utils.h"
-#include "rand.h"
+#include "dl_rand.h"
 
 #define DROP_FALL_SPEED 0x200
 #define DROP_WIGGLE_START_TIME 0xa8 // wiggle timer starts at 168 which signed is -40. The value is decremented

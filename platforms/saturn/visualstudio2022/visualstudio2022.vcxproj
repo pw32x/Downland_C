@@ -102,6 +102,7 @@
     <ClCompile Include="..\..\..\game\game.c" />
     <ClCompile Include="..\..\..\game\physics_utils.c" />
     <ClCompile Include="..\..\..\game\player.c" />
+    <ClCompile Include="..\..\..\game\dl_rand.c" />
     <ClCompile Include="..\..\..\game\rooms\chambers.c" />
     <ClCompile Include="..\..\..\game\rooms\getready.c" />
     <ClCompile Include="..\..\..\game\rooms\rooms.c" />
@@ -137,6 +138,7 @@
     <ClInclude Include="..\..\..\game\pickup_types.h" />
     <ClInclude Include="..\..\..\game\player.h" />
     <ClInclude Include="..\..\..\game\player_types.h" />
+    <ClInclude Include="..\..\..\game\dl_rand.h" />
     <ClInclude Include="..\..\..\game\resource_types.h" />
     <ClInclude Include="..\..\..\game\rooms\chambers.h" />
     <ClInclude Include="..\..\..\game\rooms\rooms.h" />

@@ -97,11 +97,14 @@ public:
         // pre-generate a number of regeneration sprites ahead of time
         // instead of creating them on the fly.    
 
-        m_frameTextureIndexes = new s16[numFrames];
+        u8 totalFrames = numFrames * 2;
+
+        m_frameTextureIndexes = new s16[totalFrames];
 
         u8* buffer = new u8[width * height];
         u8* regenBuffer = new u8[(width / 8) * height];
 
+        // right side
         for (int loop = 0; loop < numFrames; loop++)
         {
             memset(regenBuffer, 0, (width / 8) * height);
@@ -124,6 +127,33 @@ public:
 
             m_frameTextureIndexes[loop] = SRL::VDP1::TryLoadTexture(&inMemoryBitmap, 
                                                                     PaletteUtils::PaletteLoader::LoadDownlandPalette);
+
+        }
+
+        originalSprite += ((width / 8) * height) * 6; // PLAYER_SPRITE_LEFT_STAND
+
+        // left size
+        for (int loop = 0; loop < numFrames; loop++)
+        {
+            memset(regenBuffer, 0, (width / 8) * height);
+            drawSprite_16PixelsWide_static_IntoSpriteBuffer(originalSprite, 
+													        m_height,
+													        (u8*)regenBuffer);
+
+            ImageUtils::ImageConverter::convert1bppImageTo8bppCrtEffectImage(regenBuffer,
+                                                                             buffer,
+                                                                             width,
+                                                                             height,
+                                                                             ImageUtils::ImageConverter::CrtColor::Blue);
+
+            BitmapUtils::InMemoryBitmap inMemoryBitmap(buffer, 
+                                                       width, 
+                                                       height, 
+                                                       PaletteUtils::g_downlandPalette, 
+                                                       PaletteUtils::g_downlandPaletteColorsCount);
+
+            m_frameTextureIndexes[loop + numFrames] = SRL::VDP1::TryLoadTexture(&inMemoryBitmap, 
+                                                                                PaletteUtils::PaletteLoader::LoadDownlandPalette);
 
         }
 

@@ -5,6 +5,7 @@ extern "C"
 #include "base_types.h"
 #include "resource_types.h"
 #include "sound.h"
+#include "game.h"
 }
 
 #include "game_runner.hpp"
@@ -13,9 +14,18 @@ using namespace SRL::Types;
 using namespace SRL::Input;
 using namespace SRL::Math;
 
+Resources* g_resources;
+GameRunner* g_gameRunner;
+
+void gameRoomChanged(const GameData* gameData, u8 roomNumber, s8 transitionType)
+{
+    g_gameRunner->roomChanged(gameData, roomNumber, transitionType);
+}
 
 extern "C"
 {
+
+
 
 void* dl_alloc(u32 size)
 {
@@ -73,8 +83,7 @@ void Update_Controls(int controllerIndex,
     joystickState->startDown = startDown;
 }
 
-Resources* g_resources;
-GameRunner* g_gameRunner;
+
 
 int main()
 {
@@ -99,26 +108,6 @@ int main()
 
     g_gameRunner = new GameRunner(g_resources);
 
-    u8* frameBuffer8bpp = new u8[FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT];
-
-    ImageUtils::ImageConverter::convert1bppImageTo8bppCrtEffectImage(g_gameRunner->m_gameData.cleanBackground,
-                                                                     frameBuffer8bpp,
-                                                                     FRAMEBUFFER_WIDTH,
-                                                                     FRAMEBUFFER_HEIGHT,
-                                                                     ImageUtils::ImageConverter::CrtColor::Blue);
-
-    BitmapUtils::InMemoryBitmap* framebufferBitmap = new BitmapUtils::InMemoryBitmap(frameBuffer8bpp, 
-                                                                                     FRAMEBUFFER_WIDTH, 
-                                                                                     FRAMEBUFFER_HEIGHT, 
-                                                                                     PaletteUtils::g_downlandPalette, 
-                                                                                     PaletteUtils::g_downlandPaletteColorsCount);
-
-    SRL::Tilemap::Interfaces::Bmp2Tile* tileSet = new SRL::Tilemap::Interfaces::Bmp2Tile(*framebufferBitmap);
-    SRL::VDP2::NBG0::LoadTilemap(*tileSet);
-    
-    delete tileSet;//free work RAM
-    delete [] frameBuffer8bpp;
-    delete framebufferBitmap;
 
     /*
     TestTilebin = new SRL::Tilemap::Interfaces::CubeTile("FOG256.BIN");//Load fog tilemap from cd to work RAM
@@ -170,6 +159,8 @@ int main()
     //SRL::Debug::Print(1,19,"player: %d", (u8)resources->roomResources[2].backgroundDrawData.drawCommandCount);
     //SRL::Debug::Print(1,20,"player: %d", (u8)resources->roomResources[3].backgroundDrawData.drawCommandCount);
     //SRL::Debug::Print(1,21,"player: %d", (u8)resources->roomResources[4].backgroundDrawData.drawCommandCount);
+
+    Game_ChangedRoomCallback = gameRoomChanged;
 
     while(1)
     {

@@ -48,7 +48,10 @@ public:
           m_cursorSprite(&m_cursor1bppSprite, 8, 1, 1),
           m_regenSprite(resources->sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, 8),
           m_characterFont(resources->characterFont, 8, 7, 39),
-          m_regenSpriteIndex(0)
+          m_regenSpriteIndex(0),
+          m_layerInitialized(false),
+          m_roomChanged(false),
+          m_currentRoom(-1)
     {
         m_drawRoomFunctions = { &GameRunner::drawChamber,
                                 &GameRunner::drawChamber,
@@ -98,9 +101,107 @@ public:
         }
     }
 
+    void handleRoomChange()
+    {
+        SRL::VDP2::NBG0::ScrollDisable();//enable display of NBG0 
+
+        u8* frameBuffer8bpp = new u8[FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT];
+
+        ImageUtils::ImageConverter::convert1bppImageTo8bppCrtEffectImage(m_gameData.cleanBackground,
+                                                                         frameBuffer8bpp,
+                                                                         FRAMEBUFFER_WIDTH,
+                                                                         FRAMEBUFFER_HEIGHT,
+                                                                         ImageUtils::ImageConverter::CrtColor::Blue);
+
+        BitmapUtils::InMemoryBitmap* framebufferBitmap = new BitmapUtils::InMemoryBitmap(frameBuffer8bpp, 
+                                                                                         FRAMEBUFFER_WIDTH, 
+                                                                                         FRAMEBUFFER_HEIGHT, 
+                                                                                         PaletteUtils::g_downlandPalette, 
+                                                                                         PaletteUtils::g_downlandPaletteColorsCount);
+
+        SRL::Tilemap::Interfaces::Bmp2Tile* tileSet = new SRL::Tilemap::Interfaces::Bmp2Tile(*framebufferBitmap);
+
+        if (!m_layerInitialized)
+        {
+            // init the whole layer
+            SRL::VDP2::NBG0::LoadTilemap(*tileSet);
+            m_layerInitialized = true;
+
+            SRL::VDP2::NBG0::SetPriority(SRL::VDP2::Priority::Layer2);//set NBG0 priority
+        }
+        else
+        {
+            // we can't easily reset just the layer, so
+            // just replace the tiles and map directly
+            Cell2VRAM((uint8_t*)tileSet->GetCellData(), 
+                      SRL::VDP2::NBG0::CellAddress, 
+                      SRL::VDP2::NBG0::Info.CellByteSize);
+
+            Map2VRAM(SRL::VDP2::NBG0::Info,
+                     (uint16_t*)tileSet->GetMapData(),
+                     SRL::VDP2::NBG0::MapAddress,
+                     SRL::VDP2::NBG0::TilePalette.GetId(),
+                     SRL::VDP2::NBG0::GetCellOffset(SRL::VDP2::NBG0::Info, SRL::VDP2::NBG0::CellAddress));
+        }
+
+
+        delete tileSet;//free work RAM
+        delete [] frameBuffer8bpp;
+        delete framebufferBitmap;
+
+        SRL::VDP2::NBG0::ScrollEnable();//enable display of NBG0 
+    }
+
     void draw()
     {
-        (this->*m_drawRoomFunctions[m_gameData.currentRoom->roomNumber])();
+        if (m_roomChanged)
+        {
+            handleRoomChange();
+            m_roomChanged = false;
+        }
+        else
+        {
+            (this->*m_drawRoomFunctions[m_gameData.currentRoom->roomNumber])();
+        }
+    }
+
+    inline void Cell2VRAM(uint8_t* cellData, 
+                          void* cellAdr, 
+                          uint32_t size)
+    {
+        uint8_t* VRAM = (uint8_t*)cellAdr;
+
+        // Note: Consider DMA
+        for (uint32_t i = 0; i < size; i++) *(VRAM++) = *(cellData++);
+    }
+
+    inline void Map2VRAM(SRL::Tilemap::TilemapInfo& info, 
+                         uint16_t* mapData, 
+                         void* mapAdr, 
+                         uint8_t paloff, 
+                         uint32_t mapoff)
+    {
+        uint16_t* VRAM = (uint16_t*)mapAdr;
+        uint32_t* VRAM32 = (uint32_t*)mapAdr;
+        uint32_t* Data32 = (uint32_t*)mapData;
+
+        for (uint16_t i = 0; i < info.MapHeight; i++)
+        {
+            for (uint16_t j = 0; j < info.MapWidth; j++)
+            {
+                if (info.MapMode) *VRAM++ = ((*mapData++) + mapoff) | (paloff << 12); // 1WORD data
+                else *VRAM32++ = ((*Data32++) + mapoff) | (paloff << 20); // 2WORD data
+            }
+        }
+    }
+
+    void roomChanged(const GameData* gameData, u8 roomNumber, s8 transitionType)
+    {
+        if (m_currentRoom != roomNumber)
+        {
+            m_roomChanged = true;
+            m_currentRoom = roomNumber;
+        }
     }
 
 private:
@@ -171,7 +272,7 @@ private:
 
             m_regenSprite.draw((playerData->x >> 8) << 1,
                                 playerData->y >> 8,
-                                m_regenSpriteIndex /* + (playerData->facingDirection * m_regenSprite.m_numFrames)*/);
+                                m_regenSpriteIndex + (playerData->facingDirection ? 0 : m_regenSprite.m_numFrames)); // PLAYER_SPRITE_LEFT_STAND
             break;
         default: 
             /*
@@ -377,7 +478,6 @@ private:
     }
 
 
-
 public:
     GameData m_gameData;
 
@@ -404,6 +504,10 @@ private:
 	std::vector<DrawRoomFunction> m_drawRoomFunctions;
 
     u8 m_regenSpriteBuffer[(PLAYER_SPRITE_WIDTH / 8) * PLAYER_SPRITE_ROWS];
+
+    bool m_layerInitialized;
+    bool m_roomChanged;
+    u8 m_currentRoom;
 };
 
 #endif

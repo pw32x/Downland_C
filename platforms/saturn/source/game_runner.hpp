@@ -46,7 +46,27 @@ public:
 	      m_moneyBagSprite(resources->sprite_moneyBag, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1),
           m_cursorSprite(&m_cursor1bppSprite, 8, 1, 1)
     {
+        m_drawRoomFunctions = { &GameRunner::drawChamber,
+                                &GameRunner::drawChamber,
+                                &GameRunner::drawChamber,
+                                &GameRunner::drawChamber,
+                                &GameRunner::drawChamber,
+                                &GameRunner::drawChamber,
+                                &GameRunner::drawChamber,
+                                &GameRunner::drawChamber,
+                                &GameRunner::drawChamber,
+                                &GameRunner::drawChamber,
+                                &GameRunner::drawTitleScreen,
+                                &GameRunner::drawTransition,
+                                &GameRunner::drawWipeTransition,
+                                &GameRunner::drawGetReadyScreen };
+
+        m_pickUpSprites[0] = &m_diamondSprite;
+        m_pickUpSprites[1] = &m_moneyBagSprite;
+        m_pickUpSprites[2] = &m_keySprite;
+
         Game_Init(&m_gameData, m_resources);
+
     }
 
 
@@ -54,8 +74,6 @@ public:
     {
         Game_Update(&m_gameData, m_resources);
     }
-
-
 
     void drawDrops(const GameData* gameData)
     {
@@ -78,16 +96,299 @@ public:
 
     void draw()
     {
+        (this->*m_drawRoomFunctions[m_gameData.currentRoom->roomNumber])();
+    }
+
+private:
+    void drawChamber()
+    {
+        /*
+        // Update texture from gameFramebuffer
+        SDLUtils_convert1bppImageTo32bppCrtEffectImage(m_gameData.cleanBackground,
+                                                       framebuffer,
+                                                       FRAMEBUFFER_WIDTH,
+                                                       FRAMEBUFFER_HEIGHT,
+                                                       CrtColor::Blue);
+        */
+
+        // draw drops
+
+
+        drawDrops(&m_gameData);
+
+        const PlayerData* playerData = m_gameData.currentPlayerData;
+
+        u16 currentTimer = playerData->roomTimers[playerData->currentRoom->roomNumber];
+
+        const Pickup* pickups = playerData->gamePickups[m_gameData.currentRoom->roomNumber];
+        for (int loop = 0; loop < NUM_PICKUPS_PER_ROOM; loop++)
+        {
+		    if ((pickups->state & playerData->playerMask))
+		    {
+                m_pickUpSprites[pickups->type]->draw(pickups->x << 1, 
+                                                     pickups->y, 
+                                                     0);
+
+                /*
+                drawSprite(framebuffer, 
+                            FRAMEBUFFER_WIDTH, 
+                            FRAMEBUFFER_HEIGHT,
+                            pickups->x << 1,
+                            pickups->y,
+                            0,
+                            m_pickUpSprites[pickups->type]);
+                            */
+            }
+
+            pickups++;
+        }
+
+
+        switch (playerData->state)
+        {
+        case PLAYER_STATE_SPLAT: 
+            /*
+            drawSprite(framebuffer, 
+                        FRAMEBUFFER_WIDTH, 
+                        FRAMEBUFFER_HEIGHT,
+                        (playerData->x >> 8) << 1,
+                        (playerData->y >> 8) + 7,
+                        playerData->splatFrameNumber,
+                        &m_playerSplatSprite);
+            */
+            break;
+        case PLAYER_STATE_REGENERATION: 
+
+            /*
+            if (!m_gameData.paused)
+            {
+                updateRegenSprite(playerData->currentSpriteNumber);
+            }
+            */
+
+            m_playerSprite.draw((playerData->x >> 8) << 1,
+                                playerData->y >> 8,
+                                playerData->currentSpriteNumber);
+
+            /*
+            drawSprite(framebuffer, 
+                        FRAMEBUFFER_WIDTH, 
+                        FRAMEBUFFER_HEIGHT,
+                        (playerData->x >> 8) << 1,
+                        playerData->y >> 8,
+                        0,
+                        &m_regenSprite);
+            */
+            break;
+        default: 
+            /*
+            drawSprite(framebuffer, 
+                        FRAMEBUFFER_WIDTH, 
+                        FRAMEBUFFER_HEIGHT,
+                        (playerData->x >> 8) << 1,
+                        playerData->y >> 8,
+                        playerData->currentSpriteNumber,
+                        &m_playerSprite);
+            */
+
+            m_playerSprite.draw((playerData->x >> 8) << 1,
+                                playerData->y >> 8,
+                                playerData->currentSpriteNumber);
+        }
+
+        // draw ball
+        if (m_gameData.ballData.enabled)
+        {
+            const BallData* ballData = &m_gameData.ballData;
+
+            m_ballSprite.draw((ballData->x >> 8) << 1,
+                              ballData->y >> 8,
+                              ((s8)ballData->fallStateCounter < 0));
+
+            /*
+            drawSprite(framebuffer, 
+                        FRAMEBUFFER_WIDTH, 
+                        FRAMEBUFFER_HEIGHT,
+                        (ballData->x >> 8) << 1,
+                        ballData->y >> 8,
+                        ((s8)ballData->fallStateCounter < 0),
+                        &m_ballSprite);
+            */
+
+        }
+
+        // draw bird
+        if (m_gameData.birdData.state && currentTimer == 0)
+        {
+            const BirdData* birdData = &m_gameData.birdData;
+
+            m_birdSprite.draw((birdData->x >> 8) << 1,
+                              birdData->y >> 8,
+                              birdData->animationFrame);
+
+            /*
+            drawSprite(framebuffer, 
+                        FRAMEBUFFER_WIDTH, 
+                        FRAMEBUFFER_HEIGHT,
+                        (birdData->x >> 8) << 1,
+                        birdData->y >> 8,
+                        birdData->animationFrame,
+                        &m_birdSprite);
+            */
+        }
+
+        /*
+        // draw player lives icons
+        drawPlayerLives(m_gameData.currentPlayerData->lives,
+                        playerData->currentSpriteNumber,
+                        &m_playerSprite,
+                        &m_regenSprite,
+                        playerData->state == PLAYER_STATE_REGENERATION,
+                        framebuffer);
+
+
+
+        // draw timer
+	    drawText(framebuffer,
+                    FRAMEBUFFER_WIDTH,
+                    FRAMEBUFFER_HEIGHT,
+                    m_gameData.string_timer, 
+			        &m_characterFont, 
+                    TIMER_DRAW_LOCATION);
+
+        // draw player text
+	    drawText(framebuffer,
+                    FRAMEBUFFER_WIDTH,
+                    FRAMEBUFFER_HEIGHT,
+                    m_resources->text_pl1, 
+			        &m_characterFont, 
+                    PLAYERLIVES_TEXT_DRAW_LOCATION);
+
+        // draw chamber text
+	    drawText(framebuffer,
+                    FRAMEBUFFER_WIDTH,
+                    FRAMEBUFFER_HEIGHT,
+                    m_resources->text_chamber, 
+			        &m_characterFont, 
+			        CHAMBER_TEXT_DRAW_LOCATION);
+
+        // room number chamber text
+	    drawText(framebuffer,
+                    FRAMEBUFFER_WIDTH,
+                    FRAMEBUFFER_HEIGHT,
+                    m_gameData.string_roomNumber, 
+			        &m_characterFont, 
+			        CHAMBER_NUMBER_TEXT_DRAW_LOCATION);
+
+        // draw score
+	    drawText(framebuffer,
+                    FRAMEBUFFER_WIDTH,
+                    FRAMEBUFFER_HEIGHT,
+                    playerData->scoreString, 
+			        &m_characterFont, 
+			        SCORE_DRAW_LOCATION);
+        */
+    }
+
+    void drawTitleScreen()
+    {
+        /*
+        SDLUtils_convert1bppImageTo32bppCrtEffectImage(m_gameData.cleanBackground,
+                                                       framebuffer,
+                                                       FRAMEBUFFER_WIDTH,
+                                                       FRAMEBUFFER_HEIGHT,
+                                                       CrtColor::Blue);
+        // draw drops
+        drawDrops(gameData, framebuffer);
+        */
+
         drawDrops(&m_gameData);
 
 	    u16 cursorX = m_gameData.numPlayers == 1 ? 32 :128;  // hardcoded locations in the frambuffer
 
         m_cursorSprite.draw(cursorX, 123, 0);
+
     }
 
-public:
+    void drawTransition()
+    {
+	    //memset(framebuffer, 0, FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT * sizeof(u32));
 
+        /*
+        u8* frameBuffer8bpp = new u8[FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT];
+
+        ImageUtils::ImageConverter::convert1bppImageTo8bppCrtEffectImage(m_gameData.cleanBackground,
+                                                                         frameBuffer8bpp,
+                                                                         FRAMEBUFFER_WIDTH,
+                                                                         FRAMEBUFFER_HEIGHT,
+                                                                         ImageUtils::ImageConverter::CrtColor::Blue);
+
+        BitmapUtils::InMemoryBitmap* framebufferBitmap = new BitmapUtils::InMemoryBitmap(frameBuffer8bpp, 
+                                                                                         FRAMEBUFFER_WIDTH, 
+                                                                                         FRAMEBUFFER_HEIGHT, 
+                                                                                         PaletteUtils::g_downlandPalette, 
+                                                                                         PaletteUtils::g_downlandPaletteColorsCount);
+
+        SRL::Tilemap::Interfaces::Bmp2Tile* tileSet = new SRL::Tilemap::Interfaces::Bmp2Tile(*framebufferBitmap);
+        SRL::VDP2::NBG0::LoadTilemap(*tileSet);    
+
+        delete tileSet;//free work RAM
+        delete [] frameBuffer8bpp;
+        delete framebufferBitmap;
+        */
+    }
+
+
+
+    void drawWipeTransition()
+    {
+        /*
+        // not the most efficient as it updates the whole framebuffer
+        // instead of what changed per frame during the wipe, but at the 
+        // moment we're not worried about performance. Different platforms
+        // will have to handle this in different ways.
+	    for (int sectionCounter = 0; sectionCounter < 6; sectionCounter++)
+	    {
+            u32 offset = (sectionCounter * 32 * FRAMEBUFFER_WIDTH);
+	        u32* framebufferRunner = framebuffer + offset;
+	        u32* wipeFramebufferRunner = m_wipeFramebuffer + offset;
+
+            for (int lineCounter = 0; lineCounter < m_gameData.transitionCurrentLine; lineCounter++)
+            {
+		        for (int innerLoop = 0; innerLoop < FRAMEBUFFER_WIDTH; innerLoop++)
+		        {
+			        *framebufferRunner = *wipeFramebufferRunner;
+
+			        // draw a solid line underneath the pixel
+				    *(framebufferRunner + FRAMEBUFFER_WIDTH) = 0x000000ff;
+
+			        framebufferRunner++;
+			        wipeFramebufferRunner++;
+		        }
+            }
+	    }
+        */
+    }
+
+    void drawGetReadyScreen()
+    {
+        /*
+        SDLUtils_convert1bppImageTo32bppCrtEffectImage(m_gameData.cleanBackground,
+                                                       framebuffer,
+                                                       FRAMEBUFFER_WIDTH,
+                                                       FRAMEBUFFER_HEIGHT,
+                                                       CrtColor::Blue);
+        */
+
+        drawDrops(&m_gameData);
+    }
+
+
+
+public:
     GameData m_gameData;
+
+private:
     Resources* m_resources;
     u8 m_cursor1bppSprite;
     Sprite m_dropSprite;
@@ -100,7 +401,12 @@ public:
     Sprite m_moneyBagSprite;
     Sprite m_cursorSprite;
 
+    Sprite* m_pickUpSprites[3];
 
+    bool didCopy;
+
+	typedef void (GameRunner::*DrawRoomFunction)();
+	std::vector<DrawRoomFunction> m_drawRoomFunctions;
 };
 
 #endif

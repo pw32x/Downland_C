@@ -32,14 +32,16 @@ public:
 
         u8* buffer = new u8[width * height];
 
-        ImageUtils::ImageConverter::convert1bppImageTo8bppCrtEffectImage(originalSprite,
-                                                                         buffer,
-                                                                         width,
-                                                                         height,
-                                                                         ImageUtils::ImageConverter::CrtColor::Blue);
+        const u8* spriteRunner = originalSprite;
 
         for (int loop = 0; loop < numFrames; loop++)
         {
+            ImageUtils::ImageConverter::convert1bppImageTo8bppCrtEffectImage(spriteRunner,
+                                                                             buffer,
+                                                                             width,
+                                                                             height,
+                                                                             ImageUtils::ImageConverter::CrtColor::Blue);
+
             BitmapUtils::InMemoryBitmap inMemoryBitmap(buffer, 
                                                        width, 
                                                        height, 
@@ -48,6 +50,8 @@ public:
 
             m_frameTextureIndexes[loop] = SRL::VDP1::TryLoadTexture(&inMemoryBitmap, 
                                                                     PaletteUtils::PaletteLoader::LoadDownlandPalette);
+
+            spriteRunner += (width / 8) * height;
         }
 
         delete [] buffer;

@@ -14,7 +14,7 @@ extern "C"
 #include "../game/draw_utils.h"
 #include "../game/sound.h"
 #include "../game/alloc.h"
-#include "../game/rand.h"
+#include "../game/dl_rand.h"
 }
 
 #include <SDL3/SDL.h>

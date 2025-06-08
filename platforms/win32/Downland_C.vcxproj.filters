@@ -139,10 +139,8 @@
     <ClCompile Include="..\..\sdl_main\video_filters\sdl_video_filter_new_renderer.cpp">
       <Filter>sdl_main\video_filters</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\game\rand.c">
-      <Filter>game</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\alloc.c">
+    <ClCompile Include="alloc.c" />
+    <ClCompile Include="..\..\game\dl_rand.c">
       <Filter>game</Filter>
     </ClCompile>
   </ItemGroup>
@@ -249,10 +247,10 @@
     <ClInclude Include="..\..\sdl_main\video_filters\sdl_video_filter_new_renderer.h">
       <Filter>sdl_main\video_filters</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\game\rand.h">
+    <ClInclude Include="..\..\game\alloc.h">
       <Filter>game</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\game\alloc.h">
+    <ClInclude Include="..\..\game\dl_rand.h">
       <Filter>game</Filter>
     </ClInclude>
   </ItemGroup>

@@ -7,6 +7,7 @@ extern "C"
 {
 #include "base_types.h"
 #include "game_types.h"
+#include "door_types.h"
 #include "game.h"
 #include "sound.h"
 #include "resource_types.h"
@@ -48,6 +49,8 @@ public:
           m_cursorSprite(&m_cursor1bppSprite, 8, 1, 1),
           m_regenSprite(resources->sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, 8),
           m_characterFont(resources->characterFont, 8, 7, 39),
+          m_doorSprite(resources->sprite_door, DOOR_SPRITE_WIDTH, DOOR_SPRITE_ROWS, 1),
+          m_splatSprite(resources->sprite_playerSplat, PLAYER_SPLAT_SPRITE_WIDTH, PLAYER_SPLAT_SPRITE_ROWS),
           m_regenSpriteIndex(0),
           m_layerInitialized(false),
           m_roomChanged(false),
@@ -253,6 +256,10 @@ private:
         switch (playerData->state)
         {
         case PLAYER_STATE_SPLAT: 
+            m_splatSprite.draw((playerData->x >> 8) << 1,
+                               (playerData->y >> 8) + 7,
+                               playerData->splatFrameNumber);
+
             /*
             drawSprite(framebuffer, 
                         FRAMEBUFFER_WIDTH, 
@@ -330,6 +337,32 @@ private:
                         &m_birdSprite);
             */
         }
+
+        // draw doors
+        int roomNumber = m_gameData.currentRoom->roomNumber;
+		DoorInfoData* doorInfoData = &m_resources->roomResources[roomNumber].doorInfoData;
+		const DoorInfo* doorInfoRunner = doorInfoData->doorInfos;
+
+		for (u8 loop = 0; loop < doorInfoData->drawInfosCount; loop++)
+		{
+            if (!playerData->doorStateData[doorInfoRunner->globalDoorIndex] & playerData->playerMask)
+                continue;
+
+            int xPosition = doorInfoRunner->x;
+	        // adjust the door position, as per the original game.
+	        if (xPosition > 40) 
+		        xPosition += 7;
+	        else
+		        xPosition -= 4;
+
+            m_doorSprite.draw(xPosition << 1, 
+                              doorInfoRunner->y,
+                              0);
+
+			doorInfoRunner++;
+		}
+
+
 
         /*
         // draw player lives icons
@@ -495,6 +528,8 @@ private:
     Sprite m_cursorSprite;
 	RegenSprite m_regenSprite;
 	Sprite m_characterFont;
+    Sprite m_doorSprite;
+    SplatSprite m_splatSprite;
 
     Sprite* m_pickUpSprites[3];
 

@@ -145,7 +145,7 @@ int main()
     //SRL::Debug::Print(1,14,"Color count %d", myBitmap.m_bitmapInfo.Palette->Count);
     //SRL::Debug::Print(1,22,"sizeof(size_t) %d", sizeof(size_t));
 
-    //SRL::Debug::Print(1,12,"width %d", g_gameRunner->m_dropSprite.m_width);
+    
 	//SRL::Debug::Print(1,13,"height %d", g_gameRunner->m_dropSprite.m_height);
 	//SRL::Debug::Print(1,14,"num frames %d", g_gameRunner->m_dropSprite.m_numFrames);
     //SRL::Debug::Print(1,15,"frame tex index %d", g_gameRunner->m_dropSprite.m_frameTextureIndexes[0]);
@@ -191,7 +191,16 @@ int main()
 
         //SRL::Debug::Print(1,17,"x %02d", drop->x << 1);
 	    //SRL::Debug::Print(1,18,"y %02d", drop->y >> 8);
+
+        //SRL::Debug::Print(1,2,"%d", g_gameRunner->m_regenPlayerIconSprite.m_numFrames);
+
+        //    SRL::Debug::Print(1,2 + loop,"%d", g_gameRunner->m_regenPlayerIconSprite.m_frameTextureIndexes[loop]);
+
         g_gameRunner->draw();
+
+        //for (int loop = 0; loop < g_gameRunner->m_regenPlayerIconSprite.m_numFrames * 2; loop++)
+        //      SRL::Debug::Print(1,0 + loop, "%d", g_gameRunner->m_regenPlayerIconSprite.m_frameTextureIndexes[loop]);
+        //    SRL::Debug::Print(1,0 + loop,"hello");
 
         //move positions of NBG0 and NBG1 scrolls:
         //Nbg0Position += Vector2D(1.0, 1.0);

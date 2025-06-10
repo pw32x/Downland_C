@@ -25,6 +25,8 @@ extern "C"
 #include "bitmap_utils.hpp"
 #include "palette_utils.hpp"
 
+#define REGEN_SPRITES 5
+
 const char* romFileNames[] = 
 {
     "DOWNLAND.BIN",
@@ -47,10 +49,12 @@ public:
 	      m_diamondSprite(resources->sprite_diamond, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1),
 	      m_moneyBagSprite(resources->sprite_moneyBag, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1),
           m_cursorSprite(&m_cursor1bppSprite, 8, 1, 1),
-          m_regenSprite(resources->sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, 8),
+          m_regenSprite(resources->sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYER_SPRITE_ROWS, REGEN_SPRITES),
           m_characterFont(resources->characterFont, 8, 7, 39),
           m_doorSprite(resources->sprite_door, DOOR_SPRITE_WIDTH, DOOR_SPRITE_ROWS, 1),
           m_splatSprite(resources->sprite_playerSplat, PLAYER_SPLAT_SPRITE_WIDTH, PLAYER_SPLAT_SPRITE_ROWS),
+          m_playerIconSprite(resources->sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYERICON_NUM_SPRITE_ROWS, PLAYER_SPRITE_COUNT),
+          m_regenPlayerIconSprite(resources->sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYERICON_NUM_SPRITE_ROWS, REGEN_SPRITES),
           m_regenSpriteIndex(0),
           m_layerInitialized(false),
           m_roomChanged(false),
@@ -209,6 +213,27 @@ public:
 
 private:
 
+    void drawPlayerLives()
+    {
+        const PlayerData* playerData = m_gameData.currentPlayerData;
+
+	    u8 x = PLAYERLIVES_ICON_X;
+	    u8 y = PLAYERLIVES_ICON_Y;
+
+        for (u8 loop = 0; loop < playerData->lives; loop++)
+	    {
+            m_playerIconSprite.draw(x << 1, y, playerData->currentSpriteNumber);
+		    x += PLAYERLIVES_ICON_SPACING;
+        }
+
+	    if (playerData->state == PLAYER_STATE_REGENERATION)
+	    {
+            m_regenPlayerIconSprite.draw(x << 1, 
+                                         y, 
+                                         m_regenSpriteIndex + (playerData->facingDirection ? 0 : m_regenPlayerIconSprite.m_numFrames)); // PLAYER_SPRITE_LEFT_STAND
+        }
+    }
+
     void drawChamber()
     {
         /*
@@ -362,16 +387,12 @@ private:
 			doorInfoRunner++;
 		}
 
+        // draw player lives icons
+        drawPlayerLives();
+
 
 
         /*
-        // draw player lives icons
-        drawPlayerLives(m_gameData.currentPlayerData->lives,
-                        playerData->currentSpriteNumber,
-                        &m_playerSprite,
-                        &m_regenSprite,
-                        playerData->state == PLAYER_STATE_REGENERATION,
-                        framebuffer);
 
 
 
@@ -530,6 +551,8 @@ private:
 	Sprite m_characterFont;
     Sprite m_doorSprite;
     SplatSprite m_splatSprite;
+    ClippedSprite m_playerIconSprite;
+    RegenSprite m_regenPlayerIconSprite;
 
     Sprite* m_pickUpSprites[3];
 

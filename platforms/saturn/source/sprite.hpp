@@ -87,6 +87,7 @@ public:
     RegenSprite(const u8* originalSprite, 
                 s16 width, 
                 s16 height, 
+                s16 clippedHeight,
                 u8 numFrames)
         : m_originalSprite(originalSprite),
           m_width(width),
@@ -101,27 +102,27 @@ public:
 
         m_frameTextureIndexes = new s16[totalFrames];
 
-        u8* buffer = new u8[width * height];
-        u8* regenBuffer = new u8[(width / 8) * height];
+        u8* buffer = new u8[width * clippedHeight];
+        u8* regenBuffer = new u8[(width / 8) * clippedHeight];
 
         // right side
         for (int loop = 0; loop < numFrames; loop++)
         {
-            memset(regenBuffer, 0, (width / 8) * height);
+            memset(regenBuffer, 0, (width / 8) * clippedHeight);
             drawSprite_16PixelsWide_static_IntoSpriteBuffer(originalSprite, 
-													        m_height,
+													        clippedHeight,
 													        (u8*)regenBuffer);
 
             ImageUtils::ImageConverter::convert1bppImageTo8bppCrtEffectImage(regenBuffer,
                                                                              buffer,
                                                                              width,
-                                                                             height,
+                                                                             clippedHeight,
                                                                              ImageUtils::ImageConverter::CrtColor::Blue);
 
 
             BitmapUtils::InMemoryBitmap inMemoryBitmap(buffer, 
                                                        width, 
-                                                       height, 
+                                                       clippedHeight, 
                                                        PaletteUtils::g_downlandPalette, 
                                                        PaletteUtils::g_downlandPaletteColorsCount);
 
@@ -132,23 +133,23 @@ public:
 
         originalSprite += ((width / 8) * height) * 6; // PLAYER_SPRITE_LEFT_STAND
 
-        // left size
+        // facing left
         for (int loop = 0; loop < numFrames; loop++)
         {
-            memset(regenBuffer, 0, (width / 8) * height);
+            memset(regenBuffer, 0, (width / 8) * clippedHeight);
             drawSprite_16PixelsWide_static_IntoSpriteBuffer(originalSprite, 
-													        m_height,
+													        clippedHeight,
 													        (u8*)regenBuffer);
 
             ImageUtils::ImageConverter::convert1bppImageTo8bppCrtEffectImage(regenBuffer,
                                                                              buffer,
                                                                              width,
-                                                                             height,
+                                                                             clippedHeight,
                                                                              ImageUtils::ImageConverter::CrtColor::Blue);
 
             BitmapUtils::InMemoryBitmap inMemoryBitmap(buffer, 
                                                        width, 
-                                                       height, 
+                                                       clippedHeight, 
                                                        PaletteUtils::g_downlandPalette, 
                                                        PaletteUtils::g_downlandPaletteColorsCount);
 
@@ -156,6 +157,8 @@ public:
                                                                                 PaletteUtils::PaletteLoader::LoadDownlandPalette);
 
         }
+
+        m_height = clippedHeight;
 
         delete [] buffer;
         delete [] regenBuffer;
@@ -251,5 +254,73 @@ public:
 	const u8* m_originalSprite;
 };
 
+
+class ClippedSprite
+{
+public:
+    ClippedSprite(const u8* originalSprite, 
+                  s16 width, 
+                  s16 height, 
+                  s16 clippedHeight,
+                  u8 numFrames)
+        : m_originalSprite(originalSprite),
+          m_width(width),
+          m_height(height),
+          m_numFrames(numFrames),
+          m_frameTextureIndexes(NULL)
+    {
+        m_frameTextureIndexes = new s16[numFrames];
+
+        u8* buffer = new u8[width * height];
+
+        const u8* spriteRunner = originalSprite;
+
+        for (int loop = 0; loop < numFrames; loop++)
+        {
+            ImageUtils::ImageConverter::convert1bppImageTo8bppCrtEffectImage(spriteRunner,
+                                                                             buffer,
+                                                                             width,
+                                                                             clippedHeight,
+                                                                             ImageUtils::ImageConverter::CrtColor::Blue);
+
+            BitmapUtils::InMemoryBitmap inMemoryBitmap(buffer, 
+                                                       width, 
+                                                       clippedHeight, 
+                                                       PaletteUtils::g_downlandPalette, 
+                                                       PaletteUtils::g_downlandPaletteColorsCount);
+
+            m_frameTextureIndexes[loop] = SRL::VDP1::TryLoadTexture(&inMemoryBitmap, 
+                                                                    PaletteUtils::PaletteLoader::LoadDownlandPalette);
+
+            spriteRunner += (width / 8) * height;
+        }
+
+        m_height = clippedHeight;
+
+        delete [] buffer;
+    }
+
+    void draw(s16 x, s16 y, s16 frameNumber)
+    {
+        SRL::Math::Types::Vector2D points[4];
+
+        GeometryHelpers::Quad::setup(x, 
+                                     y, 
+                                     m_width, 
+                                     m_height, 
+                                     points);
+
+        // Simple sprite
+        SRL::Scene2D::DrawSprite(m_frameTextureIndexes[frameNumber], points, 500);
+    }
+
+public:
+
+	s16 m_width;
+	s16 m_height;
+	u8 m_numFrames;
+    s16* m_frameTextureIndexes;
+	const u8* m_originalSprite;
+};
 
 #endif

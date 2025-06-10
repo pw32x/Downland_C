@@ -234,6 +234,20 @@ private:
         }
     }
 
+	void drawText(const u8* text, u16 xyLocation)
+    {
+        u16 x = ((xyLocation % 32) * 8);
+        u16 y = (xyLocation / 32);
+
+        // for each character
+        while (*text != 0xff)
+        {
+            m_characterFont.draw(x, y, *text);
+            text++;
+            x += 8;
+        }
+    }
+
     void drawChamber()
     {
         /*
@@ -390,52 +404,12 @@ private:
         // draw player lives icons
         drawPlayerLives();
 
-
-
-        /*
-
-
-
-        // draw timer
-	    drawText(framebuffer,
-                    FRAMEBUFFER_WIDTH,
-                    FRAMEBUFFER_HEIGHT,
-                    m_gameData.string_timer, 
-			        &m_characterFont, 
-                    TIMER_DRAW_LOCATION);
-
-        // draw player text
-	    drawText(framebuffer,
-                    FRAMEBUFFER_WIDTH,
-                    FRAMEBUFFER_HEIGHT,
-                    m_resources->text_pl1, 
-			        &m_characterFont, 
-                    PLAYERLIVES_TEXT_DRAW_LOCATION);
-
-        // draw chamber text
-	    drawText(framebuffer,
-                    FRAMEBUFFER_WIDTH,
-                    FRAMEBUFFER_HEIGHT,
-                    m_resources->text_chamber, 
-			        &m_characterFont, 
-			        CHAMBER_TEXT_DRAW_LOCATION);
-
-        // room number chamber text
-	    drawText(framebuffer,
-                    FRAMEBUFFER_WIDTH,
-                    FRAMEBUFFER_HEIGHT,
-                    m_gameData.string_roomNumber, 
-			        &m_characterFont, 
-			        CHAMBER_NUMBER_TEXT_DRAW_LOCATION);
-
-        // draw score
-	    drawText(framebuffer,
-                    FRAMEBUFFER_WIDTH,
-                    FRAMEBUFFER_HEIGHT,
-                    playerData->scoreString, 
-			        &m_characterFont, 
-			        SCORE_DRAW_LOCATION);
-        */
+        // draw text
+	    drawText(m_gameData.string_timer, TIMER_DRAW_LOCATION);
+	    drawText(m_resources->text_pl1, PLAYERLIVES_TEXT_DRAW_LOCATION);
+	    drawText(m_resources->text_chamber, CHAMBER_TEXT_DRAW_LOCATION);
+	    drawText(m_gameData.string_roomNumber, CHAMBER_NUMBER_TEXT_DRAW_LOCATION);
+	    drawText(playerData->scoreString, SCORE_DRAW_LOCATION);        
     }
 
     void drawTitleScreen()
@@ -548,7 +522,7 @@ private:
     Sprite m_moneyBagSprite;
     Sprite m_cursorSprite;
 	RegenSprite m_regenSprite;
-	Sprite m_characterFont;
+	FontSprite m_characterFont;
     Sprite m_doorSprite;
     SplatSprite m_splatSprite;
     ClippedSprite m_playerIconSprite;

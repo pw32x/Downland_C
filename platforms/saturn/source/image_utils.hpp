@@ -95,6 +95,44 @@ public:
             }
         }
     }
+
+    static void convert1bppImageTo8bppBlue(const u8* originalImage,
+                                           u8* destinationImage,
+                                           u16 width,
+                                           u16 height) 
+    {
+        const u8 BLACK  = 0x0; // 00 black
+        const u8 BLUE   = 0x1; // 01 blue
+        const u8 ORANGE = 0x2; // 10 orange
+        const u8 WHITE  = 0x3; // 11 white
+
+        const u8 bytesPerRow = width / 8;
+
+        for (int y = 0; y < height; ++y) 
+        {
+            u32 yOffset = y * width;
+
+            for (int x = 0; x < width; x += 2) 
+            {
+                int byteIndex = (y * bytesPerRow) + (x / 8);
+                int bitOffset = 7 - (x % 8);
+
+                // Read two adjacent bits
+                u8 bit1 = (originalImage[byteIndex] >> bitOffset) & 1;
+                u8 bit2 = (originalImage[byteIndex] >> (bitOffset - 1)) & 1;
+
+                // Determine base color
+                u8 color = BLACK;
+                if (bit1 == 0 && bit2 == 1) color = BLUE;
+                else if (bit1 == 1 && bit2 == 0) color = ORANGE;
+                else if (bit1 == 1 && bit2 == 1) color = 1; // don't care. just set to blue.
+
+                // Apply base color
+                destinationImage[yOffset + x]     = color;
+                destinationImage[yOffset + x + 1] = color;
+            }
+        }
+    }
 };
 }
 #endif

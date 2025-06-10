@@ -94,6 +94,44 @@ public:
     }
 };
 
+class FontSprite : public SpriteBase
+{
+public:
+    FontSprite(const u8* originalSprite, 
+               s16 width, 
+               s16 height, 
+               u8 numFrames)
+        : SpriteBase(originalSprite, width, height, numFrames)
+    {
+        m_frameTextureIndexes = new s16[numFrames];
+
+        u8* buffer = new u8[width * height];
+
+        const u8* spriteRunner = originalSprite;
+
+        for (int loop = 0; loop < numFrames; loop++)
+        {
+            ImageUtils::ImageConverter::convert1bppImageTo8bppBlue(spriteRunner,
+                                                                   buffer,
+                                                                   width,
+                                                                   height);
+
+            BitmapUtils::InMemoryBitmap inMemoryBitmap(buffer, 
+                                                       width, 
+                                                       height, 
+                                                       PaletteUtils::g_downlandPalette, 
+                                                       PaletteUtils::g_downlandPaletteColorsCount);
+
+            m_frameTextureIndexes[loop] = SRL::VDP1::TryLoadTexture(&inMemoryBitmap, 
+                                                                    PaletteUtils::PaletteLoader::LoadDownlandPalette);
+
+            spriteRunner += (width / 8) * height;
+        }
+
+        delete [] buffer;
+    }
+};
+
 class RegenSprite : public SpriteBase
 {
 public:

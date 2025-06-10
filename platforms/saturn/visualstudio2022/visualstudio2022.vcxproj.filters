@@ -67,8 +67,8 @@
     <ClCompile Include="..\..\..\game\rooms\getready.c">
       <Filter>game\rooms</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\resource_loader_saturn.cpp">
-      <Filter>source\resource_loader</Filter>
+    <ClCompile Include="..\..\..\game\dl_rand.c">
+      <Filter>game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -161,8 +161,35 @@
     <ClInclude Include="..\..\..\game\rooms\chambers.h">
       <Filter>game\rooms</Filter>
     </ClInclude>
-    <ClInclude Include="..\source\resource_loader_saturn.h">
-      <Filter>source\resource_loader</Filter>
+    <ClInclude Include="..\source\bitmap_utils.hpp">
+      <Filter>source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\downland_resource_loader_saturn.hpp">
+      <Filter>source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game_runner.hpp">
+      <Filter>source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\geometry_helpers.hpp">
+      <Filter>source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\image_utils.hpp">
+      <Filter>source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\palette_utils.hpp">
+      <Filter>source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\saturn.hpp">
+      <Filter>source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\sprite.hpp">
+      <Filter>source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\dl_rand.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\alloc.h">
+      <Filter>game</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -230,7 +230,7 @@ private:
 	    {
             m_regenPlayerIconSprite.draw(x << 1, 
                                          y, 
-                                         m_regenSpriteIndex + (playerData->facingDirection ? 0 : m_regenPlayerIconSprite.m_numFrames)); // PLAYER_SPRITE_LEFT_STAND
+                                         m_regenSpriteIndex + (playerData->facingDirection ? 0 : m_regenPlayerIconSprite.getNumFrames())); // PLAYER_SPRITE_LEFT_STAND
         }
     }
 
@@ -299,12 +299,12 @@ private:
 
             if (!m_gameData.paused)
             {
-                m_regenSpriteIndex = dl_rand() % m_regenSprite.m_numFrames;
+                m_regenSpriteIndex = dl_rand() % m_regenSprite.getNumFrames();
             }
 
             m_regenSprite.draw((playerData->x >> 8) << 1,
                                 playerData->y >> 8,
-                                m_regenSpriteIndex + (playerData->facingDirection ? 0 : m_regenSprite.m_numFrames)); // PLAYER_SPRITE_LEFT_STAND
+                                m_regenSpriteIndex + (playerData->facingDirection ? 0 : m_regenSprite.getNumFrames())); // PLAYER_SPRITE_LEFT_STAND
             break;
         default: 
             /*

@@ -162,6 +162,9 @@ int main()
 
     Game_ChangedRoomCallback = gameRoomChanged;
 
+    Vector2D scrollOffset = Vector2D(-SCREEN_OFFSET_X, -SCREEN_OFFSET_Y);
+    SRL::VDP2::NBG0::SetPosition(scrollOffset);
+
     while(1)
     {
         int controllerIndex = 0;

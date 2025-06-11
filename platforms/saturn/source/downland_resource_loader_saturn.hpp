@@ -77,7 +77,7 @@ public:
 
 		// in the original game, the player splat sprite and the door
 		// are loaded, bitshifted, and drawn on demand. Here we just 
-		// pre-build them because gigs of ram. 
+		// pre-build them because megs of ram. 
 		resources->bitShiftedSprites_playerSplat = buildBitShiftedSprites(resources->sprite_playerSplat, PLAYER_SPLAT_SPRITE_COUNT, PLAYER_SPLAT_SPRITE_ROWS, PLAYER_SPLAT_SPRITE_BYTES_PER_ROW);
 		resources->bitShiftedSprites_door = buildBitShiftedSprites(resources->sprite_door, DOOR_SPRITE_COUNT, DOOR_SPRITE_ROWS, DOOR_SPRITE_BYTES_PER_ROW);
 

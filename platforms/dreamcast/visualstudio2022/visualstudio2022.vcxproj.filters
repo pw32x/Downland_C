@@ -49,9 +49,6 @@
     <ClInclude Include="..\..\..\game\resource_types.h">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\game\sound.h">
-      <Filter>Game</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\game\string_utils.h">
       <Filter>Game</Filter>
     </ClInclude>
@@ -93,6 +90,11 @@
     </ClInclude>
     <ClInclude Include="..\..\..\resource_loaders\resource_loader_filesys.h">
       <Filter>resource_loaders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\alloc.h" />
+    <ClInclude Include="..\..\..\game\rand.h" />
+    <ClInclude Include="..\..\..\game\dl_sound.h">
+      <Filter>Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -146,6 +148,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\resource_loaders\resource_loader_filesys.c">
       <Filter>resource_loaders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game\rand.c">
+      <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

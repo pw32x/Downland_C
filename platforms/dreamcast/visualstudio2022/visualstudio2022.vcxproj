@@ -97,6 +97,7 @@
     <ClInclude Include="..\..\..\game\base_types.h" />
     <ClInclude Include="..\..\..\game\bird.h" />
     <ClInclude Include="..\..\..\game\debug_utils.h" />
+    <ClInclude Include="..\..\..\game\dl_sound.h" />
     <ClInclude Include="..\..\..\game\door_types.h" />
     <ClInclude Include="..\..\..\game\door_utils.h" />
     <ClInclude Include="..\..\..\game\draw_utils.h" />
@@ -114,7 +115,6 @@
     <ClInclude Include="..\..\..\game\rooms\chambers.h" />
     <ClInclude Include="..\..\..\game\rooms\rooms.h" />
     <ClInclude Include="..\..\..\game\rooms\room_types.h" />
-    <ClInclude Include="..\..\..\game\sound.h" />
     <ClInclude Include="..\..\..\game\string_utils.h" />
     <ClInclude Include="..\..\..\resource_loaders\resource_loader_filesys.h" />
   </ItemGroup>

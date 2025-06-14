@@ -14,9 +14,6 @@
     <Filter Include="game\rooms">
       <UniqueIdentifier>{beac2d17-2378-4c5a-ac6b-59d50e2ef8c9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="source\resource_loader">
-      <UniqueIdentifier>{ae60a015-6258-4211-9fc8-4c22e92979dd}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\source\main.cpp">
@@ -146,7 +143,7 @@
     <ClInclude Include="..\..\..\game\resource_types.h">
       <Filter>game</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\game\sound.h">
+    <ClInclude Include="..\..\..\game\dl_sound.h">
       <Filter>game</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\game\string_utils.h">
@@ -190,6 +187,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\game\alloc.h">
       <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\sound_manager.hpp">
+      <Filter>source</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

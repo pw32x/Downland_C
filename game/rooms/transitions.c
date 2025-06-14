@@ -5,7 +5,7 @@
 #include "..\game_types.h"
 #include "..\draw_utils.h"
 #include "..\drops_manager.h"
-#include "..\sound.h"
+#include "..\dl_sound.h"
 
 // This simulates the pause before a room appears in the original game.
 // In the original game, the pause is because the background is being

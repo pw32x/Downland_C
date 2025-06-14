@@ -9,9 +9,8 @@ extern "C"
 #include "game_types.h"
 #include "door_types.h"
 #include "game.h"
-#include "sound.h"
+#include "dl_sound.h"
 #include "resource_types.h"
-#include "sound.h"
 #include "drops_manager.h"
 #include "drops_types.h"
 #include "pickup_types.h"
@@ -79,6 +78,7 @@ public:
         m_pickUpSprites[1] = &m_moneyBagSprite;
         m_pickUpSprites[2] = &m_keySprite;
 
+        memset(&m_gameData, 0, sizeof(GameData));
         Game_Init(&m_gameData, m_resources);
 
     }

@@ -12,7 +12,7 @@ extern "C"
 #include "../game/physics_utils.h"
 #include "../game/debug_utils.h"
 #include "../game/draw_utils.h"
-#include "../game/sound.h"
+#include "../game/dl_sound.h"
 #include "../game/alloc.h"
 #include "../game/dl_rand.h"
 }

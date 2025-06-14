@@ -9,7 +9,7 @@
 #include "game_types.h"
 #include "pickup_types.h"
 #include "door_utils.h"
-#include "sound.h"
+#include "dl_sound.h"
 #include "dl_rand.h"
 
 

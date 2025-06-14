@@ -4,11 +4,12 @@ extern "C"
 {
 #include "base_types.h"
 #include "resource_types.h"
-#include "sound.h"
+#include "dl_sound.h"
 #include "game.h"
 }
 
 #include "game_runner.hpp"
+#include "sound_manager.hpp"
 
 using namespace SRL::Types;
 using namespace SRL::Input;
@@ -16,6 +17,7 @@ using namespace SRL::Math;
 
 Resources* g_resources;
 GameRunner* g_gameRunner;
+SoundManager* g_soundManager;
 
 void gameRoomChanged(const GameData* gameData, u8 roomNumber, s8 transitionType)
 {
@@ -25,8 +27,6 @@ void gameRoomChanged(const GameData* gameData, u8 roomNumber, s8 transitionType)
 extern "C"
 {
 
-
-
 void* dl_alloc(u32 size)
 {
     return (void*)new u8[size];
@@ -34,12 +34,12 @@ void* dl_alloc(u32 size)
 
 void Sound_Play(u8 soundIndex, u8 loop)
 {
-	//soundManager.play(soundIndex, loop);
+    g_soundManager->Play(soundIndex, loop);
 }
 
-void Sound_Stop(u8 soundindex)
+void Sound_Stop(u8 soundIndex)
 {
-    //soundManager.stop(soundindex);
+    g_soundManager->Stop(soundIndex);
 }
 }
 
@@ -107,7 +107,7 @@ int main()
      }
 
     g_gameRunner = new GameRunner(g_resources);
-
+    g_soundManager = new SoundManager();
 
     /*
     TestTilebin = new SRL::Tilemap::Interfaces::CubeTile("FOG256.BIN");//Load fog tilemap from cd to work RAM
@@ -189,6 +189,8 @@ int main()
         {
             g_gameRunner->update();
         }
+
+        g_soundManager->Update();
 
         SRL::Core::Synchronize();
 

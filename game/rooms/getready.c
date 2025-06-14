@@ -5,7 +5,7 @@
 #include "..\game_types.h"
 #include "..\draw_utils.h"
 #include "..\drops_manager.h"
-#include "..\sound.h"
+#include "..\dl_sound.h"
 
 void get_ready_room_draw(u8 roomNumber, GameData* gameData, Resources* resources)
 {

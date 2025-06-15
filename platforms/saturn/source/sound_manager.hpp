@@ -6,9 +6,27 @@
 #include "base_types.h"
 #include "dl_sound.h"
 
-#define SOUND_CHANNEL_COUNT 4
 
-int COUNT = 130;
+
+// SoundManager relies on a modified set of channels in
+// srl_sound.hpp. There's no current way to configure this
+// in SaturnRingLib.
+//
+// For sound to properly work, change Channels to this
+// configuration.
+//
+//    static inline PCM Channels[CHANNEL_COUNT] =
+//    {
+//        { _Mono | _PCM8Bit , 0, 127, 0, 0, 0, 0, 0, 0 },
+//        { _Mono | _PCM8Bit , 1, 127, 0, 0, 0, 0, 0, 0 },
+//        { _Mono | _PCM8Bit , 2, 127, 0, 0, 0, 0, 0, 0 },
+//        { _Mono | _PCM8Bit , 3, 127, 0, 0, 0, 0, 0, 0 },
+//        { _Mono | _PCM8Bit , 4, 127, 0, 0, 0, 0, 0, 0 },
+//        { _Mono | _PCM8Bit , 5, 127, 0, 0, 0, 0, 0, 0 },
+//        { _Mono | _PCM8Bit , 6, 127, 0, 0, 0, 0, 0, 0 },
+//        { _Mono | _PCM8Bit , 7, 127, 0, 0, 0, 0, 0, 0 },
+//    };
+
 
 class SoundManager
 {
@@ -35,7 +53,7 @@ public:
 
 SoundManager::SoundManager()
 {
-    for (int loop = 0; loop < SOUND_CHANNEL_COUNT; loop++)
+    for (int loop = 0; loop < SOUND_NUM_SOUNDS; loop++)
     {
         m_isLooping[loop] = false;
         m_isPlaying[loop] = false;

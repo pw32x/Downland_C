@@ -10,3 +10,13 @@ Bugs
     DC: walking against the wall makes sound
     
     Gameplay: the bird doesn't disappear when you die?
+    
+    SS: sound driver causes sounds issues 
+        - sometimes a sound doesn't not play
+        - sometimes a looping sound doesn't stop
+        
+        
+    Gameplay: the door opening order isn't correct?
+             chamber 6: key at the bottom right activates both doors
+             
+    Gameplay: chamber 1, picking up the first treasure sometimes kills the player

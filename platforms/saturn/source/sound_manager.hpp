@@ -8,6 +8,8 @@
 
 #define SOUND_CHANNEL_COUNT 4
 
+int COUNT = 130;
+
 class SoundManager
 {
 public:
@@ -21,20 +23,21 @@ public:
 private:
     void LoadSound(u8 soundIndex, const char* path);
 
-private:
-    u8 m_currentChannel;
-    bool m_activeChannels[SOUND_CHANNEL_COUNT];
-    bool m_looping[SOUND_CHANNEL_COUNT];
-    u8 m_channelToSoundIndex[SOUND_CHANNEL_COUNT];
-    u8 m_soundIndexToChannel[SOUND_NUM_SOUNDS];
+public:
+    bool m_isLooping[SOUND_NUM_SOUNDS];
+    bool m_isPlaying[SOUND_NUM_SOUNDS];
+    int m_counts[SOUND_NUM_SOUNDS];
+    int m_countStart[SOUND_NUM_SOUNDS];
     SRL::Sound::Pcm::WaveSound* m_sounds[SOUND_NUM_SOUNDS];
 };
 
 SoundManager::SoundManager()
-    : m_currentChannel(0)
 {
     for (int loop = 0; loop < SOUND_CHANNEL_COUNT; loop++)
-        m_looping[loop] = false;
+    {
+        m_isLooping[loop] = false;
+        m_isPlaying[loop] = false;
+    }
 
     LoadSound(SOUND_JUMP,"JUMP.WAV");
     LoadSound(SOUND_LAND,"LAND.WAV");
@@ -44,34 +47,57 @@ SoundManager::SoundManager()
     LoadSound(SOUND_RUN,"RUN.WAV");
     LoadSound(SOUND_CLIMB_UP,"CLIMB_UP.WAV");
     LoadSound(SOUND_CLIMB_DOWN,"CLIMB_DN.WAV");
+
+    m_countStart[SOUND_JUMP] = 0;
+    m_countStart[SOUND_LAND] = 0;
+    m_countStart[SOUND_SCREEN_TRANSITION] = 0;
+    m_countStart[SOUND_SPLAT] = 0;
+    m_countStart[SOUND_PICKUP] = 0;
+    m_countStart[SOUND_RUN] = 64;
+    m_countStart[SOUND_CLIMB_UP] = 130;
+    m_countStart[SOUND_CLIMB_DOWN] = 48;
 }
 
 void SoundManager::Play(u8 soundIndex, bool loop)
 {
-    m_sounds[soundIndex]->PlayOnChannel(m_currentChannel);
-    m_looping[m_currentChannel] = loop;
-    m_channelToSoundIndex[m_currentChannel] = soundIndex;
-    m_soundIndexToChannel[soundIndex] = m_currentChannel;
-    m_currentChannel = (m_currentChannel + 1) % SOUND_CHANNEL_COUNT;
+    if (m_sounds[soundIndex] == NULL)
+        return;
+
+    if (m_isLooping[soundIndex] && m_isPlaying[soundIndex])
+        return;
+
+    m_isPlaying[soundIndex] = true;
+    SRL::Sound::Pcm::StopSound(soundIndex);
+    m_sounds[soundIndex]->PlayOnChannel(soundIndex);
+    m_counts[soundIndex] = m_countStart[soundIndex];
+    m_isLooping[soundIndex] = loop;
 }
 
 void SoundManager::Stop(u8 soundIndex)
 {
-    u8 channel = m_soundIndexToChannel[soundIndex];
-    SRL::Sound::Pcm::StopSound(channel);
-    m_looping[channel] = false;
+    if (m_isPlaying[soundIndex])
+        SRL::Sound::Pcm::StopSound(soundIndex);
+
+    m_isPlaying[soundIndex] = false;
+    m_isLooping[soundIndex] = false;
+    m_counts[soundIndex] = m_countStart[soundIndex];
 }
 
 void SoundManager::Update()
 {
-    for (int loop = 0; loop < SOUND_CHANNEL_COUNT; loop++)
+    for (int loop = 0; loop < SOUND_NUM_SOUNDS; loop++)
     {
-        if (SRL::Sound::Pcm::IsChannelFree(loop) &&
-            m_looping[loop])
+        if (m_isLooping[loop])
         {
-            u8 soundIndex = m_channelToSoundIndex[loop];
+            m_counts[loop]--;
 
-            m_sounds[soundIndex]->PlayOnChannel(loop);        
+            if (m_counts[loop] == 0)
+            {
+                SRL::Sound::Pcm::StopSound(loop);
+                m_sounds[loop]->PlayOnChannel(loop);    
+                m_counts[loop] = m_countStart[loop];
+                //m_counts[loop] = COUNT;
+            }
         }
     }
 }

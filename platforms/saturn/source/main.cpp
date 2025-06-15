@@ -183,6 +183,9 @@ int main()
         if (gameData->joystickState.startPressed)
         {
             gameData->paused = !gameData->paused;
+
+            if (gameData->paused)
+                g_soundManager->StopAll();
         }
 
         if (!gameData->paused)

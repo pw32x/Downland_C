@@ -18,6 +18,8 @@ public:
     void Play(u8 soundIndex, bool loop);
     void Stop(u8 soundIndex);
 
+    void StopAll();
+
     void Update();
 
 private:
@@ -47,6 +49,7 @@ SoundManager::SoundManager()
     LoadSound(SOUND_RUN,"RUN.WAV");
     LoadSound(SOUND_CLIMB_UP,"CLIMB_UP.WAV");
     LoadSound(SOUND_CLIMB_DOWN,"CLIMB_DN.WAV");
+    SRL::Debug::Print(1, 26,"                                  ");
 
     m_countStart[SOUND_JUMP] = 0;
     m_countStart[SOUND_LAND] = 0;
@@ -83,6 +86,14 @@ void SoundManager::Stop(u8 soundIndex)
     m_counts[soundIndex] = m_countStart[soundIndex];
 }
 
+void SoundManager::StopAll()
+{
+    for (int loop = 0; loop < SOUND_NUM_SOUNDS; loop++)
+    {
+        Stop(loop);
+    }
+}
+
 void SoundManager::Update()
 {
     for (int loop = 0; loop < SOUND_NUM_SOUNDS; loop++)
@@ -104,6 +115,7 @@ void SoundManager::Update()
 
 void SoundManager::LoadSound(u8 soundIndex, const char* path)
 {
+    SRL::Debug::Print(1, 26,"Loading sound: %s               ", path);
     m_sounds[soundIndex] = lwnew SRL::Sound::Pcm::WaveSound(path);
 }
 

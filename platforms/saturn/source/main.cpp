@@ -15,9 +15,14 @@ using namespace SRL::Types;
 using namespace SRL::Input;
 using namespace SRL::Math;
 
+#define ENABLE_SOUND
+
 Resources* g_resources;
 GameRunner* g_gameRunner;
+
+#ifdef ENABLE_SOUND 
 SoundManager* g_soundManager;
+#endif
 
 void gameRoomChanged(const GameData* gameData, u8 roomNumber, s8 transitionType)
 {
@@ -34,12 +39,16 @@ void* dl_alloc(u32 size)
 
 void Sound_Play(u8 soundIndex, u8 loop)
 {
+#ifdef ENABLE_SOUND 
     g_soundManager->Play(soundIndex, loop);
+#endif
 }
 
 void Sound_Stop(u8 soundIndex)
 {
+#ifdef ENABLE_SOUND 
     g_soundManager->Stop(soundIndex);
+#endif
 }
 }
 
@@ -107,7 +116,10 @@ int main()
      }
 
     g_gameRunner = new GameRunner(g_resources);
+
+#ifdef ENABLE_SOUND 
     g_soundManager = new SoundManager();
+#endif
 
     /*
     TestTilebin = new SRL::Tilemap::Interfaces::CubeTile("FOG256.BIN");//Load fog tilemap from cd to work RAM
@@ -124,12 +136,16 @@ int main()
     //store XY screen positions of Background scrolls:
     */
     Vector2D Nbg0Position(0.0, 0.0);
-    /*
     Vector2D Nbg1Position(0.0, 0.0);
+
+    /*
     Vector2D Nbg2Position(-64.0, -16.0);
     */
-    SRL::VDP2::NBG0::SetPriority(SRL::VDP2::Priority::Layer2);//set NBG0 priority
+    SRL::VDP2::NBG0::SetPriority(SRL::VDP2::Priority::Layer0);//set NBG0 priority
     SRL::VDP2::NBG0::ScrollEnable();//enable display of NBG0 
+
+    //SRL::VDP2::NBG1::SetPriority(SRL::VDP2::Priority::Layer1);//set NBG1 priority
+    //SRL::VDP2::NBG1::ScrollEnable();//enable display of NBG1 
 
     /*
     SRL::VDP2::NBG1::SetPriority(SRL::VDP2::Priority::Layer6);//set NBG1 priority
@@ -184,8 +200,10 @@ int main()
         {
             gameData->paused = !gameData->paused;
 
+#ifdef ENABLE_SOUND 
             if (gameData->paused)
                 g_soundManager->StopAll();
+#endif
         }
 
         if (!gameData->paused)
@@ -193,7 +211,9 @@ int main()
             g_gameRunner->update();
         }
 
+#ifdef ENABLE_SOUND 
         g_soundManager->Update();
+#endif
 
         SRL::Core::Synchronize();
 

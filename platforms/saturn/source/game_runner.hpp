@@ -81,11 +81,14 @@ public:
         memset(&m_gameData, 0, sizeof(GameData));
         Game_Init(&m_gameData, m_resources);
 
+
+        g_rooms[WIPE_TRANSITION_ROOM_INDEX] = g_rooms[TRANSITION_ROOM_INDEX];
     }
 
 
     void update()
     {
+        m_gameData.transitionInitialDelay = 0;
         Game_Update(&m_gameData, m_resources);
     }
 
@@ -108,56 +111,6 @@ public:
         }
     }
 
-    void handleRoomChange()
-    {
-        SRL::VDP2::NBG0::ScrollDisable();//enable display of NBG0 
-
-        u8* frameBuffer8bpp = new u8[FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT];
-
-        ImageUtils::ImageConverter::convert1bppImageTo8bppCrtEffectImage(m_gameData.cleanBackground,
-                                                                         frameBuffer8bpp,
-                                                                         FRAMEBUFFER_WIDTH,
-                                                                         FRAMEBUFFER_HEIGHT,
-                                                                         ImageUtils::ImageConverter::CrtColor::Blue);
-
-        BitmapUtils::InMemoryBitmap* framebufferBitmap = new BitmapUtils::InMemoryBitmap(frameBuffer8bpp, 
-                                                                                         FRAMEBUFFER_WIDTH, 
-                                                                                         FRAMEBUFFER_HEIGHT, 
-                                                                                         PaletteUtils::g_downlandPalette, 
-                                                                                         PaletteUtils::g_downlandPaletteColorsCount);
-
-        SRL::Tilemap::Interfaces::Bmp2Tile* tileSet = new SRL::Tilemap::Interfaces::Bmp2Tile(*framebufferBitmap);
-
-        if (!m_layerInitialized)
-        {
-            // init the whole layer
-            SRL::VDP2::NBG0::LoadTilemap(*tileSet);
-            m_layerInitialized = true;
-
-            SRL::VDP2::NBG0::SetPriority(SRL::VDP2::Priority::Layer2);//set NBG0 priority
-        }
-        else
-        {
-            // we can't easily reset just the layer, so
-            // just replace the tiles and map directly
-            Cell2VRAM((uint8_t*)tileSet->GetCellData(), 
-                      SRL::VDP2::NBG0::CellAddress, 
-                      SRL::VDP2::NBG0::Info.CellByteSize);
-
-            Map2VRAM(SRL::VDP2::NBG0::Info,
-                     (uint16_t*)tileSet->GetMapData(),
-                     SRL::VDP2::NBG0::MapAddress,
-                     SRL::VDP2::NBG0::TilePalette.GetId(),
-                     SRL::VDP2::NBG0::GetCellOffset(SRL::VDP2::NBG0::Info, SRL::VDP2::NBG0::CellAddress));
-        }
-
-
-        delete tileSet;//free work RAM
-        delete [] frameBuffer8bpp;
-        delete framebufferBitmap;
-
-        SRL::VDP2::NBG0::ScrollEnable();//enable display of NBG0 
-    }
 
     void draw()
     {
@@ -250,18 +203,6 @@ private:
 
     void drawChamber()
     {
-        /*
-        // Update texture from gameFramebuffer
-        SDLUtils_convert1bppImageTo32bppCrtEffectImage(m_gameData.cleanBackground,
-                                                       framebuffer,
-                                                       FRAMEBUFFER_WIDTH,
-                                                       FRAMEBUFFER_HEIGHT,
-                                                       CrtColor::Blue);
-        */
-
-        // draw drops
-
-
         drawDrops(&m_gameData);
 
         const PlayerData* playerData = m_gameData.currentPlayerData;
@@ -276,16 +217,6 @@ private:
                 m_pickUpSprites[pickups->type]->draw(pickups->x << 1, 
                                                      pickups->y, 
                                                      0);
-
-                /*
-                drawSprite(framebuffer, 
-                            FRAMEBUFFER_WIDTH, 
-                            FRAMEBUFFER_HEIGHT,
-                            pickups->x << 1,
-                            pickups->y,
-                            0,
-                            m_pickUpSprites[pickups->type]);
-                            */
             }
 
             pickups++;
@@ -298,16 +229,6 @@ private:
             m_splatSprite.draw((playerData->x >> 8) << 1,
                                (playerData->y >> 8) + 7,
                                playerData->splatFrameNumber);
-
-            /*
-            drawSprite(framebuffer, 
-                        FRAMEBUFFER_WIDTH, 
-                        FRAMEBUFFER_HEIGHT,
-                        (playerData->x >> 8) << 1,
-                        (playerData->y >> 8) + 7,
-                        playerData->splatFrameNumber,
-                        &m_playerSplatSprite);
-            */
             break;
         case PLAYER_STATE_REGENERATION: 
 
@@ -321,16 +242,6 @@ private:
                                 m_regenSpriteIndex + (playerData->facingDirection ? 0 : m_regenSprite.getNumFrames())); // PLAYER_SPRITE_LEFT_STAND
             break;
         default: 
-            /*
-            drawSprite(framebuffer, 
-                        FRAMEBUFFER_WIDTH, 
-                        FRAMEBUFFER_HEIGHT,
-                        (playerData->x >> 8) << 1,
-                        playerData->y >> 8,
-                        playerData->currentSpriteNumber,
-                        &m_playerSprite);
-            */
-
             m_playerSprite.draw((playerData->x >> 8) << 1,
                                 playerData->y >> 8,
                                 playerData->currentSpriteNumber);
@@ -344,17 +255,6 @@ private:
             m_ballSprite.draw((ballData->x >> 8) << 1,
                               ballData->y >> 8,
                               ((s8)ballData->fallStateCounter < 0));
-
-            /*
-            drawSprite(framebuffer, 
-                        FRAMEBUFFER_WIDTH, 
-                        FRAMEBUFFER_HEIGHT,
-                        (ballData->x >> 8) << 1,
-                        ballData->y >> 8,
-                        ((s8)ballData->fallStateCounter < 0),
-                        &m_ballSprite);
-            */
-
         }
 
         // draw bird
@@ -365,16 +265,6 @@ private:
             m_birdSprite.draw((birdData->x >> 8) << 1,
                               birdData->y >> 8,
                               birdData->animationFrame);
-
-            /*
-            drawSprite(framebuffer, 
-                        FRAMEBUFFER_WIDTH, 
-                        FRAMEBUFFER_HEIGHT,
-                        (birdData->x >> 8) << 1,
-                        birdData->y >> 8,
-                        birdData->animationFrame,
-                        &m_birdSprite);
-            */
         }
 
         // draw doors
@@ -414,29 +304,22 @@ private:
 
     void drawTitleScreen()
     {
-        /*
-        SDLUtils_convert1bppImageTo32bppCrtEffectImage(m_gameData.cleanBackground,
-                                                       framebuffer,
-                                                       FRAMEBUFFER_WIDTH,
-                                                       FRAMEBUFFER_HEIGHT,
-                                                       CrtColor::Blue);
-        // draw drops
-        drawDrops(gameData, framebuffer);
-        */
-
         drawDrops(&m_gameData);
 
 	    u16 cursorX = m_gameData.numPlayers == 1 ? 32 :128;  // hardcoded locations in the frambuffer
 
         m_cursorSprite.draw(cursorX, 123, 0);
-
     }
 
     void drawTransition()
     {
-	    //memset(framebuffer, 0, FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT * sizeof(u32));
+    }
 
-        /*
+
+    void handleRoomChange()
+    {
+        SRL::VDP2::NBG0::ScrollDisable();//enable display of NBG0 
+
         u8* frameBuffer8bpp = new u8[FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT];
 
         ImageUtils::ImageConverter::convert1bppImageTo8bppCrtEffectImage(m_gameData.cleanBackground,
@@ -452,56 +335,44 @@ private:
                                                                                          PaletteUtils::g_downlandPaletteColorsCount);
 
         SRL::Tilemap::Interfaces::Bmp2Tile* tileSet = new SRL::Tilemap::Interfaces::Bmp2Tile(*framebufferBitmap);
-        SRL::VDP2::NBG0::LoadTilemap(*tileSet);    
+
+        if (!m_layerInitialized)
+        {
+            // init the whole layer
+            SRL::VDP2::NBG0::LoadTilemap(*tileSet);
+            m_layerInitialized = true;
+
+            SRL::VDP2::NBG0::SetPriority(SRL::VDP2::Priority::Layer2);//set NBG0 priority
+        }
+        else
+        {
+            // we can't easily reset just the layer, so
+            // just replace the tiles and map directly
+            Cell2VRAM((uint8_t*)tileSet->GetCellData(), 
+                      SRL::VDP2::NBG0::CellAddress, 
+                      SRL::VDP2::NBG0::Info.CellByteSize);
+
+            Map2VRAM(SRL::VDP2::NBG0::Info,
+                     (uint16_t*)tileSet->GetMapData(),
+                     SRL::VDP2::NBG0::MapAddress,
+                     SRL::VDP2::NBG0::TilePalette.GetId(),
+                     SRL::VDP2::NBG0::GetCellOffset(SRL::VDP2::NBG0::Info, SRL::VDP2::NBG0::CellAddress));
+        }
+
 
         delete tileSet;//free work RAM
         delete [] frameBuffer8bpp;
         delete framebufferBitmap;
-        */
+
+        SRL::VDP2::NBG0::ScrollEnable();
     }
-
-
 
     void drawWipeTransition()
     {
-        /*
-        // not the most efficient as it updates the whole framebuffer
-        // instead of what changed per frame during the wipe, but at the 
-        // moment we're not worried about performance. Different platforms
-        // will have to handle this in different ways.
-	    for (int sectionCounter = 0; sectionCounter < 6; sectionCounter++)
-	    {
-            u32 offset = (sectionCounter * 32 * FRAMEBUFFER_WIDTH);
-	        u32* framebufferRunner = framebuffer + offset;
-	        u32* wipeFramebufferRunner = m_wipeFramebuffer + offset;
-
-            for (int lineCounter = 0; lineCounter < m_gameData.transitionCurrentLine; lineCounter++)
-            {
-		        for (int innerLoop = 0; innerLoop < FRAMEBUFFER_WIDTH; innerLoop++)
-		        {
-			        *framebufferRunner = *wipeFramebufferRunner;
-
-			        // draw a solid line underneath the pixel
-				    *(framebufferRunner + FRAMEBUFFER_WIDTH) = 0x000000ff;
-
-			        framebufferRunner++;
-			        wipeFramebufferRunner++;
-		        }
-            }
-	    }
-        */
     }
 
     void drawGetReadyScreen()
     {
-        /*
-        SDLUtils_convert1bppImageTo32bppCrtEffectImage(m_gameData.cleanBackground,
-                                                       framebuffer,
-                                                       FRAMEBUFFER_WIDTH,
-                                                       FRAMEBUFFER_HEIGHT,
-                                                       CrtColor::Blue);
-        */
-
         drawDrops(&m_gameData);
     }
 

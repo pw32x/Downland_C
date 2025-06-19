@@ -22,6 +22,7 @@
     <VCProjectVersion>17.0</VCProjectVersion>
     <ProjectGuid>{535C2E42-8758-457A-8E36-89387D3E10BE}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
+    <ProjectName>SegaDreamcast</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

@@ -18,3 +18,6 @@ Before Building
         SRL_SDK_ROOT = /cygdrive/c/development/SaturnDev/SaturnRingLib/saturnringlib
         SRL_SDK_ROOT_WIN32 = c:\development\SaturnDev\SaturnRingLib\saturnringlib
     
+    
+    Also requires modifying srl_sound.hpp to configure the sound channels. 
+        see the project for more details

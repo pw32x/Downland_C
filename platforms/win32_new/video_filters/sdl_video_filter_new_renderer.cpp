@@ -166,8 +166,9 @@ void drawPlayerLives(u8 playerLives,
 }
 
 SDLVideoFilterNewRenderer::SDLVideoFilterNewRenderer(SDL_Renderer* renderer, 
-						                   const Resources* resources) 
-	: SDLVideoFilterBase(renderer, resources),
+						                             const Resources* resources) 
+	: m_renderer(renderer), 
+	  m_outputTexture(nullptr),
       m_resources(resources),
       m_dropSprite(resources->sprites_drops, DROP_SPRITE_WIDTH, DROP_SPRITE_ROWS, DROP_SPRITE_COUNT),
       m_ballSprite(resources->sprites_bouncyBall, BALL_SPRITE_WIDTH, BALL_SPRITE_ROWS, BALL_SPRITE_COUNT),
@@ -221,6 +222,11 @@ SDLVideoFilterNewRenderer::SDLVideoFilterNewRenderer(SDL_Renderer* renderer,
                             &SDLVideoFilterNewRenderer::drawGetReadyScreen };
 }
 
+SDLVideoFilterNewRenderer::~SDLVideoFilterNewRenderer()
+{
+    shutdown();
+}
+
 bool SDLVideoFilterNewRenderer::init()
 {
     // Create the texture
@@ -237,7 +243,11 @@ bool SDLVideoFilterNewRenderer::init()
 
 void SDLVideoFilterNewRenderer::shutdown()
 {
-    SDLVideoFilterBase::shutdown();
+	if (m_outputTexture != nullptr)
+	{
+		SDL_DestroyTexture(m_outputTexture);
+		m_outputTexture = nullptr;
+	}
 }
 
 

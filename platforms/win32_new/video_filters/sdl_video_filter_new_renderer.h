@@ -1,7 +1,9 @@
 #ifndef SDL_VIDEO_FILTER_NEW_RENDERER
 #define SDL_VIDEO_FILTER_NEW_RENDERER
 
-#include "sdl_video_filter_base.h"
+#include <SDL3/SDL.h>
+#include "..\..\..\game\resource_types.h"
+#include "..\..\..\game\game.h"
 #include <vector>
 
 // This is an example of using the game state to render
@@ -32,18 +34,23 @@ public:
 	const u8* m_originalSprite;
 };
 
-class SDLVideoFilterNewRenderer : public SDLVideoFilterBase
+class SDLVideoFilterNewRenderer
 {
 public:
 	SDLVideoFilterNewRenderer(SDL_Renderer* renderer, 
-						 const Resources* resources);
+						     const Resources* resources);
 
-	bool init() override;
-	void shutdown() override;
-	void update(const GameData* gameData) override;
+	~SDLVideoFilterNewRenderer();
+
+	void shutdown();
+	void update(const GameData* gameData);
 	void roomChanged(const GameData* gameData, u8 roomNumber, s8 transitionType);
 
+	SDL_Texture* getOutputTexture() { return m_outputTexture; }
+
 private:
+
+	bool init();
 
 	void updateRegenSprite(u8 currentPlayerSpriteNumber);
 
@@ -56,6 +63,9 @@ private:
 	void drawGetReadyScreen(const GameData* gameData, u32* framebuffer);
 
 private:
+	SDL_Renderer* m_renderer;
+	SDL_Texture* m_outputTexture;
+
 	unsigned int m_framebuffer[FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT];
 	unsigned int m_wipeFramebuffer[FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT];
 
@@ -79,6 +89,8 @@ private:
 
 	typedef void (SDLVideoFilterNewRenderer::*DrawRoomFunction)(const GameData* gameData, u32* framebuffer);
 	std::vector<DrawRoomFunction> m_drawRoomFunctions;
+
+
 };
 
 #endif

@@ -22,9 +22,6 @@ extern "C"
 #include <SDL3/SDL_gamepad.h>
 
 #include "video_filters\sdl_video_filter_utils.h"
-#include "video_filters\sdl_video_filter_raw.h"
-#include "video_filters\sdl_video_filter_basic_crt_artifacts_blue.h"
-#include "video_filters\sdl_video_filter_basic_crt_artifacts_orange.h"
 #include "video_filters\sdl_video_filter_new_renderer.h"
 
 #include "..\..\sdl_sound\sdl_sound_manager.h"
@@ -55,7 +52,7 @@ Resources resources;
 GameData gameData;
 
 int currentVideoFilterIndex = -1;
-std::vector<std::unique_ptr<SDLVideoFilterBase>> videoFilters;
+std::unique_ptr<SDLVideoFilterNewRenderer> m_newRenderer;
 
 SDLSoundManager soundManager;
 
@@ -88,16 +85,6 @@ const char* romFileNames[] =
 int romFileNamesCount = sizeof(romFileNames) / sizeof(romFileNames[0]);
 
 SDL_Gamepad* gamePad = NULL;
-
-void selectFilter(int videoFilterIndex)
-{
-    if (currentVideoFilterIndex != -1)
-    {
-        videoFilters[currentVideoFilterIndex]->shutdown();
-    }
-
-    currentVideoFilterIndex = videoFilterIndex;
-}
 
 void updateDestRect()
 {
@@ -134,8 +121,7 @@ void setFullscreen(bool fullscreen)
 
 void gameRoomChanged(const GameData* gameData, u8 roomNumber, s8 transitionType)
 {
-    auto& currentVideoFilter = videoFilters[currentVideoFilterIndex];
-    currentVideoFilter->roomChanged(gameData, roomNumber, transitionType);
+    m_newRenderer->roomChanged(gameData, roomNumber, transitionType);
 }
 
 SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
@@ -243,12 +229,7 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
 
     // Init video filters
     // 
-    videoFilters.emplace_back(std::make_unique<SDLVideoFilterRaw>(renderer, &resources));
-    videoFilters.emplace_back(std::make_unique<SDLVideoFilterBasicCrtArtifactsBlue>(renderer, &resources));
-    videoFilters.emplace_back(std::make_unique<SDLVideoFilterBasicCrtArtifactsOrange>(renderer, &resources));
-    videoFilters.emplace_back(std::make_unique<SDLVideoFilterNewRenderer>(renderer, &resources));
-
-    selectFilter((int)videoFilters.size() - 1);
+    m_newRenderer = std::make_unique<SDLVideoFilterNewRenderer>(renderer, &resources);
 
     Game_ChangedRoomCallback = gameRoomChanged;
 
@@ -279,15 +260,6 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
                 soundManager.pauseAll();
             else
                 soundManager.resumeAll();
-        }
-        else if (event->key.key == SDLK_F1)
-        {
-            int nextVideoFilterIndex = currentVideoFilterIndex + 1;
-
-            if (nextVideoFilterIndex >= (int)videoFilters.size())
-                nextVideoFilterIndex = 0;
-
-            selectFilter(nextVideoFilterIndex);
         }
         else if (event->key.key == SDLK_RETURN && currentKeyStates[SDL_SCANCODE_LALT])
         {
@@ -450,10 +422,8 @@ SDL_AppResult SDL_AppIterate(void *appstate)
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
 
-    auto& currentVideoFilter = videoFilters[currentVideoFilterIndex];
-
-    currentVideoFilter->update(&gameData);
-    SDL_RenderTexture(renderer, currentVideoFilter->getOutputTexture(), NULL, &destRect);
+    m_newRenderer->update(&gameData);
+    SDL_RenderTexture(renderer, m_newRenderer->getOutputTexture(), NULL, &destRect);
 
 #ifdef DEV_MODE
     SDLUtils_updateDebugFramebufferTexture(debugFramebuffer, 

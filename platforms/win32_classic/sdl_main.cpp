@@ -25,7 +25,6 @@ extern "C"
 #include "video_filters\sdl_video_filter_raw.h"
 #include "video_filters\sdl_video_filter_basic_crt_artifacts_blue.h"
 #include "video_filters\sdl_video_filter_basic_crt_artifacts_orange.h"
-#include "video_filters\sdl_video_filter_new_renderer.h"
 
 #include "..\..\sdl_sound\sdl_sound_manager.h"
 
@@ -246,9 +245,8 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
     videoFilters.emplace_back(std::make_unique<SDLVideoFilterRaw>(renderer, &resources));
     videoFilters.emplace_back(std::make_unique<SDLVideoFilterBasicCrtArtifactsBlue>(renderer, &resources));
     videoFilters.emplace_back(std::make_unique<SDLVideoFilterBasicCrtArtifactsOrange>(renderer, &resources));
-    videoFilters.emplace_back(std::make_unique<SDLVideoFilterNewRenderer>(renderer, &resources));
 
-    selectFilter((int)videoFilters.size() - 1);
+    selectFilter(1);
 
     Game_ChangedRoomCallback = gameRoomChanged;
 

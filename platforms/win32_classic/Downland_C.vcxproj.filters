@@ -125,9 +125,6 @@
     <ClCompile Include="sdl_main.cpp">
       <Filter>sdl_main</Filter>
     </ClCompile>
-    <ClCompile Include="video_filters\sdl_video_filter_new_renderer.cpp">
-      <Filter>sdl_main\video_filters</Filter>
-    </ClCompile>
     <ClCompile Include="video_filters\sdl_video_filter_raw.cpp">
       <Filter>sdl_main\video_filters</Filter>
     </ClCompile>
@@ -231,9 +228,6 @@
     </ClInclude>
     <ClInclude Include="..\..\game\dl_sound.h">
       <Filter>game</Filter>
-    </ClInclude>
-    <ClInclude Include="video_filters\sdl_video_filter_new_renderer.h">
-      <Filter>sdl_main\video_filters</Filter>
     </ClInclude>
     <ClInclude Include="video_filters\sdl_video_filter_raw.h">
       <Filter>sdl_main\video_filters</Filter>

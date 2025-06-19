@@ -92,7 +92,6 @@
     <ClCompile Include="sdl_main.cpp" />
     <ClCompile Include="video_filters\sdl_video_filter_basic_crt_artifacts_blue.cpp" />
     <ClCompile Include="video_filters\sdl_video_filter_basic_crt_artifacts_orange.cpp" />
-    <ClCompile Include="video_filters\sdl_video_filter_new_renderer.cpp" />
     <ClCompile Include="video_filters\sdl_video_filter_raw.cpp" />
     <ClCompile Include="video_filters\sdl_video_filter_utils.cpp" />
   </ItemGroup>
@@ -130,7 +129,6 @@
     <ClInclude Include="video_filters\sdl_video_filter_base.h" />
     <ClInclude Include="video_filters\sdl_video_filter_basic_crt_artifacts_blue.h" />
     <ClInclude Include="video_filters\sdl_video_filter_basic_crt_artifacts_orange.h" />
-    <ClInclude Include="video_filters\sdl_video_filter_new_renderer.h" />
     <ClInclude Include="video_filters\sdl_video_filter_raw.h" />
     <ClInclude Include="video_filters\sdl_video_filter_utils.h" />
   </ItemGroup>

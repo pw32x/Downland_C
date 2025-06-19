@@ -39,6 +39,9 @@
     <Filter Include="thirdparty\SDL3\x86">
       <UniqueIdentifier>{48861716-7952-44c3-bad7-cfdaa8041002}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sdl_sound">
+      <UniqueIdentifier>{b7ea6156-516b-482a-8c5e-8ae9ac31c126}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Media Include="..\..\sounds\land.wav">
@@ -67,12 +70,6 @@
     </Media>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\sdl_main\sdl_sound.cpp">
-      <Filter>sdl_main</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\sdl_main\sdl_sound_manager.cpp">
-      <Filter>sdl_main</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\resource_loaders\resource_loader_filesys.c">
       <Filter>resource_loaders</Filter>
     </ClCompile>
@@ -143,14 +140,14 @@
     <ClCompile Include="video_filters\sdl_video_filter_basic_crt_artifacts_orange.cpp">
       <Filter>sdl_main\video_filters</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\sdl_sound\sdl_sound_manager.cpp">
+      <Filter>sdl_sound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sdl_sound\sdl_sound.cpp">
+      <Filter>sdl_sound</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\sdl_main\sdl_sound.h">
-      <Filter>sdl_main</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\sdl_main\sdl_sound_manager.h">
-      <Filter>sdl_main</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\resource_loaders\resource_loader_filesys.h">
       <Filter>resource_loaders</Filter>
     </ClInclude>
@@ -252,6 +249,12 @@
     </ClInclude>
     <ClInclude Include="video_filters\sdl_video_filter_basic_crt_artifacts_orange.h">
       <Filter>sdl_main\video_filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sdl_sound\sdl_sound_manager.h">
+      <Filter>sdl_sound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sdl_sound\sdl_sound.h">
+      <Filter>sdl_sound</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

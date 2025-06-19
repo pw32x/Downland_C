@@ -27,7 +27,7 @@ extern "C"
 #include "video_filters\sdl_video_filter_basic_crt_artifacts_orange.h"
 #include "video_filters\sdl_video_filter_new_renderer.h"
 
-#include "..\..\sdl_main\sdl_sound_manager.h"
+#include "..\..\sdl_sound\sdl_sound_manager.h"
 
 #include <vector>
 

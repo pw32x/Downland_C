@@ -86,8 +86,8 @@
     <ClCompile Include="..\..\game\rooms\transitions.c" />
     <ClCompile Include="..\..\game\string_utils.c" />
     <ClCompile Include="..\..\resource_loaders\resource_loader_filesys.c" />
-    <ClCompile Include="..\..\sdl_main\sdl_sound.cpp" />
-    <ClCompile Include="..\..\sdl_main\sdl_sound_manager.cpp" />
+    <ClCompile Include="..\..\sdl_sound\sdl_sound.cpp" />
+    <ClCompile Include="..\..\sdl_sound\sdl_sound_manager.cpp" />
     <ClCompile Include="alloc.c" />
     <ClCompile Include="sdl_main.cpp" />
     <ClCompile Include="video_filters\sdl_video_filter_basic_crt_artifacts_blue.cpp" />
@@ -124,8 +124,8 @@
     <ClInclude Include="..\..\game\rooms\room_types.h" />
     <ClInclude Include="..\..\game\string_utils.h" />
     <ClInclude Include="..\..\resource_loaders\resource_loader_filesys.h" />
-    <ClInclude Include="..\..\sdl_main\sdl_sound.h" />
-    <ClInclude Include="..\..\sdl_main\sdl_sound_manager.h" />
+    <ClInclude Include="..\..\sdl_sound\sdl_sound.h" />
+    <ClInclude Include="..\..\sdl_sound\sdl_sound_manager.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="video_filters\sdl_video_filter_base.h" />
     <ClInclude Include="video_filters\sdl_video_filter_basic_crt_artifacts_blue.h" />

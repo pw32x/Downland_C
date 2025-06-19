@@ -1,4 +1,4 @@
-#include "sdl_video_filter_utils.h"
+#include "sdl_image_utils.h"
 
 // Convert the 1-bit framebuffer into a texture
 void SDLUtils_updateFramebufferTexture(const u8* framebuffer, 

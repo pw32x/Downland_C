@@ -89,9 +89,9 @@
     <ClCompile Include="..\..\sdl_sound\sdl_sound.cpp" />
     <ClCompile Include="..\..\sdl_sound\sdl_sound_manager.cpp" />
     <ClCompile Include="alloc.c" />
+    <ClCompile Include="game_renderer.cpp" />
     <ClCompile Include="sdl_main.cpp" />
-    <ClCompile Include="video_filters\sdl_video_filter_new_renderer.cpp" />
-    <ClCompile Include="video_filters\sdl_video_filter_utils.cpp" />
+    <ClCompile Include="sdl_image_utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\game\alloc.h" />
@@ -123,9 +123,9 @@
     <ClInclude Include="..\..\resource_loaders\resource_loader_filesys.h" />
     <ClInclude Include="..\..\sdl_sound\sdl_sound.h" />
     <ClInclude Include="..\..\sdl_sound\sdl_sound_manager.h" />
+    <ClInclude Include="game_renderer.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="video_filters\sdl_video_filter_new_renderer.h" />
-    <ClInclude Include="video_filters\sdl_video_filter_utils.h" />
+    <ClInclude Include="sdl_image_utils.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Downland.ico" />

@@ -1,10 +1,10 @@
-#ifndef SDL_VIDEO_FILTER_UTILS_INCLUDE_H
-#define SDL_VIDEO_FILTER_UTILS_INCLUDE_H
+#ifndef SDL_IMAGE_UTILS_INCLUDE_H
+#define SDL_IMAGE_UTILS_INCLUDE_H
 
 extern "C"
 {
-#include "../../../game/base_defines.h"
-#include "../../../game/base_types.h"
+#include "../../game/base_defines.h"
+#include "../../game/base_types.h"
 }
 
 #include <SDL3/SDL.h>

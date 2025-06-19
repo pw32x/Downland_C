@@ -1,9 +1,9 @@
-#ifndef SDL_VIDEO_FILTER_NEW_RENDERER
-#define SDL_VIDEO_FILTER_NEW_RENDERER
+#ifndef SDL_GAME_RENDERER
+#define SDL_GAME_RENDERER
 
 #include <SDL3/SDL.h>
-#include "..\..\..\game\resource_types.h"
-#include "..\..\..\game\game.h"
+#include "..\..\game\resource_types.h"
+#include "..\..\game\game.h"
 #include <vector>
 
 // This is an example of using the game state to render
@@ -13,7 +13,7 @@
 
 extern "C"
 {
-#include "..\..\..\game\base_defines.h"
+#include "..\..\game\base_defines.h"
 }
 
 typedef std::vector<u32> SpriteFrame;

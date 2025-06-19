@@ -21,8 +21,8 @@ extern "C"
 #include <SDL3/SDL_main.h>
 #include <SDL3/SDL_gamepad.h>
 
-#include "video_filters\sdl_video_filter_utils.h"
-#include "video_filters\sdl_video_filter_new_renderer.h"
+#include "sdl_image_utils.h"
+#include "game_renderer.h"
 
 #include "..\..\sdl_sound\sdl_sound_manager.h"
 

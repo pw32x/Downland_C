@@ -24,9 +24,6 @@
     <Filter Include="sounds">
       <UniqueIdentifier>{02b5d9a6-1be8-480e-bd34-251f2e41134c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="sdl_main\video_filters">
-      <UniqueIdentifier>{f7f12c44-e033-405f-94d2-4c81a336cba9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="thirdparty">
       <UniqueIdentifier>{06ce69e5-2593-46bc-8918-797b8c05c6a4}</UniqueIdentifier>
     </Filter>
@@ -125,17 +122,17 @@
     <ClCompile Include="sdl_main.cpp">
       <Filter>sdl_main</Filter>
     </ClCompile>
-    <ClCompile Include="video_filters\sdl_video_filter_new_renderer.cpp">
-      <Filter>sdl_main\video_filters</Filter>
-    </ClCompile>
-    <ClCompile Include="video_filters\sdl_video_filter_utils.cpp">
-      <Filter>sdl_main\video_filters</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\sdl_sound\sdl_sound_manager.cpp">
       <Filter>sdl_sound</Filter>
     </ClCompile>
     <ClCompile Include="..\..\sdl_sound\sdl_sound.cpp">
       <Filter>sdl_sound</Filter>
+    </ClCompile>
+    <ClCompile Include="sdl_image_utils.cpp">
+      <Filter>sdl_main</Filter>
+    </ClCompile>
+    <ClCompile Include="game_renderer.cpp">
+      <Filter>sdl_main</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -223,17 +220,17 @@
     <ClInclude Include="..\..\game\dl_sound.h">
       <Filter>game</Filter>
     </ClInclude>
-    <ClInclude Include="video_filters\sdl_video_filter_new_renderer.h">
-      <Filter>sdl_main\video_filters</Filter>
-    </ClInclude>
-    <ClInclude Include="video_filters\sdl_video_filter_utils.h">
-      <Filter>sdl_main\video_filters</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\sdl_sound\sdl_sound_manager.h">
       <Filter>sdl_sound</Filter>
     </ClInclude>
     <ClInclude Include="..\..\sdl_sound\sdl_sound.h">
       <Filter>sdl_sound</Filter>
+    </ClInclude>
+    <ClInclude Include="game_renderer.h">
+      <Filter>sdl_main</Filter>
+    </ClInclude>
+    <ClInclude Include="sdl_image_utils.h">
+      <Filter>sdl_main</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

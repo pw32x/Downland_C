@@ -73,21 +73,6 @@
     <ClCompile Include="..\..\sdl_main\sdl_sound_manager.cpp">
       <Filter>sdl_main</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\sdl_main\sdl_main.cpp">
-      <Filter>sdl_main</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\sdl_main\video_filters\sdl_video_filter_basic_crt_artifacts_blue.cpp">
-      <Filter>sdl_main\video_filters</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\sdl_main\video_filters\sdl_video_filter_basic_crt_artifacts_orange.cpp">
-      <Filter>sdl_main\video_filters</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\sdl_main\video_filters\sdl_video_filter_raw.cpp">
-      <Filter>sdl_main\video_filters</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\sdl_main\video_filters\sdl_video_filter_utils.cpp">
-      <Filter>sdl_main\video_filters</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\resource_loaders\resource_loader_filesys.c">
       <Filter>resource_loaders</Filter>
     </ClCompile>
@@ -136,12 +121,27 @@
     <ClCompile Include="..\..\game\rooms\chambers.c">
       <Filter>game\rooms</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\sdl_main\video_filters\sdl_video_filter_new_renderer.cpp">
-      <Filter>sdl_main\video_filters</Filter>
-    </ClCompile>
     <ClCompile Include="alloc.c" />
     <ClCompile Include="..\..\game\dl_rand.c">
       <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="sdl_main.cpp">
+      <Filter>sdl_main</Filter>
+    </ClCompile>
+    <ClCompile Include="video_filters\sdl_video_filter_new_renderer.cpp">
+      <Filter>sdl_main\video_filters</Filter>
+    </ClCompile>
+    <ClCompile Include="video_filters\sdl_video_filter_raw.cpp">
+      <Filter>sdl_main\video_filters</Filter>
+    </ClCompile>
+    <ClCompile Include="video_filters\sdl_video_filter_utils.cpp">
+      <Filter>sdl_main\video_filters</Filter>
+    </ClCompile>
+    <ClCompile Include="video_filters\sdl_video_filter_basic_crt_artifacts_blue.cpp">
+      <Filter>sdl_main\video_filters</Filter>
+    </ClCompile>
+    <ClCompile Include="video_filters\sdl_video_filter_basic_crt_artifacts_orange.cpp">
+      <Filter>sdl_main\video_filters</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -150,21 +150,6 @@
     </ClInclude>
     <ClInclude Include="..\..\sdl_main\sdl_sound_manager.h">
       <Filter>sdl_main</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\sdl_main\video_filters\sdl_video_filter_basic_crt_artifacts_blue.h">
-      <Filter>sdl_main\video_filters</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\sdl_main\video_filters\sdl_video_filter_basic_crt_artifacts_orange.h">
-      <Filter>sdl_main\video_filters</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\sdl_main\video_filters\sdl_video_filter_raw.h">
-      <Filter>sdl_main\video_filters</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\sdl_main\video_filters\sdl_video_filter_utils.h">
-      <Filter>sdl_main\video_filters</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\sdl_main\video_filters\sdl_video_filter_base.h">
-      <Filter>sdl_main\video_filters</Filter>
     </ClInclude>
     <ClInclude Include="..\..\resource_loaders\resource_loader_filesys.h">
       <Filter>resource_loaders</Filter>
@@ -241,9 +226,6 @@
     <ClInclude Include="..\..\game\rooms\chambers.h">
       <Filter>game\rooms</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\sdl_main\video_filters\sdl_video_filter_new_renderer.h">
-      <Filter>sdl_main\video_filters</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\game\alloc.h">
       <Filter>game</Filter>
     </ClInclude>
@@ -252,6 +234,24 @@
     </ClInclude>
     <ClInclude Include="..\..\game\dl_sound.h">
       <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="video_filters\sdl_video_filter_new_renderer.h">
+      <Filter>sdl_main\video_filters</Filter>
+    </ClInclude>
+    <ClInclude Include="video_filters\sdl_video_filter_raw.h">
+      <Filter>sdl_main\video_filters</Filter>
+    </ClInclude>
+    <ClInclude Include="video_filters\sdl_video_filter_utils.h">
+      <Filter>sdl_main\video_filters</Filter>
+    </ClInclude>
+    <ClInclude Include="video_filters\sdl_video_filter_base.h">
+      <Filter>sdl_main\video_filters</Filter>
+    </ClInclude>
+    <ClInclude Include="video_filters\sdl_video_filter_basic_crt_artifacts_blue.h">
+      <Filter>sdl_main\video_filters</Filter>
+    </ClInclude>
+    <ClInclude Include="video_filters\sdl_video_filter_basic_crt_artifacts_orange.h">
+      <Filter>sdl_main\video_filters</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

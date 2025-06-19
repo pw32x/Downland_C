@@ -2,8 +2,8 @@
 #define SDL_VIDEO_FILTER_BASE
 
 #include <SDL3/SDL.h>
-#include "..\..\game\resource_types.h"
-#include "..\..\game\game.h"
+#include "..\..\..\game\resource_types.h"
+#include "..\..\..\game\game.h"
 
 class SDLVideoFilterBase
 {

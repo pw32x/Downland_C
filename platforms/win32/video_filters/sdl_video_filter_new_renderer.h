@@ -11,7 +11,7 @@
 
 extern "C"
 {
-#include "..\..\game\base_defines.h"
+#include "..\..\..\game\base_defines.h"
 }
 
 typedef std::vector<u32> SpriteFrame;

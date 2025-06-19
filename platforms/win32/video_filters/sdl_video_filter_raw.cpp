@@ -1,7 +1,7 @@
 #include "sdl_video_filter_raw.h"
 #include "sdl_video_filter_utils.h"
 
-#include "..\..\game\base_defines.h"
+#include "..\..\..\game\base_defines.h"
 
 bool SDLVideoFilterRaw::init()
 {

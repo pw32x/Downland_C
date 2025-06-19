@@ -3,8 +3,8 @@
 
 extern "C"
 {
-#include "../../game/base_defines.h"
-#include "../../game/base_types.h"
+#include "../../../game/base_defines.h"
+#include "../../../game/base_types.h"
 }
 
 #include <SDL3/SDL.h>

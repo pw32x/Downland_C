@@ -4,17 +4,17 @@
 
 extern "C"
 {
-#include "../game/base_defines.h"
-#include "../game/base_types.h"
-#include "../game/game.h"
-#include "../game/game_types.h"
-#include "../resource_loaders/resource_loader_filesys.h"
-#include "../game/physics_utils.h"
-#include "../game/debug_utils.h"
-#include "../game/draw_utils.h"
-#include "../game/dl_sound.h"
-#include "../game/alloc.h"
-#include "../game/dl_rand.h"
+#include "../../game/base_defines.h"
+#include "../../game/base_types.h"
+#include "../../game/game.h"
+#include "../../game/game_types.h"
+#include "../../resource_loaders/resource_loader_filesys.h"
+#include "../../game/physics_utils.h"
+#include "../../game/debug_utils.h"
+#include "../../game/draw_utils.h"
+#include "../../game/dl_sound.h"
+#include "../../game/alloc.h"
+#include "../../game/dl_rand.h"
 }
 
 #include <SDL3/SDL.h>
@@ -27,7 +27,7 @@ extern "C"
 #include "video_filters\sdl_video_filter_basic_crt_artifacts_orange.h"
 #include "video_filters\sdl_video_filter_new_renderer.h"
 
-#include "sdl_sound_manager.h"
+#include "..\..\sdl_main\sdl_sound_manager.h"
 
 #include <vector>
 

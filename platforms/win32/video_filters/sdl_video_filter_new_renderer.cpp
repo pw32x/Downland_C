@@ -1,13 +1,13 @@
 #include "sdl_video_filter_new_renderer.h"
 #include "sdl_video_filter_utils.h"
 
-#include "..\..\game\drops_manager.h"
-#include "..\..\game\drops_types.h"
-#include "..\..\game\rooms\chambers.h"
+#include "..\..\..\game\drops_manager.h"
+#include "..\..\..\game\drops_types.h"
+#include "..\..\..\game\rooms\chambers.h"
 
 extern "C"
 {
-#include "..\..\game\draw_utils.h"
+#include "..\..\..\game\draw_utils.h"
 }
 
 #include <algorithm>

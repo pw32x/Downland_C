@@ -1,18 +1,14 @@
-#ifndef SDL_VIDEO_FILTER_BASIC_CRT_ARTIFACTS_BLUE
-#define SDL_VIDEO_FILTER_BASIC_CRT_ARTIFACTS_BLUE
+#ifndef SDL_VIDEO_FILTER_BASIC_CRT_ARTIFACTS_ORANGE
+#define SDL_VIDEO_FILTER_BASIC_CRT_ARTIFACTS_ORANGE
 
 #include "sdl_video_filter_base.h"
+#include "..\..\..\game\base_defines.h"
 
-extern "C"
-{
-#include "..\..\game\base_defines.h"
-}
-
-class SDLVideoFilterBasicCrtArtifactsBlue : public SDLVideoFilterBase
+class SDLVideoFilterBasicCrtArtifactsOrange : public SDLVideoFilterBase
 {
 public:
-	SDLVideoFilterBasicCrtArtifactsBlue(SDL_Renderer* renderer, 
-										const Resources* resources) 
+	SDLVideoFilterBasicCrtArtifactsOrange(SDL_Renderer* renderer, 
+										  const Resources* resources) 
 		: SDLVideoFilterBase(renderer, resources) {}
 
 	bool init() override;

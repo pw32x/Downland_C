@@ -165,7 +165,7 @@ void drawPlayerLives(u8 playerLives,
     }
 }
 
-SDLVideoFilterNewRenderer::SDLVideoFilterNewRenderer(SDL_Renderer* renderer, 
+GameRenderer::GameRenderer(SDL_Renderer* renderer, 
 						                             const Resources* resources) 
 	: m_renderer(renderer), 
 	  m_outputTexture(nullptr),
@@ -206,28 +206,28 @@ SDLVideoFilterNewRenderer::SDLVideoFilterNewRenderer(SDL_Renderer* renderer,
         }
     }
 
-    m_drawRoomFunctions = { &SDLVideoFilterNewRenderer::drawChamber,
-                            &SDLVideoFilterNewRenderer::drawChamber,
-                            &SDLVideoFilterNewRenderer::drawChamber,
-                            &SDLVideoFilterNewRenderer::drawChamber,
-                            &SDLVideoFilterNewRenderer::drawChamber,
-                            &SDLVideoFilterNewRenderer::drawChamber,
-                            &SDLVideoFilterNewRenderer::drawChamber,
-                            &SDLVideoFilterNewRenderer::drawChamber,
-                            &SDLVideoFilterNewRenderer::drawChamber,
-                            &SDLVideoFilterNewRenderer::drawChamber,
-                            &SDLVideoFilterNewRenderer::drawTitleScreen,
-                            &SDLVideoFilterNewRenderer::drawTransition,
-                            &SDLVideoFilterNewRenderer::drawWipeTransition,
-                            &SDLVideoFilterNewRenderer::drawGetReadyScreen };
+    m_drawRoomFunctions = { &GameRenderer::drawChamber,
+                            &GameRenderer::drawChamber,
+                            &GameRenderer::drawChamber,
+                            &GameRenderer::drawChamber,
+                            &GameRenderer::drawChamber,
+                            &GameRenderer::drawChamber,
+                            &GameRenderer::drawChamber,
+                            &GameRenderer::drawChamber,
+                            &GameRenderer::drawChamber,
+                            &GameRenderer::drawChamber,
+                            &GameRenderer::drawTitleScreen,
+                            &GameRenderer::drawTransition,
+                            &GameRenderer::drawWipeTransition,
+                            &GameRenderer::drawGetReadyScreen };
 }
 
-SDLVideoFilterNewRenderer::~SDLVideoFilterNewRenderer()
+GameRenderer::~GameRenderer()
 {
     shutdown();
 }
 
-bool SDLVideoFilterNewRenderer::init()
+bool GameRenderer::init()
 {
     // Create the texture
     m_outputTexture = SDL_CreateTexture(m_renderer, 
@@ -241,7 +241,7 @@ bool SDLVideoFilterNewRenderer::init()
 	return true;
 }
 
-void SDLVideoFilterNewRenderer::shutdown()
+void GameRenderer::shutdown()
 {
 	if (m_outputTexture != nullptr)
 	{
@@ -251,7 +251,7 @@ void SDLVideoFilterNewRenderer::shutdown()
 }
 
 
-void SDLVideoFilterNewRenderer::updateRegenSprite(u8 currentPlayerSpriteNumber)
+void GameRenderer::updateRegenSprite(u8 currentPlayerSpriteNumber)
 {
     const u8* originalSprite = m_playerSprite.m_originalSprite;
     originalSprite += currentPlayerSpriteNumber * (m_playerSprite.m_width / 8) * m_playerSprite.m_height;
@@ -265,7 +265,7 @@ void SDLVideoFilterNewRenderer::updateRegenSprite(u8 currentPlayerSpriteNumber)
     m_regenSprite.updateSprite(0, m_regenSpriteBuffer);
 }
 
-void SDLVideoFilterNewRenderer::roomChanged(const GameData* gameData, 
+void GameRenderer::roomChanged(const GameData* gameData, 
                                        u8 roomNumber, 
                                        s8 transitionType)
 {
@@ -281,7 +281,7 @@ void SDLVideoFilterNewRenderer::roomChanged(const GameData* gameData,
     }
 }
 
-void SDLVideoFilterNewRenderer::drawDrops(const GameData* gameData, u32* framebuffer)
+void GameRenderer::drawDrops(const GameData* gameData, u32* framebuffer)
 {
     // draw drops
     const Drop* dropsRunner = gameData->dropData.drops;
@@ -304,7 +304,7 @@ void SDLVideoFilterNewRenderer::drawDrops(const GameData* gameData, u32* framebu
     }
 }
 
-void SDLVideoFilterNewRenderer::drawChamber(const GameData* gameData, u32* framebuffer)
+void GameRenderer::drawChamber(const GameData* gameData, u32* framebuffer)
 {
     // Update texture from gameFramebuffer
     SDLUtils_convert1bppImageTo32bppCrtEffectImage(gameData->cleanBackground,
@@ -454,7 +454,7 @@ void SDLVideoFilterNewRenderer::drawChamber(const GameData* gameData, u32* frame
 			    SCORE_DRAW_LOCATION);
 }
 
-void SDLVideoFilterNewRenderer::drawTitleScreen(const GameData* gameData, u32* framebuffer)
+void GameRenderer::drawTitleScreen(const GameData* gameData, u32* framebuffer)
 {
     SDLUtils_convert1bppImageTo32bppCrtEffectImage(gameData->cleanBackground,
                                                    framebuffer,
@@ -477,12 +477,12 @@ void SDLVideoFilterNewRenderer::drawTitleScreen(const GameData* gameData, u32* f
 
 }
 
-void SDLVideoFilterNewRenderer::drawTransition(const GameData* gameData, u32* framebuffer)
+void GameRenderer::drawTransition(const GameData* gameData, u32* framebuffer)
 {
 	memset(framebuffer, 0, FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT * sizeof(u32));
 }
 
-void SDLVideoFilterNewRenderer::drawWipeTransition(const GameData* gameData, u32* framebuffer)
+void GameRenderer::drawWipeTransition(const GameData* gameData, u32* framebuffer)
 {
     // not the most efficient as it updates the whole framebuffer
     // instead of what changed per frame during the wipe, but at the 
@@ -510,7 +510,7 @@ void SDLVideoFilterNewRenderer::drawWipeTransition(const GameData* gameData, u32
 	}
 }
 
-void SDLVideoFilterNewRenderer::drawGetReadyScreen(const GameData* gameData, u32* framebuffer)
+void GameRenderer::drawGetReadyScreen(const GameData* gameData, u32* framebuffer)
 {
     SDLUtils_convert1bppImageTo32bppCrtEffectImage(gameData->cleanBackground,
                                                    framebuffer,
@@ -521,7 +521,7 @@ void SDLVideoFilterNewRenderer::drawGetReadyScreen(const GameData* gameData, u32
     drawDrops(gameData, framebuffer);
 }
 
-void SDLVideoFilterNewRenderer::update(const GameData* gameData)
+void GameRenderer::update(const GameData* gameData)
 {
     if (m_outputTexture == nullptr)
         init();

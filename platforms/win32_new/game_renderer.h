@@ -34,13 +34,13 @@ public:
 	const u8* m_originalSprite;
 };
 
-class SDLVideoFilterNewRenderer
+class GameRenderer
 {
 public:
-	SDLVideoFilterNewRenderer(SDL_Renderer* renderer, 
+	GameRenderer(SDL_Renderer* renderer, 
 						     const Resources* resources);
 
-	~SDLVideoFilterNewRenderer();
+	~GameRenderer();
 
 	void shutdown();
 	void update(const GameData* gameData);
@@ -87,7 +87,7 @@ private:
 
 	const Resources* m_resources;
 
-	typedef void (SDLVideoFilterNewRenderer::*DrawRoomFunction)(const GameData* gameData, u32* framebuffer);
+	typedef void (GameRenderer::*DrawRoomFunction)(const GameData* gameData, u32* framebuffer);
 	std::vector<DrawRoomFunction> m_drawRoomFunctions;
 
 

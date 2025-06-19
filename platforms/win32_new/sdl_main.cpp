@@ -52,7 +52,7 @@ Resources resources;
 GameData gameData;
 
 int currentVideoFilterIndex = -1;
-std::unique_ptr<SDLVideoFilterNewRenderer> m_newRenderer;
+std::unique_ptr<GameRenderer> m_newRenderer;
 
 SDLSoundManager soundManager;
 
@@ -229,7 +229,7 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
 
     // Init video filters
     // 
-    m_newRenderer = std::make_unique<SDLVideoFilterNewRenderer>(renderer, &resources);
+    m_newRenderer = std::make_unique<GameRenderer>(renderer, &resources);
 
     Game_ChangedRoomCallback = gameRoomChanged;
 

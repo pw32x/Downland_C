@@ -110,6 +110,7 @@
     <ClCompile Include="..\..\..\game\rooms\titlescreen.c" />
     <ClCompile Include="..\..\..\game\rooms\transitions.c" />
     <ClCompile Include="..\..\..\game\string_utils.c" />
+    <ClCompile Include="..\source\logger.cpp" />
     <ClCompile Include="..\source\main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -150,6 +151,7 @@
     <ClInclude Include="..\source\downland_resource_loader_saturn.hpp" />
     <ClInclude Include="..\source\game_runner.hpp" />
     <ClInclude Include="..\source\geometry_helpers.hpp" />
+    <ClInclude Include="..\source\logger.hpp" />
     <ClInclude Include="..\source\palette_utils.hpp" />
     <ClInclude Include="..\source\saturn.hpp" />
     <ClInclude Include="..\source\sound_manager.hpp" />

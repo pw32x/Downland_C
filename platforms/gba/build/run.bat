@@ -1,0 +1,1 @@
+C:\devkitPro\emulators\mGBA-0.10.5-win64\mGBA.exe ..\out\downland.gba

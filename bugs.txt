@@ -1,7 +1,7 @@
         
 Bugs
 
-    DC: no jump sound or static
+    DC: no jump sound or static sound
 
     PC: GameRenderer wipe transitions clear the screen to black first for some reason when
         it shouldn't.

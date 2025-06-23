@@ -130,43 +130,6 @@ void gameRoomChanged(const GameData* gameData, u8 roomNumber, s8 transitionType)
     m_newRenderer->roomChanged(gameData, roomNumber, transitionType);
 }
 
-// We want to handle the room transitions in a custom way
-void Game_TransitionToRoom(struct GameData* gameData, u8 roomNumber, Resources* resources)
-{
-	gameData->transitionRoomNumber = roomNumber;
-
-	gameData->currentRoom = g_rooms[roomNumber];
-
-	if (gameData->currentPlayerData != NULL)
-		gameData->currentPlayerData->currentRoom = gameData->currentRoom;
-
-	gameData->currentRoom = g_rooms[TRANSITION_ROOM_INDEX];
-	gameData->currentRoom->init(g_rooms[roomNumber], 
-								(struct GameData*)gameData, 
-								resources);
-
-	if (Game_ChangedRoomCallback != NULL)
-		Game_ChangedRoomCallback(gameData, roomNumber, TRANSITION_ROOM_INDEX);
-}
-
-void Game_WipeTransitionToRoom(struct GameData* gameData, u8 roomNumber, Resources* resources)
-{
-	gameData->transitionRoomNumber = roomNumber;
-
-	gameData->currentRoom = g_rooms[roomNumber];
-
-	if (gameData->currentPlayerData != NULL)
-		gameData->currentPlayerData->currentRoom = gameData->currentRoom;
-
-	gameData->currentRoom = g_rooms[WIPE_TRANSITION_ROOM_INDEX];
-	gameData->currentRoom->init(g_rooms[roomNumber], 
-								(struct GameData*)gameData, 
-								resources);
-
-	if (Game_ChangedRoomCallback != NULL)
-		Game_ChangedRoomCallback(gameData, roomNumber, WIPE_TRANSITION_ROOM_INDEX);
-}
-
 static bool loadFile(const char* romPath, u8* fileBuffer, u32 fileBufferSize)
 {
 	FILE* file = fopen(romPath, "rb");

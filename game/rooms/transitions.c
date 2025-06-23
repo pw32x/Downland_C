@@ -10,7 +10,7 @@
 // This simulates the pause before a room appears in the original game.
 // In the original game, the pause is because the background is being
 // drawn in the clearBackground off-screen buffer.
-void transition_init(Room* targetRoom, GameData* gameData, Resources* resources)
+void transition_init(Room* targetRoom, GameData* gameData, const Resources* resources)
 {
 	// init the clean background with the target room. 
 	// it'll be revealed at the end of the transition.
@@ -21,7 +21,7 @@ void transition_init(Room* targetRoom, GameData* gameData, Resources* resources)
 	memset(gameData->framebuffer, 0, FRAMEBUFFER_SIZE_IN_BYTES);
 }
 
-void transition_update(Room* room, GameData* gameData, Resources* resources)
+void transition_update(Room* room, GameData* gameData, const Resources* resources)
 {
 	// wait to draw anything until the delay is over
 	if (gameData->transitionInitialDelay)
@@ -45,7 +45,7 @@ Room transitionRoom =
 	(UpdateRoomFunctionType)transition_update
 };
 
-void wipe_transition_init(Room* targetRoom, GameData* gameData, Resources* resources)
+void wipe_transition_init(Room* targetRoom, GameData* gameData, const Resources* resources)
 {
 	// init the clean background with the target room. 
 	// we'll be slowly revealing it during the room transition.
@@ -57,7 +57,7 @@ void wipe_transition_init(Room* targetRoom, GameData* gameData, Resources* resou
 	gameData->transitionFrameDelay = 0;
 }
 
-void wipe_transition_update(Room* room, GameData* gameData, Resources* resources)
+void wipe_transition_update(Room* room, GameData* gameData, const Resources* resources)
 {
 	if (gameData->transitionInitialDelay)
 	{

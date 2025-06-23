@@ -7,7 +7,7 @@
 #include "..\drops_manager.h"
 #include "..\dl_sound.h"
 
-void get_ready_room_draw(u8 roomNumber, GameData* gameData, Resources* resources)
+void get_ready_room_draw(u8 roomNumber, GameData* gameData, const Resources* resources)
 {
 	u8* framebuffer = gameData->cleanBackground;
 
@@ -22,14 +22,14 @@ void get_ready_room_draw(u8 roomNumber, GameData* gameData, Resources* resources
 	drawText(getReadyString, resources->characterFont, framebuffer, 0x0b66);
 }
 
-void get_ready_room_init(Room* room, GameData* gameData, Resources* resources)
+void get_ready_room_init(Room* room, GameData* gameData, const Resources* resources)
 {
 	// init drops
 	gameData->dropData.dropSpawnPositions = &resources->roomResources[TITLESCREEN_ROOM_INDEX].dropSpawnPositions;
 	DropsManager_Init(&gameData->dropData, TITLESCREEN_ROOM_INDEX, 1 /*gameCompletionCount*/);
 }
 
-void get_ready_room_update(Room* room, GameData* gameData, Resources* resources)
+void get_ready_room_update(Room* room, GameData* gameData, const Resources* resources)
 {
 	// run the drops manager three times to simulate
 	// the lack of checking for vsync in the original 

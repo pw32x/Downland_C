@@ -11,7 +11,7 @@
 
 void drawPickups(Pickup* pickups, 
 				 u8 playerMask,
-				 Resources* resources, 
+				 const Resources* resources, 
 				 u8* framebuffer)
 {
 	u8 count = NUM_PICKUPS_PER_ROOM;
@@ -92,14 +92,14 @@ void updateTimers(u8 roomNumber, u16* roomTimers)
 }
 
 
-void chamber_draw(u8 roomNumber, GameData* gameData, Resources* resources)
+void chamber_draw(u8 roomNumber, GameData* gameData, const Resources* resources)
 {
 	drawBackground(&resources->roomResources[roomNumber].backgroundDrawData, 
 				   resources,
 				   gameData->cleanBackground);
 
 	// draw active doors in the room
-	DoorInfoData* doorInfoData = &resources->roomResources[roomNumber].doorInfoData;
+	const DoorInfoData* doorInfoData = &resources->roomResources[roomNumber].doorInfoData;
 	const DoorInfo* doorInfoRunner = doorInfoData->doorInfos;
 	for (u8 loop = 0; loop < doorInfoData->drawInfosCount; loop++)
 	{
@@ -118,7 +118,7 @@ void chamber_draw(u8 roomNumber, GameData* gameData, Resources* resources)
 	}
 }
 
-void chamber_init(Room* room, GameData* gameData, Resources* resources)
+void chamber_init(Room* room, GameData* gameData, const Resources* resources)
 {
 	u8 roomNumber = room->roomNumber;
 	PlayerData* playerData = gameData->currentPlayerData;
@@ -156,7 +156,7 @@ void chamber_init(Room* room, GameData* gameData, Resources* resources)
 			 SCORE_DRAW_LOCATION);
 }
 
-void chamber_update(Room* room, GameData* gameData, Resources* resources)
+void chamber_update(Room* room, GameData* gameData, const Resources* resources)
 {
 	PlayerData* playerData = gameData->currentPlayerData;
 
@@ -164,7 +164,8 @@ void chamber_update(Room* room, GameData* gameData, Resources* resources)
 	// otherwise, falling drops will erase them
 	drawPickups(playerData->gamePickups[room->roomNumber], 
 				gameData->currentPlayerData->playerMask,
-				resources, gameData->framebuffer);
+				resources, 
+				gameData->framebuffer);
 
 	updateTimers(playerData->currentRoom->roomNumber, playerData->roomTimers);
 	u16 currentTimer = playerData->roomTimers[playerData->currentRoom->roomNumber];

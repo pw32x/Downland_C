@@ -34,7 +34,7 @@ typedef struct
 typedef struct
 {
 	Drop drops[NUM_DROPS];
-	DropSpawnPositions* dropSpawnPositions;
+	const DropSpawnPositions* dropSpawnPositions;
 	u8 activeDropsCount;
 } DropData;
 

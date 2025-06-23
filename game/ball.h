@@ -20,7 +20,7 @@ typedef struct
 	u8 fallStateCounter;
 } BallData;
 
-void Ball_Init(BallData* ballData, u8 roomNumber, Resources* resources);
+void Ball_Init(BallData* ballData, u8 roomNumber, const Resources* resources);
 void Ball_Update(BallData* ballData, u8* framebuffer, u8* cleanBackground);
 
 #endif

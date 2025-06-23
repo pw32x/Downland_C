@@ -14,14 +14,14 @@ struct GameData;
 typedef struct Room
 {
 	u8 roomNumber;
-	void (*init)(struct Room* room, struct GameData* gameData, Resources* resources);
-	void (*draw)(u8 roomNumber, struct GameData* gameData, Resources* resources);
-	void (*update)(struct Room* room, struct GameData* gameData, Resources* resources);
+	void (*init)(struct Room* room, struct GameData* gameData, const Resources* resources);
+	void (*draw)(u8 roomNumber, struct GameData* gameData, const Resources* resources);
+	void (*update)(struct Room* room, struct GameData* gameData, const Resources* resources);
 } Room;
 
-typedef void (*InitRoomFunctionType)(Room* room, struct GameData* gameObject, Resources* resources);
-typedef void (*DrawRoomFunctionType)(u8 roomNumber, struct GameData* gameData, Resources* resources);
-typedef void (*UpdateRoomFunctionType)(Room* room, struct GameData* gameObject, Resources* resources);
+typedef void (*InitRoomFunctionType)(Room* room, struct GameData* gameObject, const Resources* resources);
+typedef void (*DrawRoomFunctionType)(u8 roomNumber, struct GameData* gameData, const Resources* resources);
+typedef void (*UpdateRoomFunctionType)(Room* room, struct GameData* gameObject, const Resources* resources);
 
 
 #endif

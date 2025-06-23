@@ -53,7 +53,7 @@ void initBallPhysics(BallData* ballData)
 											      BITSHIFTED_SPRITE_FRAME_SIZE);
 }
 
-void Ball_Init(BallData* ballData, u8 roomNumber, Resources* resources)
+void Ball_Init(BallData* ballData, u8 roomNumber, const Resources* resources)
 {
 	ballData->state = BALL_INACTIVE;
 	ballData->enabled = FALSE;

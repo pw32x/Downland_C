@@ -318,7 +318,7 @@ void Player_Update(PlayerData* playerData,
 				   const JoystickState* joystickState, 
 				   u8* framebuffer, 
 				   u8* cleanBackground,
-				   DoorInfoData* doorInfoData,
+				   const DoorInfoData* doorInfoData,
 				   u8* doorStateData)
 {
 	playerData->globalAnimationCounter++;
@@ -1057,7 +1057,7 @@ BOOL dropsManagerCollisionTest(DropData* dropData, PlayerData* playerData)
 }
 
 void Player_PerformCollisions(struct GameData* gameDataStruct, 
-							  Resources* resources)
+							  const Resources* resources)
 {
 	GameData* gameData = (GameData*) gameDataStruct;
 	PlayerData* playerData = gameData->currentPlayerData;
@@ -1104,7 +1104,7 @@ void Player_PerformCollisions(struct GameData* gameDataStruct,
 					playerData->doorStateData[doorIndex] |= playerData->playerMask;
 
 					// check if we need to activate a door in the room
-					DoorInfoData* doorInfoData = &resources->roomResources[roomNumber].doorInfoData;
+					const DoorInfoData* doorInfoData = &resources->roomResources[roomNumber].doorInfoData;
 					const DoorInfo* doorInfoRunner = doorInfoData->doorInfos;
 
 					for (u8 loop = 0; loop < doorInfoData->drawInfosCount; loop++)

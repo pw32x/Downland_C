@@ -11,7 +11,7 @@
 #define TITLESCREEN_PLAYERONE_SCORE_LOCATION	0x1412
 #define TITLESCREEN_PLAYERTWO_SCORE_LOCATION	0x1552
 
-void titleScreen_draw(u8 roomNumber, GameData* gameData, Resources* resources)
+void titleScreen_draw(u8 roomNumber, GameData* gameData, const Resources* resources)
 {
 	u8* framebuffer = gameData->cleanBackground;
 
@@ -62,7 +62,7 @@ void titleScreen_draw(u8 roomNumber, GameData* gameData, Resources* resources)
 			 TITLESCREEN_HIGHSCORE_LOCATION);
 }
 
-void titleScreen_init(Room* room, GameData* gameData, Resources* resources)
+void titleScreen_init(Room* room, GameData* gameData, const Resources* resources)
 {
 	u8 roomNumber = room->roomNumber;
 
@@ -71,7 +71,7 @@ void titleScreen_init(Room* room, GameData* gameData, Resources* resources)
 	DropsManager_Init(&gameData->dropData, roomNumber, 1 /*gameCompletionCount*/);
 }
 
-void titleScreen_update(Room* room, GameData* gameData, Resources* resources)
+void titleScreen_update(Room* room, GameData* gameData, const Resources* resources)
 {
 	// run the drops manager three times to simulate
 	// the lack of checking for vsync in the original 

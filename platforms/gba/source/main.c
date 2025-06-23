@@ -15,8 +15,10 @@
 //
 // --------------------------------------------------------------------
 
+
 #include <gba_base.h>
 #include <gba_video.h>
+#include <gba_sprites.h>
 #include <gba_systemcalls.h>
 #include <gba_interrupt.h>
 
@@ -31,7 +33,8 @@
 
 // --------------------------------------------------------------------
 
-const u16 palette[] = {
+const u16 palette[] = 
+{
 	RGB8(0x40,0x80,0xc0),
 	RGB8(0xFF,0xFF,0xFF),
 	RGB8(0xF5,0xFF,0xFF),
@@ -41,9 +44,38 @@ const u16 palette[] = {
 	RGB8(0x2C,0x4F,0x8B)
 };
 
+// Example 8x8 4bpp sprite data (16 colors, 32 bytes)
+// This is just a simple pattern (like a checkerboard)
+const unsigned short spriteTiles[16] = 
+{
+    0x1111, 0x2222, 
+	0x1111, 0x2222,
+    0x1111, 0x2222, 
+	0x1111, 0x2222,
+    0x1111, 0x2222, 
+	0x1111, 0x2222,
+    0x1111, 0x2222, 
+	0x1111, 0x2222,
+};
+
+// Simple palette with two colors (index 0 is transparent)
+const unsigned short spritePalette[16] = 
+{
+    RGB5(0,0,0),   // Transparent color (palette index 0)
+    RGB5(31,0,0),  // Red
+    RGB5(0,31,0),  // Green
+    RGB5(0,0,31),  // Blue
+    RGB5(31,31,0), // Yellow
+    RGB5(31,0,31), // Magenta
+    RGB5(0,31,31), // Cyan
+    RGB5(31,31,31),// White
+    0,0,0,0,0,0,0,0 // rest unused
+};
+
 // --------------------------------------------------------------------
 
-const u8 message[] = {
+const u8 message[] = 
+{
 	"                                " \
 	"Hello, this is an example of an oldschool simple tile scroller " \
 	"not unlike how it was done in days of yore.  The '@' symbol " \
@@ -65,7 +97,7 @@ void updatescrolltext(u32 idx)
 	temppointer = (u16 *)MAPADDRESS + (ROW * 32);
 
 	// write out a whole row of text to the map
-	for(i=0; i<32; i++)
+	for (i = 0; i < 32; i++)
 	{
 		// check for end of message so we can wrap around properly
 		if(message[idx] == 0) idx = 0;
@@ -79,7 +111,9 @@ void updatescrolltext(u32 idx)
 }
 
 
-int main() {
+int main() 
+{
+
 	// Set up the interrupt handlers
 	irqInit();
 	// Enable Vblank Interrupt to allow VblankIntrWait
@@ -89,14 +123,45 @@ int main() {
 	REG_IME = 1;
 
 	u32 i, scrollx, scrolldelay, textindex;
-	u16 *temppointer;
+	volatile u16 *temppointer;
 
 
 	// load the palette for the background, 7 colors
 	temppointer = BG_COLORS;
-	for(i=0; i<7; i++) {
+	for (i=0; i<7; i++) 
+	{
 		*temppointer++ = palette[i];
 	}
+
+   // Load sprite palette to OBJ palette memory (256 colors max)
+    // Palettes are 16 colors per palette, so 16 * 16 bits = 32 bytes
+    for (int i = 0; i < 16; i++) 
+	{
+        SPRITE_PALETTE[i] = spritePalette[i];
+    }
+
+	// Load sprite tile data to charblock 4 (OBJ VRAM)
+    // Since we are using 1D mapping, tile 0 is at 0x6010000
+    // Each tile is 32 bytes for 4bpp 8x8
+    CpuFastSet(spriteTiles, (void*)CHAR_BASE_BLOCK(4), 4 | COPY32);
+
+	for (int i = 0; i < 128; i++) 
+	{
+		OAM[i].attr0 = ATTR0_DISABLED;
+		OAM[i].attr1 = 0;
+		OAM[i].attr2 = 0;
+	}
+
+    // Set OAM entry 0:
+    // Attribute 0: Y coordinate and shape
+    // Attribute 1: X coordinate and size
+    // Attribute 2: tile index, priority, palette bank
+    OAM[0].attr0 = ATTR0_COLOR_16 | ATTR0_SQUARE | 50; // Y=50
+    OAM[0].attr1 = ATTR1_SIZE_8 | 50;                  // X=50
+    OAM[0].attr2 = 0;                                  // tile index 0, palette 0
+
+
+
 
 	// load the font into gba video mem (48 characters, 4bit tiles)
 
@@ -127,35 +192,45 @@ int main() {
 	BGCTRL[0] = SCREEN_BASE(31);
 
 	// screen mode & background to display
-	SetMode( MODE_0 | BG0_ON );
+	SetMode( MODE_0 | BG0_ON | MODE_0 | OBJ_ENABLE | OBJ_1D_MAP);
 
-	while(1) {
+	while (1) 
+	{
 		VBlankIntrWait();
 
 		// check if we reached our delay
-		if(scrolldelay == DELAY) {
+		if (scrolldelay == DELAY) 
+		{
 			// yes, the delay is complete, so let's reset it
 			scrolldelay = 0;
 
 			// check if we reached our scrollcount
-			if(scrollx == (TILEWIDTH-1)) {
+			if (scrollx == (TILEWIDTH-1)) 
+			{
 				// yes, we've scrolled enough, so let's reset the count
 				scrollx = 0;
 
 				// check if we reached the end of our scrolltext
 				// and if so we need to restart our index
-				if(message[textindex] == 0) textindex = 0;
-				else textindex++;
+				if(message[textindex] == 0) 
+					textindex = 0;
+				else 
+					textindex++;
 
 				// finally, let's update the scrolltext with the current text index
 				updatescrolltext(textindex);
 			}
-			else scrollx++;
+			else 
+			{
+				scrollx++;
+			}
 		}
-		else scrolldelay++;
+		else 
+		{
+			scrolldelay++;
+		}
 
 		// update the hardware horizontal scroll register
 		BG_OFFSET[0].x = scrollx;
 	}
-
 }

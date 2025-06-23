@@ -96,6 +96,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\game\ball.c" />
     <ClCompile Include="..\..\..\game\bird.c" />
+    <ClCompile Include="..\..\..\game\checksum_utils.c" />
     <ClCompile Include="..\..\..\game\debug_utils.c" />
     <ClCompile Include="..\..\..\game\door_utils.c" />
     <ClCompile Include="..\..\..\game\draw_utils.c" />
@@ -104,6 +105,7 @@
     <ClCompile Include="..\..\..\game\physics_utils.c" />
     <ClCompile Include="..\..\..\game\player.c" />
     <ClCompile Include="..\..\..\game\dl_rand.c" />
+    <ClCompile Include="..\..\..\game\resource_loader_buffer.c" />
     <ClCompile Include="..\..\..\game\rooms\chambers.c" />
     <ClCompile Include="..\..\..\game\rooms\getready.c" />
     <ClCompile Include="..\..\..\game\rooms\rooms.c" />
@@ -127,6 +129,7 @@
     <ClInclude Include="..\..\..\game\base_defines.h" />
     <ClInclude Include="..\..\..\game\base_types.h" />
     <ClInclude Include="..\..\..\game\bird.h" />
+    <ClInclude Include="..\..\..\game\checksum_utils.h" />
     <ClInclude Include="..\..\..\game\debug_utils.h" />
     <ClInclude Include="..\..\..\game\door_types.h" />
     <ClInclude Include="..\..\..\game\door_utils.h" />
@@ -141,6 +144,7 @@
     <ClInclude Include="..\..\..\game\player.h" />
     <ClInclude Include="..\..\..\game\player_types.h" />
     <ClInclude Include="..\..\..\game\dl_rand.h" />
+    <ClInclude Include="..\..\..\game\resource_loader_buffer.h" />
     <ClInclude Include="..\..\..\game\resource_types.h" />
     <ClInclude Include="..\..\..\game\rooms\chambers.h" />
     <ClInclude Include="..\..\..\game\rooms\rooms.h" />

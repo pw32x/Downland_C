@@ -67,6 +67,15 @@
     <ClCompile Include="..\..\..\game\dl_rand.c">
       <Filter>game</Filter>
     </ClCompile>
+    <ClCompile Include="..\source\logger.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game\resource_loader_buffer.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game\checksum_utils.c">
+      <Filter>game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\build\build.bat">
@@ -190,6 +199,13 @@
     </ClInclude>
     <ClInclude Include="..\source\sound_manager.hpp">
       <Filter>source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\logger.hpp" />
+    <ClInclude Include="..\..\..\game\resource_loader_buffer.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\checksum_utils.h">
+      <Filter>game</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

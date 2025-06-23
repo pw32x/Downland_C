@@ -6,7 +6,7 @@ Bugs
     PC: GameRenderer wipe transitions clear the screen to black first for some reason when
         it shouldn't.
 
-    PC: Downland_C original renderer doesn't draw the right side of the splat sprite properly
+    PC_classic: Downland_C original renderer doesn't draw the right side of the splat sprite properly
     
     DC: walking against the wall makes sound
     
@@ -23,3 +23,6 @@ Bugs
     Gameplay: chamber 1, picking up the first treasure sometimes kills the player
     
     DC: Pick up sound too loud?
+    
+    SS: if you make a door appear and then change rooms, the door will disappear during
+        the transition. But it'll work correctly the next time in the room.

@@ -56,8 +56,8 @@ public:
           m_playerIconSprite(resources->sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYERICON_NUM_SPRITE_ROWS, PLAYER_SPRITE_COUNT),
           m_regenPlayerIconSprite(resources->sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYERICON_NUM_SPRITE_ROWS, REGEN_SPRITES),
           m_regenSpriteIndex(0),
-          m_ngb0Initialized(false),
-          m_ngb1Initialized(false),
+          m_nbg0Initialized(false),
+          m_nbg1Initialized(false),
           m_roomChanged(false),
           m_currentRoom(-1),
           m_isNBG0Active(true)
@@ -363,11 +363,11 @@ private:
 
         SRL::Tilemap::Interfaces::Bmp2Tile* tileSet = new SRL::Tilemap::Interfaces::Bmp2Tile(*framebufferBitmap);
 
-        if (!m_ngb0Initialized)
+        if (!m_nbg0Initialized)
         {
             // init the whole layer
             SRL::VDP2::NBG0::LoadTilemap(*tileSet);
-            m_ngb0Initialized = true;
+            m_nbg0Initialized = true;
 
             SRL::VDP2::NBG0::SetPriority(SRL::VDP2::Priority::Layer2);//set NBG0 priority
         }
@@ -411,11 +411,11 @@ private:
 
         SRL::Tilemap::Interfaces::Bmp2Tile* tileSet = new SRL::Tilemap::Interfaces::Bmp2Tile(*framebufferBitmap);
 
-        if (!m_ngb1Initialized)
+        if (!m_nbg1Initialized)
         {
             // init the whole layer
             SRL::VDP2::NBG0::LoadTilemap(*tileSet);
-            m_ngb1Initialized = true;
+            m_nbg1Initialized = true;
 
             SRL::VDP2::NBG0::SetPriority(SRL::VDP2::Priority::Layer2);//set NBG0 priority
         }
@@ -462,11 +462,11 @@ private:
 
         SRL::Tilemap::Interfaces::Bmp2Tile* tileSet = new SRL::Tilemap::Interfaces::Bmp2Tile(*framebufferBitmap);
 
-        if (!m_ngb0Initialized)
+        if (!m_nbg0Initialized)
         {
             // init the whole layer
             SRL::VDP2::NBG0::LoadTilemap(*tileSet);
-            m_ngb0Initialized = true;
+            m_nbg0Initialized = true;
 
             SRL::VDP2::NBG0::SetPriority(SRL::VDP2::Priority::Layer2);//set NBG0 priority
         }
@@ -514,11 +514,11 @@ private:
 
         SRL::Tilemap::Interfaces::Bmp2Tile* tileSet = new SRL::Tilemap::Interfaces::Bmp2Tile(*framebufferBitmap);
 
-        if (!m_ngb1Initialized)
+        if (!m_nbg1Initialized)
         {
             // init the whole layer
             SRL::VDP2::NBG1::LoadTilemap(*tileSet);
-            m_ngb1Initialized = true;
+            m_nbg1Initialized = true;
 
             SRL::VDP2::NBG1::SetPriority(SRL::VDP2::Priority::Layer2);//set NBG1 priority
         }
@@ -666,8 +666,8 @@ private:
 
     u8 m_regenSpriteBuffer[(PLAYER_SPRITE_WIDTH / 8) * PLAYER_SPRITE_ROWS];
 
-    bool m_ngb0Initialized;
-    bool m_ngb1Initialized;
+    bool m_nbg0Initialized;
+    bool m_nbg1Initialized;
     bool m_roomChanged;
     u8 m_currentRoom;
     bool m_isNBG0Active;

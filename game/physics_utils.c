@@ -40,8 +40,8 @@ u8 terrainTest(u8 pixelData)
 u8 testTerrainCollision(u16 x, 
 						u16 y, 
 						u16 yOffset, 
-						u16* objectCollisionMasks,
-						u8* cleanBackground)
+						const u16* objectCollisionMasks,
+						const u8* cleanBackground)
 {
 	u8 pixelX = GET_HIGH_BYTE(x);
 	u8 tableIndex = pixelX & 0x3;
@@ -65,8 +65,8 @@ u8 rightPixelData;
 void getTerrainValue(u16 x, 
 				     u16 y, 
 				     u16 yOffset, 
-				     u16* objectCollisionMasks,
-				     u8* cleanBackground)
+				     const u16* objectCollisionMasks,
+				     const u8* cleanBackground)
 {
 	u8 pixelX = GET_HIGH_BYTE(x);
 	u8 tableIndex = pixelX & 0x3;

@@ -71,6 +71,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\game\ball.c" />
     <ClCompile Include="..\..\game\bird.c" />
+    <ClCompile Include="..\..\game\checksum_utils.c" />
     <ClCompile Include="..\..\game\debug_utils.c" />
     <ClCompile Include="..\..\game\dl_rand.c" />
     <ClCompile Include="..\..\game\door_utils.c" />
@@ -79,15 +80,13 @@
     <ClCompile Include="..\..\game\game.c" />
     <ClCompile Include="..\..\game\physics_utils.c" />
     <ClCompile Include="..\..\game\player.c" />
+    <ClCompile Include="..\..\game\resource_loader_buffer.c" />
     <ClCompile Include="..\..\game\rooms\chambers.c" />
     <ClCompile Include="..\..\game\rooms\getready.c" />
     <ClCompile Include="..\..\game\rooms\rooms.c" />
     <ClCompile Include="..\..\game\rooms\titlescreen.c" />
     <ClCompile Include="..\..\game\rooms\transitions.c" />
     <ClCompile Include="..\..\game\string_utils.c" />
-    <ClCompile Include="..\..\resource_loaders\checksum_utils.c" />
-    <ClCompile Include="..\..\resource_loaders\resource_loader_buffer.c" />
-    <ClCompile Include="..\..\resource_loaders\resource_loader_filesys.c" />
     <ClCompile Include="..\..\sdl_sound\sdl_sound.cpp" />
     <ClCompile Include="..\..\sdl_sound\sdl_sound_manager.cpp" />
     <ClCompile Include="alloc.c" />
@@ -102,6 +101,7 @@
     <ClInclude Include="..\..\game\base_defines.h" />
     <ClInclude Include="..\..\game\base_types.h" />
     <ClInclude Include="..\..\game\bird.h" />
+    <ClInclude Include="..\..\game\checksum_utils.h" />
     <ClInclude Include="..\..\game\debug_utils.h" />
     <ClInclude Include="..\..\game\dl_rand.h" />
     <ClInclude Include="..\..\game\dl_sound.h" />
@@ -117,14 +117,12 @@
     <ClInclude Include="..\..\game\pickup_types.h" />
     <ClInclude Include="..\..\game\player.h" />
     <ClInclude Include="..\..\game\player_types.h" />
+    <ClInclude Include="..\..\game\resource_loader_buffer.h" />
     <ClInclude Include="..\..\game\resource_types.h" />
     <ClInclude Include="..\..\game\rooms\chambers.h" />
     <ClInclude Include="..\..\game\rooms\rooms.h" />
     <ClInclude Include="..\..\game\rooms\room_types.h" />
     <ClInclude Include="..\..\game\string_utils.h" />
-    <ClInclude Include="..\..\resource_loaders\checksum_utils.h" />
-    <ClInclude Include="..\..\resource_loaders\resource_loader_buffer.h" />
-    <ClInclude Include="..\..\resource_loaders\resource_loader_filesys.h" />
     <ClInclude Include="..\..\sdl_sound\sdl_sound.h" />
     <ClInclude Include="..\..\sdl_sound\sdl_sound_manager.h" />
     <ClInclude Include="game_renderer.h" />

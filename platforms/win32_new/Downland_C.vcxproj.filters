@@ -15,9 +15,6 @@
     <Filter Include="game\rooms">
       <UniqueIdentifier>{303f2de5-e98a-40ac-82ea-3434e43f5d02}</UniqueIdentifier>
     </Filter>
-    <Filter Include="resource_loaders">
-      <UniqueIdentifier>{48d44954-ca9b-4639-9fda-69ee5cda73e6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="sdl_main">
       <UniqueIdentifier>{d4655141-3cfa-47d3-b5fe-d37ea8d52674}</UniqueIdentifier>
     </Filter>
@@ -67,9 +64,6 @@
     </Media>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\resource_loaders\resource_loader_filesys.c">
-      <Filter>resource_loaders</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\game\bird.c">
       <Filter>game</Filter>
     </ClCompile>
@@ -134,17 +128,14 @@
     <ClCompile Include="game_renderer.cpp">
       <Filter>sdl_main</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\resource_loaders\resource_loader_buffer.c">
-      <Filter>resource_loaders</Filter>
+    <ClCompile Include="..\..\game\resource_loader_buffer.c">
+      <Filter>game</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\resource_loaders\checksum_utils.c">
-      <Filter>resource_loaders</Filter>
+    <ClCompile Include="..\..\game\checksum_utils.c">
+      <Filter>game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\resource_loaders\resource_loader_filesys.h">
-      <Filter>resource_loaders</Filter>
-    </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -238,11 +229,11 @@
     <ClInclude Include="sdl_image_utils.h">
       <Filter>sdl_main</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\resource_loaders\resource_loader_buffer.h">
-      <Filter>resource_loaders</Filter>
+    <ClInclude Include="..\..\game\checksum_utils.h">
+      <Filter>game</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\resource_loaders\checksum_utils.h">
-      <Filter>resource_loaders</Filter>
+    <ClInclude Include="..\..\game\resource_loader_buffer.h">
+      <Filter>game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

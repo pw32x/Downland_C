@@ -58,7 +58,6 @@ public:
           m_regenSpriteIndex(0),
           m_nbg0Initialized(false),
           m_nbg1Initialized(false),
-          m_roomChanged(false),
           m_currentRoom(-1),
           m_isNBG0Active(true)
     {
@@ -117,15 +116,7 @@ public:
 
     void draw()
     {
-        if (m_roomChanged)
-        {
-            //handleRoomChange();
-            m_roomChanged = false;
-        }
-        else
-        {
-            (this->*m_drawRoomFunctions[m_gameData.currentRoom->roomNumber])();
-        }
+        (this->*m_drawRoomFunctions[m_gameData.currentRoom->roomNumber])();
     }
 
     inline void Cell2VRAM(uint8_t* cellData, 
@@ -155,15 +146,6 @@ public:
                 if (info.MapMode) *VRAM++ = ((*mapData++) + mapoff) | (paloff << 12); // 1WORD data
                 else *VRAM32++ = ((*Data32++) + mapoff) | (paloff << 20); // 2WORD data
             }
-        }
-    }
-
-    void roomChanged(const GameData* gameData, u8 roomNumber, s8 transitionType)
-    {
-        if (m_currentRoom != roomNumber)
-        {
-            m_roomChanged = true;
-            m_currentRoom = roomNumber;
         }
     }
 
@@ -668,7 +650,6 @@ private:
 
     bool m_nbg0Initialized;
     bool m_nbg1Initialized;
-    bool m_roomChanged;
     u8 m_currentRoom;
     bool m_isNBG0Active;
     bool m_transitionDirection;

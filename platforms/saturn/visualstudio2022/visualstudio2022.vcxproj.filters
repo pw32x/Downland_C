@@ -200,12 +200,14 @@
     <ClInclude Include="..\source\sound_manager.hpp">
       <Filter>source</Filter>
     </ClInclude>
-    <ClInclude Include="..\source\logger.hpp" />
     <ClInclude Include="..\..\..\game\resource_loader_buffer.h">
       <Filter>game</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\game\checksum_utils.h">
       <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\logger.hpp">
+      <Filter>source</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -134,6 +134,12 @@
     <ClCompile Include="game_renderer.cpp">
       <Filter>sdl_main</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\resource_loaders\resource_loader_buffer.c">
+      <Filter>resource_loaders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\resource_loaders\checksum_utils.c">
+      <Filter>resource_loaders</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\resource_loaders\resource_loader_filesys.h">
@@ -231,6 +237,12 @@
     </ClInclude>
     <ClInclude Include="sdl_image_utils.h">
       <Filter>sdl_main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\resource_loaders\resource_loader_buffer.h">
+      <Filter>resource_loaders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\resource_loaders\checksum_utils.h">
+      <Filter>resource_loaders</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

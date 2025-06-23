@@ -17,9 +17,10 @@
 // downland headers
 #include "game_types.h"
 #include "game.h"
-#include "sound.h"
+#include "dl_sound.h"
 #include "resource_types.h"
-#include "../resource_loaders/resource_loader_filesys.h"
+#include "checksum_utils.h"
+#include "resource_loader_buffer.h"
 
 GameData gameData;
 Resources resources;
@@ -236,15 +237,51 @@ void convert1bppImageTo16bppCrtEffectImage(const u8* originalImage,
     }
 }
 
+
+static bool loadFile(const char* romPath, u8* fileBuffer, u32 fileBufferSize)
+{
+	FILE* file = fopen(romPath, "rb");
+
+	if (file == NULL)
+		return false;
+
+    fseek(file, 0L, SEEK_END);
+    u32 fileSize = ftell(file);
+
+    if (fileSize != fileBufferSize)
+    {
+        fclose(file);
+        return false;
+    }
+
+    fseek(file, 0L, SEEK_SET);
+
+    int bytesRead = (int)fread(fileBuffer, 1, fileBufferSize, file);
+
+    if (bytesRead != fileBufferSize)
+    {
+        fclose(file);
+        return false;
+    }
+
+    fclose(file);
+	return true;
+}
+
 int main(int argc, char **argv) 
 {
+    const int fileBufferSize = 8192;
+    u8 fileBuffer[fileBufferSize];
+
     vid_set_mode(DM_320x240, PM_RGB565);
     snd_init();
 
     bool romFoundAndLoaded = false;
     for (int loop = 0; loop < romFileNamesCount; loop++)
     {
-        if (ResourceLoaderFileSys_Init(romFileNames[loop], &resources))
+        if (loadFile(romFileNames[loop], fileBuffer, fileBufferSize) &&
+            checksumCheckLitteEndian(fileBuffer, fileBufferSize) &&
+            ResourceLoaderBuffer_Init(fileBuffer, fileBufferSize, &resources))
         {
             romFoundAndLoaded = true;
             break;

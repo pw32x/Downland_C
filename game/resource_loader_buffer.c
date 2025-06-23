@@ -14,30 +14,6 @@ static const u8* getBytes(const u8* fileBuffer, u16 start)
 	return fileBuffer + start;
 }
 
-static u8* getBytesSwapped(const u8* fileBuffer, u16 start, u16 end)
-{
-	// take into account that the rom starts at c000
-	start -= 0xc000; 
-	end -= 0xc000;
-
-	u16 size = end - start;
-
-	u8* buffer = (u8*)dl_alloc(size);
-	fileBuffer += start;
-
-	// swap bytes because endianness difference
-	u8* bufferRunner = buffer;
-	for (int loop = 0; loop < size / 2; loop++)
-	{
-		bufferRunner[0] = fileBuffer[1];
-		bufferRunner[1] = fileBuffer[0];
-		bufferRunner += 2;
-		fileBuffer += 2;
-	}
-
-	return buffer;
-}
-
 static void loadBackgroundDrawData(const u8* fileBuffer, 
 									u16 start, 
 									BackgroundDrawData* backgroundDrawData)

@@ -11,9 +11,6 @@
     <Filter Include="Game\Rooms">
       <UniqueIdentifier>{4157fa5b-93e6-406e-9477-62b26911d40b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="resource_loaders">
-      <UniqueIdentifier>{667fd75f-63ad-429c-8b5d-52478edb778c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="build">
       <UniqueIdentifier>{717e57ce-9a4d-4dab-bdb2-8ef136acb6fb}</UniqueIdentifier>
     </Filter>
@@ -88,12 +85,15 @@
     <ClInclude Include="..\..\..\game\rooms\rooms.h">
       <Filter>Game\Rooms</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\resource_loaders\resource_loader_filesys.h">
-      <Filter>resource_loaders</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\game\alloc.h" />
     <ClInclude Include="..\..\..\game\rand.h" />
     <ClInclude Include="..\..\..\game\dl_sound.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\resource_loader_buffer.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\checksum_utils.h">
       <Filter>Game</Filter>
     </ClInclude>
   </ItemGroup>
@@ -146,11 +146,14 @@
     <ClCompile Include="..\source\main.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\resource_loaders\resource_loader_filesys.c">
-      <Filter>resource_loaders</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\game\rand.c">
       <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game\resource_loader_buffer.c">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game\checksum_utils.c">
+      <Filter>Game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

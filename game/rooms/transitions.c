@@ -124,6 +124,9 @@ void wipe_transition_update(Room* room, GameData* gameData, Resources* resources
 	if (gameData->transitionCurrentLine == 32)
 	{
 		Game_EnterRoom(gameData, gameData->transitionRoomNumber, resources);
+
+		if (Game_TransitionDone)
+			Game_TransitionDone(gameData, gameData->transitionRoomNumber, WIPE_TRANSITION_ROOM_INDEX);
 	}
 }
 

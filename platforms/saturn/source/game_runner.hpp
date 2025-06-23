@@ -23,6 +23,7 @@ extern "C"
 #include "image_utils.hpp"
 #include "bitmap_utils.hpp"
 #include "palette_utils.hpp"
+#include "logger.hpp"
 
 #define REGEN_SPRITES 5
 
@@ -55,9 +56,11 @@ public:
           m_playerIconSprite(resources->sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYERICON_NUM_SPRITE_ROWS, PLAYER_SPRITE_COUNT),
           m_regenPlayerIconSprite(resources->sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYERICON_NUM_SPRITE_ROWS, REGEN_SPRITES),
           m_regenSpriteIndex(0),
-          m_layerInitialized(false),
+          m_ngb0Initialized(false),
+          m_ngb1Initialized(false),
           m_roomChanged(false),
-          m_currentRoom(-1)
+          m_currentRoom(-1),
+          m_isNBG0Active(true)
     {
         m_drawRoomFunctions = { &GameRunner::drawChamber,
                                 &GameRunner::drawChamber,
@@ -82,13 +85,13 @@ public:
         Game_Init(&m_gameData, m_resources);
 
 
-        g_rooms[WIPE_TRANSITION_ROOM_INDEX] = g_rooms[TRANSITION_ROOM_INDEX];
+        //g_rooms[WIPE_TRANSITION_ROOM_INDEX] = g_rooms[TRANSITION_ROOM_INDEX];
     }
 
 
     void update()
     {
-        m_gameData.transitionInitialDelay = 0;
+//        m_gameData.transitionInitialDelay = 0;
         Game_Update(&m_gameData, m_resources);
     }
 
@@ -116,7 +119,7 @@ public:
     {
         if (m_roomChanged)
         {
-            handleRoomChange();
+            //handleRoomChange();
             m_roomChanged = false;
         }
         else
@@ -164,6 +167,13 @@ public:
         }
     }
 
+    void roomTransitionDone(const GameData* gameData, u8 roomNumber, s8 transitionType)
+    {
+        // swap the active background for the next 
+        // wipe transition.
+        m_isNBG0Active = !m_isNBG0Active;
+    }
+
 private:
 
     void drawPlayerLives()
@@ -203,6 +213,10 @@ private:
 
     void drawChamber()
     {
+        SRL::Math::Types::Vector2D scrollOffset = SRL::Math::Types::Vector2D(-SCREEN_OFFSET_X, -SCREEN_OFFSET_Y);
+        SRL::VDP2::NBG0::SetPosition(scrollOffset);
+        SRL::VDP2::NBG1::SetPosition(scrollOffset);
+
         drawDrops(&m_gameData);
 
         const PlayerData* playerData = m_gameData.currentPlayerData;
@@ -304,6 +318,10 @@ private:
 
     void drawTitleScreen()
     {
+        SRL::Math::Types::Vector2D scrollOffset = SRL::Math::Types::Vector2D(-SCREEN_OFFSET_X, -SCREEN_OFFSET_Y);
+        SRL::VDP2::NBG0::SetPosition(scrollOffset);
+        SRL::VDP2::NBG1::SetPosition(scrollOffset);
+
         drawDrops(&m_gameData);
 
 	    u16 cursorX = m_gameData.numPlayers == 1 ? 32 :128;  // hardcoded locations in the frambuffer
@@ -313,20 +331,29 @@ private:
 
     void drawTransition()
     {
+        if (m_gameData.transitionInitialDelay == 29)
+        {
+            if (m_isNBG0Active)
+                clearBackgroundNBG0();
+            else
+                clearBackgroundNBG1();
+        }
+        else if (!m_gameData.transitionInitialDelay)
+        {
+            if (m_isNBG0Active)
+                drawCleanBackgroundToNBG0();
+            else
+                drawCleanBackgroundToNBG1();
+        }
     }
 
-
-    void handleRoomChange()
+    void clearBackgroundNBG0()
     {
         SRL::VDP2::NBG0::ScrollDisable();//enable display of NBG0 
 
         u8* frameBuffer8bpp = new u8[FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT];
 
-        ImageUtils::ImageConverter::convert1bppImageTo8bppCrtEffectImage(m_gameData.cleanBackground,
-                                                                         frameBuffer8bpp,
-                                                                         FRAMEBUFFER_WIDTH,
-                                                                         FRAMEBUFFER_HEIGHT,
-                                                                         ImageUtils::ImageConverter::CrtColor::Blue);
+        memset(frameBuffer8bpp, 0, FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT);
 
         BitmapUtils::InMemoryBitmap* framebufferBitmap = new BitmapUtils::InMemoryBitmap(frameBuffer8bpp, 
                                                                                          FRAMEBUFFER_WIDTH, 
@@ -336,11 +363,11 @@ private:
 
         SRL::Tilemap::Interfaces::Bmp2Tile* tileSet = new SRL::Tilemap::Interfaces::Bmp2Tile(*framebufferBitmap);
 
-        if (!m_layerInitialized)
+        if (!m_ngb0Initialized)
         {
             // init the whole layer
             SRL::VDP2::NBG0::LoadTilemap(*tileSet);
-            m_layerInitialized = true;
+            m_ngb0Initialized = true;
 
             SRL::VDP2::NBG0::SetPriority(SRL::VDP2::Priority::Layer2);//set NBG0 priority
         }
@@ -367,12 +394,243 @@ private:
         SRL::VDP2::NBG0::ScrollEnable();
     }
 
+
+    void clearBackgroundNBG1()
+    {
+        SRL::VDP2::NBG0::ScrollDisable();//enable display of NBG0 
+
+        u8* frameBuffer8bpp = new u8[FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT];
+
+        memset(frameBuffer8bpp, 0, FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT);
+
+        BitmapUtils::InMemoryBitmap* framebufferBitmap = new BitmapUtils::InMemoryBitmap(frameBuffer8bpp, 
+                                                                                         FRAMEBUFFER_WIDTH, 
+                                                                                         FRAMEBUFFER_HEIGHT, 
+                                                                                         PaletteUtils::g_downlandPalette, 
+                                                                                         PaletteUtils::g_downlandPaletteColorsCount);
+
+        SRL::Tilemap::Interfaces::Bmp2Tile* tileSet = new SRL::Tilemap::Interfaces::Bmp2Tile(*framebufferBitmap);
+
+        if (!m_ngb1Initialized)
+        {
+            // init the whole layer
+            SRL::VDP2::NBG0::LoadTilemap(*tileSet);
+            m_ngb1Initialized = true;
+
+            SRL::VDP2::NBG0::SetPriority(SRL::VDP2::Priority::Layer2);//set NBG0 priority
+        }
+        else
+        {
+            // we can't easily reset just the layer, so
+            // just replace the tiles and map directly
+            Cell2VRAM((uint8_t*)tileSet->GetCellData(), 
+                      SRL::VDP2::NBG0::CellAddress, 
+                      SRL::VDP2::NBG0::Info.CellByteSize);
+
+            Map2VRAM(SRL::VDP2::NBG0::Info,
+                     (uint16_t*)tileSet->GetMapData(),
+                     SRL::VDP2::NBG0::MapAddress,
+                     SRL::VDP2::NBG0::TilePalette.GetId(),
+                     SRL::VDP2::NBG0::GetCellOffset(SRL::VDP2::NBG0::Info, SRL::VDP2::NBG0::CellAddress));
+        }
+
+
+        delete tileSet;//free work RAM
+        delete [] frameBuffer8bpp;
+        delete framebufferBitmap;
+
+        SRL::VDP2::NBG0::ScrollEnable();
+    }
+
+    void drawCleanBackgroundToNBG0()
+    {
+        SRL::VDP2::NBG0::ScrollDisable();//enable display of NBG0 
+
+        u8* frameBuffer8bpp = new u8[FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT];
+
+        ImageUtils::ImageConverter::convert1bppImageTo8bppCrtEffectImage(m_gameData.cleanBackground,
+                                                                         frameBuffer8bpp,
+                                                                         FRAMEBUFFER_WIDTH,
+                                                                         FRAMEBUFFER_HEIGHT,
+                                                                         ImageUtils::ImageConverter::CrtColor::Blue);
+
+        BitmapUtils::InMemoryBitmap* framebufferBitmap = new BitmapUtils::InMemoryBitmap(frameBuffer8bpp, 
+                                                                                         FRAMEBUFFER_WIDTH, 
+                                                                                         FRAMEBUFFER_HEIGHT, 
+                                                                                         PaletteUtils::g_downlandPalette, 
+                                                                                         PaletteUtils::g_downlandPaletteColorsCount);
+
+        SRL::Tilemap::Interfaces::Bmp2Tile* tileSet = new SRL::Tilemap::Interfaces::Bmp2Tile(*framebufferBitmap);
+
+        if (!m_ngb0Initialized)
+        {
+            // init the whole layer
+            SRL::VDP2::NBG0::LoadTilemap(*tileSet);
+            m_ngb0Initialized = true;
+
+            SRL::VDP2::NBG0::SetPriority(SRL::VDP2::Priority::Layer2);//set NBG0 priority
+        }
+        else
+        {
+            // we can't easily reset just the layer, so
+            // just replace the tiles and map directly
+            Cell2VRAM((uint8_t*)tileSet->GetCellData(), 
+                      SRL::VDP2::NBG0::CellAddress, 
+                      SRL::VDP2::NBG0::Info.CellByteSize);
+
+            Map2VRAM(SRL::VDP2::NBG0::Info,
+                     (uint16_t*)tileSet->GetMapData(),
+                     SRL::VDP2::NBG0::MapAddress,
+                     SRL::VDP2::NBG0::TilePalette.GetId(),
+                     SRL::VDP2::NBG0::GetCellOffset(SRL::VDP2::NBG0::Info, SRL::VDP2::NBG0::CellAddress));
+        }
+
+
+        delete tileSet;//free work RAM
+        delete [] frameBuffer8bpp;
+        delete framebufferBitmap;
+
+        SRL::VDP2::NBG0::ScrollEnable();
+    }
+
+
+    void drawCleanBackgroundToNBG1()
+    {
+        SRL::VDP2::NBG1::ScrollDisable();//enable display of NBG1 
+
+        u8* frameBuffer8bpp = new u8[FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT];
+
+        ImageUtils::ImageConverter::convert1bppImageTo8bppCrtEffectImage(m_gameData.cleanBackground,
+                                                                         frameBuffer8bpp,
+                                                                         FRAMEBUFFER_WIDTH,
+                                                                         FRAMEBUFFER_HEIGHT,
+                                                                         ImageUtils::ImageConverter::CrtColor::Blue);
+
+        BitmapUtils::InMemoryBitmap* framebufferBitmap = new BitmapUtils::InMemoryBitmap(frameBuffer8bpp, 
+                                                                                         FRAMEBUFFER_WIDTH, 
+                                                                                         FRAMEBUFFER_HEIGHT, 
+                                                                                         PaletteUtils::g_downlandPalette, 
+                                                                                         PaletteUtils::g_downlandPaletteColorsCount);
+
+        SRL::Tilemap::Interfaces::Bmp2Tile* tileSet = new SRL::Tilemap::Interfaces::Bmp2Tile(*framebufferBitmap);
+
+        if (!m_ngb1Initialized)
+        {
+            // init the whole layer
+            SRL::VDP2::NBG1::LoadTilemap(*tileSet);
+            m_ngb1Initialized = true;
+
+            SRL::VDP2::NBG1::SetPriority(SRL::VDP2::Priority::Layer2);//set NBG1 priority
+        }
+        else
+        {
+            // we can't easily reset just the layer, so
+            // just replace the tiles and map directly
+            Cell2VRAM((uint8_t*)tileSet->GetCellData(), 
+                      SRL::VDP2::NBG1::CellAddress, 
+                      SRL::VDP2::NBG1::Info.CellByteSize);
+
+            Map2VRAM(SRL::VDP2::NBG1::Info,
+                     (uint16_t*)tileSet->GetMapData(),
+                     SRL::VDP2::NBG1::MapAddress,
+                     SRL::VDP2::NBG1::TilePalette.GetId(),
+                     SRL::VDP2::NBG1::GetCellOffset(SRL::VDP2::NBG1::Info, SRL::VDP2::NBG1::CellAddress));
+        }
+
+
+        delete tileSet;//free work RAM
+        delete [] frameBuffer8bpp;
+        delete framebufferBitmap;
+
+        SRL::VDP2::NBG1::ScrollEnable();
+    }
+
     void drawWipeTransition()
     {
+	    if (m_gameData.transitionInitialDelay)
+	    {
+		    return;
+	    }
+
+        if (m_gameData.transitionCurrentLine == 0)
+        {
+            if (m_isNBG0Active)
+                drawCleanBackgroundToNBG1();
+            else
+                drawCleanBackgroundToNBG0();
+
+            // direction to scroll the transitioning background
+            const PlayerData* playerData = m_gameData.currentPlayerData;
+            m_transitionDirection = playerData->lastDoor->xLocationInNextRoom < 50;
+
+            //m_transitionDirection ? Log::Logger::Print("to Left") : Log::Logger::Print("To right");
+        }
+
+        //Log::Logger::Print("draw wipe transition");
+
+        SRL::Math::Types::Vector2D scrollOffset;
+
+        if (m_transitionDirection)
+        {
+            scrollOffset = SRL::Math::Types::Vector2D(-SCREEN_OFFSET_X, -SCREEN_OFFSET_Y);
+            SRL::Math::Types::Fxp pos = (s16)(32 - m_gameData.transitionCurrentLine);
+            scrollOffset.X -= pos;
+        }
+        else
+        {
+            scrollOffset = SRL::Math::Types::Vector2D(0, -SCREEN_OFFSET_Y);
+            SRL::Math::Types::Fxp pos = (s16)(m_gameData.transitionCurrentLine);
+            scrollOffset.X -= pos;
+        }
+
+        //scrollOffset.Y -= pos;
+
+        if (m_isNBG0Active)
+        {
+            float opacityNBG0f = (32 - m_gameData.transitionCurrentLine) / 32.0f;
+            float opacityNBG1f = m_gameData.transitionCurrentLine / 32.0f;
+
+            SRL::Math::Types::Fxp opacityNBG0 = SRL::Math::Types::Fxp::Convert(opacityNBG0f);
+            SRL::Math::Types::Fxp opacityNBG1 = SRL::Math::Types::Fxp::Convert(opacityNBG1f);
+            SRL::VDP2::NBG0::SetOpacity(opacityNBG0);
+            SRL::VDP2::NBG1::SetOpacity(opacityNBG1);
+            SRL::VDP2::NBG1::SetPosition(scrollOffset);
+        }
+        else
+        {
+            float opacityNBG1f = (32 - m_gameData.transitionCurrentLine) / 32.0f;
+            float opacityNBG0f = m_gameData.transitionCurrentLine / 32.0f;
+
+            SRL::Math::Types::Fxp opacityNBG1 = SRL::Math::Types::Fxp::Convert(opacityNBG1f);
+            SRL::Math::Types::Fxp opacityNBG0 = SRL::Math::Types::Fxp::Convert(opacityNBG0f);
+            SRL::VDP2::NBG1::SetOpacity(opacityNBG1);
+            SRL::VDP2::NBG0::SetOpacity(opacityNBG0);
+            SRL::VDP2::NBG0::SetPosition(scrollOffset);
+        }
+
+
+
+        /*
+        if (m_gameData.transitionCurrentLine == 31)
+        {
+            Log::Logger::Print("Transition done");
+            SRL::Math::Types::Fxp opacityNBG0 = SRL::Math::Types::Fxp::Convert(1.0f);
+            SRL::Math::Types::Fxp opacityNBG1 = SRL::Math::Types::Fxp::Convert(0.0f);
+            SRL::VDP2::NBG1::SetOpacity(opacityNBG1);
+            drawCleanBackgroundToNBG0();
+            drawCleanBackgroundToNBG1();
+            SRL::VDP2::NBG0::SetOpacity(opacityNBG0);
+
+        }
+        */
     }
 
     void drawGetReadyScreen()
     {
+        SRL::Math::Types::Vector2D scrollOffset = SRL::Math::Types::Vector2D(-SCREEN_OFFSET_X, -SCREEN_OFFSET_Y);
+        SRL::VDP2::NBG0::SetPosition(scrollOffset);
+        SRL::VDP2::NBG1::SetPosition(scrollOffset);
+
         drawDrops(&m_gameData);
     }
 
@@ -408,9 +666,12 @@ private:
 
     u8 m_regenSpriteBuffer[(PLAYER_SPRITE_WIDTH / 8) * PLAYER_SPRITE_ROWS];
 
-    bool m_layerInitialized;
+    bool m_ngb0Initialized;
+    bool m_ngb1Initialized;
     bool m_roomChanged;
     u8 m_currentRoom;
+    bool m_isNBG0Active;
+    bool m_transitionDirection;
 };
 
 #endif

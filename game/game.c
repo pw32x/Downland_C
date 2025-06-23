@@ -5,6 +5,7 @@
 #include "alloc.h"
 
 Game_ChangedRoomCallbackType Game_ChangedRoomCallback = NULL;
+Game_ChangedRoomCallbackType Game_TransitionDone = NULL;
 
 static u8 initializedFramebuffers = FALSE;
 

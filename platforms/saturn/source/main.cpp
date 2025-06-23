@@ -29,6 +29,13 @@ void gameRoomChanged(const GameData* gameData, u8 roomNumber, s8 transitionType)
     g_gameRunner->roomChanged(gameData, roomNumber, transitionType);
 }
 
+void roomTransitionDone(const GameData* gameData, u8 roomNumber, s8 transitionType)
+{
+    g_gameRunner->roomTransitionDone(gameData, roomNumber, transitionType);
+}
+
+
+
 extern "C"
 {
 
@@ -67,7 +74,7 @@ void Update_Controls(int controllerIndex,
     bool rightDown = port->IsHeld(Digital::Button::Right);
     bool upDown = port->IsHeld(Digital::Button::Up);
     bool downDown = port->IsHeld(Digital::Button::Down);
-    bool jumpDown = port->IsHeld(Digital::Button::A) || port->IsHeld(Digital::Button::B) || port->IsHeld(Digital::Button::C);
+    bool jumpDown = port->IsHeld(Digital::Button::A);
     bool startDown = port->IsHeld(Digital::Button::START);
 
     joystickState->leftPressed = !joystickState->leftDown & leftDown;
@@ -90,6 +97,14 @@ void Update_Controls(int controllerIndex,
     joystickState->downDown = downDown;
     joystickState->jumpDown = jumpDown;
     joystickState->startDown = startDown;
+
+#ifdef DEV_MODE
+    bool debugStateDown = port->IsHeld(Digital::Button::B);
+
+    joystickState->debugStatePressed = !joystickState->debugStateDown & debugStateDown;
+    joystickState->debugStateReleased = joystickState->debugStatePressed & !debugStateDown;
+    joystickState->debugStateDown = debugStateDown;
+#endif
 }
 
 
@@ -177,6 +192,7 @@ int main()
     //SRL::Debug::Print(1,21,"player: %d", (u8)resources->roomResources[4].backgroundDrawData.drawCommandCount);
 
     Game_ChangedRoomCallback = gameRoomChanged;
+    Game_TransitionDone = roomTransitionDone;
 
     Vector2D scrollOffset = Vector2D(-SCREEN_OFFSET_X, -SCREEN_OFFSET_Y);
     SRL::VDP2::NBG0::SetPosition(scrollOffset);

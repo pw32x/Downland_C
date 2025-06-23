@@ -1,4 +1,4 @@
-# Downland_C: Dreamcast
+# Downland_C: Sega Dreamcast
 
 ## INTRODUCTION
 

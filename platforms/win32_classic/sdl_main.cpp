@@ -1,5 +1,7 @@
 // This implements basic SDL support
 
+#define _CRT_SECURE_NO_WARNINGS
+
 #define SDL_MAIN_USE_CALLBACKS 1  /* use the callbacks instead of main() */
 
 extern "C"
@@ -8,7 +10,8 @@ extern "C"
 #include "../../game/base_types.h"
 #include "../../game/game.h"
 #include "../../game/game_types.h"
-#include "../../resource_loaders/resource_loader_filesys.h"
+#include "../../game/checksum_utils.h"
+#include "../../game/resource_loader_buffer.h"
 #include "../../game/physics_utils.h"
 #include "../../game/debug_utils.h"
 #include "../../game/draw_utils.h"
@@ -36,6 +39,9 @@ const char* appIdentifier = "com.example.Downland_C";
 
 static SDL_Window *window = NULL;
 static SDL_Renderer *renderer = NULL;
+
+const int fileBufferSize = 8192;
+u8 fileBuffer[fileBufferSize];
 
 #define SCREEN_SCALE 3
 #define SCREEN_WIDTH (FRAMEBUFFER_WIDTH * SCREEN_SCALE)
@@ -137,6 +143,36 @@ void gameRoomChanged(const GameData* gameData, u8 roomNumber, s8 transitionType)
     currentVideoFilter->roomChanged(gameData, roomNumber, transitionType);
 }
 
+static bool loadFile(const char* romPath, u8* fileBuffer, u32 fileBufferSize)
+{
+	FILE* file = fopen(romPath, "rb");
+
+	if (file == NULL)
+		return false;
+
+    fseek(file, 0L, SEEK_END);
+    u32 fileSize = ftell(file);
+
+    if (fileSize != fileBufferSize)
+    {
+        fclose(file);
+        return false;
+    }
+
+    fseek(file, 0L, SEEK_SET);
+
+    int bytesRead = (int)fread(fileBuffer, 1, fileBufferSize, file);
+
+    if (bytesRead != fileBufferSize)
+    {
+        fclose(file);
+        return false;
+    }
+
+    fclose(file);
+	return true;
+}
+
 SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
 {
     // Init the app and main window
@@ -176,11 +212,12 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
 
     // Load game resources from the rom
     // 
-
     bool romFoundAndLoaded = false;
     for (int loop = 0; loop < romFileNamesCount; loop++)
     {
-        if (ResourceLoaderFileSys_Init(romFileNames[loop], &resources))
+        if (loadFile(romFileNames[loop], fileBuffer, fileBufferSize) &&
+            checksumCheckLitteEndian(fileBuffer, fileBufferSize) &&
+            ResourceLoaderBuffer_Init(fileBuffer, fileBufferSize, &resources))
         {
             romFoundAndLoaded = true;
             break;
@@ -562,5 +599,5 @@ void SDL_AppQuit(void *appstate, SDL_AppResult result)
 
     Game_Shutdown(&gameData);
     soundManager.shutdown();
-    ResourceLoaderFileSys_Shutdown(&resources);
+    ResourceLoaderBuffer_Shutdown(&resources);
 }

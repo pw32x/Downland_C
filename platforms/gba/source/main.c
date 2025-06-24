@@ -148,13 +148,16 @@ void convert1bppImageTo8bppCrtEffectImage(const dl_u8* originalImage,
 
 
 void convertToTiles(const dl_u8* sprite, 
-					dl_u8* spriteTiles, 
 					dl_u8 width,
-					dl_u8 height)
+					dl_u8 height,
+					int tileIndexStartInBytes)
 {
 	dl_u8 tileWidth = width / 8;
 	dl_u8 tileHeight = height / 8;
-	dl_u8* spriteTilesRunner = spriteTiles;
+
+	dl_u8 spriteTile[64];
+
+	dl_u16 tileCounter = 0;
 
 	for (int tiley = 0; tiley < tileHeight; tiley++)
 	{
@@ -164,14 +167,20 @@ void convertToTiles(const dl_u8* sprite,
 		{
 			int startx = tilex * 8;
 
+			dl_u8* spriteTileRunner = spriteTile;
+
 			for (int loopy = 0; loopy < 8; loopy++)
 			{
 				for (int loopx = 0; loopx < 8; loopx++)
 				{
-					*spriteTilesRunner = sprite[(startx + loopx) + ((starty + loopy) * width)];
-					spriteTilesRunner++;
+					*spriteTileRunner = sprite[(startx + loopx) + ((starty + loopy) * width)];
+					spriteTileRunner++;
 				}
 			}
+
+			int tileIndex = tileIndexStartInBytes + (tileCounter * 64);
+			tileCounter++;
+			CpuFastSet(spriteTile, (void*)(CHAR_BASE_BLOCK(4) + tileIndex), 16 | COPY32);
 		}
 	}
 }
@@ -291,8 +300,7 @@ int main()
                                          16,
                                          CrtColor_Blue);
 
-	dl_u8 downlandSpriteTiles[256];
-	convertToTiles(downlandSprite, downlandSpriteTiles, 16, 16);
+	convertToTiles(downlandSprite, 16, 16, 32); // 32 bytes after the last sprite
 
 	// Set up the interrupt handlers
 	irqInit();
@@ -325,8 +333,7 @@ int main()
     // Each tile is 32 bytes for 4bpp 8x8
     CpuFastSet(spriteTiles, (void*)CHAR_BASE_BLOCK(4), 4 | COPY32);
 
-	
-	CpuFastSet(downlandSpriteTiles, (void*)(CHAR_BASE_BLOCK(4) + 32), 64 | COPY32);
+
 
 	for (int i = 0; i < 128; i++) 
 	{

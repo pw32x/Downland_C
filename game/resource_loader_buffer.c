@@ -6,7 +6,7 @@
 #include <stdio.h>
 
 
-static const u8* getBytes(const u8* fileBuffer, u16 start)
+static const dl_u8* getBytes(const dl_u8* fileBuffer, dl_u16 start)
 {
 	// take into account that the rom starts at c000
 	start -= 0xc000; 
@@ -14,21 +14,21 @@ static const u8* getBytes(const u8* fileBuffer, u16 start)
 	return fileBuffer + start;
 }
 
-static void loadBackgroundDrawData(const u8* fileBuffer, 
-									u16 start, 
-									BackgroundDrawData* backgroundDrawData)
+static void loadBackgroundDrawData(const dl_u8* fileBuffer, 
+								   dl_u16 start, 
+								   BackgroundDrawData* backgroundDrawData)
 {
 	// take into account that the rom starts at c000
 	start -= 0xc000; 
 
 	fileBuffer += start;
 
-	u8 sentinelValue = 0xff;
+	dl_u8 sentinelValue = 0xff;
 
 	// go through the fileBuffer, counting the number of elements
 	// we need to create.
-	u8 drawCommandCount = 0;
-	const u8* fileBufferRunner = fileBuffer;
+	dl_u8 drawCommandCount = 0;
+	const dl_u8* fileBufferRunner = fileBuffer;
 	while (*fileBufferRunner != sentinelValue)
 	{
 		drawCommandCount++;
@@ -49,7 +49,7 @@ static void loadBackgroundDrawData(const u8* fileBuffer,
 	fileBufferRunner = fileBuffer;
 	BackgroundDrawCommand* backgroundDrawCommandsRunner = backgroundDrawCommands;
 
-	u8 repeatCodeIndicator = 0x80; // a shape code with this flag means that it repeats
+	dl_u8 repeatCodeIndicator = 0x80; // a shape code with this flag means that it repeats
 
 	while (*fileBufferRunner != sentinelValue)
 	{
@@ -73,9 +73,9 @@ static void loadBackgroundDrawData(const u8* fileBuffer,
 	backgroundDrawData->backgroundDrawCommands = backgroundDrawCommands;
 }
 	
-static void loadShapeDrawData(const u8* fileBuffer, 
-								u16 start, 
-								ShapeDrawData* shapeDrawData)
+static void loadShapeDrawData(const dl_u8* fileBuffer, 
+							  dl_u16 start, 
+							  ShapeDrawData* shapeDrawData)
 {
 	// take into account that the rom starts at c000
 	start -= 0xc000; 
@@ -89,9 +89,9 @@ static void loadShapeDrawData(const u8* fileBuffer,
 	shapeDrawData->segments = (const ShapeSegment*)fileBuffer;
 }
 	
-static void loadDropSpawnPositions(const u8* fileBuffer, 
-									u16 start, 
-									DropSpawnPositions* dropSpawnPositions)
+static void loadDropSpawnPositions(const dl_u8* fileBuffer, 
+								   dl_u16 start, 
+								   DropSpawnPositions* dropSpawnPositions)
 {
 	// take into account that the rom starts at c000
 	start -= 0xc000; 
@@ -107,16 +107,18 @@ static void loadDropSpawnPositions(const u8* fileBuffer,
 	dropSpawnPositions->dropSpawnAreas = (const DropSpawnArea*)fileBuffer;
 }
 	
-static void loadDoorInfoDataPositions(const u8* fileBuffer, u16 start, DoorInfoData* doorInfoData)
+static void loadDoorInfoDataPositions(const dl_u8* fileBuffer, 
+									  dl_u16 start, 
+									  DoorInfoData* doorInfoData)
 {
 	// take into account that the rom starts at c000
 	start -= 0xc000; 
 	fileBuffer += start;
 
-	u8 doorInfosCount = 0;
-	u8 sentinelValue = 1; // some initial non-zero value
+	dl_u8 doorInfosCount = 0;
+	dl_u8 sentinelValue = 1; // some initial non-zero value
 
-	const u8* fileBufferRunner = fileBuffer;
+	const dl_u8* fileBufferRunner = fileBuffer;
 
 	// get the number of doors by going through
 	// the file until we hit 0
@@ -146,30 +148,33 @@ static void loadDoorInfoDataPositions(const u8* fileBuffer, u16 start, DoorInfoD
 #define SHIFT_COUNT 3  // Number of shifted versions
 
 // assume two bytes per row
-static u8* buildBitShiftedSprites(const u8* spriteData, u8 spriteCount, u8 rowCount, u8 bytesPerRow)
+static dl_u8* buildBitShiftedSprites(const dl_u8* spriteData, 
+									 dl_u8 spriteCount, 
+									 dl_u8 rowCount, 
+									 dl_u8 bytesPerRow)
 {
 #define DESTINATION_BYTES_PER_ROW	3
 #define NUM_BIT_SHIFTS 4
 
-	u16 bitShiftedSpriteBufferSize = spriteCount * rowCount * DESTINATION_BYTES_PER_ROW * NUM_BIT_SHIFTS;
-	u8* bitShiftedSprites = (u8*)dl_alloc(bitShiftedSpriteBufferSize);
-	u8* bitShiftedSpritesRunner = bitShiftedSprites;
+	dl_u16 bitShiftedSpriteBufferSize = spriteCount * rowCount * DESTINATION_BYTES_PER_ROW * NUM_BIT_SHIFTS;
+	dl_u8* bitShiftedSprites = (dl_u8*)dl_alloc(bitShiftedSpriteBufferSize);
+	dl_u8* bitShiftedSpritesRunner = bitShiftedSprites;
 
-	u32 workBuffer;
+	dl_u32 workBuffer;
 
 	for (int loop = 0; loop < spriteCount; loop++)
 	{
 		for (int shiftAmount = 0; shiftAmount < NUM_BIT_SHIFTS; shiftAmount++)
 		{
-			const u8* spriteDataRunner = spriteData + (loop * rowCount * bytesPerRow);
+			const dl_u8* spriteDataRunner = spriteData + (loop * rowCount * bytesPerRow);
 
 			for (int rowLoop = 0; rowLoop < rowCount; rowLoop++)
 			{
 				workBuffer = spriteDataRunner[0] << 16 | spriteDataRunner[1] << 8;
 				workBuffer >>= (shiftAmount * 2);
-				bitShiftedSpritesRunner[0] = (u8)(workBuffer >> 16);
-				bitShiftedSpritesRunner[1] = (u8)(workBuffer >> 8);
-				bitShiftedSpritesRunner[2] = (u8)workBuffer;
+				bitShiftedSpritesRunner[0] = (dl_u8)(workBuffer >> 16);
+				bitShiftedSpritesRunner[1] = (dl_u8)(workBuffer >> 8);
+				bitShiftedSpritesRunner[2] = (dl_u8)workBuffer;
 
 				spriteDataRunner += bytesPerRow;
 				bitShiftedSpritesRunner += DESTINATION_BYTES_PER_ROW;
@@ -181,7 +186,9 @@ static u8* buildBitShiftedSprites(const u8* spriteData, u8 spriteCount, u8 rowCo
 }
 
 
-int ResourceLoaderBuffer_Init(const u8* fileBuffer, u32 fileBufferSize, Resources* resources)
+dl_u8 ResourceLoaderBuffer_Init(const dl_u8* fileBuffer, 
+							    dl_u32 fileBufferSize, 
+							    Resources* resources)
 {
 	if (fileBufferSize != DOWNLAND_ROM_SIZE)
 		return FALSE;

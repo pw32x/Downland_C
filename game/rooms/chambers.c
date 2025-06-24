@@ -10,11 +10,11 @@
 #include "..\door_utils.h"
 
 void drawPickups(Pickup* pickups, 
-				 u8 playerMask,
+				 dl_u8 playerMask,
 				 const Resources* resources, 
-				 u8* framebuffer)
+				 dl_u8* framebuffer)
 {
-	u8 count = NUM_PICKUPS_PER_ROOM;
+	dl_u8 count = NUM_PICKUPS_PER_ROOM;
 
 	while (count--)
 	{
@@ -30,22 +30,22 @@ void drawPickups(Pickup* pickups,
 	}
 }
 
-void drawPlayerLives(u8 playerLives,
-					 u8 currentSpriteNumber,
-					 const u8* playerBitShiftedSprites,
-					 u8* framebuffer,
-					 u8* cleanBackground,
-					 u8 isRegenerating)
+void drawPlayerLives(dl_u8 playerLives,
+					 dl_u8 currentSpriteNumber,
+					 const dl_u8* playerBitShiftedSprites,
+					 dl_u8* framebuffer,
+					 dl_u8* cleanBackground,
+					 dl_u8 isRegenerating)
 {
-	u8 x = PLAYERLIVES_ICON_X;
-	u8 y = PLAYERLIVES_ICON_Y;
+	dl_u8 x = PLAYERLIVES_ICON_X;
+	dl_u8 y = PLAYERLIVES_ICON_Y;
 
-	const u8* currentSprite = getBitShiftedSprite(playerBitShiftedSprites, 
+	const dl_u8* currentSprite = getBitShiftedSprite(playerBitShiftedSprites, 
 											currentSpriteNumber, 
 											0, 
 											PLAYER_BITSHIFTED_SPRITE_FRAME_SIZE);
 
-	for (u8 loop = 0; loop < playerLives; loop++)
+	for (dl_u8 loop = 0; loop < playerLives; loop++)
 	{
 		drawSprite_24PixelsWide_noblend(currentSprite,
 										x, 
@@ -72,7 +72,7 @@ void drawPlayerLives(u8 playerLives,
 	}
 }
 
-void updateTimers(u8 roomNumber, u16* roomTimers)
+void updateTimers(dl_u8 roomNumber, dl_u16* roomTimers)
 {
 	for (int loop = 0; loop < NUM_ROOMS; loop++)
 	{
@@ -92,7 +92,7 @@ void updateTimers(u8 roomNumber, u16* roomTimers)
 }
 
 
-void chamber_draw(u8 roomNumber, GameData* gameData, const Resources* resources)
+void chamber_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resources)
 {
 	drawBackground(&resources->roomResources[roomNumber].backgroundDrawData, 
 				   resources,
@@ -101,7 +101,7 @@ void chamber_draw(u8 roomNumber, GameData* gameData, const Resources* resources)
 	// draw active doors in the room
 	const DoorInfoData* doorInfoData = &resources->roomResources[roomNumber].doorInfoData;
 	const DoorInfo* doorInfoRunner = doorInfoData->doorInfos;
-	for (u8 loop = 0; loop < doorInfoData->drawInfosCount; loop++)
+	for (dl_u8 loop = 0; loop < doorInfoData->drawInfosCount; loop++)
 	{
 		if ((doorInfoRunner->y != 0xff) &&
 			(gameData->currentPlayerData->doorStateData[doorInfoRunner->globalDoorIndex] & 
@@ -120,7 +120,7 @@ void chamber_draw(u8 roomNumber, GameData* gameData, const Resources* resources)
 
 void chamber_init(Room* room, GameData* gameData, const Resources* resources)
 {
-	u8 roomNumber = room->roomNumber;
+	dl_u8 roomNumber = room->roomNumber;
 	PlayerData* playerData = gameData->currentPlayerData;
 
 	// init drops
@@ -168,7 +168,7 @@ void chamber_update(Room* room, GameData* gameData, const Resources* resources)
 				gameData->framebuffer);
 
 	updateTimers(playerData->currentRoom->roomNumber, playerData->roomTimers);
-	u16 currentTimer = playerData->roomTimers[playerData->currentRoom->roomNumber];
+	dl_u16 currentTimer = playerData->roomTimers[playerData->currentRoom->roomNumber];
 
 #ifndef DISABLE_ENEMIES
 	DropsManager_Update(&gameData->dropData, 
@@ -180,7 +180,7 @@ void chamber_update(Room* room, GameData* gameData, const Resources* resources)
 
 	const DoorInfo* lastDoor = playerData->lastDoor;
 
-	u8 playerLives = playerData->lives;
+	dl_u8 playerLives = playerData->lives;
 
 	Player_Update(playerData, 
 				  &gameData->joystickState, 

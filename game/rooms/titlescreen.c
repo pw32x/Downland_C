@@ -11,9 +11,9 @@
 #define TITLESCREEN_PLAYERONE_SCORE_LOCATION	0x1412
 #define TITLESCREEN_PLAYERTWO_SCORE_LOCATION	0x1552
 
-void titleScreen_draw(u8 roomNumber, GameData* gameData, const Resources* resources)
+void titleScreen_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resources)
 {
-	u8* framebuffer = gameData->cleanBackground;
+	dl_u8* framebuffer = gameData->cleanBackground;
 
 	// init background and text
 	drawBackground(&resources->roomResources[roomNumber].backgroundDrawData, 
@@ -64,7 +64,7 @@ void titleScreen_draw(u8 roomNumber, GameData* gameData, const Resources* resour
 
 void titleScreen_init(Room* room, GameData* gameData, const Resources* resources)
 {
-	u8 roomNumber = room->roomNumber;
+	dl_u8 roomNumber = room->roomNumber;
 
 	// init drops
 	gameData->dropData.dropSpawnPositions = &resources->roomResources[roomNumber].dropSpawnPositions;
@@ -98,8 +98,8 @@ void titleScreen_update(Room* room, GameData* gameData, const Resources* resourc
 	}
 
 	// draw the cursor
-	u16 drawLocation = gameData->numPlayers == 1 ? 0xf64 : 0xf70;  // hardcoded locations in the frambuffer
-	u16 eraseLocation = gameData->numPlayers == 1 ? 0xf70 : 0xf64; // based on the original game.
+	dl_u16 drawLocation = gameData->numPlayers == 1 ? 0xf64 : 0xf70;  // hardcoded locations in the frambuffer
+	dl_u16 eraseLocation = gameData->numPlayers == 1 ? 0xf70 : 0xf64; // based on the original game.
 
 	gameData->framebuffer[drawLocation] = 0xff;// draw the cursor (a white horizontal line)
 	gameData->framebuffer[eraseLocation] = 0;  // erase the cursor

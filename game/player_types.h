@@ -25,53 +25,53 @@
 
 typedef struct
 {
-	u8 state;	
-	u8 lives;
-	u8 gameOver;
-	u16 x; // high resolution position 256 pixels, 256 subpixels
-	u16 y; // high resolution position 256 pixels, 256 subpixels
-	u16 speedx;
-	u16 speedy;
-	u8 playerNumber;
-	u8 playerMask;
-	u8 currentFrameNumber; // 0 to 3 for run animation (both directions), 4 to 5 for climbing animation
-	u8 currentSpriteNumber; // 0 to 3 run right, 4/5 climb, 6-9 run left
-	const u8* currentSprite;
-	const u8* bitShiftedSprites;
-	const u8* bitShiftedCollisionMasks;
-	const u8* bitShiftedSplatSprite;
+	dl_u8 state;	
+	dl_u8 lives;
+	dl_u8 gameOver;
+	dl_u16 x; // high resolution position 256 pixels, 256 subpixels
+	dl_u16 y; // high resolution position 256 pixels, 256 subpixels
+	dl_u16 speedx;
+	dl_u16 speedy;
+	dl_u8 playerNumber;
+	dl_u8 playerMask;
+	dl_u8 currentFrameNumber; // 0 to 3 for run animation (both directions), 4 to 5 for climbing animation
+	dl_u8 currentSpriteNumber; // 0 to 3 run right, 4/5 climb, 6-9 run left
+	const dl_u8* currentSprite;
+	const dl_u8* bitShiftedSprites;
+	const dl_u8* bitShiftedCollisionMasks;
+	const dl_u8* bitShiftedSplatSprite;
 
-	u8 facingDirection;
+	dl_u8 facingDirection;
 
-	u8 jumpAirCounter;
-	u8 ignoreRopesCounter;
+	dl_u8 jumpAirCounter;
+	dl_u8 ignoreRopesCounter;
 
-	u8 holdLeftCounter;
-	u8 holdRightCounter;
+	dl_u8 holdLeftCounter;
+	dl_u8 holdRightCounter;
 
-	u8 preserveAirMomentum; // TRUE when jumping but FALSE when falling past
+	dl_u8 preserveAirMomentum; // TRUE when jumping but FALSE when falling past
 							// max falling speed. FALSE when walking off ledges.
 
-	u32 score;
-	u8 scoreString[SCORE_STRING_SIZE];
+	dl_u32 score;
+	dl_u8 scoreString[SCORE_STRING_SIZE];
 
-	u8 cantMoveCounter;
-	u16 regenerationCounter;
-	u8 isDead;
+	dl_u8 cantMoveCounter;
+	dl_u16 regenerationCounter;
+	dl_u8 isDead;
 
-	u8 globalAnimationCounter; // drives running, climbing animation
+	dl_u8 globalAnimationCounter; // drives running, climbing animation
 
 	
 	RoomPickups gamePickups;
-	u8 doorStateData[DOOR_TOTAL_COUNT];
-	u8 gameCompletionCount;
+	dl_u8 doorStateData[DOOR_TOTAL_COUNT];
+	dl_u8 gameCompletionCount;
 	Room* currentRoom;
 
-	u16 roomTimers[NUM_ROOMS];
+	dl_u16 roomTimers[NUM_ROOMS];
 
 	const DoorInfo* lastDoor;
 
-	u8 splatFrameNumber;
+	dl_u8 splatFrameNumber;
 } PlayerData;
 
 #endif

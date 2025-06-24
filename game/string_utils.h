@@ -19,7 +19,7 @@
 #define CHAR_9		9
 #define CHAR_SPACE 0x24
 
-void convertTimerToString(u16 timerValue, u8* timerString);
-void convertScoreToString(u32 score, u8* scoreString);
+void convertTimerToString(dl_u16 timerValue, dl_u8* timerString);
+void convertScoreToString(dl_u32 score, dl_u8* scoreString);
 
 #endif

@@ -18,7 +18,7 @@
 // playback of sounds. Once that is set up, the platform 
 // implementation implements the function below which is used by 
 // the game to request a sound to play. 
-void Sound_Play(u8 soundIndex, u8 loop);
-void Sound_Stop(u8 soundIndex);
+void Sound_Play(dl_u8 soundIndex, dl_u8 loop);
+void Sound_Stop(dl_u8 soundIndex);
 
 #endif

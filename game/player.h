@@ -28,14 +28,14 @@ void Player_RoomInit(PlayerData* playerData, const Resources* resources);
 
 void Player_Update(PlayerData* playerData, 
 				   const JoystickState* joystickState, 
-				   u8* framebuffer, 
-				   u8* cleanBackground, 
+				   dl_u8* framebuffer, 
+				   dl_u8* cleanBackground, 
 				   const DoorInfoData* doorInfoData,
-				   u8* doorStateData);
+				   dl_u8* doorStateData);
 
 void Player_StartRegen(PlayerData* playerData);
 
-u8 Player_HasCollision(PlayerData* playerData, u8* framebuffer, u8* cleanBackground);
+dl_u8 Player_HasCollision(PlayerData* playerData, dl_u8* framebuffer, dl_u8* cleanBackground);
 void Player_PerformCollisions(struct GameData* gameData, const Resources* resources);
 
 void Player_CompleteGameLoop(PlayerData* playerData, const Resources* resource);

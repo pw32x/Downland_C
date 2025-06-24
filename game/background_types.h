@@ -5,26 +5,26 @@
 
 typedef struct
 {
-    u8 subpixelIncrement;
-    u8 pixelCount;
-    u8 orientation;
+    dl_u8 subpixelIncrement;
+    dl_u8 pixelCount;
+    dl_u8 orientation;
 } ShapeSegment;
 
 typedef struct
 {
-    u8 segmentCount;
+    dl_u8 segmentCount;
     const ShapeSegment* segments;
 } ShapeDrawData;
 
 typedef struct
 {
-    u8 shapeCode;
-    u8 drawCount;
+    dl_u8 shapeCode;
+    dl_u8 drawCount;
 } BackgroundDrawCommand;
 
 typedef struct
 {
-    u8 drawCommandCount;
+    dl_u8 drawCommandCount;
     const BackgroundDrawCommand* backgroundDrawCommands;
 } BackgroundDrawData;
 

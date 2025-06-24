@@ -19,8 +19,8 @@
 // pick up positions stored in rom
 typedef struct
 {
-	u8 y;
-	u8 x;
+	dl_u8 y;
+	dl_u8 x;
 } PickupPosition;
 
 // runtime pickup data
@@ -33,11 +33,11 @@ typedef struct
 
 typedef struct
 {
-	u8 state;	// keystate contains state for both players
-	u8 type;
-	u8 x;
-	u8 y;
-	u8 doorUnlockIndex;
+	dl_u8 state;	// keystate contains state for both players
+	dl_u8 type;
+	dl_u8 x;
+	dl_u8 y;
+	dl_u8 doorUnlockIndex;
 } Pickup;
 
 // in each set of five pick ups per room, the first two

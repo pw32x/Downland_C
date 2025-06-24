@@ -2,7 +2,7 @@
 
 #include "..\game\base_defines.h"
 
-static u32 swap_endian_32(u32 val) 
+static dl_u32 swap_endian_32(dl_u32 val) 
 {
 	return ((val >> 24) & 0xFF) | 
 			((val >> 8) & 0xFF00) | 
@@ -11,14 +11,14 @@ static u32 swap_endian_32(u32 val)
 }
 
 // Verifies the checksum for Downland V1.1
-BOOL checksumCheckBigEndian(const u8* fileBuffer, u32 fileBufferSize) 
+BOOL checksumCheckBigEndian(const dl_u8* fileBuffer, dl_u32 fileBufferSize) 
 {
-	u32 accumulator = 0;
-	u32 value = 0;
-	const u32* fileBufferRunner = (const u32*)fileBuffer;
+	dl_u32 accumulator = 0;
+	dl_u32 value = 0;
+	const dl_u32* fileBufferRunner = (const dl_u32*)fileBuffer;
 
-	int loopCount = fileBufferSize / sizeof(value);
-	for (int loop = 0; loop < loopCount; loop++)
+	dl_u16 loopCount = fileBufferSize / sizeof(value);
+	for (dl_u16 loop = 0; loop < loopCount; loop++)
 	{
 		value = swap_endian_32(*fileBufferRunner);
 		accumulator += value;
@@ -29,14 +29,14 @@ BOOL checksumCheckBigEndian(const u8* fileBuffer, u32 fileBufferSize)
 }
 
 // Verifies the checksum for Downland V1.1
-BOOL checksumCheckLitteEndian(const u8* fileBuffer, u32 fileBufferSize) 
+BOOL checksumCheckLitteEndian(const dl_u8* fileBuffer, dl_u32 fileBufferSize) 
 {
-	u32 accumulator = 0;
-	u32 value = 0;
-	const u32* fileBufferRunner = (const u32*)fileBuffer;
+	dl_u32 accumulator = 0;
+	dl_u32 value = 0;
+	const dl_u32* fileBufferRunner = (const dl_u32*)fileBuffer;
 
-	int loopCount = fileBufferSize / sizeof(value);
-	for (int loop = 0; loop < loopCount; loop++)
+	dl_u16 loopCount = fileBufferSize / sizeof(value);
+	for (dl_u16 loop = 0; loop < loopCount; loop++)
 	{
 		value = *fileBufferRunner;
 		accumulator += value;

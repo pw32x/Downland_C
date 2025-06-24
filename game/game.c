@@ -7,15 +7,15 @@
 Game_ChangedRoomCallbackType Game_ChangedRoomCallback = NULL;
 Game_ChangedRoomCallbackType Game_TransitionDone = NULL;
 
-static u8 initializedFramebuffers = FALSE;
+static dl_u8 initializedFramebuffers = FALSE;
 
 void Game_Init(struct GameData* gameData, const Resources* resources)
 {
 	if (!initializedFramebuffers)
 	{
 		initializedFramebuffers = TRUE;
-		gameData->framebuffer = (u8*)dl_alloc(FRAMEBUFFER_HEIGHT * FRAMEBUFFER_PITCH);
-		gameData->cleanBackground = (u8*)dl_alloc(FRAMEBUFFER_HEIGHT * FRAMEBUFFER_PITCH);
+		gameData->framebuffer = (dl_u8*)dl_alloc(FRAMEBUFFER_HEIGHT * FRAMEBUFFER_PITCH);
+		gameData->cleanBackground = (dl_u8*)dl_alloc(FRAMEBUFFER_HEIGHT * FRAMEBUFFER_PITCH);
 	}
 
 	gameData->numPlayers = 1;
@@ -52,7 +52,7 @@ void Game_InitPlayers(struct GameData* gameData, const Resources* resources)
 
 	gameData->otherPlayerData = gameData->numPlayers > 1 ? &gameData->playerData[PLAYER_TWO] : NULL;
 
-	for (u8 loop = 0; loop < gameData->numPlayers; loop++)
+	for (dl_u8 loop = 0; loop < gameData->numPlayers; loop++)
 	{
 		Player_GameInit(&gameData->playerData[loop], resources);
 	}
@@ -65,7 +65,7 @@ void Game_Update(struct GameData* gameData, const Resources* resources)
 								  resources);
 }
 
-void Game_EnterRoom(struct GameData* gameData, u8 roomNumber, const Resources* resources)
+void Game_EnterRoom(struct GameData* gameData, dl_u8 roomNumber, const Resources* resources)
 {
 	gameData->currentRoom = g_rooms[roomNumber];
 
@@ -85,7 +85,7 @@ void Game_EnterRoom(struct GameData* gameData, u8 roomNumber, const Resources* r
 // can't do the per-pixel wiping fast enough or at all and 
 // want to do something more viable on their hardware.
 
-void Game_TransitionToRoom(struct GameData* gameData, u8 roomNumber, const Resources* resources)
+void Game_TransitionToRoom(struct GameData* gameData, dl_u8 roomNumber, const Resources* resources)
 {
 	gameData->transitionRoomNumber = roomNumber;
 
@@ -103,7 +103,7 @@ void Game_TransitionToRoom(struct GameData* gameData, u8 roomNumber, const Resou
 		Game_ChangedRoomCallback(gameData, roomNumber, TRANSITION_ROOM_INDEX);
 }
 
-void Game_WipeTransitionToRoom(struct GameData* gameData, u8 roomNumber, const Resources* resources)
+void Game_WipeTransitionToRoom(struct GameData* gameData, dl_u8 roomNumber, const Resources* resources)
 {
 	gameData->transitionRoomNumber = roomNumber;
 

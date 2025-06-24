@@ -4,12 +4,12 @@
 #include "dl_rand.h"
 #include <memory.h>
 
-void setPixel(u8* framebuffer, s16 x, s16 y, u8 value) 
+void setPixel(dl_u8* framebuffer, dl_s16 x, dl_s16 y, dl_u8 value) 
 {
     if (x < 0 || x >= FRAMEBUFFER_WIDTH || y < 0 || y >= FRAMEBUFFER_HEIGHT) 
         return;
 
-    u8 pixel = 1 << (7 - (x % 8));
+    dl_u8 pixel = 1 << (7 - (x % 8));
     int index = (x / 8) + (y * FRAMEBUFFER_PITCH);
 
     if (value)
@@ -18,16 +18,16 @@ void setPixel(u8* framebuffer, s16 x, s16 y, u8 value)
         framebuffer[index] &= ~pixel; // clear bit/pixel
 }
 
-void drawText(const u8* text, const u8* characterFont, u8* framebuffer, u16 framebufferPosition)
+void drawText(const dl_u8* text, const dl_u8* characterFont, dl_u8* framebuffer, dl_u16 framebufferPosition)
 {
-    u8 rowsPerCharacter = 7;
+    dl_u8 rowsPerCharacter = 7;
     framebuffer += framebufferPosition;
 
     // for each character
     while (*text != 0xff)
     {
         // find the corresponding character in the font
-        const u8* character = &characterFont[*text * rowsPerCharacter]; // index of the character * 7 bytes per character if font
+        const dl_u8* character = &characterFont[*text * rowsPerCharacter]; // index of the character * 7 bytes per character if font
 
         for (int loop = 0; loop < rowsPerCharacter; loop++)
         {
@@ -41,11 +41,11 @@ void drawText(const u8* text, const u8* characterFont, u8* framebuffer, u16 fram
     }
 }
 
-void drawSprite_16PixelsWide(const u8* spriteData, 
-                             u8 x, 
-                             u8 y, 
-                             u8 numLines,
-                             u8* framebuffer)
+void drawSprite_16PixelsWide(const dl_u8* spriteData, 
+                             dl_u8 x, 
+                             dl_u8 y, 
+                             dl_u8 numLines,
+                             dl_u8* framebuffer)
 {
     framebuffer += (x / 4) + (y * FRAMEBUFFER_PITCH);
 
@@ -66,11 +66,11 @@ void drawSprite_16PixelsWide(const u8* spriteData,
     }
 }
 
-void drawSprite_24PixelsWide(const u8* spriteData, 
-                             u8 x, 
-                             u8 y, 
-                             u8 numLines,
-                             u8* framebuffer)
+void drawSprite_24PixelsWide(const dl_u8* spriteData, 
+                             dl_u8 x, 
+                             dl_u8 y, 
+                             dl_u8 numLines,
+                             dl_u8* framebuffer)
 {
     framebuffer += (x / 4) + (y * FRAMEBUFFER_PITCH);
 
@@ -96,11 +96,11 @@ void drawSprite_24PixelsWide(const u8* spriteData,
     }
 }
 
-void drawSprite_24PixelsWide_noblend(const u8* spriteData, 
-									 u8 x, 
-									 u8 y, 
-									 u8 numLines,
-									 u8* framebuffer)
+void drawSprite_24PixelsWide_noblend(const dl_u8* spriteData, 
+									 dl_u8 x, 
+									 dl_u8 y, 
+									 dl_u8 numLines,
+									 dl_u8* framebuffer)
 {
     framebuffer += (x / 4) + (y * FRAMEBUFFER_PITCH);
 
@@ -126,16 +126,16 @@ void drawSprite_24PixelsWide_noblend(const u8* spriteData,
     }
 }
 
-u8 corruptByte(u8 value)
+dl_u8 corruptByte(dl_u8 value)
 {
 	return ((value << 1) | value) & (dl_rand() % 0xff);
 }
 
-void drawSprite_24PixelsWide_static(const u8* spriteData, 
-									u8 x, 
-									u8 y, 
-									u8 numLines,
-									u8* framebuffer)
+void drawSprite_24PixelsWide_static(const dl_u8* spriteData, 
+									dl_u8 x, 
+									dl_u8 y, 
+									dl_u8 numLines,
+									dl_u8* framebuffer)
 {
     framebuffer += (x / 4) + (y * FRAMEBUFFER_PITCH);
 
@@ -162,14 +162,14 @@ void drawSprite_24PixelsWide_static(const u8* spriteData,
 }
 
 
-void eraseSprite_16PixelsWide(const u8* spriteData, 
-							  u8 x, 
-							  u8 y, 
-							  u8 numLines, 
-							  u8* framebuffer, 
-							  u8* cleanBackground)
+void eraseSprite_16PixelsWide(const dl_u8* spriteData, 
+							  dl_u8 x, 
+							  dl_u8 y, 
+							  dl_u8 numLines, 
+							  dl_u8* framebuffer, 
+							  dl_u8* cleanBackground)
 {
-	u16 offset = (x / 4) + (y * FRAMEBUFFER_PITCH);
+	dl_u16 offset = (x / 4) + (y * FRAMEBUFFER_PITCH);
 	framebuffer += offset;
 	cleanBackground += offset;
 
@@ -195,13 +195,13 @@ void eraseSprite_16PixelsWide(const u8* spriteData,
 }
 
 
-void eraseSprite_16PixelsWide_simple(u8 x, 
-									 u8 y, 
-									 u8 numLines, 
-									 u8* framebuffer, 
-									 u8* cleanBackground)
+void eraseSprite_16PixelsWide_simple(dl_u8 x, 
+									 dl_u8 y, 
+									 dl_u8 numLines, 
+									 dl_u8* framebuffer, 
+									 dl_u8* cleanBackground)
 {
-	u16 offset = (x / 4) + (y * FRAMEBUFFER_PITCH);
+	dl_u16 offset = (x / 4) + (y * FRAMEBUFFER_PITCH);
 	framebuffer += offset;
 	cleanBackground += offset;
 
@@ -222,14 +222,14 @@ void eraseSprite_16PixelsWide_simple(u8 x,
 	}
 }
 
-void eraseSprite_24PixelsWide(const u8* spriteData, 
-							  u8 x, 
-							  u8 y, 
-							  u8 numLines, 
-							  u8* framebuffer, 
-							  u8* cleanBackground)
+void eraseSprite_24PixelsWide(const dl_u8* spriteData, 
+							  dl_u8 x, 
+							  dl_u8 y, 
+							  dl_u8 numLines, 
+							  dl_u8* framebuffer, 
+							  dl_u8* cleanBackground)
 {
-	u16 offset = (x / 4) + (y * FRAMEBUFFER_PITCH);
+	dl_u16 offset = (x / 4) + (y * FRAMEBUFFER_PITCH);
 	framebuffer += offset;
 	cleanBackground += offset;
 
@@ -260,13 +260,13 @@ void eraseSprite_24PixelsWide(const u8* spriteData,
 	}
 }
 
-void eraseSprite_24PixelsWide_simple(u8 x, 
-									 u8 y, 
-									 u8 numLines, 
-									 u8* framebuffer, 
-									 u8* cleanBackground)
+void eraseSprite_24PixelsWide_simple(dl_u8 x, 
+									 dl_u8 y, 
+									 dl_u8 numLines, 
+									 dl_u8* framebuffer, 
+									 dl_u8* cleanBackground)
 {
-	u16 offset = (x / 4) + (y * FRAMEBUFFER_PITCH);
+	dl_u16 offset = (x / 4) + (y * FRAMEBUFFER_PITCH);
 	framebuffer += offset;
 	cleanBackground += offset;
 
@@ -291,7 +291,7 @@ void eraseSprite_24PixelsWide_simple(u8 x,
 	}
 }
 
-const u8* getBitShiftedSprite(const u8* bitShiftedSpriteData, u8 frameNumber, u8 x, u8 spriteFrameSize)
+const dl_u8* getBitShiftedSprite(const dl_u8* bitShiftedSpriteData, dl_u8 frameNumber, dl_u8 x, dl_u8 spriteFrameSize)
 {
 	// x will be 0 to 3
 	return bitShiftedSpriteData + (frameNumber * (spriteFrameSize * 4)) + (x * spriteFrameSize);
@@ -299,11 +299,11 @@ const u8* getBitShiftedSprite(const u8* bitShiftedSpriteData, u8 frameNumber, u8
 
 /*
 // keeping these just in case
-void eraseSprite(u8* framebuffer, 
-				 u8* cleanBackground,
-				 u16 framebufferDrawLocation, 
-				 const u8* spriteData, 
-				 u8 rowCount)
+void eraseSprite(dl_u8* framebuffer, 
+				 dl_u8* cleanBackground,
+				 dl_u16 framebufferDrawLocation, 
+				 const dl_u8* spriteData, 
+				 dl_u8 rowCount)
 {
 	framebuffer += framebufferDrawLocation;
 	cleanBackground += framebufferDrawLocation;
@@ -329,10 +329,10 @@ void eraseSprite(u8* framebuffer,
 	}
 }
 
-void drawSprite(u8* framebuffer, 
-				u16 framebufferDrawLocation, 
-				const u8* spriteData, 
-				u8 rowCount)
+void drawSprite(dl_u8* framebuffer, 
+				dl_u16 framebufferDrawLocation, 
+				const dl_u8* spriteData, 
+				dl_u8 rowCount)
 {
 	framebuffer += framebufferDrawLocation;
 
@@ -353,17 +353,17 @@ void drawSprite(u8* framebuffer,
 */
 
 
-u8* g_framebuffer;
+dl_u8* g_framebuffer;
 
-u8 g_plotterCurrentY;
-u8 g_plotterCurrentX;
-u16 g_plotterHiresPos;
+dl_u8 g_plotterCurrentY;
+dl_u8 g_plotterCurrentX;
+dl_u16 g_plotterHiresPos;
 
-u8 g_subpixelInitValue;
-u8 g_pixelCount;
-u16 g_subpixelIncrement;
+dl_u8 g_subpixelInitValue;
+dl_u8 g_pixelCount;
+dl_u16 g_subpixelIncrement;
 
-u8 g_crtMaskIndexToUse;
+dl_u8 g_crtMaskIndexToUse;
 
 void DrawSegment_MovePlotterUpAndRight()
 {
@@ -416,7 +416,7 @@ void DrawSegment_MovePlotterUpAndLeft()
 // depending on the x position, chose 
 // of these to get at the corresponding
 // two bits you want to activate.
-u8 pixelMasks[4] = 
+dl_u8 pixelMasks[4] = 
 {
 	0xc0, // 11000000b,
 	0x30, // 00110000b,
@@ -426,7 +426,7 @@ u8 pixelMasks[4] =
 
 // different pixel masks to acheive different pixel
 // colors using crt artifact effects.
-u8 crtMasks[4] = 
+dl_u8 crtMasks[4] = 
 {
 	0x00, // 00000000b - black
 	0x55, // 01010101b - blue
@@ -444,13 +444,13 @@ enum
 
 void DrawPixel()
 {
-	u8 y = g_plotterCurrentX;
-	u8 x = g_plotterCurrentY;
-	u8* framebufferPos = g_framebuffer + (y * FRAMEBUFFER_PITCH) + ((x << 1) / 8);
+	dl_u8 y = g_plotterCurrentX;
+	dl_u8 x = g_plotterCurrentY;
+	dl_u8* framebufferPos = g_framebuffer + (y * FRAMEBUFFER_PITCH) + ((x << 1) / 8);
 
-	u8 pixelMaskIndex = x & 0x3;
-	u8 pixelMask = pixelMasks[pixelMaskIndex];
-	u8 pixelToDraw = pixelMask & crtMasks[g_crtMaskIndexToUse]; // apply crt artifact mask on top of the pixel
+	dl_u8 pixelMaskIndex = x & 0x3;
+	dl_u8 pixelMask = pixelMasks[pixelMaskIndex];
+	dl_u8 pixelToDraw = pixelMask & crtMasks[g_crtMaskIndexToUse]; // apply crt artifact mask on top of the pixel
 
 	if (!pixelToDraw)
 		return;
@@ -554,7 +554,7 @@ void (*drawSegmentFunctions[])() = {
 
 void DrawPiece(const ShapeDrawData* shapeDrawData)
 {
-	u8 count = shapeDrawData->segmentCount;
+	dl_u8 count = shapeDrawData->segmentCount;
 	const ShapeSegment* shapeSegmentRunner = shapeDrawData->segments;
 
 	while (count--)
@@ -781,7 +781,7 @@ void (*drawPieceFunctions[])(const Resources* resources) = {
 
 void drawBackground(const BackgroundDrawData* backgroundDrawData, 
 					const Resources* resources,
-					u8* framebuffer)
+					dl_u8* framebuffer)
 {
 	g_framebuffer = framebuffer;
 
@@ -800,7 +800,7 @@ void drawBackground(const BackgroundDrawData* backgroundDrawData,
 	{
 		for (int shapeLoop = 0; shapeLoop < backgroundDrawCommandRunner->drawCount; shapeLoop++)
 		{
-			u8 shapeCode = backgroundDrawCommandRunner->shapeCode;
+			dl_u8 shapeCode = backgroundDrawCommandRunner->shapeCode;
 			drawPieceFunctions[shapeCode](resources);
 		}
 
@@ -808,7 +808,7 @@ void drawBackground(const BackgroundDrawData* backgroundDrawData,
 	}
 }
 
-void drawSprite_16PixelsWide_static_IntoSpriteBuffer(const u8* spriteData, u8 numLines,	u8* spriteBuffer)
+void drawSprite_16PixelsWide_static_IntoSpriteBuffer(const dl_u8* spriteData, dl_u8 numLines,	dl_u8* spriteBuffer)
 {
     while (numLines--)
     {

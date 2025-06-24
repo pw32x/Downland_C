@@ -10,24 +10,24 @@
 
 typedef struct
 {
-	u8 wiggleTimer;
-	u16 speedY;
-	u16 y; // u16 because 256 pixels with 256 subpixels resolution
-	u8 x; // position in half resolution (0 - 127)
-	const u8* spriteData;
-	u8 collisionMask;
+	dl_u8 wiggleTimer;
+	dl_u16 speedY;
+	dl_u16 y; // dl_u16 because 256 pixels with 256 subpixels resolution
+	dl_u8 x; // position in half resolution (0 - 127)
+	const dl_u8* spriteData;
+	dl_u8 collisionMask;
 } Drop;
 
 typedef struct
 {
-	u8 dropSpawnPointsCount;
-	u8 y;
-	u8 x;
+	dl_u8 dropSpawnPointsCount;
+	dl_u8 y;
+	dl_u8 x;
 } DropSpawnArea;
 
 typedef struct
 {
-	u8 spawnAreasCount;
+	dl_u8 spawnAreasCount;
 	const DropSpawnArea* dropSpawnAreas;
 } DropSpawnPositions;
 
@@ -35,7 +35,7 @@ typedef struct
 {
 	Drop drops[NUM_DROPS];
 	const DropSpawnPositions* dropSpawnPositions;
-	u8 activeDropsCount;
+	dl_u8 activeDropsCount;
 } DropData;
 
 #endif

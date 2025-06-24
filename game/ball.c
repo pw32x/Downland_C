@@ -20,7 +20,7 @@
 // used as a sensor at the bottom of the
 // ball to detect whether the ball is touching
 // the floor. 
-u16 ballGroundCollisionMasks[4] =
+dl_u16 ballGroundCollisionMasks[4] =
 {
 	0x0300, // 0000001100000000b
 	0x00c0, // 0000000011000000b
@@ -31,7 +31,7 @@ u16 ballGroundCollisionMasks[4] =
 // used as a sensor mid-way across the
 // ball to detect whether it has touched
 // a wall.
-u16 ballWideCollisionMasks[4] =
+dl_u16 ballWideCollisionMasks[4] =
 {
     0x3ff0, // 0011111111110000b
     0x0ffc, // 0000111111111100b
@@ -53,14 +53,14 @@ void initBallPhysics(BallData* ballData)
 											      BITSHIFTED_SPRITE_FRAME_SIZE);
 }
 
-void Ball_Init(BallData* ballData, u8 roomNumber, const Resources* resources)
+void Ball_Init(BallData* ballData, dl_u8 roomNumber, const Resources* resources)
 {
 	ballData->state = BALL_INACTIVE;
 	ballData->enabled = FALSE;
 
 	// check if this room uses the ball. if not, then return and
 	// stay disabled.
-	const u8* roomsWithBouncingBall = resources->roomsWithBouncingBall;
+	const dl_u8* roomsWithBouncingBall = resources->roomsWithBouncingBall;
 
 	while (*roomsWithBouncingBall != roomNumber && *roomsWithBouncingBall != 0xff)
 	{
@@ -80,7 +80,7 @@ void Ball_Init(BallData* ballData, u8 roomNumber, const Resources* resources)
 }
 
 
-void Ball_Update(BallData* ballData, u8* framebuffer, u8* cleanBackground)
+void Ball_Update(BallData* ballData, dl_u8* framebuffer, dl_u8* cleanBackground)
 {
 	if (!ballData->enabled)
 		return;
@@ -92,7 +92,7 @@ void Ball_Update(BallData* ballData, u8* framebuffer, u8* cleanBackground)
 		return;
 	}
 
-	if ((s8)ballData->fallStateCounter > 0)
+	if ((dl_s8)ballData->fallStateCounter > 0)
 	{
 		// jumping up
 		ballData->speedy += 0xa;
@@ -103,7 +103,7 @@ void Ball_Update(BallData* ballData, u8* framebuffer, u8* cleanBackground)
 			ballData->speedy = 0;
 		}
 	}
-	else if ((s8)ballData->fallStateCounter < 0)
+	else if ((dl_s8)ballData->fallStateCounter < 0)
 	{
 		// on ground
 		ballData->fallStateCounter++;
@@ -145,12 +145,12 @@ void Ball_Update(BallData* ballData, u8* framebuffer, u8* cleanBackground)
 							 framebuffer, 
 							 cleanBackground);
 
-	if ((s8)ballData->fallStateCounter >= 0)
+	if ((dl_s8)ballData->fallStateCounter >= 0)
 	{
 		ballData->x += ballData->speedx;
 		ballData->y += ballData->speedy;	
 
-		u8 terrainTest = testTerrainCollision(ballData->x, 
+		dl_u8 terrainTest = testTerrainCollision(ballData->x, 
 											  ballData->y, 
 											  BALL_WALL_SENSOR_YOFFSET, 
 											  ballWideCollisionMasks, 
@@ -163,7 +163,7 @@ void Ball_Update(BallData* ballData, u8* framebuffer, u8* cleanBackground)
 	}
 
 	ballData->currentSprite = getBitShiftedSprite(ballData->bitShiftedSprites, 
-												  ((s8)ballData->fallStateCounter < 0), // sprite 0 (not squished) if fallStateCounterSigned >= 0, else sprite 1 (squished)
+												  ((dl_s8)ballData->fallStateCounter < 0), // sprite 0 (not squished) if fallStateCounterSigned >= 0, else sprite 1 (squished)
 												  GET_HIGH_BYTE(ballData->x) & 3, 
 												  BITSHIFTED_SPRITE_FRAME_SIZE);
 

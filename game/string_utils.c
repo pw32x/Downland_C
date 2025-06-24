@@ -2,7 +2,7 @@
 
 #include "base_defines.h"
 
-void convertTimerToString(u16 timerValue, u8* timerString)
+void convertTimerToString(dl_u16 timerValue, dl_u8* timerString)
 {
 	timerString[0] = timerValue / 10000;
 	timerValue %= 10000;
@@ -12,7 +12,7 @@ void convertTimerToString(u16 timerValue, u8* timerString)
 	timerValue %= 100;
 	timerString[3] = timerValue / 10;
 	timerValue %= 10;
-	timerString[4] = (u8)timerValue;
+	timerString[4] = (dl_u8)timerValue;
 
 	for (int loop = 0; loop < TIMER_STRING_SIZE - 2; loop++)
 	{
@@ -23,7 +23,7 @@ void convertTimerToString(u16 timerValue, u8* timerString)
 	}
 }
 
-void convertScoreToString(u32 score, u8* scoreString)
+void convertScoreToString(dl_u32 score, dl_u8* scoreString)
 {
 	scoreString[0] = score / 1000000;
 	score %= 1000000;
@@ -37,7 +37,7 @@ void convertScoreToString(u32 score, u8* scoreString)
 	score %= 100;
 	scoreString[5] = score / 10;
 	score %= 10;
-	scoreString[6] = (u8)score;
+	scoreString[6] = (dl_u8)score;
 
 	for (int loop = 0; loop < SCORE_STRING_SIZE - 2; loop++)
 	{

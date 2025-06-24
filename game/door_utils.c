@@ -2,14 +2,14 @@
 #include "draw_utils.h"
 
 void drawDoor(const DoorInfo* doorInfo, 
-			  const u8* bitShiftedDoorSprites, 
-			  u8* framebuffer, 
-			  u8* cleanBackground,
-			  u8 drawOnFramebuffer)
+			  const dl_u8* bitShiftedDoorSprites, 
+			  dl_u8* framebuffer, 
+			  dl_u8* cleanBackground,
+			  dl_u8 drawOnFramebuffer)
 {
 	// draw the door. 
-	u8 y = doorInfo->y;
-	u8 x = doorInfo->x;
+	dl_u8 y = doorInfo->y;
+	dl_u8 x = doorInfo->x;
 
 	// adjust the door position, as per the original game.
 	if (x > 40) 
@@ -17,7 +17,7 @@ void drawDoor(const DoorInfo* doorInfo,
 	else
 		x -= 4;
 
-	const u8* doorSprite = getBitShiftedSprite(bitShiftedDoorSprites, 
+	const dl_u8* doorSprite = getBitShiftedSprite(bitShiftedDoorSprites, 
 											   0,
 											   x & 3, 
 											   DOOR_BITSHIFTED_SPRITE_FRAME_SIZE);

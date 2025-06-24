@@ -27,49 +27,49 @@ typedef struct
 typedef struct
 {
     // font
-    const u8* characterFont;
+    const dl_u8* characterFont;
 
     //strings
-    const u8* text_downland;
-    const u8* text_writtenBy;
-    const u8* text_michaelAichlmayer;
-    const u8* text_copyright1983;
-    const u8* text_spectralAssociates;
-    const u8* text_licensedTo;
-    const u8* text_tandyCorporation;
-    const u8* text_allRightsReserved;
-    const u8* text_onePlayer;
-    const u8* text_twoPlayer;
-    const u8* text_highScore;
-    const u8* text_playerOne;
-    const u8* text_playerTwo;
-    const u8* text_pl1;
-    const u8* text_pl2;
-    const u8* text_getReadyPlayerOne;
-    const u8* text_getReadyPlayerTwo;
-    const u8* text_chamber;
+    const dl_u8* text_downland;
+    const dl_u8* text_writtenBy;
+    const dl_u8* text_michaelAichlmayer;
+    const dl_u8* text_copyright1983;
+    const dl_u8* text_spectralAssociates;
+    const dl_u8* text_licensedTo;
+    const dl_u8* text_tandyCorporation;
+    const dl_u8* text_allRightsReserved;
+    const dl_u8* text_onePlayer;
+    const dl_u8* text_twoPlayer;
+    const dl_u8* text_highScore;
+    const dl_u8* text_playerOne;
+    const dl_u8* text_playerTwo;
+    const dl_u8* text_pl1;
+    const dl_u8* text_pl2;
+    const dl_u8* text_getReadyPlayerOne;
+    const dl_u8* text_getReadyPlayerTwo;
+    const dl_u8* text_chamber;
     
     //sprites
-    const u8* sprites_player;
-    const u8* collisionmasks_player;
-    const u8* sprites_bouncyBall;
-    const u8* sprites_bird;
-    const u8* sprite_moneyBag;
-    const u8* sprite_diamond;
-    const u8* sprite_key;
-    const u8* sprite_playerSplat;
-    const u8* sprite_door;
-    const u8* sprites_drops;
+    const dl_u8* sprites_player;
+    const dl_u8* collisionmasks_player;
+    const dl_u8* sprites_bouncyBall;
+    const dl_u8* sprites_bird;
+    const dl_u8* sprite_moneyBag;
+    const dl_u8* sprite_diamond;
+    const dl_u8* sprite_key;
+    const dl_u8* sprite_playerSplat;
+    const dl_u8* sprite_door;
+    const dl_u8* sprites_drops;
 
     // bit shifted sprites
-    const u8* bitShiftedSprites_player;
-    const u8* bitShiftedCollisionmasks_player;
-    const u8* bitShiftedSprites_bouncyBall;
-    const u8* bitShiftedSprites_bird;
-    const u8* bitShiftedSprites_playerSplat;
-    const u8* bitShiftedSprites_door;
+    const dl_u8* bitShiftedSprites_player;
+    const dl_u8* bitShiftedCollisionmasks_player;
+    const dl_u8* bitShiftedSprites_bouncyBall;
+    const dl_u8* bitShiftedSprites_bird;
+    const dl_u8* bitShiftedSprites_playerSplat;
+    const dl_u8* bitShiftedSprites_door;
 
-    const u8* pickupSprites[3];
+    const dl_u8* pickupSprites[3];
 
     // background piece shapes
     ShapeDrawData shapeDrawData_00_Stalactite;	                        // 0xd5f7
@@ -100,11 +100,11 @@ typedef struct
     RoomResources roomResources[NUM_ROOMS_PLUS_TITLESCREN];
 
     const PickupPosition* roomPickupPositions;
-    const u8* keyPickUpDoorIndexes;               // 20 items
-    const u8* keyPickUpDoorIndexesHardMode;       // 20 items
-    const u8* offsetsToDoorsAlreadyActivated;     // 16 items
+    const dl_u8* keyPickUpDoorIndexes;               // 20 items
+    const dl_u8* keyPickUpDoorIndexesHardMode;       // 20 items
+    const dl_u8* offsetsToDoorsAlreadyActivated;     // 16 items
 
-    const u8* roomsWithBouncingBall; // 10 items
+    const dl_u8* roomsWithBouncingBall; // 10 items
 } Resources;
 
 #endif

@@ -7,14 +7,14 @@
 void Game_Init(struct GameData* gameData, const Resources* resources);
 void Game_InitPlayers(struct GameData* gameData, const Resources* resources);
 void Game_Update(struct GameData* gameData, const Resources* resources);
-void Game_EnterRoom(struct GameData* gameData, u8 roomNumber, const Resources* resources);
+void Game_EnterRoom(struct GameData* gameData, dl_u8 roomNumber, const Resources* resources);
 
-void Game_TransitionToRoom(struct GameData* gameData, u8 roomNumber, const Resources* resources);
-void Game_WipeTransitionToRoom(struct GameData* gameData, u8 roomNumber, const Resources* resources);
+void Game_TransitionToRoom(struct GameData* gameData, dl_u8 roomNumber, const Resources* resources);
+void Game_WipeTransitionToRoom(struct GameData* gameData, dl_u8 roomNumber, const Resources* resources);
 
 void Game_Shutdown(struct GameData* gameData);
 
-typedef void (*Game_ChangedRoomCallbackType)(const struct GameData* gameData, u8 roomNumber, s8 transitionType);
+typedef void (*Game_ChangedRoomCallbackType)(const struct GameData* gameData, dl_u8 roomNumber, dl_s8 transitionType);
 
 
 extern Game_ChangedRoomCallbackType Game_ChangedRoomCallback;

@@ -7,9 +7,9 @@
 #include "..\drops_manager.h"
 #include "..\dl_sound.h"
 
-void get_ready_room_draw(u8 roomNumber, GameData* gameData, const Resources* resources)
+void get_ready_room_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resources)
 {
-	u8* framebuffer = gameData->cleanBackground;
+	dl_u8* framebuffer = gameData->cleanBackground;
 
 	// init background and text
 	drawBackground(&resources->roomResources[TITLESCREEN_ROOM_INDEX].backgroundDrawData, 
@@ -17,7 +17,7 @@ void get_ready_room_draw(u8 roomNumber, GameData* gameData, const Resources* res
 				   framebuffer);
 
 	// get ready text
-	const u8* getReadyString = gameData->currentPlayerData->playerNumber == PLAYER_ONE ? resources->text_getReadyPlayerOne : resources->text_getReadyPlayerTwo;
+	const dl_u8* getReadyString = gameData->currentPlayerData->playerNumber == PLAYER_ONE ? resources->text_getReadyPlayerOne : resources->text_getReadyPlayerTwo;
 
 	drawText(getReadyString, resources->characterFont, framebuffer, 0x0b66);
 }
@@ -47,7 +47,7 @@ void get_ready_room_update(Room* room, GameData* gameData, const Resources* reso
 	if (gameData->joystickState.jumpPressed)
 	{
 		// enter the new player's room
-		u8 roomNumber = 0;
+		dl_u8 roomNumber = 0;
 		if (gameData->currentPlayerData->lastDoor != NULL)
 			roomNumber = gameData->currentPlayerData->lastDoor->nextRoomNumber;
 

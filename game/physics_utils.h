@@ -6,21 +6,21 @@
 #define TOUCHES_VINE(v) (v & 0x10)
 #define TOUCHES_TERRAIN(v) (v & 0x1)
 
-u8 testTerrainCollision(u16 x, 
-						u16 y, 
-						u16 yOffset, 
-						const u16* objectCollisionMasks, 
-						const u8* cleanBackground);
+dl_u8 testTerrainCollision(dl_u16 x, 
+						dl_u16 y, 
+						dl_u16 yOffset, 
+						const dl_u16* objectCollisionMasks, 
+						const dl_u8* cleanBackground);
 
 
 
-extern u8 leftPixelData;
-extern u8 rightPixelData;
+extern dl_u8 leftPixelData;
+extern dl_u8 rightPixelData;
 
-void getTerrainValue(u16 x, 
-				     u16 y, 
-				     u16 yOffset, 
-				     const u16* objectCollisionMasks,
-				     const u8* cleanBackground);
+void getTerrainValue(dl_u16 x, 
+				     dl_u16 y, 
+				     dl_u16 yOffset, 
+				     const dl_u16* objectCollisionMasks,
+				     const dl_u8* cleanBackground);
 
 #endif

@@ -4,7 +4,7 @@
 #include "..\game\base_types.h"
 #include "..\game\resource_types.h"
 
-int ResourceLoaderBuffer_Init(const u8* fileBuffer, u32 fileBufferSize, Resources* resources);
+dl_u8 ResourceLoaderBuffer_Init(const dl_u8* fileBuffer, dl_u32 fileBufferSize, Resources* resources);
 void ResourceLoaderBuffer_Shutdown(Resources* resources);
 
 #endif

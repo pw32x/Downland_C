@@ -6,21 +6,21 @@
 
 typedef struct
 {
-	u8 enabled;
-	u8 state;	// 0 - inactive
+	dl_u8 enabled;
+	dl_u8 state;	// 0 - inactive
 				// 1 - resetting?
 				// 2 - active
 				// 0xff - dying?
-	u16 x; // high resolution position 256 pixels, 256 subpixels
-	u16 y; // high resolution position 256 pixels, 256 subpixels
-	u16 speedx;
-	u16 speedy; // high resolution
-	const u8* currentSprite;
-	const u8* bitShiftedSprites;
-	u8 fallStateCounter;
+	dl_u16 x; // high resolution position 256 pixels, 256 subpixels
+	dl_u16 y; // high resolution position 256 pixels, 256 subpixels
+	dl_u16 speedx;
+	dl_u16 speedy; // high resolution
+	const dl_u8* currentSprite;
+	const dl_u8* bitShiftedSprites;
+	dl_u8 fallStateCounter;
 } BallData;
 
-void Ball_Init(BallData* ballData, u8 roomNumber, const Resources* resources);
-void Ball_Update(BallData* ballData, u8* framebuffer, u8* cleanBackground);
+void Ball_Init(BallData* ballData, dl_u8 roomNumber, const Resources* resources);
+void Ball_Update(BallData* ballData, dl_u8* framebuffer, dl_u8* cleanBackground);
 
 #endif

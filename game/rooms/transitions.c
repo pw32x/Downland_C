@@ -80,14 +80,14 @@ void wipe_transition_update(Room* room, GameData* gameData, const Resources* res
 
 	// do two lines at every four so that we
 	// can finish when the transition sound effect does.
-	u8 loopCount = gameData->transitionCurrentLine % 4 == 0 ? 2 : 1;
+	dl_u8 loopCount = gameData->transitionCurrentLine % 4 == 0 ? 2 : 1;
 
-	for (u8 loopCounter = 0; loopCounter < loopCount; loopCounter++)
+	for (dl_u8 loopCounter = 0; loopCounter < loopCount; loopCounter++)
 	{
-		u16 offset = gameData->transitionCurrentLine * FRAMEBUFFER_PITCH;
+		dl_u16 offset = gameData->transitionCurrentLine * FRAMEBUFFER_PITCH;
 
-		u8* cleanBackgroundRunner = gameData->cleanBackground + offset;
-		u8* framebufferRunner = gameData->framebuffer + offset;
+		dl_u8* cleanBackgroundRunner = gameData->cleanBackground + offset;
+		dl_u8* framebufferRunner = gameData->framebuffer + offset;
 
 		// the screen is divided in six horizontal strips. Every frame,
 		// a horizontal line of every strip is revealed, copied from the

@@ -16,17 +16,17 @@
 // per-room door information stored in rom
 typedef struct
 {
-    u8 y;
-    u8 x;
-    u8 yLocationInNextRoom;
-    u8 xLocationInNextRoom;
-    u8 nextRoomNumber;
-    u8 globalDoorIndex;
+    dl_u8 y;
+    dl_u8 x;
+    dl_u8 yLocationInNextRoom;
+    dl_u8 xLocationInNextRoom;
+    dl_u8 nextRoomNumber;
+    dl_u8 globalDoorIndex;
 } DoorInfo;
 
 typedef struct
 {
-    u8 drawInfosCount;
+    dl_u8 drawInfosCount;
     const DoorInfo* doorInfos;
 } DoorInfoData;
 

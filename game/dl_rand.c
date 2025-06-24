@@ -2,14 +2,14 @@
 #include <stdlib.h>
 #include "alloc.h"
 
-u32 rng_state = 1;
+dl_u32 rng_state = 1;
 
-void dl_srand(unsigned int seed)
+void dl_srand(dl_u32 seed)
 {
     rng_state = seed;
 }
 
-u8 dl_rand(void)
+dl_u8 dl_rand(void)
 {
     rng_state ^= rng_state << 13;
     rng_state ^= rng_state >> 17;

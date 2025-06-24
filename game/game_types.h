@@ -20,8 +20,8 @@
 // contains the global state of the game
 typedef struct GameData
 {
-	u8* framebuffer; // main game 1bpp frame buffer
-	u8* cleanBackground; // the game background without UI or objects. Used for terrain collision detection.
+	dl_u8* framebuffer; // main game 1bpp frame buffer
+	dl_u8* cleanBackground; // the game background without UI or objects. Used for terrain collision detection.
 
 	// objects
 	PlayerData playerData[NUM_PLAYERS];
@@ -35,23 +35,23 @@ typedef struct GameData
 	// the pointers swap every time a player dies.
 	PlayerData* currentPlayerData;
 	PlayerData* otherPlayerData;
-	u8 numPlayers;
+	dl_u8 numPlayers;
 
 	Room* currentRoom;
 
 	// used for screen transitions
-	u8 transitionRoomNumber;
-	u16 transitionInitialDelay;
-	u8 transitionCurrentLine;
-	u8 transitionFrameDelay;
+	dl_u8 transitionRoomNumber;
+	dl_u16 transitionInitialDelay;
+	dl_u8 transitionCurrentLine;
+	dl_u8 transitionFrameDelay;
 
 	// strings. Number of expected characters + 0xff ending value
-	u8 string_roomNumber[ROOM_NUMBER_STRING_SIZE];
-	u8 string_timer[TIMER_STRING_SIZE]; // max timer is 65535
-	u8 string_highScore[SCORE_STRING_SIZE];
+	dl_u8 string_roomNumber[ROOM_NUMBER_STRING_SIZE];
+	dl_u8 string_timer[TIMER_STRING_SIZE]; // max timer is 65535
+	dl_u8 string_highScore[SCORE_STRING_SIZE];
 
-	u32 highScore;
-	u8 paused;
+	dl_u32 highScore;
+	dl_u8 paused;
 } GameData;
 
 #endif

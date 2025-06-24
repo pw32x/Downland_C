@@ -85,16 +85,18 @@ void convert1bppImageTo8bppCrtEffectImage(const dl_u8* originalImage,
 }
 
 
-void convertToTiles(const dl_u8* sprite, 
-					dl_u8 width,
-					dl_u8 height,
-					int tileIndexStartInBytes)
+dl_u16 convertToTiles(const dl_u8* sprite, 
+					  dl_u8 width,
+					  dl_u8 height,
+					  int tileIndexStartInBytes)
 {
-	dl_u8 tileWidth = width / 8;
-	dl_u8 tileHeight = height / 8;
+	dl_u8 tileWidth = (width + 7) / 8;
+	dl_u8 tileHeight = (height + 7) / 8;
 
 	// vram only accepts 16bit writes
 	dl_u16* vramRunner = (dl_u16*)(CHAR_BASE_BLOCK(4) + tileIndexStartInBytes);
+
+    dl_u16 tileCount = 0;
 
 	for (int tiley = 0; tiley < tileHeight; tiley++)
 	{
@@ -103,6 +105,8 @@ void convertToTiles(const dl_u8* sprite,
 		for (int tilex = 0; tilex < tileWidth; tilex++)
 		{
 			int startx = tilex * 8;
+
+            tileCount++;
 
 			for (int loopy = 0; loopy < 8; loopy++)
 			{
@@ -116,4 +120,6 @@ void convertToTiles(const dl_u8* sprite,
 			}
 		}
 	}
+
+    return tileCount;
 }

@@ -24,6 +24,7 @@
 
 #include "r6502_portfont_bin.h"
 #include "downland_rom.h"
+#include "game_runner.h"
 #include "image_utils.h"
 
 #include "..\..\..\game\base_types.h"
@@ -155,8 +156,9 @@ int main()
 	if (!ResourceLoaderBuffer_Init(downland_rom, downland_rom_size, &resources))
 		return -1;
 
-	Game_Init(&gameData, &resources);
-
+	GameRunner_Init(&gameData, &resources);
+	
+	/*
 	dl_u8 downlandSprite[256];
 	for (int loop = 0; loop < 256; loop++)
 	{
@@ -176,6 +178,7 @@ int main()
                                          CrtColor_Blue);
 
 	convertToTiles(downlandSprite, 16, 16, 32); // 32 bytes after the last sprite
+	*/
 
 	// Set up the interrupt handlers
 	irqInit();
@@ -206,10 +209,10 @@ int main()
 	// Load sprite tile data to charblock 4 (OBJ VRAM)
     // Since we are using 1D mapping, tile 0 is at 0x6010000
     // Each tile is 32 bytes for 4bpp 8x8
-    CpuFastSet(spriteTiles, (void*)CHAR_BASE_BLOCK(4), 4 | COPY32);
+    //CpuFastSet(spriteTiles, (void*)CHAR_BASE_BLOCK(4), 4 | COPY32);
 
 
-
+	/*
 	for (int i = 0; i < 128; i++) 
 	{
 		OAM[i].attr0 = ATTR0_DISABLED;
@@ -233,7 +236,7 @@ int main()
     OAM[1].attr0 = ATTR0_COLOR_256 | ATTR0_SQUARE | 100; // Y=50
     OAM[1].attr1 = ATTR1_SIZE_16 | 100;                  // X=50
     OAM[1].attr2 = 1;                                  // tile index 0, palette 0
-
+	*/
 
 	// load the font into gba video mem (48 characters, 4bit tiles)
 
@@ -268,9 +271,11 @@ int main()
 
 	while (1) 
 	{
-		Game_Update(&gameData, &resources);
+		GameRunner_Update(&gameData, &resources);
 
 		VBlankIntrWait();
+
+		GameRunner_Draw(&gameData, &resources);
 
 		// check if we reached our delay
 		if (scrolldelay == DELAY) 

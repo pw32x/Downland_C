@@ -79,6 +79,9 @@
     <ClCompile Include="..\source\image_utils.c">
       <Filter>source</Filter>
     </ClCompile>
+    <ClCompile Include="..\source\game_runner.c">
+      <Filter>source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\build\build.bat">
@@ -276,6 +279,9 @@
       <Filter>source</Filter>
     </ClInclude>
     <ClInclude Include="..\source\image_utils.h">
+      <Filter>source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game_runner.h">
       <Filter>source</Filter>
     </ClInclude>
   </ItemGroup>

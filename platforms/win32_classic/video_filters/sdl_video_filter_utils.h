@@ -11,7 +11,7 @@ extern "C"
 
 
 // Convert the 1-bit framebuffer into a texture
-void SDLUtils_updateFramebufferTexture(const u8* framebuffer, 
+void SDLUtils_updateFramebufferTexture(const dl_u8* framebuffer, 
                                        SDL_Texture* framebufferTexture);
 
 
@@ -23,13 +23,13 @@ enum CrtColor
     Orange
 };
 
-void SDLUtils_convert1bppImageTo32bppCrtEffectImage(const u8* originalImage,
-                                                    u32* crtImage,
-                                                    u16 width,
-                                                    u16 height,
+void SDLUtils_convert1bppImageTo32bppCrtEffectImage(const dl_u8* originalImage,
+                                                    dl_u32* crtImage,
+                                                    dl_u16 width,
+                                                    dl_u16 height,
                                                     CrtColor crtColor);
 
-void SDLUtils_updateDebugFramebufferTexture(u32* debugFramebuffer, 
+void SDLUtils_updateDebugFramebufferTexture(dl_u32* debugFramebuffer, 
                                             SDL_Texture* debugFramebufferTexture);
 
 void SDLUtils_computeDestinationRect(int screenWidth, 

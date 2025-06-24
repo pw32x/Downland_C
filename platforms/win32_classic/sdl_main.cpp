@@ -41,7 +41,7 @@ static SDL_Window *window = NULL;
 static SDL_Renderer *renderer = NULL;
 
 const int fileBufferSize = 8192;
-u8 fileBuffer[fileBufferSize];
+dl_u8 fileBuffer[fileBufferSize];
 
 #define SCREEN_SCALE 3
 #define SCREEN_WIDTH (FRAMEBUFFER_WIDTH * SCREEN_SCALE)
@@ -68,12 +68,12 @@ bool isFullscreen = false;
 SDL_FRect destRect;
 
 // implement the sound function here
-void Sound_Play(u8 soundIndex, u8 loop)
+void Sound_Play(dl_u8 soundIndex, dl_u8 loop)
 {
 	soundManager.play(soundIndex, loop);
 }
 
-void Sound_Stop(u8 soundindex)
+void Sound_Stop(dl_u8 soundindex)
 {
     soundManager.stop(soundindex);
 }
@@ -137,13 +137,13 @@ void setFullscreen(bool fullscreen)
     updateDestRect();
 }
 
-void gameRoomChanged(const GameData* gameData, u8 roomNumber, s8 transitionType)
+void gameRoomChanged(const GameData* gameData, dl_u8 roomNumber, dl_s8 transitionType)
 {
     auto& currentVideoFilter = videoFilters[currentVideoFilterIndex];
     currentVideoFilter->roomChanged(gameData, roomNumber, transitionType);
 }
 
-static bool loadFile(const char* romPath, u8* fileBuffer, u32 fileBufferSize)
+static bool loadFile(const char* romPath, dl_u8* fileBuffer, dl_u32 fileBufferSize)
 {
 	FILE* file = fopen(romPath, "rb");
 
@@ -151,7 +151,7 @@ static bool loadFile(const char* romPath, u8* fileBuffer, u32 fileBufferSize)
 		return false;
 
     fseek(file, 0L, SEEK_END);
-    u32 fileSize = ftell(file);
+    dl_u32 fileSize = ftell(file);
 
     if (fileSize != fileBufferSize)
     {
@@ -345,7 +345,7 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
         else if (event->key.key >= SDLK_1 && event->key.key <= SDLK_9)
         {
             Game_Init(&gameData, &resources);
-            u8 roomNumber = event->key.key - SDLK_1;
+            dl_u8 roomNumber = event->key.key - SDLK_1;
 
             if (gameData.currentPlayerData == NULL)
             {

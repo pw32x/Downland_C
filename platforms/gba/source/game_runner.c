@@ -19,6 +19,15 @@ SpriteAttributes g_16x16SpriteAttributes;
 int playerSpriteTileIndex;
 int dropSpriteTileIndex;
 
+typedef void (*DrawRoomFunction)(struct GameData* gameData, const Resources* resources);
+DrawRoomFunction m_drawRoomFunctions[NUM_ROOMS_AND_ALL];
+
+void drawChamber(struct GameData* gameData, const Resources* resources);
+void drawTitleScreen(struct GameData* gameData, const Resources* resources);
+void drawTransition(struct GameData* gameData, const Resources* resources);
+void drawWipeTransition(struct GameData* gameData, const Resources* resources);
+void drawGetReadyScreen(struct GameData* gameData, const Resources* resources);
+
 //m_dropSprite(resources->sprites_drops, DROP_SPRITE_WIDTH, DROP_SPRITE_ROWS, DROP_SPRITE_COUNT),
 //m_ballSprite(resources->sprites_bouncyBall, BALL_SPRITE_WIDTH, BALL_SPRITE_ROWS, BALL_SPRITE_COUNT),
 //m_playerSprite(resources->sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYER_SPRITE_COUNT),
@@ -61,6 +70,22 @@ void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 	g_16x16SpriteAttributes.attr1 = ATTR1_SIZE_16;
 	g_16x16SpriteAttributes.attr2 = 0;
 
+	// room draw setup
+    m_drawRoomFunctions[0] = drawChamber;
+    m_drawRoomFunctions[1] = drawChamber;
+    m_drawRoomFunctions[2] = drawChamber;
+    m_drawRoomFunctions[3] = drawChamber;
+    m_drawRoomFunctions[4] = drawChamber;
+    m_drawRoomFunctions[5] = drawChamber;
+    m_drawRoomFunctions[6] = drawChamber;
+    m_drawRoomFunctions[7] = drawChamber;
+    m_drawRoomFunctions[8] = drawChamber;
+    m_drawRoomFunctions[9] = drawChamber;
+    m_drawRoomFunctions[TITLESCREEN_ROOM_INDEX] = drawTitleScreen;
+    m_drawRoomFunctions[TRANSITION_ROOM_INDEX] = drawTransition;
+    m_drawRoomFunctions[WIPE_TRANSITION_ROOM_INDEX] = drawWipeTransition;
+    m_drawRoomFunctions[GET_READY_ROOM_INDEX] = drawGetReadyScreen;
+
 	Game_Init(gameData, resources);
 }
 
@@ -71,9 +96,43 @@ void GameRunner_Update(struct GameData* gameData, const Resources* resources)
 
 void GameRunner_Draw(struct GameData* gameData, const Resources* resources)
 {
-	// draw
-	dl_u16 oamIndex = 0;
+	 m_drawRoomFunctions[gameData->currentRoom->roomNumber](gameData, resources);
+}
 
+dl_u16 drawDrops(const GameData* gameData, dl_u16 oamIndex)
+{
+    // draw drops
+    const Drop* dropsRunner = gameData->dropData.drops;
+
+    for (int loop = 0; loop < NUM_DROPS; loop++)
+    {
+        if ((dl_s8)dropsRunner->wiggleTimer < 0 || // wiggling
+            dropsRunner->wiggleTimer > 1)   // falling
+        {
+			OAM[oamIndex].attr0 = g_8x8SpriteAttributes.attr0 | ((dropsRunner->y >> 8) & 0xff);
+			OAM[oamIndex].attr1 = g_8x8SpriteAttributes.attr1 | ((dropsRunner->x << 1) & 0x1ff);
+			OAM[oamIndex].attr2 = g_8x8SpriteAttributes.attr2 | dropSpriteTileIndex;
+
+			oamIndex++;
+        }
+
+        dropsRunner++;
+    }
+
+	return oamIndex;
+}
+
+void drawChamber(struct GameData* gameData, const Resources* resources)
+{
+
+}
+
+void drawTitleScreen(struct GameData* gameData, const Resources* resources)
+{
+	dl_u16 oamIndex = 0;
+	oamIndex = drawDrops(gameData, oamIndex);
+
+	// draw
 	dl_u16 x;
 	dl_u16 y;
 	dl_u16 tileIndex;
@@ -103,4 +162,19 @@ void GameRunner_Draw(struct GameData* gameData, const Resources* resources)
 		OAM[i].attr1 = 0;
 		OAM[i].attr2 = 0;
 	}
+}
+
+void drawTransition(struct GameData* gameData, const Resources* resources)
+{
+
+}
+
+void drawWipeTransition(struct GameData* gameData, const Resources* resources)
+{
+
+}
+
+void drawGetReadyScreen(struct GameData* gameData, const Resources* resources)
+{
+
 }

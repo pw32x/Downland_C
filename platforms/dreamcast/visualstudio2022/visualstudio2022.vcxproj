@@ -131,7 +131,6 @@
     <ClCompile Include="..\..\..\game\game.c" />
     <ClCompile Include="..\..\..\game\physics_utils.c" />
     <ClCompile Include="..\..\..\game\player.c" />
-    <ClCompile Include="..\..\..\game\rand.c" />
     <ClCompile Include="..\..\..\game\resource_loader_buffer.c" />
     <ClCompile Include="..\..\..\game\rooms\chambers.c" />
     <ClCompile Include="..\..\..\game\rooms\getready.c" />

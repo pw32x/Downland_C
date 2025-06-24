@@ -146,9 +146,6 @@
     <ClCompile Include="..\source\main.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\game\rand.c">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\game\resource_loader_buffer.c">
       <Filter>Game</Filter>
     </ClCompile>

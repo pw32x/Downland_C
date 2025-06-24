@@ -59,6 +59,123 @@ void Sound_Stop(dl_u8 soundIndex)
 {
 }
 
+enum CrtColor
+{
+    CrtColor_Blue,
+    CrtColor_Orange
+};
+
+void convert1bppImageTo8bppCrtEffectImage(const dl_u8* originalImage,
+                                          dl_u8* destinationImage,
+                                          dl_u16 width,
+                                          dl_u16 height,
+                                          enum CrtColor crtColor) 
+{
+    const dl_u8 bytesPerRow = width / 8;
+
+    // Color definitions
+    const dl_u8 BLACK  = 0x00; // 00 black
+    const dl_u8 BLUE   = crtColor == CrtColor_Blue ? 0x1 : 0x2; // 01 blue
+    const dl_u8 ORANGE = crtColor == CrtColor_Blue ? 0x2 : 0x1; // 10 orange
+    const dl_u8 WHITE  = 0x3; // 11 white
+
+    for (int y = 0; y < height; ++y) 
+    {
+        // every pair of bits generates a color for the two corresponding
+        // pixels of the destination texture, so:
+        // source bits:        00 01 10 11
+        // final pixel colors: black, black, blue, blue, orange, orange, white, white.
+        dl_u32 yOffset = y * width;
+
+        for (int x = 0; x < width; x += 2) 
+        {
+            int byteIndex = (y * bytesPerRow) + (x / 8);
+            int bitOffset = 7 - (x % 8);
+
+            // Read two adjacent bits
+            dl_u8 bit1 = (originalImage[byteIndex] >> bitOffset) & 1;
+            dl_u8 bit2 = (originalImage[byteIndex] >> (bitOffset - 1)) & 1;
+
+            // Determine base color
+            dl_u8 color = BLACK;
+            if (bit1 == 0 && bit2 == 1) color = BLUE;
+            else if (bit1 == 1 && bit2 == 0) color = ORANGE;
+            else if (bit1 == 1 && bit2 == 1) color = WHITE;
+
+            // Apply base color
+            destinationImage[yOffset + x]     = color;
+            destinationImage[yOffset + x + 1] = color;
+        }
+
+        // Apply a quick and dirty crt artifact effect
+        // pixels whose original bits are adjacent are converted to white
+        // source colors: black, black, blue, blue, orange, orange, white, white.
+        // source bits:  00 01 10 11
+        // seen as:      00 00 01 01 10 10 11 11 // forth and fifth pairs have adjacent bits. 
+        //                                          Turn both corresponding pixels to white.
+        //                                          Also turn off the other pixel in the pair to
+        //                                          black.
+        // final final:  black, black, black, white, white, black, white, white
+        for (int x = 0; x < width; x += 2) 
+        {
+            dl_u8 leftPixel = destinationImage[yOffset + x];
+            dl_u8 rightPixel = destinationImage[yOffset + x + 1];
+
+            if (rightPixel == BLUE && x < width - 2)
+            {
+                dl_u8 pixel3 = destinationImage[yOffset + x + 2];
+                if (pixel3 == ORANGE || pixel3 == WHITE)
+                {
+                    rightPixel = WHITE;
+                    leftPixel = BLACK;
+                }
+            }
+            else if (leftPixel == ORANGE && x >= 2)
+            {
+                dl_u8 pixel0 = destinationImage[yOffset + x - 1];
+                if (pixel0 == BLUE || pixel0 == WHITE)
+                {
+                    leftPixel = WHITE;
+                    rightPixel = BLACK;
+                }
+            }
+
+            destinationImage[yOffset + x] = leftPixel;
+            destinationImage[yOffset + x + 1] = rightPixel;
+        }
+    }
+}
+
+
+void convertToTiles(const dl_u8* sprite, 
+					dl_u8* spriteTiles, 
+					dl_u8 width,
+					dl_u8 height)
+{
+	dl_u8 tileWidth = width / 8;
+	dl_u8 tileHeight = height / 8;
+	dl_u8* spriteTilesRunner = spriteTiles;
+
+	for (int tiley = 0; tiley < tileHeight; tiley++)
+	{
+		int starty = tiley * 8;
+
+		for (int tilex = 0; tilex < tileWidth; tilex++)
+		{
+			int startx = tilex * 8;
+
+			for (int loopy = 0; loopy < 8; loopy++)
+			{
+				for (int loopx = 0; loopx < 8; loopx++)
+				{
+					*spriteTilesRunner = sprite[(startx + loopx) + ((starty + loopy) * width)];
+					spriteTilesRunner++;
+				}
+			}
+		}
+	}
+}
+
 // --------------------------------------------------------------------
 
 #define MAPADDRESS		MAP_BASE_ADR(31)	// our base map address
@@ -97,9 +214,9 @@ const unsigned short spriteTiles[16] =
 const unsigned short spritePalette[16] = 
 {
     RGB5(0,0,0),   // Transparent color (palette index 0)
-    RGB5(31,0,0),  // Red
-    RGB5(0,31,0),  // Green
     RGB5(0,0,31),  // Blue
+    RGB5(31,20,0), // Orange
+    RGB5(31,31,31),// white
     RGB5(31,31,0), // Yellow
     RGB5(31,0,31), // Magenta
     RGB5(0,31,31), // Cyan
@@ -156,6 +273,27 @@ int main()
 
 	Game_Init(&gameData, &resources);
 
+	dl_u8 downlandSprite[256];
+	for (int loop = 0; loop < 256; loop++)
+	{
+		downlandSprite[loop] = 1;
+	}
+
+	downlandSprite[0] = 2;
+	downlandSprite[255] = 2;
+
+	downlandSprite[15] = 2;
+	//downlandSprite[240] = 2;
+
+	convert1bppImageTo8bppCrtEffectImage(resources.sprites_player,
+                                         downlandSprite,
+                                         16,
+                                         16,
+                                         CrtColor_Blue);
+
+	dl_u8 downlandSpriteTiles[256];
+	convertToTiles(downlandSprite, downlandSpriteTiles, 16, 16);
+
 	// Set up the interrupt handlers
 	irqInit();
 	// Enable Vblank Interrupt to allow VblankIntrWait
@@ -187,6 +325,9 @@ int main()
     // Each tile is 32 bytes for 4bpp 8x8
     CpuFastSet(spriteTiles, (void*)CHAR_BASE_BLOCK(4), 4 | COPY32);
 
+	
+	CpuFastSet(downlandSpriteTiles, (void*)(CHAR_BASE_BLOCK(4) + 32), 64 | COPY32);
+
 	for (int i = 0; i < 128; i++) 
 	{
 		OAM[i].attr0 = ATTR0_DISABLED;
@@ -203,6 +344,13 @@ int main()
     OAM[0].attr2 = 0;                                  // tile index 0, palette 0
 
 
+    // Set OAM entry 0:
+    // Attribute 0: Y coordinate and shape
+    // Attribute 1: X coordinate and size
+    // Attribute 2: tile index, priority, palette bank
+    OAM[1].attr0 = ATTR0_COLOR_256 | ATTR0_SQUARE | 100; // Y=50
+    OAM[1].attr1 = ATTR1_SIZE_16 | 100;                  // X=50
+    OAM[1].attr2 = 1;                                  // tile index 0, palette 0
 
 
 	// load the font into gba video mem (48 characters, 4bit tiles)

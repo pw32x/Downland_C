@@ -15,19 +15,19 @@ public:
     };
 
 public:
-    static void convert1bppImageTo8bppCrtEffectImage(const u8* originalImage,
-                                                     u8* destinationImage,
-                                                     u16 width,
-                                                     u16 height,
+    static void convert1bppImageTo8bppCrtEffectImage(const dl_u8* originalImage,
+                                                     dl_u8* destinationImage,
+                                                     dl_u16 width,
+                                                     dl_u16 height,
                                                      CrtColor crtColor) 
     {
-        const u8 bytesPerRow = width / 8;
+        const dl_u8 bytesPerRow = width / 8;
 
         // Color definitions
-        const u8 BLACK  = 0x0000; // 00 black
-        const u8 BLUE   = crtColor == CrtColor::Blue ? 0x1 : 0x2; // 01 blue
-        const u8 ORANGE = crtColor == CrtColor::Blue ? 0x2 : 0x1; // 10 orange
-        const u8 WHITE  = 0x3; // 11 white
+        const dl_u8 BLACK  = 0x0000; // 00 black
+        const dl_u8 BLUE   = crtColor == CrtColor::Blue ? 0x1 : 0x2; // 01 blue
+        const dl_u8 ORANGE = crtColor == CrtColor::Blue ? 0x2 : 0x1; // 10 orange
+        const dl_u8 WHITE  = 0x3; // 11 white
 
         for (int y = 0; y < height; ++y) 
         {
@@ -35,7 +35,7 @@ public:
             // pixels of the destination texture, so:
             // source bits:        00 01 10 11
             // final pixel colors: black, black, blue, blue, orange, orange, white, white.
-            u32 yOffset = y * width;
+            dl_u32 yOffset = y * width;
 
             for (int x = 0; x < width; x += 2) 
             {
@@ -43,11 +43,11 @@ public:
                 int bitOffset = 7 - (x % 8);
 
                 // Read two adjacent bits
-                u8 bit1 = (originalImage[byteIndex] >> bitOffset) & 1;
-                u8 bit2 = (originalImage[byteIndex] >> (bitOffset - 1)) & 1;
+                dl_u8 bit1 = (originalImage[byteIndex] >> bitOffset) & 1;
+                dl_u8 bit2 = (originalImage[byteIndex] >> (bitOffset - 1)) & 1;
 
                 // Determine base color
-                u8 color = BLACK;
+                dl_u8 color = BLACK;
                 if (bit1 == 0 && bit2 == 1) color = BLUE;
                 else if (bit1 == 1 && bit2 == 0) color = ORANGE;
                 else if (bit1 == 1 && bit2 == 1) color = WHITE;
@@ -68,12 +68,12 @@ public:
             // final final:  black, black, black, white, white, black, white, white
             for (int x = 0; x < width; x += 2) 
             {
-                u8 leftPixel = destinationImage[yOffset + x];
-                u8 rightPixel = destinationImage[yOffset + x + 1];
+                dl_u8 leftPixel = destinationImage[yOffset + x];
+                dl_u8 rightPixel = destinationImage[yOffset + x + 1];
 
                 if (rightPixel == BLUE && x < width - 2)
                 {
-                    u8 pixel3 = destinationImage[yOffset + x + 2];
+                    dl_u8 pixel3 = destinationImage[yOffset + x + 2];
                     if (pixel3 == ORANGE || pixel3 == WHITE)
                     {
                         rightPixel = WHITE;
@@ -82,7 +82,7 @@ public:
                 }
                 else if (leftPixel == ORANGE && x >= 2)
                 {
-                    u8 pixel0 = destinationImage[yOffset + x - 1];
+                    dl_u8 pixel0 = destinationImage[yOffset + x - 1];
                     if (pixel0 == BLUE || pixel0 == WHITE)
                     {
                         leftPixel = WHITE;
@@ -96,21 +96,21 @@ public:
         }
     }
 
-    static void convert1bppImageTo8bppBlue(const u8* originalImage,
-                                           u8* destinationImage,
-                                           u16 width,
-                                           u16 height) 
+    static void convert1bppImageTo8bppBlue(const dl_u8* originalImage,
+                                           dl_u8* destinationImage,
+                                           dl_u16 width,
+                                           dl_u16 height) 
     {
-        const u8 BLACK  = 0x0; // 00 black
-        const u8 BLUE   = 0x1; // 01 blue
-        const u8 ORANGE = 0x2; // 10 orange
-        const u8 WHITE  = 0x3; // 11 white
+        const dl_u8 BLACK  = 0x0; // 00 black
+        const dl_u8 BLUE   = 0x1; // 01 blue
+        const dl_u8 ORANGE = 0x2; // 10 orange
+        const dl_u8 WHITE  = 0x3; // 11 white
 
-        const u8 bytesPerRow = width / 8;
+        const dl_u8 bytesPerRow = width / 8;
 
         for (int y = 0; y < height; ++y) 
         {
-            u32 yOffset = y * width;
+            dl_u32 yOffset = y * width;
 
             for (int x = 0; x < width; x += 2) 
             {
@@ -118,11 +118,11 @@ public:
                 int bitOffset = 7 - (x % 8);
 
                 // Read two adjacent bits
-                u8 bit1 = (originalImage[byteIndex] >> bitOffset) & 1;
-                u8 bit2 = (originalImage[byteIndex] >> (bitOffset - 1)) & 1;
+                dl_u8 bit1 = (originalImage[byteIndex] >> bitOffset) & 1;
+                dl_u8 bit2 = (originalImage[byteIndex] >> (bitOffset - 1)) & 1;
 
                 // Determine base color
-                u8 color = BLACK;
+                dl_u8 color = BLACK;
                 if (bit1 == 0 && bit2 == 1) color = BLUE;
                 else if (bit1 == 1 && bit2 == 0) color = ORANGE;
                 else if (bit1 == 1 && bit2 == 1) color = 1; // don't care. just set to blue.

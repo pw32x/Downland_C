@@ -10,16 +10,16 @@ namespace GeometryHelpers
 class Quad
 {
 public:
-    static void setup(s16 x, 
-                      s16 y, 
-                      s16 width, 
-                      s16 height, 
+    static void setup(dl_s16 x, 
+                      dl_s16 y, 
+                      dl_s16 width, 
+                      dl_s16 height, 
                       SRL::Math::Types::Vector2D points[4])
     {
-        SRL::Math::Types::Fxp fx = (s16)(x - (s16)(HALF_SCREEN_WIDTH));
-        SRL::Math::Types::Fxp fy = (s16)(y - (s16)(HALF_SCREEN_HEIGHT)); 
-        SRL::Math::Types::Fxp fwidth = (s16)(width - 1);
-        SRL::Math::Types::Fxp fheight = (s16)(height - 1);
+        SRL::Math::Types::Fxp fx = (dl_s16)(x - (dl_s16)(HALF_SCREEN_WIDTH));
+        SRL::Math::Types::Fxp fy = (dl_s16)(y - (dl_s16)(HALF_SCREEN_HEIGHT)); 
+        SRL::Math::Types::Fxp fwidth = (dl_s16)(width - 1);
+        SRL::Math::Types::Fxp fheight = (dl_s16)(height - 1);
 
         points[0].X = fx;
         points[0].Y = fy;

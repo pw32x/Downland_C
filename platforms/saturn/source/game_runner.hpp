@@ -101,7 +101,7 @@ public:
 
         for (int loop = 0; loop < NUM_DROPS; loop++)
         {
-            if ((s8)dropsRunner->wiggleTimer < 0 || // wiggling
+            if ((dl_s8)dropsRunner->wiggleTimer < 0 || // wiggling
                 dropsRunner->wiggleTimer > 1)   // falling
             {
                 m_dropSprite.draw(dropsRunner->x << 1,
@@ -149,7 +149,7 @@ public:
         }
     }
 
-    void roomTransitionDone(const GameData* gameData, u8 roomNumber, s8 transitionType)
+    void roomTransitionDone(const GameData* gameData, dl_u8 roomNumber, dl_s8 transitionType)
     {
         // swap the active background for the next 
         // wipe transition.
@@ -162,10 +162,10 @@ private:
     {
         const PlayerData* playerData = m_gameData.currentPlayerData;
 
-	    u8 x = PLAYERLIVES_ICON_X;
-	    u8 y = PLAYERLIVES_ICON_Y;
+	    dl_u8 x = PLAYERLIVES_ICON_X;
+	    dl_u8 y = PLAYERLIVES_ICON_Y;
 
-        for (u8 loop = 0; loop < playerData->lives; loop++)
+        for (dl_u8 loop = 0; loop < playerData->lives; loop++)
 	    {
             m_playerIconSprite.draw(x << 1, y, playerData->currentSpriteNumber);
 		    x += PLAYERLIVES_ICON_SPACING;
@@ -179,10 +179,10 @@ private:
         }
     }
 
-	void drawText(const u8* text, u16 xyLocation)
+	void drawText(const dl_u8* text, dl_u16 xyLocation)
     {
-        u16 x = ((xyLocation % 32) * 8);
-        u16 y = (xyLocation / 32);
+        dl_u16 x = ((xyLocation % 32) * 8);
+        dl_u16 y = (xyLocation / 32);
 
         // for each character
         while (*text != 0xff)
@@ -203,7 +203,7 @@ private:
 
         const PlayerData* playerData = m_gameData.currentPlayerData;
 
-        u16 currentTimer = playerData->roomTimers[playerData->currentRoom->roomNumber];
+        dl_u16 currentTimer = playerData->roomTimers[playerData->currentRoom->roomNumber];
 
         const Pickup* pickups = playerData->gamePickups[m_gameData.currentRoom->roomNumber];
         for (int loop = 0; loop < NUM_PICKUPS_PER_ROOM; loop++)
@@ -250,7 +250,7 @@ private:
 
             m_ballSprite.draw((ballData->x >> 8) << 1,
                               ballData->y >> 8,
-                              ((s8)ballData->fallStateCounter < 0));
+                              ((dl_s8)ballData->fallStateCounter < 0));
         }
 
         // draw bird
@@ -265,10 +265,10 @@ private:
 
         // draw doors
         int roomNumber = m_gameData.currentRoom->roomNumber;
-		DoorInfoData* doorInfoData = &m_resources->roomResources[roomNumber].doorInfoData;
+		const DoorInfoData* doorInfoData = &m_resources->roomResources[roomNumber].doorInfoData;
 		const DoorInfo* doorInfoRunner = doorInfoData->doorInfos;
 
-		for (u8 loop = 0; loop < doorInfoData->drawInfosCount; loop++)
+		for (dl_u8 loop = 0; loop < doorInfoData->drawInfosCount; loop++)
 		{
             if (!playerData->doorStateData[doorInfoRunner->globalDoorIndex] & playerData->playerMask)
                 continue;
@@ -306,7 +306,7 @@ private:
 
         drawDrops(&m_gameData);
 
-	    u16 cursorX = m_gameData.numPlayers == 1 ? 32 :128;  // hardcoded locations in the frambuffer
+	    dl_u16 cursorX = m_gameData.numPlayers == 1 ? 32 :128;  // hardcoded locations in the frambuffer
 
         m_cursorSprite.draw(cursorX, 123, 0);
     }
@@ -333,7 +333,7 @@ private:
     {
         SRL::VDP2::NBG0::ScrollDisable();//enable display of NBG0 
 
-        u8* frameBuffer8bpp = new u8[FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT];
+        dl_u8* frameBuffer8bpp = new dl_u8[FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT];
 
         memset(frameBuffer8bpp, 0, FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT);
 
@@ -381,7 +381,7 @@ private:
     {
         SRL::VDP2::NBG0::ScrollDisable();//enable display of NBG0 
 
-        u8* frameBuffer8bpp = new u8[FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT];
+        dl_u8* frameBuffer8bpp = new dl_u8[FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT];
 
         memset(frameBuffer8bpp, 0, FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT);
 
@@ -428,7 +428,7 @@ private:
     {
         SRL::VDP2::NBG0::ScrollDisable();//enable display of NBG0 
 
-        u8* frameBuffer8bpp = new u8[FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT];
+        dl_u8* frameBuffer8bpp = new dl_u8[FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT];
 
         ImageUtils::ImageConverter::convert1bppImageTo8bppCrtEffectImage(m_gameData.cleanBackground,
                                                                          frameBuffer8bpp,
@@ -480,7 +480,7 @@ private:
     {
         SRL::VDP2::NBG1::ScrollDisable();//enable display of NBG1 
 
-        u8* frameBuffer8bpp = new u8[FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT];
+        dl_u8* frameBuffer8bpp = new dl_u8[FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT];
 
         ImageUtils::ImageConverter::convert1bppImageTo8bppCrtEffectImage(m_gameData.cleanBackground,
                                                                          frameBuffer8bpp,
@@ -555,13 +555,13 @@ private:
         if (m_transitionDirection)
         {
             scrollOffset = SRL::Math::Types::Vector2D(-SCREEN_OFFSET_X, -SCREEN_OFFSET_Y);
-            SRL::Math::Types::Fxp pos = (s16)(32 - m_gameData.transitionCurrentLine);
+            SRL::Math::Types::Fxp pos = (dl_s16)(32 - m_gameData.transitionCurrentLine);
             scrollOffset.X -= pos;
         }
         else
         {
             scrollOffset = SRL::Math::Types::Vector2D(0, -SCREEN_OFFSET_Y);
-            SRL::Math::Types::Fxp pos = (s16)(m_gameData.transitionCurrentLine);
+            SRL::Math::Types::Fxp pos = (dl_s16)(m_gameData.transitionCurrentLine);
             scrollOffset.X -= pos;
         }
 
@@ -622,7 +622,7 @@ public:
 
 private:
     Resources* m_resources;
-    u8 m_cursor1bppSprite;
+    dl_u8 m_cursor1bppSprite;
     Sprite m_dropSprite;
     Sprite m_ballSprite;
     Sprite m_playerSprite;
@@ -646,11 +646,11 @@ private:
 	typedef void (GameRunner::*DrawRoomFunction)();
 	std::vector<DrawRoomFunction> m_drawRoomFunctions;
 
-    u8 m_regenSpriteBuffer[(PLAYER_SPRITE_WIDTH / 8) * PLAYER_SPRITE_ROWS];
+    dl_u8 m_regenSpriteBuffer[(PLAYER_SPRITE_WIDTH / 8) * PLAYER_SPRITE_ROWS];
 
     bool m_nbg0Initialized;
     bool m_nbg1Initialized;
-    u8 m_currentRoom;
+    dl_u8 m_currentRoom;
     bool m_isNBG0Active;
     bool m_transitionDirection;
 };

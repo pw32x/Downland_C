@@ -18,10 +18,10 @@ extern "C"
 class SpriteBase 
 {
 public:
-    SpriteBase(const u8* originalSprite, 
-               s16 width, 
-               s16 height, 
-               u8 numFrames)
+    SpriteBase(const dl_u8* originalSprite, 
+               dl_s16 width, 
+               dl_s16 height, 
+               dl_u8 numFrames)
         : m_originalSprite(originalSprite),
           m_width(width),
           m_height(height),
@@ -31,7 +31,7 @@ public:
 
     }
 
-    void draw(s16 x, s16 y, s16 frameNumber)
+    void draw(dl_s16 x, dl_s16 y, dl_s16 frameNumber)
     {
         SRL::Math::Types::Vector2D points[4];
 
@@ -45,30 +45,30 @@ public:
         SRL::Scene2D::DrawSprite(m_frameTextureIndexes[frameNumber], points, 500);
     }
 
-    u8 getNumFrames() { return m_numFrames; }
+    dl_u8 getNumFrames() { return m_numFrames; }
 
 protected:
-	s16 m_width;
-	s16 m_height;
-	u8 m_numFrames;
-    s16* m_frameTextureIndexes;
-	const u8* m_originalSprite;
+	dl_s16 m_width;
+	dl_s16 m_height;
+	dl_u8 m_numFrames;
+    dl_s16* m_frameTextureIndexes;
+	const dl_u8* m_originalSprite;
 };
 
 class Sprite : public SpriteBase
 {
 public:
-    Sprite(const u8* originalSprite, 
-           s16 width, 
-           s16 height, 
-           u8 numFrames)
+    Sprite(const dl_u8* originalSprite, 
+           dl_s16 width, 
+           dl_s16 height, 
+           dl_u8 numFrames)
         : SpriteBase(originalSprite, width, height, numFrames)
     {
-        m_frameTextureIndexes = new s16[numFrames];
+        m_frameTextureIndexes = new dl_s16[numFrames];
 
-        u8* buffer = new u8[width * height];
+        dl_u8* buffer = new dl_u8[width * height];
 
-        const u8* spriteRunner = originalSprite;
+        const dl_u8* spriteRunner = originalSprite;
 
         for (int loop = 0; loop < numFrames; loop++)
         {
@@ -97,17 +97,17 @@ public:
 class FontSprite : public SpriteBase
 {
 public:
-    FontSprite(const u8* originalSprite, 
-               s16 width, 
-               s16 height, 
-               u8 numFrames)
+    FontSprite(const dl_u8* originalSprite, 
+               dl_s16 width, 
+               dl_s16 height, 
+               dl_u8 numFrames)
         : SpriteBase(originalSprite, width, height, numFrames)
     {
-        m_frameTextureIndexes = new s16[numFrames];
+        m_frameTextureIndexes = new dl_s16[numFrames];
 
-        u8* buffer = new u8[width * height];
+        dl_u8* buffer = new dl_u8[width * height];
 
-        const u8* spriteRunner = originalSprite;
+        const dl_u8* spriteRunner = originalSprite;
 
         for (int loop = 0; loop < numFrames; loop++)
         {
@@ -135,22 +135,22 @@ public:
 class RegenSprite : public SpriteBase
 {
 public:
-    RegenSprite(const u8* originalSprite, 
-                s16 width, 
-                s16 height, 
-                s16 clippedHeight,
-                u8 numFrames)
+    RegenSprite(const dl_u8* originalSprite, 
+                dl_s16 width, 
+                dl_s16 height, 
+                dl_s16 clippedHeight,
+                dl_u8 numFrames)
         : SpriteBase(originalSprite, width, height, numFrames)
     {
         // pre-generate a number of regeneration sprites ahead of time
         // instead of creating them on the fly.    
 
-        u8 totalFrames = numFrames * 2;
+        dl_u8 totalFrames = numFrames * 2;
 
-        m_frameTextureIndexes = new s16[totalFrames];
+        m_frameTextureIndexes = new dl_s16[totalFrames];
 
-        u8* buffer = new u8[width * clippedHeight];
-        u8* regenBuffer = new u8[(width / 8) * clippedHeight];
+        dl_u8* buffer = new dl_u8[width * clippedHeight];
+        dl_u8* regenBuffer = new dl_u8[(width / 8) * clippedHeight];
 
         // right side
         for (int loop = 0; loop < numFrames; loop++)
@@ -158,7 +158,7 @@ public:
             memset(regenBuffer, 0, (width / 8) * clippedHeight);
             drawSprite_16PixelsWide_static_IntoSpriteBuffer(originalSprite, 
 													        clippedHeight,
-													        (u8*)regenBuffer);
+													        (dl_u8*)regenBuffer);
 
             ImageUtils::ImageConverter::convert1bppImageTo8bppCrtEffectImage(regenBuffer,
                                                                              buffer,
@@ -186,7 +186,7 @@ public:
             memset(regenBuffer, 0, (width / 8) * clippedHeight);
             drawSprite_16PixelsWide_static_IntoSpriteBuffer(originalSprite, 
 													        clippedHeight,
-													        (u8*)regenBuffer);
+													        (dl_u8*)regenBuffer);
 
             ImageUtils::ImageConverter::convert1bppImageTo8bppCrtEffectImage(regenBuffer,
                                                                              buffer,
@@ -216,14 +216,14 @@ public:
 class SplatSprite : public SpriteBase
 {
 public:
-    SplatSprite(const u8* originalSprite, 
-                s16 width, 
-                s16 height)
+    SplatSprite(const dl_u8* originalSprite, 
+                dl_s16 width, 
+                dl_s16 height)
         : SpriteBase(originalSprite, width, height, 2)
     {
-        m_frameTextureIndexes = new s16[m_numFrames];
+        m_frameTextureIndexes = new dl_s16[m_numFrames];
 
-        u8* buffer = new u8[width * height];
+        dl_u8* buffer = new dl_u8[width * height];
 
         // first frame
         ImageUtils::ImageConverter::convert1bppImageTo8bppCrtEffectImage(originalSprite,
@@ -257,18 +257,18 @@ public:
 class ClippedSprite : public SpriteBase
 {
 public:
-    ClippedSprite(const u8* originalSprite, 
-                  s16 width, 
-                  s16 height, 
-                  s16 clippedHeight,
-                  u8 numFrames)
+    ClippedSprite(const dl_u8* originalSprite, 
+                  dl_s16 width, 
+                  dl_s16 height, 
+                  dl_s16 clippedHeight,
+                  dl_u8 numFrames)
         : SpriteBase(originalSprite, width, height, numFrames)
     {
-        m_frameTextureIndexes = new s16[numFrames];
+        m_frameTextureIndexes = new dl_s16[numFrames];
 
-        u8* buffer = new u8[width * height];
+        dl_u8* buffer = new dl_u8[width * height];
 
-        const u8* spriteRunner = originalSprite;
+        const dl_u8* spriteRunner = originalSprite;
 
         for (int loop = 0; loop < numFrames; loop++)
         {

@@ -24,7 +24,7 @@ GameRunner* g_gameRunner;
 SoundManager* g_soundManager;
 #endif
 
-void roomTransitionDone(const GameData* gameData, u8 roomNumber, s8 transitionType)
+void roomTransitionDone(const GameData* gameData, dl_u8 roomNumber, dl_s8 transitionType)
 {
     g_gameRunner->roomTransitionDone(gameData, roomNumber, transitionType);
 }
@@ -32,19 +32,19 @@ void roomTransitionDone(const GameData* gameData, u8 roomNumber, s8 transitionTy
 extern "C"
 {
 
-void* dl_alloc(u32 size)
+void* dl_alloc(dl_u32 size)
 {
-    return (void*)new u8[size];
+    return (void*)new dl_u8[size];
 }
 
-void Sound_Play(u8 soundIndex, u8 loop)
+void Sound_Play(dl_u8 soundIndex, dl_u8 loop)
 {
 #ifdef ENABLE_SOUND 
     g_soundManager->Play(soundIndex, loop);
 #endif
 }
 
-void Sound_Stop(u8 soundIndex)
+void Sound_Stop(dl_u8 soundIndex)
 {
 #ifdef ENABLE_SOUND 
     g_soundManager->Stop(soundIndex);

@@ -11,9 +11,9 @@ namespace BitmapUtils
 class InMemoryBitmap : public SRL::Bitmap::IBitmap
 {
 public:
-    InMemoryBitmap(u8* bitmapData, 
-                   int width, 
-                   int height, 
+    InMemoryBitmap(dl_u8* bitmapData, 
+                   dl_u16 width, 
+                   dl_u16 height, 
                    SRL::Types::HighColor* paletteColors, 
                    size_t numColors) 
         : m_bitmapData(bitmapData),
@@ -23,7 +23,7 @@ public:
 
     }
 
-    virtual uint8_t* GetData()
+    virtual dl_u8* GetData()
     {
         return m_bitmapData;
     }
@@ -34,7 +34,7 @@ public:
     }
 
 public:
-    u8* m_bitmapData;
+    dl_u8* m_bitmapData;
     SRL::Bitmap::Palette m_palette;
     SRL::Bitmap::BitmapInfo m_bitmapInfo;
 };

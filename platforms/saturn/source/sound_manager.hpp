@@ -33,15 +33,15 @@ class SoundManager
 public:
     SoundManager();
 
-    void Play(u8 soundIndex, bool loop);
-    void Stop(u8 soundIndex);
+    void Play(dl_u8 soundIndex, bool loop);
+    void Stop(dl_u8 soundIndex);
 
     void StopAll();
 
     void Update();
 
 private:
-    void LoadSound(u8 soundIndex, const char* path);
+    void LoadSound(dl_u8 soundIndex, const char* path);
 
 public:
     bool m_isLooping[SOUND_NUM_SOUNDS];
@@ -79,7 +79,7 @@ SoundManager::SoundManager()
     m_countStart[SOUND_CLIMB_DOWN] = 48;
 }
 
-void SoundManager::Play(u8 soundIndex, bool loop)
+void SoundManager::Play(dl_u8 soundIndex, bool loop)
 {
     if (m_sounds[soundIndex] == NULL)
         return;
@@ -94,7 +94,7 @@ void SoundManager::Play(u8 soundIndex, bool loop)
     m_isLooping[soundIndex] = loop;
 }
 
-void SoundManager::Stop(u8 soundIndex)
+void SoundManager::Stop(dl_u8 soundIndex)
 {
     if (m_isPlaying[soundIndex])
         SRL::Sound::Pcm::StopSound(soundIndex);
@@ -131,7 +131,7 @@ void SoundManager::Update()
     }
 }
 
-void SoundManager::LoadSound(u8 soundIndex, const char* path)
+void SoundManager::LoadSound(dl_u8 soundIndex, const char* path)
 {
     SRL::Debug::Print(1, 26,"Loading sound: %s               ", path);
     m_sounds[soundIndex] = lwnew SRL::Sound::Pcm::WaveSound(path);

@@ -24,8 +24,8 @@ class DownlandResourceLoader
 public:
 	static int LoadResources(const char* romPath, Resources* resources)
 	{
-		u8* fileBuffer = NULL;
-		u32 fileSize = 0;
+		dl_u8* fileBuffer = NULL;
+		dl_u32 fileSize = 0;
 		
 		if (!loadFile(romPath, &fileBuffer, &fileSize))
 			return RESULT_FILENOTFOUND;
@@ -43,7 +43,7 @@ public:
 	}
 
 private:
-	static bool loadFile(const char* romPath, u8** fileBuffer, u32* fileSize)
+	static bool loadFile(const char* romPath, dl_u8** fileBuffer, dl_u32* fileSize)
 	{
 		SRL::Cd::File file = SRL::Cd::File(romPath);
 
@@ -55,7 +55,7 @@ private:
 		*fileSize = file.Size.Bytes;
 		file.Open();
 
-		*fileBuffer = (u8*)dl_alloc(*fileSize);
+		*fileBuffer = (dl_u8*)dl_alloc(*fileSize);
 		file.Read(*fileSize, *fileBuffer);
 
 		file.Close();

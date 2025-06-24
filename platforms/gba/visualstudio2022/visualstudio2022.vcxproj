@@ -112,6 +112,7 @@
     <ClCompile Include="..\..\..\game\rooms\titlescreen.c" />
     <ClCompile Include="..\..\..\game\rooms\transitions.c" />
     <ClCompile Include="..\..\..\game\string_utils.c" />
+    <ClCompile Include="..\source\image_utils.c" />
     <ClCompile Include="..\source\main.c" />
   </ItemGroup>
   <ItemGroup>
@@ -181,6 +182,7 @@
     <ClInclude Include="..\..\..\game\dl_sound.h" />
     <ClInclude Include="..\..\..\game\string_utils.h" />
     <ClInclude Include="..\out\downland_rom.h" />
+    <ClInclude Include="..\source\image_utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

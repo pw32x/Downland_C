@@ -112,7 +112,7 @@ const unsigned short spritePalette[16] =
 };
 
 // --------------------------------------------------------------------
-
+/*
 const u8 message[] = 
 {
 	"                                " \
@@ -148,7 +148,7 @@ void updatescrolltext(u32 idx)
 		*temppointer++ = message[idx++] - 32;
 	}
 }
-
+*/
 
 int main() 
 {
@@ -192,7 +192,8 @@ int main()
 	// Allow Interrupts
 	REG_IME = 1;
 
-	u32 i, scrollx, scrolldelay, textindex;
+	u32 i;
+	// u32 scrollx, scrolldelay, textindex;
 	volatile u16 *temppointer;
 
 
@@ -244,7 +245,7 @@ int main()
 
 	// load the font into gba video mem (48 characters, 4bit tiles)
 
-	CpuFastSet(r6502_portfont_bin, (u16*)VRAM,(r6502_portfont_bin_size/4) | COPY32);
+	//CpuFastSet(r6502_portfont_bin, (u16*)VRAM,(r6502_portfont_bin_size/4) | COPY32);
 
 	// clear screen map with tile 0 ('space' tile) (256x256 halfwords)
 
@@ -268,14 +269,14 @@ int main()
 	BG_OFFSET[0].x = 0; BG_OFFSET[0].y = 0;
 
 	// initialize our variables
-	scrollx = 0;
-	textindex = 0;
-	scrolldelay = 0;
+	//scrollx = 0;
+	//textindex = 0;
+	//scrolldelay = 0;
 
 	// put the '@' symbol on the top of the screen to show how
 	// the screen is only scrolling 7 pixels - to reveal the
 	// illusion of how the scroller works
-	*((u16 *)MAPADDRESS + 1) = 0x20;	// 0x20 == '@'
+	//*((u16 *)MAPADDRESS + 1) = 0x20;	// 0x20 == '@'
 
 	// draw a row of text from beginning of message
 	//updatescrolltext(0);
@@ -287,6 +288,13 @@ int main()
 
 	// screen mode & background to display
 	SetMode( MODE_0 | BG0_ON | MODE_0 | OBJ_ENABLE | OBJ_1D_MAP);
+
+	for (int i = 0; i < 128; i++) 
+	{
+		OAM[i].attr0 = ATTR0_DISABLED;
+		OAM[i].attr1 = 0;
+		OAM[i].attr2 = 0;
+	}
 
 	while (1) 
 	{

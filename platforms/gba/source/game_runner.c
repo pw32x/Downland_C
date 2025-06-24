@@ -185,11 +185,20 @@ void drawCleanBackground(dl_u8* cleanBackground)
 
 	//static dl_u8 convertedBackground[FRAMEBUFFER_WIDTH * 8];
 
-	convert1bppImageToVRAMCrtEffectImage(cleanBackground,
-                                         vram,
-                                         FRAMEBUFFER_WIDTH,
-                                         FRAMEBUFFER_HEIGHT,
-                                         CrtColor_Blue);
+	/*
+	convert1bppImageToVRAM(cleanBackground,
+                           vram,
+                           FRAMEBUFFER_WIDTH,
+                           FRAMEBUFFER_HEIGHT,
+                           CrtColor_Blue);
+	*/
+	convertBackgroundToVRAM256(cleanBackground,
+                               vram,
+                               FRAMEBUFFER_WIDTH,
+                               FRAMEBUFFER_HEIGHT,
+                               CrtColor_Blue);
+
+
 
 	/*
 

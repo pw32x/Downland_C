@@ -155,9 +155,8 @@ void convertToTiles(const dl_u8* sprite,
 	dl_u8 tileWidth = width / 8;
 	dl_u8 tileHeight = height / 8;
 
-	dl_u8 spriteTile[64];
-
-	dl_u16 tileCounter = 0;
+	// vram only accepts 16bit writes
+	dl_u16* vramRunner = (dl_u16*)(CHAR_BASE_BLOCK(4) + tileIndexStartInBytes);
 
 	for (int tiley = 0; tiley < tileHeight; tiley++)
 	{
@@ -167,20 +166,16 @@ void convertToTiles(const dl_u8* sprite,
 		{
 			int startx = tilex * 8;
 
-			dl_u8* spriteTileRunner = spriteTile;
-
 			for (int loopy = 0; loopy < 8; loopy++)
 			{
-				for (int loopx = 0; loopx < 8; loopx++)
+				for (int loopx = 0; loopx < 8; loopx += 2)
 				{
-					*spriteTileRunner = sprite[(startx + loopx) + ((starty + loopy) * width)];
-					spriteTileRunner++;
+					// write two pixels at a time
+					int pixelIndex = (startx + loopx) + ((starty + loopy) * width);
+					*vramRunner = sprite[pixelIndex] | (sprite[pixelIndex + 1] << 8);
+					vramRunner++;
 				}
 			}
-
-			int tileIndex = tileIndexStartInBytes + (tileCounter * 64);
-			tileCounter++;
-			CpuFastSet(spriteTile, (void*)(CHAR_BASE_BLOCK(4) + tileIndex), 16 | COPY32);
 		}
 	}
 }

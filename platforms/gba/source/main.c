@@ -22,6 +22,8 @@
 #include <gba_systemcalls.h>
 #include <gba_interrupt.h>
 
+#include <string.h>
+
 #include "r6502_portfont_bin.h"
 #include "downland_rom.h"
 #include "game_runner.h"
@@ -70,12 +72,12 @@ void Sound_Stop(dl_u8 soundIndex)
 
 // --------------------------------------------------------------------
 
-const u16 palette[] = 
+const u16 backgroundPalette[] = 
 {
-	RGB8(0x40,0x80,0xc0),
-	RGB8(0xFF,0xFF,0xFF),
-	RGB8(0xF5,0xFF,0xFF),
-	RGB8(0xDF,0xFF,0xF2),
+    RGB5(0,0,0),   // Transparent color (palette index 0)
+    RGB5(0,0,31),  // Blue
+    RGB5(31,20,0), // Orange
+    RGB5(31,31,31),// white
 	RGB8(0xCA,0xFF,0xE2),
 	RGB8(0xB7,0xFD,0xD8),
 	RGB8(0x2C,0x4F,0x8B)
@@ -156,6 +158,8 @@ int main()
 	if (!ResourceLoaderBuffer_Init(downland_rom, downland_rom_size, &resources))
 		return -1;
 
+	memset(&gameData, 0, sizeof(GameData));
+
 	GameRunner_Init(&gameData, &resources);
 	
 	/*
@@ -196,7 +200,7 @@ int main()
 	temppointer = BG_COLORS;
 	for (i=0; i<7; i++) 
 	{
-		*temppointer++ = palette[i];
+		*temppointer++ = backgroundPalette[i];
 	}
 
    // Load sprite palette to OBJ palette memory (256 colors max)
@@ -244,8 +248,21 @@ int main()
 
 	// clear screen map with tile 0 ('space' tile) (256x256 halfwords)
 
-	*((u32 *)MAP_BASE_ADR(31)) =0;
-	CpuFastSet( MAP_BASE_ADR(31), MAP_BASE_ADR(31), FILL | COPY32 | (0x800/4));
+	//*((u32 *)MAP_BASE_ADR(31)) =0;
+	//CpuFastSet( MAP_BASE_ADR(31), MAP_BASE_ADR(31), FILL | COPY32 | (0x800/4));
+
+	int tileWidth = FRAMEBUFFER_WIDTH / 8;
+	int tileHeight = FRAMEBUFFER_HEIGHT / 8;
+	dl_u16* mapAddr = (dl_u16*)MAP_BASE_ADR(31);
+	for (int loopy = 0; loopy < tileHeight; loopy++)
+	{
+		for (int loopx = 0; loopx < tileWidth; loopx++)
+		{
+			int tileIndex = loopx + (loopy * tileWidth);
+
+			mapAddr[loopx + (loopy * 32)] = tileIndex;
+		}
+	}
 
 	// set screen H and V scroll positions
 	BG_OFFSET[0].x = 0; BG_OFFSET[0].y = 0;
@@ -261,10 +278,12 @@ int main()
 	*((u16 *)MAPADDRESS + 1) = 0x20;	// 0x20 == '@'
 
 	// draw a row of text from beginning of message
-	updatescrolltext(0);
+	//updatescrolltext(0);
 
 	// set the screen base to 31 (0x600F800) and char base to 0 (0x6000000)
-	BGCTRL[0] = SCREEN_BASE(31);
+	BGCTRL[0] = SCREEN_BASE(31) |
+				BG_256_COLOR |
+			    BG_SIZE_0;
 
 	// screen mode & background to display
 	SetMode( MODE_0 | BG0_ON | MODE_0 | OBJ_ENABLE | OBJ_1D_MAP);
@@ -277,6 +296,7 @@ int main()
 
 		GameRunner_Draw(&gameData, &resources);
 
+		/*
 		// check if we reached our delay
 		if (scrolldelay == DELAY) 
 		{
@@ -297,7 +317,7 @@ int main()
 					textindex++;
 
 				// finally, let's update the scrolltext with the current text index
-				updatescrolltext(textindex);
+				//updatescrolltext(textindex);
 			}
 			else 
 			{
@@ -311,5 +331,6 @@ int main()
 
 		// update the hardware horizontal scroll register
 		BG_OFFSET[0].x = scrollx;
+		*/
 	}
 }

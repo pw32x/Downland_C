@@ -15,9 +15,16 @@ void convert1bppImageTo8bppCrtEffectImage(const dl_u8* originalImage,
                                           dl_u16 height,
                                           enum CrtColor crtColor);
 
+void convert1bppImageToVRAMCrtEffectImage(const dl_u8* originalImage,
+                                          dl_u16* vram,
+                                          dl_u16 width,
+                                          dl_u16 height,
+                                          enum CrtColor crtColor);
+
 dl_u16 convertToTiles(const dl_u8* sprite, 
-					  dl_u8 width,
-					  dl_u8 height,
-					  int tileIndexStartInBytes);
+					  dl_u16 width,
+					  dl_u16 height,
+                      void* vramLocation,
+					  dl_u16 offsetInBytes);
 
 #endif

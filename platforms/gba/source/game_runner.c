@@ -1,6 +1,7 @@
 #include "game_runner.h"
 
 #include <gba_sprites.h>
+#include <gba_video.h>
 
 #include "image_utils.h"
 
@@ -50,7 +51,11 @@ dl_u16 loadResourceToTiles(const dl_u8* sprite, dl_u8 width, dl_u8 height, dl_u1
                                          height,
                                          CrtColor_Blue);
 
-	dl_u16 tileCount = convertToTiles(convertedSprite, width, height, tileIndex * 32); // 32 bytes after the last sprite
+	dl_u16 tileCount = convertToTiles(convertedSprite, 
+									  width, 
+									  height, 
+									  CHAR_BASE_BLOCK(4),
+									  tileIndex * 32); // 32 bytes after the last sprite
 
 	return tileIndex + tileCount;
 }
@@ -85,6 +90,9 @@ void GameRunner_Init(struct GameData* gameData, const Resources* resources)
     m_drawRoomFunctions[TRANSITION_ROOM_INDEX] = drawTransition;
     m_drawRoomFunctions[WIPE_TRANSITION_ROOM_INDEX] = drawWipeTransition;
     m_drawRoomFunctions[GET_READY_ROOM_INDEX] = drawGetReadyScreen;
+
+	//extern Room transitionRoom;
+	//g_rooms[WIPE_TRANSITION_ROOM_INDEX] = &transitionRoom;
 
 	Game_Init(gameData, resources);
 }
@@ -164,9 +172,48 @@ void drawTitleScreen(struct GameData* gameData, const Resources* resources)
 	}
 }
 
-void drawTransition(struct GameData* gameData, const Resources* resources)
+void clearBackground()
 {
 
+}
+
+
+
+void drawCleanBackground(dl_u8* cleanBackground)
+{
+	dl_u16* vram = (dl_u16*)VRAM;
+
+	//static dl_u8 convertedBackground[FRAMEBUFFER_WIDTH * 8];
+
+	convert1bppImageToVRAMCrtEffectImage(cleanBackground,
+                                         vram,
+                                         FRAMEBUFFER_WIDTH,
+                                         FRAMEBUFFER_HEIGHT,
+                                         CrtColor_Blue);
+
+	/*
+
+	for (int loop = 0; loop < FRAMEBUFFER_WIDTH * 8; loop++)
+		convertedBackground[loop] = 1;
+
+	convertToTiles(convertedBackground, 
+				   FRAMEBUFFER_WIDTH, 
+				   8, 
+				   CHAR_BASE_BLOCK(4),
+				   0);
+	*/
+}
+
+void drawTransition(struct GameData* gameData, const Resources* resources)
+{
+	if (gameData->transitionInitialDelay == 29)
+    {
+        clearBackground();
+    }
+    else if (!gameData->transitionInitialDelay)
+    {
+        drawCleanBackground(gameData->cleanBackground);
+    }
 }
 
 void drawWipeTransition(struct GameData* gameData, const Resources* resources)

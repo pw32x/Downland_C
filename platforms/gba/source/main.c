@@ -29,7 +29,9 @@
 #include "..\..\..\game\resource_types.h"
 #include "..\..\..\game\resource_loader_buffer.h"
 #include "..\..\..\game\checksum_utils.h"
+#include "..\..\..\game\game.h"
 
+GameData gameData;
 Resources resources;
 
 static dl_u8 memory[18288];
@@ -152,6 +154,8 @@ int main()
 	if (!ResourceLoaderBuffer_Init(downland_rom, downland_rom_size, &resources))
 		return -1;
 
+	Game_Init(&gameData, &resources);
+
 	// Set up the interrupt handlers
 	irqInit();
 	// Enable Vblank Interrupt to allow VblankIntrWait
@@ -234,6 +238,8 @@ int main()
 
 	while (1) 
 	{
+		Game_Update(&gameData, &resources);
+
 		VBlankIntrWait();
 
 		// check if we reached our delay
@@ -250,7 +256,7 @@ int main()
 
 				// check if we reached the end of our scrolltext
 				// and if so we need to restart our index
-				if(message[textindex] == 0) 
+				if (message[textindex] == 0) 
 					textindex = 0;
 				else 
 					textindex++;

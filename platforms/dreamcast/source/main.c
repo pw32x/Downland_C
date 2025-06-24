@@ -37,17 +37,17 @@ const char* romFileNames[] =
 int romFileNamesCount = sizeof(romFileNames) / sizeof(romFileNames[0]);
 
 
-static u8 memory[18288];
-static u8* memoryEnd = NULL;
+static dl_u8 memory[18288];
+static dl_u8* memoryEnd = NULL;
 
-void* dl_alloc(u32 size)
+void* dl_alloc(dl_u32 size)
 {
 	if (memoryEnd == NULL)
 	{
 		memoryEnd = memory;
 	}
 
-	u8* memory = memoryEnd;
+	dl_u8* memory = memoryEnd;
 
 	memoryEnd += size;
 
@@ -57,7 +57,7 @@ void* dl_alloc(u32 size)
 uint8_t volume = 128;
 #define CENTER 128
 
-void Sound_Play(u8 soundIndex, u8 loop)
+void Sound_Play(dl_u8 soundIndex, dl_u8 loop)
 {
     int channel = soundIndex * 2;
 
@@ -85,7 +85,7 @@ void Sound_Play(u8 soundIndex, u8 loop)
     }
 }
 
-void Sound_Stop(u8 soundIndex)
+void Sound_Stop(dl_u8 soundIndex)
 {
     int channel = soundIndex * 2;
     playing[soundIndex] = FALSE;
@@ -95,7 +95,7 @@ void Sound_Stop(u8 soundIndex)
 }
 
 
-void Update_Controls(u8 playerIndex, JoystickState* joystickState)
+void Update_Controls(dl_u8 playerIndex, JoystickState* joystickState)
 {
     maple_device_t* cont = maple_enum_type(playerIndex, MAPLE_FUNC_CONTROLLER);
 
@@ -136,15 +136,15 @@ void Update_Controls(u8 playerIndex, JoystickState* joystickState)
     joystickState->startDown = startDown;
 }
 
-void updateFramebufferTexture(const u8* gameFramebuffer, 
-                              u16* dcFramebuffer) 
+void updateFramebufferTexture(const dl_u8* gameFramebuffer, 
+                              dl_u16* dcFramebuffer) 
 {
     // Convert 1-bit buffer to 16-bit pixels
     for (int y = 0; y < FRAMEBUFFER_HEIGHT; y++) 
     {
         for (int x = 0; x < FRAMEBUFFER_WIDTH; x++) 
         {
-            u8 bit = (gameFramebuffer[(x / 8) + (y * FRAMEBUFFER_PITCH)] >> (7 - (x % 8))) & 1;
+            dl_u8 bit = (gameFramebuffer[(x / 8) + (y * FRAMEBUFFER_PITCH)] >> (7 - (x % 8))) & 1;
             dcFramebuffer[(y + 24) * 320 + (x + 32)] = bit ? 0xFFFF : 0x0000; // White or Black
         }
     }
@@ -158,17 +158,17 @@ enum CrtColor
     CrtColor_Orange
 };
 
-void convert1bppImageTo16bppCrtEffectImage(const u8* originalImage,
-                                           u16* crtImage,
+void convert1bppImageTo16bppCrtEffectImage(const dl_u8* originalImage,
+                                           dl_u16* crtImage,
                                            enum CrtColor crtColor) 
 {
-    const u8 bytesPerRow = FRAMEBUFFER_WIDTH / 8;
+    const dl_u8 bytesPerRow = FRAMEBUFFER_WIDTH / 8;
 
     // Color definitions
-    const u16 BLACK  = 0x0000; // 00 black
-    const u16 BLUE   = crtColor == CrtColor_Blue ? 0x001F : 0xFC80; // 01 blue
-    const u16 ORANGE = crtColor == CrtColor_Blue ? 0xFC80 : 0x001F; // 10 orange
-    const u16 WHITE  = 0xFFFF; // 11 white
+    const dl_u16 BLACK  = 0x0000; // 00 black
+    const dl_u16 BLUE   = crtColor == CrtColor_Blue ? 0x001F : 0xFC80; // 01 blue
+    const dl_u16 ORANGE = crtColor == CrtColor_Blue ? 0xFC80 : 0x001F; // 10 orange
+    const dl_u16 WHITE  = 0xFFFF; // 11 white
 
     for (int y = 0; y < FRAMEBUFFER_HEIGHT; ++y) 
     {
@@ -176,7 +176,7 @@ void convert1bppImageTo16bppCrtEffectImage(const u8* originalImage,
         // pixels of the destination texture, so:
         // source bits:        00 01 10 11
         // final pixel colors: black, black, blue, blue, orange, orange, white, white.
-        u32 yOffset = (y + 24) * 320;
+        dl_u32 yOffset = (y + 24) * 320;
 
         for (int x = 0; x < FRAMEBUFFER_WIDTH; x += 2) 
         {
@@ -238,7 +238,7 @@ void convert1bppImageTo16bppCrtEffectImage(const u8* originalImage,
 }
 
 
-static bool loadFile(const char* romPath, u8* fileBuffer, u32 fileBufferSize)
+static bool loadFile(const char* romPath, dl_u8* fileBuffer, dl_u32 fileBufferSize)
 {
 	FILE* file = fopen(romPath, "rb");
 
@@ -246,7 +246,7 @@ static bool loadFile(const char* romPath, u8* fileBuffer, u32 fileBufferSize)
 		return false;
 
     fseek(file, 0L, SEEK_END);
-    u32 fileSize = ftell(file);
+    dl_u32 fileSize = ftell(file);
 
     if (fileSize != fileBufferSize)
     {
@@ -271,7 +271,7 @@ static bool loadFile(const char* romPath, u8* fileBuffer, u32 fileBufferSize)
 int main(int argc, char **argv) 
 {
     const int fileBufferSize = 8192;
-    u8 fileBuffer[fileBufferSize];
+    dl_u8 fileBuffer[fileBufferSize];
 
     vid_set_mode(DM_320x240, PM_RGB565);
     snd_init();
@@ -308,7 +308,7 @@ int main(int argc, char **argv)
 
     Game_Init(&gameData, &resources);
 
-    u16* crtFramebuffer = malloc(320*240);
+    dl_u16* crtFramebuffer = malloc(320*240);
     memset(crtFramebuffer, 0, 320*240*2);
     
 

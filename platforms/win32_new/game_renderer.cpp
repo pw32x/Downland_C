@@ -12,18 +12,18 @@ extern "C"
 
 #include <algorithm>
 
-Sprite::Sprite(const u8* originalSprite, 
-               u8 width, 
-               u8 height, 
-               u8 numFrames)
+Sprite::Sprite(const dl_u8* originalSprite, 
+               dl_u8 width, 
+               dl_u8 height, 
+               dl_u8 numFrames)
     : m_originalSprite(originalSprite),
       m_numFrames(numFrames),
       m_width(width),
       m_height(height)
 {
-    const u8* spriteRunner = originalSprite;
+    const dl_u8* spriteRunner = originalSprite;
 
-    std::vector<u32> spriteFrame;
+    std::vector<dl_u32> spriteFrame;
     spriteFrame.resize(width * height);
 
     for (int loop = 0; loop < numFrames; loop++)
@@ -40,9 +40,9 @@ Sprite::Sprite(const u8* originalSprite,
     }
 }
 
-void Sprite::updateSprite(u8 frameNumber, const u8* originalSprite)
+void Sprite::updateSprite(dl_u8 frameNumber, const dl_u8* originalSprite)
 {
-    std::vector<u32>& spriteFrame = m_frames[frameNumber];
+    std::vector<dl_u32>& spriteFrame = m_frames[frameNumber];
 
     SDLUtils_convert1bppImageTo32bppCrtEffectImage(originalSprite,
                                                    spriteFrame.data(),
@@ -52,25 +52,25 @@ void Sprite::updateSprite(u8 frameNumber, const u8* originalSprite)
 }
 
 
-void drawSpriteBottomClipped(u32* crtFramebuffer, 
-                             u16 framebufferWidth,
-                             u16 framebufferHeight,
-                             u16 spriteX, 
-                             u16 spriteY, 
-                             u8 spriteHeight,
-                             u16 frameNumber,
+void drawSpriteBottomClipped(dl_u32* crtFramebuffer, 
+                             dl_u16 framebufferWidth,
+                             dl_u16 framebufferHeight,
+                             dl_u16 spriteX, 
+                             dl_u16 spriteY, 
+                             dl_u8 spriteHeight,
+                             dl_u16 frameNumber,
                              const Sprite* sprite)
 {
-    u32 drawLocation = spriteX + (spriteY * framebufferWidth);
+    dl_u32 drawLocation = spriteX + (spriteY * framebufferWidth);
     crtFramebuffer += drawLocation;
 
-    const u32* spriteRunner = sprite->m_frames[frameNumber].data();
+    const dl_u32* spriteRunner = sprite->m_frames[frameNumber].data();
 
     for (int loopY = 0; loopY < spriteHeight; loopY++)
     {
         for (int loopX = 0; loopX < sprite->m_width; loopX++)
         {
-            u32 color = *spriteRunner;
+            dl_u32 color = *spriteRunner;
 
             if (color != 0)
                 *crtFramebuffer = color;
@@ -83,12 +83,12 @@ void drawSpriteBottomClipped(u32* crtFramebuffer,
     }
 }
 
-void drawSprite(u32* crtFramebuffer, 
-                u16 framebufferWidth,
-                u16 framebufferHeight,
-                u16 spriteX, 
-                u16 spriteY, 
-                u16 frameNumber,
+void drawSprite(dl_u32* crtFramebuffer, 
+                dl_u16 framebufferWidth,
+                dl_u16 framebufferHeight,
+                dl_u16 spriteX, 
+                dl_u16 spriteY, 
+                dl_u16 frameNumber,
                 const Sprite* sprite)
 {
     drawSpriteBottomClipped(crtFramebuffer,
@@ -101,15 +101,15 @@ void drawSprite(u32* crtFramebuffer,
                             sprite);
 }
 
-void drawText(u32* crtFramebuffer,
-              u16 framebufferWidth,
-              u16 framebufferHeight,
-              const u8* text, 
+void drawText(dl_u32* crtFramebuffer,
+              dl_u16 framebufferWidth,
+              dl_u16 framebufferHeight,
+              const dl_u8* text, 
               const Sprite* characterFont, 
-              u32 drawLocation)
+              dl_u32 drawLocation)
 {
-    u16 x = (drawLocation % 32) << 3;
-    u16 y = drawLocation / 32;
+    dl_u16 x = (drawLocation % 32) << 3;
+    dl_u16 y = drawLocation / 32;
 
     // for each character
     while (*text != 0xff)
@@ -128,17 +128,17 @@ void drawText(u32* crtFramebuffer,
     }
 }
 
-void drawPlayerLives(u8 playerLives,
-					 u8 currentSpriteNumber,
+void drawPlayerLives(dl_u8 playerLives,
+					 dl_u8 currentSpriteNumber,
 					 const Sprite* playerSprite,
 					 const Sprite* regenSprite,
-					 u8 isRegenerating,
-                     u32* framebuffer)
+					 dl_u8 isRegenerating,
+                     dl_u32* framebuffer)
 {
-	u8 x = PLAYERLIVES_ICON_X;
-	u8 y = PLAYERLIVES_ICON_Y;
+	dl_u8 x = PLAYERLIVES_ICON_X;
+	dl_u8 y = PLAYERLIVES_ICON_Y;
 
-    for (u8 loop = 0; loop < playerLives; loop++)
+    for (dl_u8 loop = 0; loop < playerLives; loop++)
 	{
         drawSpriteBottomClipped(framebuffer, 
                                 FRAMEBUFFER_WIDTH, 
@@ -186,7 +186,7 @@ GameRenderer::GameRenderer(SDL_Renderer* renderer,
     // a copy the first frame of animation and erase the top to acheive the 
     // same effect.
     m_playerSplatSprite.m_frames.push_back(m_playerSplatSprite.m_frames[0]);
-    u32* frame = m_playerSplatSprite.m_frames[1].data();
+    dl_u32* frame = m_playerSplatSprite.m_frames[1].data();
     for (int loop = 0; loop < 5 * PLAYER_SPLAT_SPRITE_WIDTH; loop++)
         frame[loop] = 0;
 
@@ -197,7 +197,7 @@ GameRenderer::GameRenderer(SDL_Renderer* renderer,
     // convert font to blue
     for (int loop = 0; loop < m_characterFont.m_numFrames; loop++)
     {
-        std::vector<u32>& frame = m_characterFont.m_frames[loop];
+        std::vector<dl_u32>& frame = m_characterFont.m_frames[loop];
 
         for (int counter = 0; counter < frame.size(); counter++)
         {
@@ -251,23 +251,23 @@ void GameRenderer::shutdown()
 }
 
 
-void GameRenderer::updateRegenSprite(u8 currentPlayerSpriteNumber)
+void GameRenderer::updateRegenSprite(dl_u8 currentPlayerSpriteNumber)
 {
-    const u8* originalSprite = m_playerSprite.m_originalSprite;
+    const dl_u8* originalSprite = m_playerSprite.m_originalSprite;
     originalSprite += currentPlayerSpriteNumber * (m_playerSprite.m_width / 8) * m_playerSprite.m_height;
 
     memset(m_regenSpriteBuffer, 0, sizeof(m_regenSpriteBuffer));
 
     drawSprite_16PixelsWide_static_IntoSpriteBuffer(originalSprite, 
 													m_playerSprite.m_height,
-													(u8*)m_regenSpriteBuffer);
+													(dl_u8*)m_regenSpriteBuffer);
 
     m_regenSprite.updateSprite(0, m_regenSpriteBuffer);
 }
 
 void GameRenderer::roomChanged(const GameData* gameData, 
-                                       u8 roomNumber, 
-                                       s8 transitionType)
+                                       dl_u8 roomNumber, 
+                                       dl_s8 transitionType)
 {
     if (transitionType == WIPE_TRANSITION_ROOM_INDEX)
     {
@@ -277,11 +277,11 @@ void GameRenderer::roomChanged(const GameData* gameData,
                                                        FRAMEBUFFER_HEIGHT,
                                                        CrtColor::Blue);
 
-        memset(m_framebuffer, 0, FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT * sizeof(u32));
+        memset(m_framebuffer, 0, FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT * sizeof(dl_u32));
     }
 }
 
-void GameRenderer::drawDrops(const GameData* gameData, u32* framebuffer)
+void GameRenderer::drawDrops(const GameData* gameData, dl_u32* framebuffer)
 {
     // draw drops
     const Drop* dropsRunner = gameData->dropData.drops;
@@ -304,7 +304,7 @@ void GameRenderer::drawDrops(const GameData* gameData, u32* framebuffer)
     }
 }
 
-void GameRenderer::drawChamber(const GameData* gameData, u32* framebuffer)
+void GameRenderer::drawChamber(const GameData* gameData, dl_u32* framebuffer)
 {
     // Update texture from gameFramebuffer
     SDLUtils_convert1bppImageTo32bppCrtEffectImage(gameData->cleanBackground,
@@ -318,7 +318,7 @@ void GameRenderer::drawChamber(const GameData* gameData, u32* framebuffer)
 
     const PlayerData* playerData = gameData->currentPlayerData;
 
-    u16 currentTimer = playerData->roomTimers[playerData->currentRoom->roomNumber];
+    dl_u16 currentTimer = playerData->roomTimers[playerData->currentRoom->roomNumber];
 
     const Pickup* pickups = playerData->gamePickups[gameData->currentRoom->roomNumber];
     for (int loop = 0; loop < NUM_PICKUPS_PER_ROOM; loop++)
@@ -384,7 +384,7 @@ void GameRenderer::drawChamber(const GameData* gameData, u32* framebuffer)
                     FRAMEBUFFER_HEIGHT,
                     (ballData->x >> 8) << 1,
                     ballData->y >> 8,
-                    ((s8)ballData->fallStateCounter < 0),
+                    ((dl_s8)ballData->fallStateCounter < 0),
                     &m_ballSprite);
 
     }
@@ -454,7 +454,7 @@ void GameRenderer::drawChamber(const GameData* gameData, u32* framebuffer)
 			    SCORE_DRAW_LOCATION);
 }
 
-void GameRenderer::drawTitleScreen(const GameData* gameData, u32* framebuffer)
+void GameRenderer::drawTitleScreen(const GameData* gameData, dl_u32* framebuffer)
 {
     SDLUtils_convert1bppImageTo32bppCrtEffectImage(gameData->cleanBackground,
                                                    framebuffer,
@@ -466,7 +466,7 @@ void GameRenderer::drawTitleScreen(const GameData* gameData, u32* framebuffer)
     drawDrops(gameData, framebuffer);
 
 	// draw the cursor
-	u16 drawLocation = gameData->numPlayers == 1 ? 0xf64 : 0xf70;  // hardcoded locations in the frambuffer
+	dl_u16 drawLocation = gameData->numPlayers == 1 ? 0xf64 : 0xf70;  // hardcoded locations in the frambuffer
 
     framebuffer = framebuffer + (drawLocation * 8);
     for (int loop = 0; loop < 8; loop++)
@@ -477,12 +477,12 @@ void GameRenderer::drawTitleScreen(const GameData* gameData, u32* framebuffer)
 
 }
 
-void GameRenderer::drawTransition(const GameData* gameData, u32* framebuffer)
+void GameRenderer::drawTransition(const GameData* gameData, dl_u32* framebuffer)
 {
-	memset(framebuffer, 0, FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT * sizeof(u32));
+	memset(framebuffer, 0, FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT * sizeof(dl_u32));
 }
 
-void GameRenderer::drawWipeTransition(const GameData* gameData, u32* framebuffer)
+void GameRenderer::drawWipeTransition(const GameData* gameData, dl_u32* framebuffer)
 {
     // not the most efficient as it updates the whole framebuffer
     // instead of what changed per frame during the wipe, but at the 
@@ -490,9 +490,9 @@ void GameRenderer::drawWipeTransition(const GameData* gameData, u32* framebuffer
     // will have to handle this in different ways.
 	for (int sectionCounter = 0; sectionCounter < 6; sectionCounter++)
 	{
-        u32 offset = (sectionCounter * 32 * FRAMEBUFFER_WIDTH);
-	    u32* framebufferRunner = framebuffer + offset;
-	    u32* wipeFramebufferRunner = m_wipeFramebuffer + offset;
+        dl_u32 offset = (sectionCounter * 32 * FRAMEBUFFER_WIDTH);
+	    dl_u32* framebufferRunner = framebuffer + offset;
+	    dl_u32* wipeFramebufferRunner = m_wipeFramebuffer + offset;
 
         for (int lineCounter = 0; lineCounter < gameData->transitionCurrentLine; lineCounter++)
         {
@@ -510,7 +510,7 @@ void GameRenderer::drawWipeTransition(const GameData* gameData, u32* framebuffer
 	}
 }
 
-void GameRenderer::drawGetReadyScreen(const GameData* gameData, u32* framebuffer)
+void GameRenderer::drawGetReadyScreen(const GameData* gameData, dl_u32* framebuffer)
 {
     SDLUtils_convert1bppImageTo32bppCrtEffectImage(gameData->cleanBackground,
                                                    framebuffer,

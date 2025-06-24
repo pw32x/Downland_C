@@ -16,22 +16,22 @@ extern "C"
 #include "..\..\game\base_defines.h"
 }
 
-typedef std::vector<u32> SpriteFrame;
+typedef std::vector<dl_u32> SpriteFrame;
 
 class Sprite
 {
 public:
-	Sprite(const u8* orginalSprite, u8 width, u8 height, u8 numFrames);
+	Sprite(const dl_u8* orginalSprite, dl_u8 width, dl_u8 height, dl_u8 numFrames);
 
-	void updateSprite(u8 frameNumber, const u8* originalSprite);
+	void updateSprite(dl_u8 frameNumber, const dl_u8* originalSprite);
 
 public:
 
-	u8 m_width;
-	u8 m_height;
-	u8 m_numFrames;
+	dl_u8 m_width;
+	dl_u8 m_height;
+	dl_u8 m_numFrames;
 	std::vector<SpriteFrame> m_frames;
-	const u8* m_originalSprite;
+	const dl_u8* m_originalSprite;
 };
 
 class GameRenderer
@@ -44,7 +44,7 @@ public:
 
 	void shutdown();
 	void update(const GameData* gameData);
-	void roomChanged(const GameData* gameData, u8 roomNumber, s8 transitionType);
+	void roomChanged(const GameData* gameData, dl_u8 roomNumber, dl_s8 transitionType);
 
 	SDL_Texture* getOutputTexture() { return m_outputTexture; }
 
@@ -52,15 +52,15 @@ private:
 
 	bool init();
 
-	void updateRegenSprite(u8 currentPlayerSpriteNumber);
+	void updateRegenSprite(dl_u8 currentPlayerSpriteNumber);
 
-	void drawDrops(const GameData* gameData, u32* framebuffer);
+	void drawDrops(const GameData* gameData, dl_u32* framebuffer);
 
-	void drawChamber(const GameData* gameData, u32* framebuffer);
-	void drawTitleScreen(const GameData* gameData, u32* framebuffer);
-	void drawTransition(const GameData* gameData, u32* framebuffer);
-	void drawWipeTransition(const GameData* gameData, u32* framebuffer);
-	void drawGetReadyScreen(const GameData* gameData, u32* framebuffer);
+	void drawChamber(const GameData* gameData, dl_u32* framebuffer);
+	void drawTitleScreen(const GameData* gameData, dl_u32* framebuffer);
+	void drawTransition(const GameData* gameData, dl_u32* framebuffer);
+	void drawWipeTransition(const GameData* gameData, dl_u32* framebuffer);
+	void drawGetReadyScreen(const GameData* gameData, dl_u32* framebuffer);
 
 private:
 	SDL_Renderer* m_renderer;
@@ -81,13 +81,13 @@ private:
 	Sprite m_regenSprite;
 	Sprite m_characterFont;
 
-	u8 m_regenSpriteBuffer[(PLAYER_SPRITE_WIDTH / 8) * PLAYER_SPRITE_ROWS];
+	dl_u8 m_regenSpriteBuffer[(PLAYER_SPRITE_WIDTH / 8) * PLAYER_SPRITE_ROWS];
 
 	std::vector<const Sprite*> m_pickUpSprites;
 
 	const Resources* m_resources;
 
-	typedef void (GameRenderer::*DrawRoomFunction)(const GameData* gameData, u32* framebuffer);
+	typedef void (GameRenderer::*DrawRoomFunction)(const GameData* gameData, dl_u32* framebuffer);
 	std::vector<DrawRoomFunction> m_drawRoomFunctions;
 
 

@@ -1,7 +1,7 @@
 #include "sdl_image_utils.h"
 
 // Convert the 1-bit framebuffer into a texture
-void SDLUtils_updateFramebufferTexture(const u8* framebuffer, 
+void SDLUtils_updateFramebufferTexture(const dl_u8* framebuffer, 
                                        SDL_Texture* framebufferTexture) 
 {
     void* pixels;
@@ -25,13 +25,13 @@ void SDLUtils_updateFramebufferTexture(const u8* framebuffer,
 }
 
 
-void SDLUtils_convert1bppImageTo32bppCrtEffectImage(const u8* originalImage,
-                                                    u32* crtImage,
-                                                    u16 width,
-                                                    u16 height,
+void SDLUtils_convert1bppImageTo32bppCrtEffectImage(const dl_u8* originalImage,
+                                                    dl_u32* crtImage,
+                                                    dl_u16 width,
+                                                    dl_u16 height,
                                                     CrtColor crtColor) 
 {
-    const u8 bytesPerRow = width / 8;
+    const dl_u8 bytesPerRow = width / 8;
 
     // Color definitions
     const uint32_t BLACK  = 0x000000; // 00 black
@@ -105,7 +105,7 @@ void SDLUtils_convert1bppImageTo32bppCrtEffectImage(const u8* originalImage,
     }
 }
 
-void SDLUtils_updateDebugFramebufferTexture(u32* debugFramebuffer, 
+void SDLUtils_updateDebugFramebufferTexture(dl_u32* debugFramebuffer, 
                                             SDL_Texture* debugFramebufferTexture)
 {
     void* pixels;

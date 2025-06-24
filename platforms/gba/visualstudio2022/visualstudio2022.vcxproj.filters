@@ -269,5 +269,8 @@
     <ClInclude Include="..\..\..\..\..\..\..\devkitPro\libgba\include\gba_types.h">
       <Filter>libgba</Filter>
     </ClInclude>
+    <ClInclude Include="..\out\downland_rom.h">
+      <Filter>source</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

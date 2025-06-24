@@ -22,9 +22,9 @@ include $(DEVKITARM)/gba_rules
 #---------------------------------------------------------------------------------
 TARGET		:= Downland
 OUT		    := out
-SOURCES		:= source
+SOURCES		:= source ../../game ../../game/rooms
 INCLUDES	:= include
-DATA		:= gamedata
+DATA		:= gamedata 
 MUSIC		:=
 
 #---------------------------------------------------------------------------------

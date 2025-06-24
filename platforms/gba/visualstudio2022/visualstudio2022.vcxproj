@@ -180,6 +180,7 @@
     <ClInclude Include="..\..\..\game\rooms\room_types.h" />
     <ClInclude Include="..\..\..\game\dl_sound.h" />
     <ClInclude Include="..\..\..\game\string_utils.h" />
+    <ClInclude Include="..\out\downland_rom.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

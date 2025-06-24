@@ -23,6 +23,39 @@
 #include <gba_interrupt.h>
 
 #include "r6502_portfont_bin.h"
+#include "downland_rom.h"
+
+#include "..\..\..\game\base_types.h"
+#include "..\..\..\game\resource_types.h"
+#include "..\..\..\game\resource_loader_buffer.h"
+#include "..\..\..\game\checksum_utils.h"
+
+Resources resources;
+
+static dl_u8 memory[18288];
+static dl_u8* memoryEnd = NULL;
+
+void* dl_alloc(dl_u32 size)
+{
+	if (memoryEnd == NULL)
+	{
+		memoryEnd = memory;
+	}
+
+	dl_u8* memory = memoryEnd;
+
+	memoryEnd += size;
+
+	return (void*)memory;
+}
+
+void Sound_Play(dl_u8 soundIndex, dl_u8 loop)
+{
+}
+
+void Sound_Stop(dl_u8 soundIndex)
+{
+}
 
 // --------------------------------------------------------------------
 
@@ -113,6 +146,11 @@ void updatescrolltext(u32 idx)
 
 int main() 
 {
+	if (!checksumCheckLitteEndian(downland_rom, downland_rom_size))
+		return -1;
+	
+	if (!ResourceLoaderBuffer_Init(downland_rom, downland_rom_size, &resources))
+		return -1;
 
 	// Set up the interrupt handlers
 	irqInit();

@@ -22,7 +22,8 @@ void convert1bppImageToVRAM(const dl_u8* originalImage,
                             enum CrtColor crtColor);
 
 void convertBackgroundToVRAM256(const dl_u8* originalImage,
-                                dl_u16* vram,
+                                dl_u16* vramTileAddr,
+                                dl_u16* vramTileMapAddr,
                                 dl_u16 width,
                                 dl_u16 height,
                                 enum CrtColor crtColor);

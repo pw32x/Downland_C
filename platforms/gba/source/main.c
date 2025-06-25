@@ -252,19 +252,6 @@ int main()
 	//*((u32 *)MAP_BASE_ADR(31)) =0;
 	//CpuFastSet( MAP_BASE_ADR(31), MAP_BASE_ADR(31), FILL | COPY32 | (0x800/4));
 
-	int tileWidth = FRAMEBUFFER_WIDTH / 8;
-	int tileHeight = FRAMEBUFFER_HEIGHT / 8;
-	dl_u16* mapAddr = (dl_u16*)MAP_BASE_ADR(31);
-	for (int loopy = 0; loopy < tileHeight; loopy++)
-	{
-		for (int loopx = 0; loopx < tileWidth; loopx++)
-		{
-			int tileIndex = loopx + (loopy * tileWidth);
-
-			mapAddr[loopx + (loopy * 32)] = tileIndex;
-		}
-	}
-
 	// set screen H and V scroll positions
 	BG_OFFSET[0].x = 0; BG_OFFSET[0].y = 0;
 

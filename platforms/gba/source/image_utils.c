@@ -3,6 +3,8 @@
 #include <gba_video.h>
 #include <gba_systemcalls.h>
 
+#include <string.h>
+
 void convert1bppImageTo8bppCrtEffectImage(const dl_u8* originalImage,
                                           dl_u8* destinationImage,
                                           dl_u16 width,
@@ -84,8 +86,6 @@ void convert1bppImageTo8bppCrtEffectImage(const dl_u8* originalImage,
     }
 }
 
-dl_u8 workBuffer[256 * 8];
-
 void convert1bppImageToVRAM(const dl_u8* originalImage,
                             dl_u16* vram,
                             dl_u16 width,
@@ -137,9 +137,9 @@ void convert1bppImageToVRAM(const dl_u8* originalImage,
     }
 }
 
-
 void convertBackgroundToVRAM256(const dl_u8* originalImage,
-                                dl_u16* vram,
+                                dl_u16* vramTileAddr,
+                                dl_u16* vramTileMapAddr,
                                 dl_u16 width,
                                 dl_u16 height,
                                 enum CrtColor crtColor) 
@@ -156,23 +156,27 @@ void convertBackgroundToVRAM256(const dl_u8* originalImage,
     dl_u16 tileHeight = height / 8;
 
     dl_u8 tile[64]; // 256 colors
+    memset(tile, 0, sizeof(tile));
+    CpuFastSet(tile, vramTileAddr, COPY32 | 16);
 
-    dl_u16 tileCounter = 0;
+    dl_u16 tileCounter = 1;
 
-    for (int tileY = 0; tileY < tileHeight; tileY++) 
+    for (dl_u16 tileY = 0; tileY < tileHeight; tileY++) 
     {
-        for (int tileX = 0; tileX < tileWidth; tileX++)
+        for (dl_u16 tileX = 0; tileX < tileWidth; tileX++)
         {
-            int startX = tileX;
-            int startY = tileY * 8;
+            dl_u16 startX = tileX;
+            dl_u16 startY = tileY * 8;
 
-            for (int y = 0; y < 8; y++) 
+            dl_u16 sumColor = 0;
+
+            for (dl_u8 y = 0; y < 8; y++) 
             {
                 // every pair of bits generates a color for the two corresponding
                 // pixels of the destination texture, so:
                 // source bits:        00 01 10 11
                 // final pixel colors: black, black, blue, blue, orange, orange, white, white.
-                for (int x = 0; x < 8; x += 2) 
+                for (dl_u8 x = 0; x < 8; x += 2) 
                 {
                     int byteIndex = ((startY + y) * bytesPerRow) + startX;
                     int bitOffset = 7 - (x % 8);
@@ -187,6 +191,8 @@ void convertBackgroundToVRAM256(const dl_u8* originalImage,
                     else if (bit1 == 1 && bit2 == 0) color = ORANGE;
                     else if (bit1 == 1 && bit2 == 1) color = WHITE;
 
+                    sumColor += color;
+
                     // Set color
                     dl_u16 byteLocation = x + (y * 8);
                     tile[byteLocation] = color;
@@ -194,9 +200,16 @@ void convertBackgroundToVRAM256(const dl_u8* originalImage,
                 }
             }
 
-            CpuFastSet(tile, vram + (tileCounter * 32), COPY32 | 16);
+            dl_u16 tileIndex = 0;
 
-            tileCounter++;
+            if (sumColor)
+            {
+                tileIndex = tileCounter;
+                CpuFastSet(tile, vramTileAddr + (tileCounter * 32), COPY32 | 16);
+                tileCounter++;
+            }
+
+            vramTileMapAddr[tileX + (tileY * 32)] = tileIndex;            
         }
     }
 }

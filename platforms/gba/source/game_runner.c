@@ -181,7 +181,8 @@ void clearBackground()
 
 void drawCleanBackground(dl_u8* cleanBackground)
 {
-	dl_u16* vram = (dl_u16*)VRAM;
+	dl_u16* vramTileAddr = (dl_u16*)VRAM;
+	dl_u16* vramTileMapAddr = (dl_u16*)MAP_BASE_ADR(31);
 
 	//static dl_u8 convertedBackground[FRAMEBUFFER_WIDTH * 8];
 
@@ -193,7 +194,8 @@ void drawCleanBackground(dl_u8* cleanBackground)
                            CrtColor_Blue);
 	*/
 	convertBackgroundToVRAM256(cleanBackground,
-                               vram,
+                               vramTileAddr,
+							   vramTileMapAddr,
                                FRAMEBUFFER_WIDTH,
                                FRAMEBUFFER_HEIGHT,
                                CrtColor_Blue);

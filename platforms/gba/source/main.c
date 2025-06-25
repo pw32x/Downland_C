@@ -270,7 +270,7 @@ int main()
 
 	// set the screen base to 31 (0x600F800) and char base to 0 (0x6000000)
 	BGCTRL[0] = SCREEN_BASE(31) |
-				BG_256_COLOR |
+				BG_16_COLOR |
 			    BG_SIZE_0;
 
 	// screen mode & background to display

@@ -215,6 +215,82 @@ void convertBackgroundToVRAM256(const dl_u8* originalImage,
 }
 
 
+void convertBackgroundToVRAM16(const dl_u8* originalImage,
+                               dl_u16* vramTileAddr,
+                               dl_u16* vramTileMapAddr,
+                               dl_u16 width,
+                               dl_u16 height,
+                               enum CrtColor crtColor) 
+{
+    const dl_u8 bytesPerRow = width / 8;
+
+    // Color definitions
+    const dl_u8 BLACK  = 0x00; // 00 black
+    const dl_u8 BLUE   = crtColor == CrtColor_Blue ? 0x1 : 0x2; // 01 blue
+    const dl_u8 ORANGE = crtColor == CrtColor_Blue ? 0x2 : 0x1; // 10 orange
+    const dl_u8 WHITE  = 0x3; // 11 white
+
+    dl_u16 tileWidth = width / 8;
+    dl_u16 tileHeight = height / 8;
+
+    dl_u8 tile[32]; // 16 colors
+    memset(tile, 0, sizeof(tile));
+    CpuFastSet(tile, vramTileAddr, COPY32 | 8);
+
+    dl_u16 tileCounter = 1;
+
+    for (dl_u16 tileY = 0; tileY < tileHeight; tileY++) 
+    {
+        for (dl_u16 tileX = 0; tileX < tileWidth; tileX++)
+        {
+            dl_u16 startX = tileX;
+            dl_u16 startY = tileY * 8;
+
+            dl_u16 sumColor = 0;
+
+            for (dl_u8 y = 0; y < 8; y++) 
+            {
+                // every pair of bits generates a color for the two corresponding
+                // pixels of the destination texture, so:
+                // source bits:        00 01 10 11
+                // final pixel colors: black, black, blue, blue, orange, orange, white, white.
+                for (dl_u8 x = 0; x < 8; x += 2) 
+                {
+                    int byteIndex = ((startY + y) * bytesPerRow) + startX;
+                    int bitOffset = 7 - (x % 8);
+                    
+                    // Read two adjacent bits
+                    dl_u8 bit1 = (originalImage[byteIndex] >> bitOffset) & 1;
+                    dl_u8 bit2 = (originalImage[byteIndex] >> (bitOffset - 1)) & 1;
+
+                    // Determine color
+                    dl_u8 color = BLACK;
+                    if (bit1 == 0 && bit2 == 1) color = BLUE;
+                    else if (bit1 == 1 && bit2 == 0) color = ORANGE;
+                    else if (bit1 == 1 && bit2 == 1) color = WHITE;
+
+                    sumColor += color;
+
+                    // Set color
+                    dl_u16 byteLocation = (x + (y * 8)) >> 1;
+                    tile[byteLocation] = color | (color << 4);
+                }
+            }
+
+            dl_u16 tileIndex = 0;
+
+            if (sumColor)
+            {
+                tileIndex = tileCounter;
+                CpuFastSet(tile, vramTileAddr + (tileCounter * 16), COPY32 | 8);
+                tileCounter++;
+            }
+
+            vramTileMapAddr[tileX + (tileY * 32)] = tileIndex;            
+        }
+    }
+}
+
 dl_u16 convertToTiles(const dl_u8* sprite, 
 					  dl_u16 width,
 					  dl_u16 height,

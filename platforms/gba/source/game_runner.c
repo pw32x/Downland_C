@@ -20,10 +20,21 @@ SpriteAttributes g_8x8SpriteAttributes;
 SpriteAttributes g_16x8SpriteAttributes;
 SpriteAttributes g_16x16SpriteAttributes;
 
-dl_u16 playerSpriteTileIndex;
-dl_u16 dropSpriteTileIndex;
-dl_u16 cursorSpriteTileIndex;
-dl_u16 ballSpriteTileIndex;
+typedef struct
+{
+	const SpriteAttributes* spriteAttributes;
+	dl_u16 tileIndex;
+} GameSprite;
+
+GameSprite playerSprite;
+GameSprite dropsSprite;
+GameSprite cursorSprite;
+GameSprite ballSprite;
+GameSprite keySprite;
+GameSprite diamondSprite;
+GameSprite moneyBagSprite;
+
+const GameSprite* g_pickUpSprites[3];
 
 typedef void (*DrawRoomFunction)(struct GameData* gameData, const Resources* resources);
 DrawRoomFunction m_drawRoomFunctions[NUM_ROOMS_AND_ALL];
@@ -34,21 +45,19 @@ void drawTransition(struct GameData* gameData, const Resources* resources);
 void drawWipeTransition(struct GameData* gameData, const Resources* resources);
 void drawGetReadyScreen(struct GameData* gameData, const Resources* resources);
 
-//m_dropSprite(resources->sprites_drops, DROP_SPRITE_WIDTH, DROP_SPRITE_ROWS, DROP_SPRITE_COUNT),
-//m_ballSprite(resources->sprites_bouncyBall, BALL_SPRITE_WIDTH, BALL_SPRITE_ROWS, BALL_SPRITE_COUNT),
 //m_playerSprite(resources->sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYER_SPRITE_COUNT),
 //m_playerSplatSprite(resources->sprite_playerSplat, PLAYER_SPLAT_SPRITE_WIDTH, PLAYER_SPLAT_SPRITE_ROWS, PLAYER_SPLAT_SPRITE_COUNT),
 //m_birdSprite(resources->sprites_bird, BIRD_SPRITE_WIDTH, BIRD_SPRITE_ROWS, BIRD_SPRITE_COUNT),
-//m_keySprite(resources->sprite_key, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1),
-//m_diamondSprite(resources->sprite_diamond, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1),
-//m_moneyBagSprite(resources->sprite_moneyBag, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1),
-//m_cursorSprite(&m_cursor1bppSprite, 8, 1, 1),
+
+
 //m_regenSprite(resources->sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYER_SPRITE_ROWS, REGEN_SPRITES),
 //m_characterFont(resources->characterFont, 8, 7, 39),
 
 dl_u16 g_oamIndex = 0;
 
-dl_u16 loadResourceToTiles(const dl_u8* sprite, 
+dl_u16 buildSpriteResource(GameSprite* gameSprite,
+						   const SpriteAttributes* spriteAttributes,
+						   const dl_u8* sprite, 
 						   dl_u8 width, 
 						   dl_u8 height, 
 						   dl_u8 spriteCount,
@@ -69,23 +78,15 @@ dl_u16 loadResourceToTiles(const dl_u8* sprite,
 									  CHAR_BASE_BLOCK(4),
 									  tileIndex * 64); // 64 bytes after the last sprite
 
+	gameSprite->spriteAttributes = spriteAttributes;
+	gameSprite->tileIndex = tileIndex;
+
 	return tileIndex + tileCount;
 }
 
 void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 {
-	dl_u32 cursorSprite = 0xffffffff;
-
-	// load tile resources
-	dropSpriteTileIndex = 0;
-	playerSpriteTileIndex = loadResourceToTiles(resources->sprites_drops, DROP_SPRITE_WIDTH, DROP_SPRITE_ROWS, DROP_SPRITE_COUNT, dropSpriteTileIndex);
-	cursorSpriteTileIndex = loadResourceToTiles(resources->sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYER_SPRITE_COUNT, playerSpriteTileIndex);
-	ballSpriteTileIndex = loadResourceToTiles((dl_u8*)&cursorSprite, 8, 1, 1, cursorSpriteTileIndex);
-	loadResourceToTiles(resources->sprites_bouncyBall, BALL_SPRITE_WIDTH, BALL_SPRITE_ROWS, BALL_SPRITE_COUNT, ballSpriteTileIndex);
-
-	//playerSpriteTileIndex = 4;
-	//cursorSpriteTileIndex = 12;
-
+	// setup sprite attributes
 	g_8x8SpriteAttributes.attr0 = ATTR0_COLOR_256 | ATTR0_SQUARE;
 	g_8x8SpriteAttributes.attr1 = ATTR1_SIZE_8;
 	g_8x8SpriteAttributes.attr2 = 0;
@@ -97,6 +98,26 @@ void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 	g_16x8SpriteAttributes.attr0 = ATTR0_COLOR_256 | ATTR0_WIDE;
 	g_16x8SpriteAttributes.attr1 = ATTR1_SIZE_8;
 	g_16x8SpriteAttributes.attr2 = 0;
+
+
+	dl_u32 cursorSpriteRaw = 0xffffffff;
+
+	// load tile resources
+	dl_u16 tileIndex = 0;
+	tileIndex = buildSpriteResource(&dropsSprite, &g_8x8SpriteAttributes, resources->sprites_drops, DROP_SPRITE_WIDTH, DROP_SPRITE_ROWS, DROP_SPRITE_COUNT, tileIndex);
+	tileIndex = buildSpriteResource(&playerSprite, &g_16x16SpriteAttributes, resources->sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYER_SPRITE_COUNT, tileIndex);
+	tileIndex = buildSpriteResource(&cursorSprite, &g_8x8SpriteAttributes, (dl_u8*)&cursorSpriteRaw, 8, 1, 1, tileIndex);
+	tileIndex = buildSpriteResource(&ballSprite, &g_16x8SpriteAttributes, resources->sprites_bouncyBall, BALL_SPRITE_WIDTH, BALL_SPRITE_ROWS, BALL_SPRITE_COUNT, tileIndex);
+	tileIndex = buildSpriteResource(&keySprite, &g_16x16SpriteAttributes, resources->sprite_key, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, tileIndex);
+	tileIndex = buildSpriteResource(&diamondSprite, &g_16x16SpriteAttributes, resources->sprite_diamond, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, tileIndex);
+	tileIndex = buildSpriteResource(&moneyBagSprite, &g_16x16SpriteAttributes, resources->sprite_moneyBag, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, tileIndex);
+
+	//playerSpriteTileIndex = 4;
+	//cursorSpriteTileIndex = 12;
+
+	g_pickUpSprites[0] = &keySprite;
+	g_pickUpSprites[1] = &diamondSprite;
+	g_pickUpSprites[2] = &moneyBagSprite;
 
 	// room draw setup
     m_drawRoomFunctions[0] = drawChamber;
@@ -139,11 +160,11 @@ void GameRunner_Draw(struct GameData* gameData, const Resources* resources)
 	}
 }
 
-void drawSprite(dl_u16 x, dl_u16 y, const SpriteAttributes* spriteAttributes, dl_u16 tileIndex)
+void drawSprite(dl_u16 x, dl_u16 y, const GameSprite* gameSprite)
 {
-	OAM[g_oamIndex].attr0 = spriteAttributes->attr0 | (y & 0xff);
-	OAM[g_oamIndex].attr1 = spriteAttributes->attr1 | (x & 0x1ff);
-	OAM[g_oamIndex].attr2 = spriteAttributes->attr2 | (tileIndex << 1);
+	OAM[g_oamIndex].attr0 = gameSprite->spriteAttributes->attr0 | (y & 0xff);
+	OAM[g_oamIndex].attr1 = gameSprite->spriteAttributes->attr1 | (x & 0x1ff);
+	OAM[g_oamIndex].attr2 = gameSprite->spriteAttributes->attr2 | (gameSprite->tileIndex << 1);
 
 	g_oamIndex++;
 }
@@ -160,8 +181,7 @@ void drawDrops(const GameData* gameData)
         {
 			drawSprite((dropsRunner->x << 1), 
 					   (dropsRunner->y >> 8), 
-					   &g_8x8SpriteAttributes,
-					   dropSpriteTileIndex);
+					   &dropsSprite);
         }
 
         dropsRunner++;
@@ -174,6 +194,24 @@ void drawChamber(struct GameData* gameData, const Resources* resources)
 {
 	drawDrops(gameData);
 
+
+    const PlayerData* playerData = gameData->currentPlayerData;
+
+    //dl_u16 currentTimer = playerData->roomTimers[playerData->currentRoom->roomNumber];
+
+    const Pickup* pickups = playerData->gamePickups[gameData->currentRoom->roomNumber];
+    for (int loop = 0; loop < NUM_PICKUPS_PER_ROOM; loop++)
+    {
+		if ((pickups->state & playerData->playerMask))
+		{
+			drawSprite(pickups->x << 1,
+					   pickups->y,
+					   g_pickUpSprites[pickups->type]); // ((dl_s8)ballData->fallStateCounter < 0));
+        }
+
+        pickups++;
+    }
+
     // draw ball
     if (gameData->ballData.enabled)
     {
@@ -181,8 +219,7 @@ void drawChamber(struct GameData* gameData, const Resources* resources)
 
 		drawSprite((ballData->x >> 8) << 1,
 				   ballData->y >> 8,
-				   &g_16x8SpriteAttributes,
-				   ballSpriteTileIndex); // ((dl_s8)ballData->fallStateCounter < 0));
+				   &ballSprite); // ((dl_s8)ballData->fallStateCounter < 0));
     }
 }
 
@@ -192,8 +229,7 @@ void drawTitleScreen(struct GameData* gameData, const Resources* resources)
 
 	drawSprite(gameData->numPlayers == 1 ? 32 : 128,
 			   123,
-			   &g_8x8SpriteAttributes,
-			   cursorSpriteTileIndex);
+			   &cursorSprite);
 }
 
 void clearBackground()

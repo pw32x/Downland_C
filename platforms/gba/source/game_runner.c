@@ -135,8 +135,8 @@ void GameRunner_Init(struct GameData* gameData, const Resources* resources)
     m_drawRoomFunctions[WIPE_TRANSITION_ROOM_INDEX] = drawTransition;//drawWipeTransition;
     m_drawRoomFunctions[GET_READY_ROOM_INDEX] = drawGetReadyScreen;
 
-	//extern Room transitionRoom;
-	//g_rooms[WIPE_TRANSITION_ROOM_INDEX] = &transitionRoom;
+	extern Room transitionRoom;
+	g_rooms[WIPE_TRANSITION_ROOM_INDEX] = &transitionRoom;
 
 	Game_Init(gameData, resources);
 }
@@ -199,6 +199,16 @@ void drawChamber(struct GameData* gameData, const Resources* resources)
 
     //dl_u16 currentTimer = playerData->roomTimers[playerData->currentRoom->roomNumber];
 
+    // draw ball
+    if (gameData->ballData.enabled)
+    {
+        const BallData* ballData = &gameData->ballData;
+
+		drawSprite((ballData->x >> 8) << 1,
+				   ballData->y >> 8,
+				   &ballSprite); // ((dl_s8)ballData->fallStateCounter < 0));
+    }
+
     const Pickup* pickups = playerData->gamePickups[gameData->currentRoom->roomNumber];
     for (int loop = 0; loop < NUM_PICKUPS_PER_ROOM; loop++)
     {
@@ -212,15 +222,7 @@ void drawChamber(struct GameData* gameData, const Resources* resources)
         pickups++;
     }
 
-    // draw ball
-    if (gameData->ballData.enabled)
-    {
-        const BallData* ballData = &gameData->ballData;
 
-		drawSprite((ballData->x >> 8) << 1,
-				   ballData->y >> 8,
-				   &ballSprite); // ((dl_s8)ballData->fallStateCounter < 0));
-    }
 }
 
 void drawTitleScreen(struct GameData* gameData, const Resources* resources)

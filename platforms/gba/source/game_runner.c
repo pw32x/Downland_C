@@ -20,16 +20,22 @@ SpriteAttributes g_8x8SpriteAttributes;
 SpriteAttributes g_16x8SpriteAttributes;
 SpriteAttributes g_16x16SpriteAttributes;
 
+dl_s16 g_scrollx;
+dl_s16 g_scrolly;
+
+
 typedef struct
 {
 	const SpriteAttributes* spriteAttributes;
 	dl_u16 tileIndex;
+	dl_u8 tilesPerFrame;
 } GameSprite;
 
 GameSprite playerSprite;
 GameSprite dropsSprite;
 GameSprite cursorSprite;
 GameSprite ballSprite;
+GameSprite birdSprite;
 GameSprite keySprite;
 GameSprite diamondSprite;
 GameSprite moneyBagSprite;
@@ -45,10 +51,7 @@ void drawTransition(struct GameData* gameData, const Resources* resources);
 void drawWipeTransition(struct GameData* gameData, const Resources* resources);
 void drawGetReadyScreen(struct GameData* gameData, const Resources* resources);
 
-//m_playerSprite(resources->sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYER_SPRITE_COUNT),
 //m_playerSplatSprite(resources->sprite_playerSplat, PLAYER_SPLAT_SPRITE_WIDTH, PLAYER_SPLAT_SPRITE_ROWS, PLAYER_SPLAT_SPRITE_COUNT),
-//m_birdSprite(resources->sprites_bird, BIRD_SPRITE_WIDTH, BIRD_SPRITE_ROWS, BIRD_SPRITE_COUNT),
-
 
 //m_regenSprite(resources->sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYER_SPRITE_ROWS, REGEN_SPRITES),
 //m_characterFont(resources->characterFont, 8, 7, 39),
@@ -63,25 +66,36 @@ dl_u16 buildSpriteResource(GameSprite* gameSprite,
 						   dl_u8 spriteCount,
 						   dl_u16 tileIndex)
 {
-	dl_u8 convertedSprite[256];
+	dl_u8 convertedSprite[384];
 	memset(convertedSprite, 0, sizeof(convertedSprite));
-
-	convert1bppImageTo8bppCrtEffectImage(sprite,
-                                         convertedSprite,
-                                         width,
-                                         height,
-                                         CrtColor_Blue);
-
-	dl_u16 tileCount = convertToTiles(convertedSprite, 
-									  width, 
-									  height, 
-									  CHAR_BASE_BLOCK(4),
-									  tileIndex * 64); // 64 bytes after the last sprite
 
 	gameSprite->spriteAttributes = spriteAttributes;
 	gameSprite->tileIndex = tileIndex;
 
-	return tileIndex + tileCount;
+	const dl_u8* spriteRunner = sprite;
+
+	gameSprite->tilesPerFrame = ((width + 7) / 8) * ((height + 7) / 8);
+
+
+	for (int loop = 0; loop < spriteCount; loop++)
+    {
+
+		convert1bppImageTo8bppCrtEffectImage(spriteRunner,
+											 convertedSprite,
+											 width,
+											 height,
+											 CrtColor_Blue);
+
+		tileIndex += convertToTiles(convertedSprite, 
+									width, 
+									height, 
+									CHAR_BASE_BLOCK(4),
+									tileIndex * 64); // 64 bytes after the last sprite
+
+		spriteRunner += (width / 8) * height;
+	}
+
+	return tileIndex;
 }
 
 void GameRunner_Init(struct GameData* gameData, const Resources* resources)
@@ -108,6 +122,7 @@ void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 	tileIndex = buildSpriteResource(&playerSprite, &g_16x16SpriteAttributes, resources->sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYER_SPRITE_COUNT, tileIndex);
 	tileIndex = buildSpriteResource(&cursorSprite, &g_8x8SpriteAttributes, (dl_u8*)&cursorSpriteRaw, 8, 1, 1, tileIndex);
 	tileIndex = buildSpriteResource(&ballSprite, &g_16x8SpriteAttributes, resources->sprites_bouncyBall, BALL_SPRITE_WIDTH, BALL_SPRITE_ROWS, BALL_SPRITE_COUNT, tileIndex);
+	tileIndex = buildSpriteResource(&birdSprite, &g_16x8SpriteAttributes, resources->sprites_bird, BIRD_SPRITE_WIDTH, BIRD_SPRITE_ROWS, BIRD_SPRITE_COUNT, tileIndex);
 	tileIndex = buildSpriteResource(&keySprite, &g_16x16SpriteAttributes, resources->sprite_key, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, tileIndex);
 	tileIndex = buildSpriteResource(&diamondSprite, &g_16x16SpriteAttributes, resources->sprite_diamond, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, tileIndex);
 	tileIndex = buildSpriteResource(&moneyBagSprite, &g_16x16SpriteAttributes, resources->sprite_moneyBag, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, tileIndex);
@@ -115,9 +130,12 @@ void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 	//playerSpriteTileIndex = 4;
 	//cursorSpriteTileIndex = 12;
 
-	g_pickUpSprites[0] = &keySprite;
-	g_pickUpSprites[1] = &diamondSprite;
-	g_pickUpSprites[2] = &moneyBagSprite;
+	g_pickUpSprites[0] = &diamondSprite;
+	g_pickUpSprites[1] = &moneyBagSprite;
+	g_pickUpSprites[2] = &keySprite;
+
+	g_scrollx = 7;
+	g_scrolly = 13;
 
 	// room draw setup
     m_drawRoomFunctions[0] = drawChamber;
@@ -148,6 +166,9 @@ void GameRunner_Update(struct GameData* gameData, const Resources* resources)
 
 void GameRunner_Draw(struct GameData* gameData, const Resources* resources)
 {
+	BG_OFFSET[0].x = g_scrollx;
+	BG_OFFSET[0].y = g_scrolly;
+
 	g_oamIndex = 0;
 
 	m_drawRoomFunctions[gameData->currentRoom->roomNumber](gameData, resources);
@@ -160,11 +181,15 @@ void GameRunner_Draw(struct GameData* gameData, const Resources* resources)
 	}
 }
 
-void drawSprite(dl_u16 x, dl_u16 y, const GameSprite* gameSprite)
+void drawSprite(dl_u16 x, dl_u16 y, dl_u8 frame, const GameSprite* gameSprite)
 {
+	x -= g_scrollx;
+	y -= g_scrolly;
+	dl_u16 tileIndex = gameSprite->tileIndex + (frame * gameSprite->tilesPerFrame);
+
 	OAM[g_oamIndex].attr0 = gameSprite->spriteAttributes->attr0 | (y & 0xff);
 	OAM[g_oamIndex].attr1 = gameSprite->spriteAttributes->attr1 | (x & 0x1ff);
-	OAM[g_oamIndex].attr2 = gameSprite->spriteAttributes->attr2 | (gameSprite->tileIndex << 1);
+	OAM[g_oamIndex].attr2 = gameSprite->spriteAttributes->attr2 | (tileIndex << 1);
 
 	g_oamIndex++;
 }
@@ -181,6 +206,7 @@ void drawDrops(const GameData* gameData)
         {
 			drawSprite((dropsRunner->x << 1), 
 					   (dropsRunner->y >> 8), 
+					   0,
 					   &dropsSprite);
         }
 
@@ -192,10 +218,13 @@ void drawDrops(const GameData* gameData)
 
 void drawChamber(struct GameData* gameData, const Resources* resources)
 {
+	g_scrollx = 7;
+	g_scrolly = 22;
+
+	PlayerData* playerData = gameData->currentPlayerData;
+	dl_u16 currentTimer = playerData->roomTimers[playerData->currentRoom->roomNumber];
+
 	drawDrops(gameData);
-
-
-    const PlayerData* playerData = gameData->currentPlayerData;
 
     //dl_u16 currentTimer = playerData->roomTimers[playerData->currentRoom->roomNumber];
 
@@ -206,9 +235,50 @@ void drawChamber(struct GameData* gameData, const Resources* resources)
 
 		drawSprite((ballData->x >> 8) << 1,
 				   ballData->y >> 8,
-				   &ballSprite); // ((dl_s8)ballData->fallStateCounter < 0));
+				   (dl_s8)ballData->fallStateCounter < 0,
+				   &ballSprite);
     }
 
+    // draw bird
+    if (gameData->birdData.state && currentTimer == 0)
+    {
+        const BirdData* birdData = &gameData->birdData;
+
+		drawSprite((birdData->x >> 8) << 1,
+				   birdData->y >> 8,
+				   birdData->animationFrame,
+				   &birdSprite);
+    }
+
+	// draw player
+    switch (playerData->state)
+    {
+		/*
+    case PLAYER_STATE_SPLAT: 
+        m_splatSprite.draw((playerData->x >> 8) << 1,
+                            (playerData->y >> 8) + 7,
+                            playerData->splatFrameNumber);
+        break;
+    case PLAYER_STATE_REGENERATION: 
+
+        if (!m_gameData.paused)
+        {
+            m_regenSpriteIndex = dl_rand() % m_regenSprite.getNumFrames();
+        }
+
+        m_regenSprite.draw((playerData->x >> 8) << 1,
+                            playerData->y >> 8,
+                            m_regenSpriteIndex + (playerData->facingDirection ? 0 : m_regenSprite.getNumFrames())); // PLAYER_SPRITE_LEFT_STAND
+        break;
+		*/
+    default: 
+        drawSprite((playerData->x >> 8) << 1,
+                   playerData->y >> 8,
+                   playerData->currentSpriteNumber,
+				   &playerSprite);
+    }
+
+	// draw pickups
     const Pickup* pickups = playerData->gamePickups[gameData->currentRoom->roomNumber];
     for (int loop = 0; loop < NUM_PICKUPS_PER_ROOM; loop++)
     {
@@ -216,6 +286,7 @@ void drawChamber(struct GameData* gameData, const Resources* resources)
 		{
 			drawSprite(pickups->x << 1,
 					   pickups->y,
+					   0,
 					   g_pickUpSprites[pickups->type]); // ((dl_s8)ballData->fallStateCounter < 0));
         }
 
@@ -227,10 +298,14 @@ void drawChamber(struct GameData* gameData, const Resources* resources)
 
 void drawTitleScreen(struct GameData* gameData, const Resources* resources)
 {
+	BG_OFFSET[0].x = 7; 
+	BG_OFFSET[0].y = 13;
+
 	drawDrops(gameData);
 
 	drawSprite(gameData->numPlayers == 1 ? 32 : 128,
 			   123,
+			   0,
 			   &cursorSprite);
 }
 

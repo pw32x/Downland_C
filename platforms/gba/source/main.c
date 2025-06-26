@@ -63,7 +63,7 @@ const unsigned short spritePalette[4] =
 void updateControls(JoystickState* joystickState)
 {
 	scanKeys();
-	u16 keys = keysDown();
+	u16 keys = keysHeld();
 
     // Check D-Pad
     bool leftDown = keys & KEY_LEFT;

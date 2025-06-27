@@ -1103,6 +1103,7 @@ void Player_PerformCollisions(struct GameData* gameDataStruct,
 
 					playerData->doorStateData[doorIndex] |= playerData->playerMask;
 
+#ifndef DISABLE_DOOR_DRAWING
 					// check if we need to activate a door in the room
 					const DoorInfoData* doorInfoData = &resources->roomResources[roomNumber].doorInfoData;
 					const DoorInfo* doorInfoRunner = doorInfoData->doorInfos;
@@ -1118,13 +1119,13 @@ void Player_PerformCollisions(struct GameData* gameDataStruct,
 										resources->bitShiftedSprites_door, 
 										gameData->framebuffer, 
 										gameData->cleanBackground,
-										TRUE /*draw on framebuffer*/);
+										TRUE ); //draw on framebuffer
 							}
 						}
 
 						doorInfoRunner++;
 					}
-
+#endif
 					break;
 				}
 				case PICKUP_TYPE_DIAMOND:

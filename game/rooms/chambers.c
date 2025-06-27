@@ -98,6 +98,7 @@ void chamber_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resourc
 				   resources,
 				   gameData->cleanBackground);
 
+#ifndef DISABLE_DOOR_DRAWING
 	// draw active doors in the room
 	const DoorInfoData* doorInfoData = &resources->roomResources[roomNumber].doorInfoData;
 	const DoorInfo* doorInfoRunner = doorInfoData->doorInfos;
@@ -116,6 +117,7 @@ void chamber_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resourc
 
 		doorInfoRunner++;
 	}
+#endif
 }
 
 void chamber_init(Room* room, GameData* gameData, const Resources* resources)

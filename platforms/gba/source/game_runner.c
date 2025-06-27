@@ -39,6 +39,7 @@ GameSprite birdSprite;
 GameSprite keySprite;
 GameSprite diamondSprite;
 GameSprite moneyBagSprite;
+GameSprite doorSprite;
 
 const GameSprite* g_pickUpSprites[3];
 
@@ -51,8 +52,12 @@ void drawTransition(struct GameData* gameData, const Resources* resources);
 void drawWipeTransition(struct GameData* gameData, const Resources* resources);
 void drawGetReadyScreen(struct GameData* gameData, const Resources* resources);
 
-//m_playerSplatSprite(resources->sprite_playerSplat, PLAYER_SPLAT_SPRITE_WIDTH, PLAYER_SPLAT_SPRITE_ROWS, PLAYER_SPLAT_SPRITE_COUNT),
+// door
+// player icon
+// regen
+// character font
 
+//m_playerSplatSprite(resources->sprite_playerSplat, PLAYER_SPLAT_SPRITE_WIDTH, PLAYER_SPLAT_SPRITE_ROWS, PLAYER_SPLAT_SPRITE_COUNT),
 //m_regenSprite(resources->sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYER_SPRITE_ROWS, REGEN_SPRITES),
 //m_characterFont(resources->characterFont, 8, 7, 39),
 
@@ -126,6 +131,7 @@ void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 	tileIndex = buildSpriteResource(&keySprite, &g_16x16SpriteAttributes, resources->sprite_key, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, tileIndex);
 	tileIndex = buildSpriteResource(&diamondSprite, &g_16x16SpriteAttributes, resources->sprite_diamond, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, tileIndex);
 	tileIndex = buildSpriteResource(&moneyBagSprite, &g_16x16SpriteAttributes, resources->sprite_moneyBag, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, tileIndex);
+	tileIndex = buildSpriteResource(&doorSprite, &g_16x16SpriteAttributes, resources->sprite_door, DOOR_SPRITE_WIDTH, DOOR_SPRITE_ROWS, 1, tileIndex);
 
 	//playerSpriteTileIndex = 4;
 	//cursorSpriteTileIndex = 12;
@@ -261,7 +267,7 @@ void drawChamber(struct GameData* gameData, const Resources* resources)
         break;
     case PLAYER_STATE_REGENERATION: 
 
-        if (!m_gameData.paused)
+        if (!gameData->paused)
         {
             m_regenSpriteIndex = dl_rand() % m_regenSprite.getNumFrames();
         }
@@ -287,13 +293,36 @@ void drawChamber(struct GameData* gameData, const Resources* resources)
 			drawSprite(pickups->x << 1,
 					   pickups->y,
 					   0,
-					   g_pickUpSprites[pickups->type]); // ((dl_s8)ballData->fallStateCounter < 0));
+					   g_pickUpSprites[pickups->type]);
         }
 
         pickups++;
     }
 
+	// draw doors
+    int roomNumber = gameData->currentRoom->roomNumber;
+	const DoorInfoData* doorInfoData = &resources->roomResources[roomNumber].doorInfoData;
+	const DoorInfo* doorInfoRunner = doorInfoData->doorInfos;
 
+	for (dl_u8 loop = 0; loop < doorInfoData->drawInfosCount; loop++)
+	{
+        if (!(playerData->doorStateData[doorInfoRunner->globalDoorIndex] & playerData->playerMask))
+            continue;
+
+        int xPosition = doorInfoRunner->x;
+	    // adjust the door position, as per the original game.
+	    if (xPosition > 40) 
+		    xPosition += 7;
+	    else
+		    xPosition -= 4;
+
+		drawSprite(xPosition << 1,
+				   doorInfoRunner->y,
+				   0,
+				   &doorSprite);
+
+		doorInfoRunner++;
+	}
 }
 
 void drawTitleScreen(struct GameData* gameData, const Resources* resources)

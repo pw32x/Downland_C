@@ -27,9 +27,14 @@ SpriteAttributes g_textSpriteAttributes;
 SpriteAttributes g_playerIconSpriteAttributes;
 SpriteAttributes g_32x16SpriteAttributes;
 
-dl_s16 g_scrollx;
-dl_s16 g_scrolly;
+#define SCROLL_MAX_X 16
+#define SCROLL_MAX_Y 32
 
+dl_s16 g_scrollX;
+dl_s16 g_scrollY;
+
+dl_u16 g_oldPlayerX = 0;
+dl_u16 g_oldPlayerY = 0;
 
 typedef struct
 {
@@ -372,8 +377,8 @@ void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 	g_pickUpSprites[1] = &moneyBagSprite;
 	g_pickUpSprites[2] = &keySprite;
 
-	g_scrollx = 7;
-	g_scrolly = 13;
+	g_scrollX = 7;
+	g_scrollY = 13;
 
 	// room draw setup
     m_drawRoomFunctions[0] = drawChamber;
@@ -403,6 +408,9 @@ void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 
 void GameRunner_ChangedRoomCallback(const struct GameData* gameData, dl_u8 roomNumber, dl_s8 transitionType)
 {
+	g_oldPlayerX = 0xffff;
+	g_oldPlayerY = 0xffff;
+
 	dl_u32 mode = MODE_0 | BG1_ON | MODE_0 | OBJ_ENABLE | OBJ_1D_MAP;
 
 	if (roomNumber != TITLESCREEN_ROOM_INDEX &&
@@ -422,12 +430,12 @@ void GameRunner_Update(struct GameData* gameData, const Resources* resources)
 
 void GameRunner_Draw(struct GameData* gameData, const Resources* resources)
 {
-	BG_OFFSET[GAME_BACKGROUND_INDEX].x = g_scrollx;
-	BG_OFFSET[GAME_BACKGROUND_INDEX].y = g_scrolly;
-
 	g_oamIndex = 0;
 
 	m_drawRoomFunctions[gameData->currentRoom->roomNumber](gameData, resources);
+
+	BG_OFFSET[GAME_BACKGROUND_INDEX].x = g_scrollX;
+	BG_OFFSET[GAME_BACKGROUND_INDEX].y = g_scrollY;
 
 	for (int i = g_oamIndex; i < 128; i++) 
 	{
@@ -440,8 +448,8 @@ void GameRunner_Draw(struct GameData* gameData, const Resources* resources)
 // draw sprite, affected by scrolling
 void drawSprite(dl_u16 x, dl_u16 y, dl_u8 frame, const GameSprite* gameSprite)
 {
-	x -= g_scrollx;
-	y -= g_scrolly;
+	x -= g_scrollX;
+	y -= g_scrollY;
 	dl_u16 tileIndex = gameSprite->tileIndex + (frame * gameSprite->tilesPerFrame);
 
 	OAM[g_oamIndex].attr0 = gameSprite->spriteAttributes->attr0 | (y & 0xff);
@@ -519,6 +527,57 @@ void drawUIPlayerLives(const PlayerData* playerData)
     }
 }
 
+void updateScroll(dl_u16 playerX, dl_u16 playerY)
+{
+	if (g_oldPlayerX == 0xffff)
+	{
+		g_oldPlayerX = playerX;
+		g_oldPlayerY = playerY;
+
+		g_scrollX = playerX > 128 ? SCROLL_MAX_X : 0;
+		g_scrollY = playerY > 96 ? SCROLL_MAX_Y : 0;
+	}
+
+	dl_u16 screenX = playerX - g_scrollX;
+	dl_u16 screenY = playerY - g_scrollY;
+	
+	dl_s16 deltaX = (dl_s16)playerX - (dl_s16)g_oldPlayerX;
+	dl_s16 deltaY = (dl_s16)playerY - (dl_s16)g_oldPlayerY;
+	
+	if (deltaX < 0 && screenX < 100)
+	{
+		g_scrollX += deltaX;
+	}
+	
+	if (deltaX > 0 && screenX > 140)
+	{
+		g_scrollX += deltaX;
+	}
+
+	if (deltaY < 0 && screenY < 60)
+	{
+		g_scrollY += deltaY;
+	}
+	
+	if (deltaY > 0 && screenY > 100)
+	{
+		g_scrollY += deltaY;
+	}
+	
+	if (g_scrollX < 0)
+		g_scrollX = 0;
+	if (g_scrollX > SCROLL_MAX_X)
+		g_scrollX = SCROLL_MAX_X;
+
+	if (g_scrollY < 0)
+		g_scrollY = 0;
+	if (g_scrollY > SCROLL_MAX_Y)
+		g_scrollY = SCROLL_MAX_Y;
+	
+	g_oldPlayerX = playerX;
+	g_oldPlayerY = playerY;
+}
+
 void drawChamber(struct GameData* gameData, const Resources* resources)
 {
 	PlayerData* playerData = gameData->currentPlayerData;
@@ -526,8 +585,7 @@ void drawChamber(struct GameData* gameData, const Resources* resources)
 	dl_u16 playerX = (playerData->x >> 8) << 1;
 	dl_u16 playerY = (playerData->y >> 8);
 
-	g_scrollx = (dl_u16)(16.0f * ((float)playerX / 256));
-	g_scrolly = (dl_u16)(32.0f * ((float)playerY / 192));
+	updateScroll(playerX, playerY);
 
 	dl_u16 currentTimer = playerData->roomTimers[playerData->currentRoom->roomNumber];
 
@@ -632,8 +690,8 @@ void drawChamber(struct GameData* gameData, const Resources* resources)
 
 void drawTitleScreen(struct GameData* gameData, const Resources* resources)
 {
-	g_scrollx = 7;
-	g_scrolly = 13;
+	g_scrollX = 7;
+	g_scrollY = 13;
 
 	drawDrops(gameData);
 

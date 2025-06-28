@@ -2,10 +2,12 @@
 
 #include <gba_sprites.h>
 #include <gba_video.h>
+#include <gba_systemcalls.h>
 
 #include <string.h>
 
 #include "image_utils.h"
+#include "gba_defines.h"
 
 #include "..\..\..\game\drops_manager.h"
 #include "..\..\..\game\draw_utils.h"
@@ -20,6 +22,7 @@ typedef struct
 SpriteAttributes g_8x8SpriteAttributes;
 SpriteAttributes g_16x8SpriteAttributes;
 SpriteAttributes g_16x16SpriteAttributes;
+SpriteAttributes g_textSpriteAttributes;
 
 dl_s16 g_scrollx;
 dl_s16 g_scrolly;
@@ -43,6 +46,7 @@ GameSprite moneyBagSprite;
 GameSprite doorSprite;
 GameSprite regenSprite;
 GameSprite splatSprite;
+GameSprite characterFont;
 
 const GameSprite* g_pickUpSprites[3];
 
@@ -55,15 +59,16 @@ void drawTransition(struct GameData* gameData, const Resources* resources);
 void drawWipeTransition(struct GameData* gameData, const Resources* resources);
 void drawGetReadyScreen(struct GameData* gameData, const Resources* resources);
 
-// status bar area
-// player icons
 // character font
+// player icons
 // sound
 // scrolling
 
 //m_characterFont(resources->characterFont, 8, 7, 39),
 
 dl_u16 g_oamIndex = 0;
+
+dl_u16 g_backgroundTileOffset;
 
 dl_u16 buildSpriteResource(GameSprite* gameSprite,
 						   const SpriteAttributes* spriteAttributes,
@@ -149,21 +154,54 @@ void updateRegenSprite(const Resources* resources, dl_u8 currentPlayerSpriteNumb
 				   regenSprite.tileIndex * 64);
 }
 
+void buildUI()
+{
+	// build the background for score and lives
+	dl_u16* vramTileAddr = (dl_u16*)VRAM;
+
+	// copy empty tile
+	dl_u8 tile[32];
+	memset(tile, 0x0, sizeof(tile));
+	CpuFastSet(tile, vramTileAddr, COPY32 | 8);
+
+	// build and copy UI tile
+	vramTileAddr += 16;
+
+	memset(tile, 0x55, sizeof(tile));
+	for (int loop = 28; loop < 32; loop++)
+		tile[loop] = 0x15;
+
+	CpuFastSet(tile, vramTileAddr, COPY32 | 8);
+
+	g_backgroundTileOffset = 2;
+
+	// build tilemap for UI bar
+	dl_u16* vramTileMapAddr = (dl_u16*)MAP_BASE_ADR(UI_TILEMAP_INDEX);
+	for (int loop = 0; loop < 30; loop++)
+	{
+		*vramTileMapAddr = 1;
+		vramTileMapAddr++;
+	}
+}
+
 void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 {
 	// setup sprite attributes
 	g_8x8SpriteAttributes.attr0 = ATTR0_COLOR_256 | ATTR0_SQUARE;
 	g_8x8SpriteAttributes.attr1 = ATTR1_SIZE_8;
-	g_8x8SpriteAttributes.attr2 = 0;
+	g_8x8SpriteAttributes.attr2 = OBJ_PRIORITY(1);
 
 	g_16x16SpriteAttributes.attr0 = ATTR0_COLOR_256 | ATTR0_SQUARE;
 	g_16x16SpriteAttributes.attr1 = ATTR1_SIZE_16;
-	g_16x16SpriteAttributes.attr2 = 0;
+	g_16x16SpriteAttributes.attr2 = OBJ_PRIORITY(1);
 
 	g_16x8SpriteAttributes.attr0 = ATTR0_COLOR_256 | ATTR0_WIDE;
 	g_16x8SpriteAttributes.attr1 = ATTR1_SIZE_8;
-	g_16x8SpriteAttributes.attr2 = 0;
+	g_16x8SpriteAttributes.attr2 = OBJ_PRIORITY(1);
 
+	g_textSpriteAttributes.attr0 = ATTR0_COLOR_256 | ATTR0_SQUARE;
+	g_textSpriteAttributes.attr1 = ATTR1_SIZE_8;
+	g_textSpriteAttributes.attr2 = 0;
 
 	dl_u32 cursorSpriteRaw = 0xffffffff;
 
@@ -179,6 +217,7 @@ void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 	tileIndex = buildSpriteResource(&moneyBagSprite, &g_16x16SpriteAttributes, resources->sprite_moneyBag, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, tileIndex);
 	tileIndex = buildSpriteResource(&doorSprite, &g_16x16SpriteAttributes, resources->sprite_door, DOOR_SPRITE_WIDTH, DOOR_SPRITE_ROWS, 1, tileIndex);
 	tileIndex = buildEmptySpriteResource(&regenSprite, &g_16x16SpriteAttributes, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, 1, tileIndex);
+	tileIndex = buildSpriteResource(&characterFont, &g_textSpriteAttributes, resources->characterFont, 8, 7, 39, tileIndex);
 
 	// load the splat tile twice to reserve the tile memory
 	dl_u16 splatTileIndex = tileIndex;
@@ -218,6 +257,8 @@ void GameRunner_Init(struct GameData* gameData, const Resources* resources)
     m_drawRoomFunctions[WIPE_TRANSITION_ROOM_INDEX] = drawTransition;//drawWipeTransition;
     m_drawRoomFunctions[GET_READY_ROOM_INDEX] = drawGetReadyScreen;
 
+	buildUI();
+
 	extern Room transitionRoom;
 	g_rooms[WIPE_TRANSITION_ROOM_INDEX] = &transitionRoom;
 
@@ -231,8 +272,8 @@ void GameRunner_Update(struct GameData* gameData, const Resources* resources)
 
 void GameRunner_Draw(struct GameData* gameData, const Resources* resources)
 {
-	BG_OFFSET[0].x = g_scrollx;
-	BG_OFFSET[0].y = g_scrolly;
+	BG_OFFSET[GAME_BACKGROUND_INDEX].x = g_scrollx;
+	BG_OFFSET[GAME_BACKGROUND_INDEX].y = g_scrolly;
 
 	g_oamIndex = 0;
 
@@ -251,6 +292,17 @@ void drawSprite(dl_u16 x, dl_u16 y, dl_u8 frame, const GameSprite* gameSprite)
 	x -= g_scrollx;
 	y -= g_scrolly;
 	dl_u16 tileIndex = gameSprite->tileIndex + (frame * gameSprite->tilesPerFrame);
+
+	OAM[g_oamIndex].attr0 = gameSprite->spriteAttributes->attr0 | (y & 0xff);
+	OAM[g_oamIndex].attr1 = gameSprite->spriteAttributes->attr1 | (x & 0x1ff);
+	OAM[g_oamIndex].attr2 = gameSprite->spriteAttributes->attr2 | (tileIndex << 1);
+
+	g_oamIndex++;
+}
+
+void drawCharacter(dl_u16 x, dl_u16 y, dl_u8 character, const GameSprite* gameSprite)
+{
+	dl_u16 tileIndex = gameSprite->tileIndex + (character * gameSprite->tilesPerFrame);
 
 	OAM[g_oamIndex].attr0 = gameSprite->spriteAttributes->attr0 | (y & 0xff);
 	OAM[g_oamIndex].attr1 = gameSprite->spriteAttributes->attr1 | (x & 0x1ff);
@@ -279,7 +331,17 @@ void drawDrops(const GameData* gameData)
     }
 }
 
+void drawUIText(const dl_u8* text, dl_u16 x, dl_u16 y)
+{
+    // for each character
+    while (*text != 0xff)
+    {
+		drawCharacter(x, y, *text, &characterFont);
 
+        text++;
+        x += 8;
+    }
+}
 
 void drawChamber(struct GameData* gameData, const Resources* resources)
 {
@@ -382,12 +444,16 @@ void drawChamber(struct GameData* gameData, const Resources* resources)
 
 		doorInfoRunner++;
 	}
+
+    // draw text
+	drawUIText(gameData->string_timer, 24 * 8, 0);
+	drawUIText(playerData->scoreString, 8, 0); 
 }
 
 void drawTitleScreen(struct GameData* gameData, const Resources* resources)
 {
-	BG_OFFSET[0].x = 7; 
-	BG_OFFSET[0].y = 13;
+	BG_OFFSET[GAME_BACKGROUND_INDEX].x = 7; 
+	BG_OFFSET[GAME_BACKGROUND_INDEX].y = 13;
 
 	drawDrops(gameData);
 
@@ -402,14 +468,15 @@ void clearBackground()
 
 }
 
-void drawCleanBackground(dl_u8* cleanBackground)
+void drawCleanBackground(dl_u8* cleanBackground, dl_u16 tileOffset)
 {
 	dl_u16* vramTileAddr = (dl_u16*)VRAM;
-	dl_u16* vramTileMapAddr = (dl_u16*)MAP_BASE_ADR(31);
+	dl_u16* vramTileMapAddr = (dl_u16*)MAP_BASE_ADR(GAME_TILEMAP_INDEX);
 
 	convertBackgroundToVRAM16(cleanBackground,
                               vramTileAddr,
 							  vramTileMapAddr,
+							  tileOffset,
                               FRAMEBUFFER_WIDTH,
                               FRAMEBUFFER_HEIGHT,
                               CrtColor_Blue);
@@ -423,7 +490,7 @@ void drawTransition(struct GameData* gameData, const Resources* resources)
     }
     else if (!gameData->transitionInitialDelay)
     {
-        drawCleanBackground(gameData->cleanBackground);
+        drawCleanBackground(gameData->cleanBackground, g_backgroundTileOffset);
     }
 }
 

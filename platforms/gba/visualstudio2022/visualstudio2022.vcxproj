@@ -184,6 +184,7 @@
     <ClInclude Include="..\..\..\game\string_utils.h" />
     <ClInclude Include="..\out\downland_rom.h" />
     <ClInclude Include="..\source\game_runner.h" />
+    <ClInclude Include="..\source\gba_defines.h" />
     <ClInclude Include="..\source\image_utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

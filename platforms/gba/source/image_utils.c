@@ -218,6 +218,7 @@ void convertBackgroundToVRAM256(const dl_u8* originalImage,
 void convertBackgroundToVRAM16(const dl_u8* originalImage,
                                dl_u16* vramTileAddr,
                                dl_u16* vramTileMapAddr,
+                               dl_u16 tileOffset,
                                dl_u16 width,
                                dl_u16 height,
                                enum CrtColor crtColor) 
@@ -235,6 +236,9 @@ void convertBackgroundToVRAM16(const dl_u8* originalImage,
 
     dl_u8 tile[32]; // 16 colors
     memset(tile, 0, sizeof(tile));
+
+    vramTileAddr += (tileOffset * 16);
+
     CpuFastSet(tile, vramTileAddr, COPY32 | 8);
 
     dl_u16 tileCounter = 1;
@@ -286,7 +290,7 @@ void convertBackgroundToVRAM16(const dl_u8* originalImage,
                 tileCounter++;
             }
 
-            vramTileMapAddr[tileX + (tileY * 32)] = tileIndex;            
+            vramTileMapAddr[tileX + (tileY * 32)] = tileIndex + tileOffset;            
         }
     }
 }

@@ -15,6 +15,7 @@
 
 #include "downland_rom.h"
 #include "game_runner.h"
+#include "gba_defines.h"
 
 GameData gameData;
 Resources resources;
@@ -50,6 +51,7 @@ const u16 backgroundPalette[] =
     RGB5(0,0,31),  // Blue
     RGB5(31,20,0), // Orange
     RGB5(31,31,31),// white
+	RGB5(0,0,0),   // Non transparent black
 };
 
 const unsigned short spritePalette[4] = 
@@ -128,7 +130,7 @@ int main()
 	//
 
 	volatile u16 *temppointer = BG_COLORS;
-	for (int i = 0; i < 4; i++) 
+	for (int i = 0; i < 5; i++) 
 	{
 		*temppointer++ = backgroundPalette[i];
 	}
@@ -139,15 +141,24 @@ int main()
     }
 
 	// set screen H and V scroll positions
-	BG_OFFSET[0].x = 0; BG_OFFSET[0].y = 0;
+	BG_OFFSET[UI_BACKGROUND_INDEX].x = 0; 
+	BG_OFFSET[UI_BACKGROUND_INDEX].y = 0;
+	BG_OFFSET[GAME_BACKGROUND_INDEX].x = 7; 
+	BG_OFFSET[GAME_BACKGROUND_INDEX].y = 13;
 
 	// set the screen base to 31 (0x600F800) and char base to 0 (0x6000000)
-	BGCTRL[0] = SCREEN_BASE(31) |
-				BG_16_COLOR |
-			    BG_SIZE_0;
+	BGCTRL[UI_BACKGROUND_INDEX] = SCREEN_BASE(UI_TILEMAP_INDEX) |
+								  BG_16_COLOR |
+								  BG_PRIORITY(0) |
+								  BG_SIZE_0;
+
+	BGCTRL[GAME_BACKGROUND_INDEX] = SCREEN_BASE(GAME_TILEMAP_INDEX) |
+									BG_16_COLOR |
+									BG_PRIORITY(1) |
+									BG_SIZE_0;
 
 	// screen mode & background to display
-	SetMode( MODE_0 | BG0_ON | MODE_0 | OBJ_ENABLE | OBJ_1D_MAP);
+	SetMode( MODE_0 | BG0_ON | BG1_ON | MODE_0 | OBJ_ENABLE | OBJ_1D_MAP);
 
 	// init the OAM 
 	for (int i = 0; i < 128; i++) 

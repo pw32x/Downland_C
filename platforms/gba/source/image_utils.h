@@ -31,6 +31,7 @@ void convertBackgroundToVRAM256(const dl_u8* originalImage,
 void convertBackgroundToVRAM16(const dl_u8* originalImage,
                                dl_u16* vramTileAddr,
                                dl_u16* vramTileMapAddr,
+                               dl_u16 tileOffset,
                                dl_u16 width,
                                dl_u16 height,
                                enum CrtColor crtColor);

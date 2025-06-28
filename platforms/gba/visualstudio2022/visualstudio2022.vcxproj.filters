@@ -284,5 +284,8 @@
     <ClInclude Include="..\source\game_runner.h">
       <Filter>source</Filter>
     </ClInclude>
+    <ClInclude Include="..\source\gba_defines.h">
+      <Filter>source</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

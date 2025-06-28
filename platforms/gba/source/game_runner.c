@@ -8,6 +8,7 @@
 #include "image_utils.h"
 
 #include "..\..\..\game\drops_manager.h"
+#include "..\..\..\game\draw_utils.h"
 
 typedef struct
 {
@@ -40,6 +41,7 @@ GameSprite keySprite;
 GameSprite diamondSprite;
 GameSprite moneyBagSprite;
 GameSprite doorSprite;
+GameSprite regenSprite;
 
 const GameSprite* g_pickUpSprites[3];
 
@@ -52,9 +54,10 @@ void drawTransition(struct GameData* gameData, const Resources* resources);
 void drawWipeTransition(struct GameData* gameData, const Resources* resources);
 void drawGetReadyScreen(struct GameData* gameData, const Resources* resources);
 
-// door
-// player icon
 // regen
+// splat
+// status bar area
+// player icons
 // character font
 
 //m_playerSplatSprite(resources->sprite_playerSplat, PLAYER_SPLAT_SPRITE_WIDTH, PLAYER_SPLAT_SPRITE_ROWS, PLAYER_SPLAT_SPRITE_COUNT),
@@ -103,6 +106,50 @@ dl_u16 buildSpriteResource(GameSprite* gameSprite,
 	return tileIndex;
 }
 
+
+dl_u16 buildEmptySpriteResource(GameSprite* gameSprite,
+								const SpriteAttributes* spriteAttributes,
+								dl_u8 width, 
+								dl_u8 height, 
+								dl_u8 spriteCount,
+								dl_u16 tileIndex)
+{
+	gameSprite->spriteAttributes = spriteAttributes;
+	gameSprite->tileIndex = tileIndex;
+	gameSprite->tilesPerFrame = ((width + 7) / 8) * ((height + 7) / 8);
+
+	tileIndex += gameSprite->tilesPerFrame;
+
+	return tileIndex;
+}
+
+void updateRegenSprite(const Resources* resources, dl_u8 currentPlayerSpriteNumber)
+{
+	const dl_u16 bufferSize = (PLAYER_SPRITE_WIDTH / 8) * PLAYER_SPRITE_ROWS;
+	dl_u8 convertedSprite[384];
+	dl_u8 regenBuffer[bufferSize];
+    memset(regenBuffer, 0, bufferSize);
+
+    const dl_u8* originalSprite = resources->sprites_player;
+    originalSprite += currentPlayerSpriteNumber * bufferSize;
+
+    drawSprite_16PixelsWide_static_IntoSpriteBuffer(originalSprite, 
+													PLAYER_SPRITE_ROWS,
+													regenBuffer);
+
+	convert1bppImageTo8bppCrtEffectImage(regenBuffer,
+										 convertedSprite,
+										 PLAYER_SPRITE_WIDTH,
+										 PLAYER_SPRITE_ROWS,
+										 CrtColor_Blue);
+
+	convertToTiles(convertedSprite, 
+				   PLAYER_SPRITE_WIDTH, 
+				   PLAYER_SPRITE_ROWS, 
+				   CHAR_BASE_BLOCK(4),
+				   regenSprite.tileIndex * 64);
+}
+
 void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 {
 	// setup sprite attributes
@@ -132,10 +179,7 @@ void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 	tileIndex = buildSpriteResource(&diamondSprite, &g_16x16SpriteAttributes, resources->sprite_diamond, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, tileIndex);
 	tileIndex = buildSpriteResource(&moneyBagSprite, &g_16x16SpriteAttributes, resources->sprite_moneyBag, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, tileIndex);
 	tileIndex = buildSpriteResource(&doorSprite, &g_16x16SpriteAttributes, resources->sprite_door, DOOR_SPRITE_WIDTH, DOOR_SPRITE_ROWS, 1, tileIndex);
-
-	//playerSpriteTileIndex = 4;
-	//cursorSpriteTileIndex = 12;
-
+	tileIndex = buildEmptySpriteResource(&regenSprite, &g_16x16SpriteAttributes, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, 1, tileIndex);
 	g_pickUpSprites[0] = &diamondSprite;
 	g_pickUpSprites[1] = &moneyBagSprite;
 	g_pickUpSprites[2] = &keySprite;
@@ -265,18 +309,19 @@ void drawChamber(struct GameData* gameData, const Resources* resources)
                             (playerData->y >> 8) + 7,
                             playerData->splatFrameNumber);
         break;
+		*/
     case PLAYER_STATE_REGENERATION: 
 
         if (!gameData->paused)
         {
-            m_regenSpriteIndex = dl_rand() % m_regenSprite.getNumFrames();
+			updateRegenSprite(resources, playerData->currentSpriteNumber);
         }
 
-        m_regenSprite.draw((playerData->x >> 8) << 1,
-                            playerData->y >> 8,
-                            m_regenSpriteIndex + (playerData->facingDirection ? 0 : m_regenSprite.getNumFrames())); // PLAYER_SPRITE_LEFT_STAND
+        drawSprite((playerData->x >> 8) << 1,
+                   playerData->y >> 8,
+                   0,
+				   &regenSprite);
         break;
-		*/
     default: 
         drawSprite((playerData->x >> 8) << 1,
                    playerData->y >> 8,

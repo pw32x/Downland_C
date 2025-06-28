@@ -11,6 +11,7 @@
 
 #include "..\..\..\game\drops_manager.h"
 #include "..\..\..\game\draw_utils.h"
+#include "..\..\..\game\rooms\chambers.h"
 
 typedef struct
 {
@@ -23,6 +24,7 @@ SpriteAttributes g_8x8SpriteAttributes;
 SpriteAttributes g_16x8SpriteAttributes;
 SpriteAttributes g_16x16SpriteAttributes;
 SpriteAttributes g_textSpriteAttributes;
+SpriteAttributes g_playerIconSpriteAttributes;
 
 dl_s16 g_scrollx;
 dl_s16 g_scrolly;
@@ -47,6 +49,8 @@ GameSprite doorSprite;
 GameSprite regenSprite;
 GameSprite splatSprite;
 GameSprite characterFont;
+GameSprite playerIconSprite;
+GameSprite playerIconSpriteRegen;
 
 const GameSprite* g_pickUpSprites[3];
 
@@ -102,7 +106,7 @@ dl_u16 buildSpriteResource(GameSprite* gameSprite,
 									width, 
 									height, 
 									CHAR_BASE_BLOCK(4),
-									tileIndex * 64); // 64 bytes after the last sprite
+									tileIndex * 64);
 
 		spriteRunner += (width / 8) * height;
 	}
@@ -138,7 +142,7 @@ dl_u16 buildTextResource(GameSprite* gameSprite,
 											 height,
 											 CrtColor_Blue);
 
-		// convert the 0 pixel indexes to 4
+		// convert the 0 pixel indexes to non-transparently black at index 4
 		// convert the white pixels to blue
 		for (int loop2 = 0; loop2 < 64; loop2++)
 		{
@@ -148,6 +152,7 @@ dl_u16 buildTextResource(GameSprite* gameSprite,
 				convertedSprite[loop2] = 1;
 		}
 
+		// add a dotted line at the bottom
 		for (int loop2 = 56; loop2 < 64; loop2 += 2)
 		{
 			convertedSprite[loop2] = 4;
@@ -158,7 +163,7 @@ dl_u16 buildTextResource(GameSprite* gameSprite,
 									width, 
 									height, 
 									CHAR_BASE_BLOCK(4),
-									tileIndex * 64); // 64 bytes after the last sprite
+									tileIndex * 64);
 
 		spriteRunner += (width / 8) * height;
 	}
@@ -166,6 +171,62 @@ dl_u16 buildTextResource(GameSprite* gameSprite,
 	return tileIndex;
 }
 
+dl_u16 buildPlayerIconResource(GameSprite* gameSprite,
+							   const SpriteAttributes* spriteAttributes,
+							   const dl_u8* sprite, 
+							   dl_u8 width, 
+							   dl_u8 height, 
+							   dl_u8 clipHeight,
+							   dl_u8 spriteCount,
+							   dl_u16 tileIndex)
+{
+	// use the player sprite but only the top part
+
+	dl_u8 convertedSprite[256];
+	memset(convertedSprite, 0, sizeof(convertedSprite));
+
+	gameSprite->spriteAttributes = spriteAttributes;
+	gameSprite->tileIndex = tileIndex;
+
+	const dl_u8* spriteRunner = sprite;
+
+	gameSprite->tilesPerFrame = ((width + 7) / 8) * ((clipHeight + 7) / 8);
+
+
+	for (int loop = 0; loop < spriteCount; loop++)
+    {
+
+		convert1bppImageTo8bppCrtEffectImage(spriteRunner,
+											 convertedSprite,
+											 width,
+											 height,
+											 CrtColor_Blue);
+
+		// convert the 0 pixel indexes to non-transparently black at index 4
+		for (int loop2 = 0; loop2 < 256; loop2++)
+		{
+			if (convertedSprite[loop2] == 0)
+				convertedSprite[loop2] = 4;
+		}
+
+		// add a dotted line at the bottom
+		for (int loop2 = 112; loop2 < 128; loop2 += 2)
+		{
+			convertedSprite[loop2] = 4;
+			convertedSprite[loop2 + 1] = 1;
+		}
+
+		tileIndex += convertToTiles(convertedSprite, 
+									width, 
+									clipHeight, 
+									CHAR_BASE_BLOCK(4),
+									tileIndex * 64);
+
+		spriteRunner += (width / 8) * height;
+	}
+
+	return tileIndex;
+}
 
 dl_u16 buildEmptySpriteResource(GameSprite* gameSprite,
 								const SpriteAttributes* spriteAttributes,
@@ -259,6 +320,10 @@ void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 	g_textSpriteAttributes.attr1 = ATTR1_SIZE_8;
 	g_textSpriteAttributes.attr2 = 0;
 
+	g_playerIconSpriteAttributes.attr0 = ATTR0_COLOR_256 | ATTR0_WIDE;
+	g_playerIconSpriteAttributes.attr1 = ATTR1_SIZE_8;
+	g_playerIconSpriteAttributes.attr2 = 0;
+
 	dl_u32 cursorSpriteRaw = 0xffffffff;
 
 	// load tile resources
@@ -274,6 +339,7 @@ void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 	tileIndex = buildSpriteResource(&doorSprite, &g_16x16SpriteAttributes, resources->sprite_door, DOOR_SPRITE_WIDTH, DOOR_SPRITE_ROWS, 1, tileIndex);
 	tileIndex = buildEmptySpriteResource(&regenSprite, &g_16x16SpriteAttributes, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, 1, tileIndex);
 	tileIndex = buildTextResource(&characterFont, &g_textSpriteAttributes, resources->characterFont, 8, 7, 39, tileIndex);
+	tileIndex = buildPlayerIconResource(&playerIconSprite, &g_playerIconSpriteAttributes, resources->sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYERICON_NUM_SPRITE_ROWS, PLAYER_SPRITE_COUNT, tileIndex);
 
 	// load the splat tile twice to reserve the tile memory
 	dl_u16 splatTileIndex = tileIndex;
@@ -289,6 +355,11 @@ void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 		vramAddress[loop + 32] = 0;
 		vramAddress[loop + 64] = 0;
 	}
+
+	// create the regen sprite for player icon
+	playerIconSpriteRegen.spriteAttributes = &g_playerIconSpriteAttributes;
+	playerIconSpriteRegen.tileIndex = regenSprite.tileIndex;
+	playerIconSpriteRegen.tilesPerFrame = regenSprite.tilesPerFrame;
 
 	g_pickUpSprites[0] = &diamondSprite;
 	g_pickUpSprites[1] = &moneyBagSprite;
@@ -343,6 +414,7 @@ void GameRunner_Draw(struct GameData* gameData, const Resources* resources)
 	}
 }
 
+// draw sprite, affected by scrolling
 void drawSprite(dl_u16 x, dl_u16 y, dl_u8 frame, const GameSprite* gameSprite)
 {
 	x -= g_scrollx;
@@ -356,7 +428,8 @@ void drawSprite(dl_u16 x, dl_u16 y, dl_u8 frame, const GameSprite* gameSprite)
 	g_oamIndex++;
 }
 
-void drawCharacter(dl_u16 x, dl_u16 y, dl_u8 character, const GameSprite* gameSprite)
+// draw sprite not affected by scrolling
+void drawSpriteAbs(dl_u16 x, dl_u16 y, dl_u8 character, const GameSprite* gameSprite)
 {
 	dl_u16 tileIndex = gameSprite->tileIndex + (character * gameSprite->tilesPerFrame);
 
@@ -392,10 +465,34 @@ void drawUIText(const dl_u8* text, dl_u16 x, dl_u16 y)
     // for each character
     while (*text != 0xff)
     {
-		drawCharacter(x, y, *text, &characterFont);
+		drawSpriteAbs(x, y, *text, &characterFont);
 
         text++;
         x += 8;
+    }
+}
+
+void drawUIPlayerLives(const PlayerData* playerData)
+{
+	dl_u8 x = 80;//PLAYERLIVES_ICON_X;
+	dl_u8 y = 0;//PLAYERLIVES_ICON_Y;
+
+    for (dl_u8 loop = 0; loop < playerData->lives; loop++)
+	{
+        drawSpriteAbs(x, 
+					  y, 
+					  playerData->currentSpriteNumber,
+					  &playerIconSprite);
+
+		x += 24;//PLAYERLIVES_ICON_SPACING;
+    }
+
+	if (playerData->state == PLAYER_STATE_REGENERATION)
+	{
+        drawSpriteAbs(x, 
+                      y, 
+					  0,
+					  &playerIconSpriteRegen);		
     }
 }
 
@@ -405,6 +502,7 @@ void drawChamber(struct GameData* gameData, const Resources* resources)
 	g_scrolly = 22;
 
 	PlayerData* playerData = gameData->currentPlayerData;
+
 	dl_u16 currentTimer = playerData->roomTimers[playerData->currentRoom->roomNumber];
 
 	drawDrops(gameData);
@@ -504,6 +602,8 @@ void drawChamber(struct GameData* gameData, const Resources* resources)
     // draw text
 	drawUIText(gameData->string_timer, 24 * 8, 0);
 	drawUIText(playerData->scoreString, 8, 0); 
+
+	drawUIPlayerLives(playerData);
 }
 
 void drawTitleScreen(struct GameData* gameData, const Resources* resources)

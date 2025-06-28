@@ -25,6 +25,7 @@ SpriteAttributes g_16x8SpriteAttributes;
 SpriteAttributes g_16x16SpriteAttributes;
 SpriteAttributes g_textSpriteAttributes;
 SpriteAttributes g_playerIconSpriteAttributes;
+SpriteAttributes g_32x16SpriteAttributes;
 
 dl_s16 g_scrollx;
 dl_s16 g_scrolly;
@@ -314,6 +315,10 @@ void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 	g_16x16SpriteAttributes.attr1 = ATTR1_SIZE_16;
 	g_16x16SpriteAttributes.attr2 = OBJ_PRIORITY(2);
 
+	g_32x16SpriteAttributes.attr0 = ATTR0_COLOR_256 | ATTR0_SQUARE;
+	g_32x16SpriteAttributes.attr1 = ATTR1_SIZE_16;
+	g_32x16SpriteAttributes.attr2 = OBJ_PRIORITY(2);
+
 	g_16x8SpriteAttributes.attr0 = ATTR0_COLOR_256 | ATTR0_WIDE;
 	g_16x8SpriteAttributes.attr1 = ATTR1_SIZE_8;
 	g_16x8SpriteAttributes.attr2 = OBJ_PRIORITY(2);
@@ -516,16 +521,17 @@ void drawUIPlayerLives(const PlayerData* playerData)
 
 void drawChamber(struct GameData* gameData, const Resources* resources)
 {
-	g_scrollx = 7;
-	g_scrolly = 22;
-
 	PlayerData* playerData = gameData->currentPlayerData;
+
+	dl_u16 playerX = (playerData->x >> 8) << 1;
+	dl_u16 playerY = (playerData->y >> 8);
+
+	g_scrollx = (dl_u16)(16.0f * ((float)playerX / 256));
+	g_scrolly = (dl_u16)(32.0f * ((float)playerY / 192));
 
 	dl_u16 currentTimer = playerData->roomTimers[playerData->currentRoom->roomNumber];
 
 	drawDrops(gameData);
-
-    //dl_u16 currentTimer = playerData->roomTimers[playerData->currentRoom->roomNumber];
 
     // draw ball
     if (gameData->ballData.enabled)
@@ -553,8 +559,8 @@ void drawChamber(struct GameData* gameData, const Resources* resources)
     switch (playerData->state)
     {
     case PLAYER_STATE_SPLAT: 
-        drawSprite((playerData->x >> 8) << 1,
-                   (playerData->y >> 8) + 7,
+        drawSprite(playerX,
+                   playerY + 7,
                    playerData->splatFrameNumber,
 				   &splatSprite);
         break;
@@ -565,14 +571,14 @@ void drawChamber(struct GameData* gameData, const Resources* resources)
 			updateRegenSprite(resources, playerData->currentSpriteNumber);
         }
 
-        drawSprite((playerData->x >> 8) << 1,
-                   playerData->y >> 8,
+        drawSprite(playerX,
+                   playerY,
                    0,
 				   &regenSprite);
         break;
     default: 
-        drawSprite((playerData->x >> 8) << 1,
-                   playerData->y >> 8,
+        drawSprite(playerX,
+                   playerY,
                    playerData->currentSpriteNumber,
 				   &playerSprite);
     }

@@ -157,9 +157,6 @@ int main()
 									BG_PRIORITY(3) |
 									BG_SIZE_0;
 
-	// screen mode & background to display
-	SetMode( MODE_0 | BG0_ON | BG1_ON | MODE_0 | OBJ_ENABLE | OBJ_1D_MAP);
-
 	// init the OAM 
 	for (int i = 0; i < 128; i++) 
 	{

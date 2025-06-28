@@ -301,6 +301,8 @@ void buildUI()
 	}
 }
 
+void GameRunner_ChangedRoomCallback(const struct GameData* gameData, dl_u8 roomNumber, dl_s8 transitionType);
+
 void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 {
 	// setup sprite attributes
@@ -389,7 +391,23 @@ void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 	extern Room transitionRoom;
 	g_rooms[WIPE_TRANSITION_ROOM_INDEX] = &transitionRoom;
 
+	Game_ChangedRoomCallback = GameRunner_ChangedRoomCallback;
+
 	Game_Init(gameData, resources);
+}
+
+void GameRunner_ChangedRoomCallback(const struct GameData* gameData, dl_u8 roomNumber, dl_s8 transitionType)
+{
+	dl_u32 mode = MODE_0 | BG1_ON | MODE_0 | OBJ_ENABLE | OBJ_1D_MAP;
+
+	if (roomNumber != TITLESCREEN_ROOM_INDEX &&
+		roomNumber != GET_READY_ROOM_INDEX)
+	{
+		// turn on the UI hud
+		mode |= BG0_ON;
+	}
+
+	SetMode(mode);
 }
 
 void GameRunner_Update(struct GameData* gameData, const Resources* resources)
@@ -608,8 +626,8 @@ void drawChamber(struct GameData* gameData, const Resources* resources)
 
 void drawTitleScreen(struct GameData* gameData, const Resources* resources)
 {
-	BG_OFFSET[GAME_BACKGROUND_INDEX].x = 7; 
-	BG_OFFSET[GAME_BACKGROUND_INDEX].y = 13;
+	g_scrollx = 7;
+	g_scrolly = 13;
 
 	drawDrops(gameData);
 

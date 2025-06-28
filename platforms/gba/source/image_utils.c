@@ -214,6 +214,33 @@ void convertBackgroundToVRAM256(const dl_u8* originalImage,
     }
 }
 
+dl_u16 findDuplicateTile(const dl_u8 tile[32], 
+                         const dl_u16* vramTileAddr, 
+                         dl_u16 maxTiles)
+{
+    const dl_u16* tile16 = (const dl_u16*)tile;
+
+    dl_u16 loop = 0;
+
+    for (loop = 0; loop < maxTiles; loop++)
+    {
+        dl_u16 differences = 0;
+
+        for (dl_u8 counter = 0; counter < 16; counter++)
+        {
+            differences += tile16[counter] ^ vramTileAddr[counter];
+        }
+
+        if (!differences)
+        {
+            return loop;
+        }
+
+        vramTileAddr += 16;
+    }
+
+    return 0xffff;
+}
 
 void convertBackgroundToVRAM16(const dl_u8* originalImage,
                                dl_u16* vramTileAddr,
@@ -283,11 +310,24 @@ void convertBackgroundToVRAM16(const dl_u8* originalImage,
 
             dl_u16 tileIndex = 0;
 
+            // if the tile isn't empty, then check for duplicates
+            // if there is then use that
             if (sumColor)
             {
-                tileIndex = tileCounter;
-                CpuFastSet(tile, vramTileAddr + (tileCounter * 16), COPY32 | 8);
-                tileCounter++;
+                dl_u16 duplicateTileIndex = findDuplicateTile(tile, 
+                                                              vramTileAddr, 
+                                                              tileCounter);
+
+                if (duplicateTileIndex == 0xffff)
+                {
+                    tileIndex = tileCounter;
+                    CpuFastSet(tile, vramTileAddr + (tileCounter * 16), COPY32 | 8);
+                    tileCounter++;
+                }
+                else
+                {
+                    tileIndex = duplicateTileIndex;
+                }
             }
 
             vramTileMapAddr[tileX + (tileY * 32)] = tileIndex + tileOffset;            

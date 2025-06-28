@@ -42,6 +42,7 @@ GameSprite diamondSprite;
 GameSprite moneyBagSprite;
 GameSprite doorSprite;
 GameSprite regenSprite;
+GameSprite splatSprite;
 
 const GameSprite* g_pickUpSprites[3];
 
@@ -54,14 +55,12 @@ void drawTransition(struct GameData* gameData, const Resources* resources);
 void drawWipeTransition(struct GameData* gameData, const Resources* resources);
 void drawGetReadyScreen(struct GameData* gameData, const Resources* resources);
 
-// regen
-// splat
 // status bar area
 // player icons
 // character font
+// sound
+// scrolling
 
-//m_playerSplatSprite(resources->sprite_playerSplat, PLAYER_SPLAT_SPRITE_WIDTH, PLAYER_SPLAT_SPRITE_ROWS, PLAYER_SPLAT_SPRITE_COUNT),
-//m_regenSprite(resources->sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYER_SPRITE_ROWS, REGEN_SPRITES),
 //m_characterFont(resources->characterFont, 8, 7, 39),
 
 dl_u16 g_oamIndex = 0;
@@ -180,6 +179,22 @@ void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 	tileIndex = buildSpriteResource(&moneyBagSprite, &g_16x16SpriteAttributes, resources->sprite_moneyBag, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, tileIndex);
 	tileIndex = buildSpriteResource(&doorSprite, &g_16x16SpriteAttributes, resources->sprite_door, DOOR_SPRITE_WIDTH, DOOR_SPRITE_ROWS, 1, tileIndex);
 	tileIndex = buildEmptySpriteResource(&regenSprite, &g_16x16SpriteAttributes, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, 1, tileIndex);
+
+	// load the splat tile twice to reserve the tile memory
+	dl_u16 splatTileIndex = tileIndex;
+	tileIndex = buildSpriteResource(&splatSprite, &g_16x16SpriteAttributes, resources->sprite_playerSplat, PLAYER_SPLAT_SPRITE_WIDTH, PLAYER_SPLAT_SPRITE_ROWS, PLAYER_SPLAT_SPRITE_COUNT, splatTileIndex);
+	buildSpriteResource(&splatSprite, &g_16x16SpriteAttributes, resources->sprite_playerSplat, PLAYER_SPLAT_SPRITE_WIDTH, PLAYER_SPLAT_SPRITE_ROWS, PLAYER_SPLAT_SPRITE_COUNT, tileIndex);
+	splatSprite.tileIndex = splatTileIndex;
+
+	// erase the first five rows of the second set of splat tiles
+	dl_u16* vramAddress = (CHAR_BASE_BLOCK(4) + (tileIndex * 64));
+	for (int loop = 0; loop < 5 * 4; loop++)
+	{
+		vramAddress[loop] = 0;
+		vramAddress[loop + 32] = 0;
+		vramAddress[loop + 64] = 0;
+	}
+
 	g_pickUpSprites[0] = &diamondSprite;
 	g_pickUpSprites[1] = &moneyBagSprite;
 	g_pickUpSprites[2] = &keySprite;
@@ -303,13 +318,12 @@ void drawChamber(struct GameData* gameData, const Resources* resources)
 	// draw player
     switch (playerData->state)
     {
-		/*
     case PLAYER_STATE_SPLAT: 
-        m_splatSprite.draw((playerData->x >> 8) << 1,
-                            (playerData->y >> 8) + 7,
-                            playerData->splatFrameNumber);
+        drawSprite((playerData->x >> 8) << 1,
+                   (playerData->y >> 8) + 7,
+                   playerData->splatFrameNumber,
+				   &splatSprite);
         break;
-		*/
     case PLAYER_STATE_REGENERATION: 
 
         if (!gameData->paused)

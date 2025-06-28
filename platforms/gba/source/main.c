@@ -149,12 +149,12 @@ int main()
 	// set the screen base to 31 (0x600F800) and char base to 0 (0x6000000)
 	BGCTRL[UI_BACKGROUND_INDEX] = SCREEN_BASE(UI_TILEMAP_INDEX) |
 								  BG_16_COLOR |
-								  BG_PRIORITY(0) |
+								  BG_PRIORITY(1) |
 								  BG_SIZE_0;
 
 	BGCTRL[GAME_BACKGROUND_INDEX] = SCREEN_BASE(GAME_TILEMAP_INDEX) |
 									BG_16_COLOR |
-									BG_PRIORITY(1) |
+									BG_PRIORITY(3) |
 									BG_SIZE_0;
 
 	// screen mode & background to display

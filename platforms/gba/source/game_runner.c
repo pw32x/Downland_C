@@ -110,6 +110,62 @@ dl_u16 buildSpriteResource(GameSprite* gameSprite,
 	return tileIndex;
 }
 
+dl_u16 buildTextResource(GameSprite* gameSprite,
+						 const SpriteAttributes* spriteAttributes,
+						 const dl_u8* sprite, 
+						 dl_u8 width, 
+						 dl_u8 height, 
+						 dl_u8 spriteCount,
+						 dl_u16 tileIndex)
+{
+	dl_u8 convertedSprite[64];
+	memset(convertedSprite, 0, sizeof(convertedSprite));
+
+	gameSprite->spriteAttributes = spriteAttributes;
+	gameSprite->tileIndex = tileIndex;
+
+	const dl_u8* spriteRunner = sprite;
+
+	gameSprite->tilesPerFrame = ((width + 7) / 8) * ((height + 7) / 8);
+
+
+	for (int loop = 0; loop < spriteCount; loop++)
+    {
+
+		convert1bppImageTo8bppCrtEffectImage(spriteRunner,
+											 convertedSprite,
+											 width,
+											 height,
+											 CrtColor_Blue);
+
+		// convert the 0 pixel indexes to 4
+		// convert the white pixels to blue
+		for (int loop2 = 0; loop2 < 64; loop2++)
+		{
+			if (convertedSprite[loop2] == 0)
+				convertedSprite[loop2] = 4;
+			if (convertedSprite[loop2] == 3)
+				convertedSprite[loop2] = 1;
+		}
+
+		for (int loop2 = 56; loop2 < 64; loop2 += 2)
+		{
+			convertedSprite[loop2] = 4;
+			convertedSprite[loop2 + 1] = 1;
+		}
+
+		tileIndex += convertToTiles(convertedSprite, 
+									width, 
+									height, 
+									CHAR_BASE_BLOCK(4),
+									tileIndex * 64); // 64 bytes after the last sprite
+
+		spriteRunner += (width / 8) * height;
+	}
+
+	return tileIndex;
+}
+
 
 dl_u16 buildEmptySpriteResource(GameSprite* gameSprite,
 								const SpriteAttributes* spriteAttributes,
@@ -167,9 +223,9 @@ void buildUI()
 	// build and copy UI tile
 	vramTileAddr += 16;
 
-	memset(tile, 0x55, sizeof(tile));
+	memset(tile, 0x44, sizeof(tile));
 	for (int loop = 28; loop < 32; loop++)
-		tile[loop] = 0x15;
+		tile[loop] = 0x14;
 
 	CpuFastSet(tile, vramTileAddr, COPY32 | 8);
 
@@ -189,15 +245,15 @@ void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 	// setup sprite attributes
 	g_8x8SpriteAttributes.attr0 = ATTR0_COLOR_256 | ATTR0_SQUARE;
 	g_8x8SpriteAttributes.attr1 = ATTR1_SIZE_8;
-	g_8x8SpriteAttributes.attr2 = OBJ_PRIORITY(1);
+	g_8x8SpriteAttributes.attr2 = OBJ_PRIORITY(2);
 
 	g_16x16SpriteAttributes.attr0 = ATTR0_COLOR_256 | ATTR0_SQUARE;
 	g_16x16SpriteAttributes.attr1 = ATTR1_SIZE_16;
-	g_16x16SpriteAttributes.attr2 = OBJ_PRIORITY(1);
+	g_16x16SpriteAttributes.attr2 = OBJ_PRIORITY(2);
 
 	g_16x8SpriteAttributes.attr0 = ATTR0_COLOR_256 | ATTR0_WIDE;
 	g_16x8SpriteAttributes.attr1 = ATTR1_SIZE_8;
-	g_16x8SpriteAttributes.attr2 = OBJ_PRIORITY(1);
+	g_16x8SpriteAttributes.attr2 = OBJ_PRIORITY(2);
 
 	g_textSpriteAttributes.attr0 = ATTR0_COLOR_256 | ATTR0_SQUARE;
 	g_textSpriteAttributes.attr1 = ATTR1_SIZE_8;
@@ -217,7 +273,7 @@ void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 	tileIndex = buildSpriteResource(&moneyBagSprite, &g_16x16SpriteAttributes, resources->sprite_moneyBag, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, tileIndex);
 	tileIndex = buildSpriteResource(&doorSprite, &g_16x16SpriteAttributes, resources->sprite_door, DOOR_SPRITE_WIDTH, DOOR_SPRITE_ROWS, 1, tileIndex);
 	tileIndex = buildEmptySpriteResource(&regenSprite, &g_16x16SpriteAttributes, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, 1, tileIndex);
-	tileIndex = buildSpriteResource(&characterFont, &g_textSpriteAttributes, resources->characterFont, 8, 7, 39, tileIndex);
+	tileIndex = buildTextResource(&characterFont, &g_textSpriteAttributes, resources->characterFont, 8, 7, 39, tileIndex);
 
 	// load the splat tile twice to reserve the tile memory
 	dl_u16 splatTileIndex = tileIndex;

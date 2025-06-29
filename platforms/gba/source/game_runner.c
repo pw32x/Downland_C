@@ -55,6 +55,7 @@ GameSprite doorSprite;
 GameSprite regenSprite;
 GameSprite splatSprite;
 GameSprite characterFont;
+GameSprite hudCharacterFont;
 GameSprite playerIconSprite;
 GameSprite playerIconSpriteRegen;
 
@@ -126,7 +127,8 @@ dl_u16 buildTextResource(GameSprite* gameSprite,
 						 dl_u8 width, 
 						 dl_u8 height, 
 						 dl_u8 spriteCount,
-						 dl_u16 tileIndex)
+						 dl_u16 tileIndex,
+						 dl_u8 addDots)
 {
 	dl_u8 convertedSprite[64];
 	memset(convertedSprite, 0, sizeof(convertedSprite));
@@ -158,11 +160,14 @@ dl_u16 buildTextResource(GameSprite* gameSprite,
 				convertedSprite[loop2] = 1;
 		}
 
-		// add a dotted line at the bottom
-		for (int loop2 = 56; loop2 < 64; loop2 += 2)
+		if (addDots)
 		{
-			convertedSprite[loop2] = 4;
-			convertedSprite[loop2 + 1] = 1;
+			// add a dotted line at the bottom
+			for (int loop2 = 56; loop2 < 64; loop2 += 2)
+			{
+				convertedSprite[loop2] = 4;
+				convertedSprite[loop2 + 1] = 1;
+			}
 		}
 
 		tileIndex += convertToTiles(convertedSprite, 
@@ -489,7 +494,8 @@ void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 	tileIndex = buildSpriteResource(&moneyBagSprite, &g_16x16SpriteAttributes, resources->sprite_moneyBag, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, tileIndex);
 	tileIndex = buildSpriteResource(&doorSprite, &g_16x16SpriteAttributes, resources->sprite_door, DOOR_SPRITE_WIDTH, DOOR_SPRITE_ROWS, 1, tileIndex);
 	tileIndex = buildEmptySpriteResource(&regenSprite, &g_16x16SpriteAttributes, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, 1, tileIndex);
-	tileIndex = buildTextResource(&characterFont, &g_textSpriteAttributes, resources->characterFont, 8, 7, 39, tileIndex);
+	tileIndex = buildTextResource(&hudCharacterFont, &g_textSpriteAttributes, resources->characterFont, 8, 7, 39, tileIndex, TRUE);
+	tileIndex = buildTextResource(&characterFont, &g_textSpriteAttributes, resources->characterFont, 8, 7, 39, tileIndex, FALSE);
 	tileIndex = buildPlayerIconResource(&playerIconSprite, &g_playerIconSpriteAttributes, resources->sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYERICON_NUM_SPRITE_ROWS, PLAYER_SPRITE_COUNT, tileIndex);
 
 
@@ -631,12 +637,12 @@ void drawDrops(const GameData* gameData)
     }
 }
 
-void drawUIText(const dl_u8* text, dl_u16 x, dl_u16 y)
+void drawUIText(const dl_u8* text, dl_u16 x, dl_u16 y, GameSprite* font)
 {
     // for each character
     while (*text != 0xff)
     {
-		drawSpriteAbs(x, y, *text, &characterFont);
+		drawSpriteAbs(x, y, *text, font);
 
         text++;
         x += 8;
@@ -823,8 +829,8 @@ void drawChamber(struct GameData* gameData, const Resources* resources)
 	}
 
     // draw text
-	drawUIText(gameData->string_timer, 24 * 8, 0);
-	drawUIText(playerData->scoreString, 8, 0); 
+	drawUIText(gameData->string_timer, 24 * 8, 0, &hudCharacterFont);
+	drawUIText(playerData->scoreString, 8, 0, &hudCharacterFont); 
 
 	drawUIPlayerLives(playerData);
 }
@@ -851,9 +857,9 @@ void drawTitleScreen(struct GameData* gameData, const Resources* resources)
 
 	convertScoreToString(gameData->highScore, gameData->string_highScore);
 
-	drawUIText(gameData->playerData[PLAYER_ONE].scoreString, 136, 118);
-	drawUIText(gameData->playerData[PLAYER_TWO].scoreString, 136, 129);
-	drawUIText(gameData->string_highScore, 136, 140);
+	drawUIText(gameData->playerData[PLAYER_ONE].scoreString, 136, 118, &characterFont);
+	drawUIText(gameData->playerData[PLAYER_TWO].scoreString, 136, 129, &characterFont);
+	drawUIText(gameData->string_highScore, 136, 140, &characterFont);
 }
 
 void clearBackground()

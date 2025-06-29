@@ -3,10 +3,7 @@ Bugs
 
     Gameplay: the bird doesn't disappear when you die?
 
-    Gameplay: the door opening order isn't correct?
-             chamber 6: key at the bottom right activates both doors
-             
-    Gameplay: chamber 1, picking up the first treasure sometimes kills the player
+    Gameplay: chamber 1, picking up the first treasure sometimes kills the player?
 
     DC: no jump sound or static sound
 

@@ -711,20 +711,21 @@ void drawChamber(struct GameData* gameData, const Resources* resources)
 
 	for (dl_u8 loop = 0; loop < doorInfoData->drawInfosCount; loop++)
 	{
-        if (!(playerData->doorStateData[doorInfoRunner->globalDoorIndex] & playerData->playerMask))
-            continue;
+        if (playerData->doorStateData[doorInfoRunner->globalDoorIndex] & playerData->playerMask &&
+			doorInfoRunner->x != 0xff)
+		{
+			int xPosition = doorInfoRunner->x;
+			// adjust the door position, as per the original game.
+			if (xPosition > 40) 
+				xPosition += 7;
+			else
+				xPosition -= 4;
 
-        int xPosition = doorInfoRunner->x;
-	    // adjust the door position, as per the original game.
-	    if (xPosition > 40) 
-		    xPosition += 7;
-	    else
-		    xPosition -= 4;
-
-		drawSprite(xPosition << 1,
-				   doorInfoRunner->y,
-				   0,
-				   &doorSprite);
+			drawSprite(xPosition << 1,
+					   doorInfoRunner->y,
+					   0,
+					   &doorSprite);
+		}
 
 		doorInfoRunner++;
 	}

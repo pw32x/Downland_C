@@ -15,6 +15,13 @@ void convert1bppImageTo8bppCrtEffectImage(const dl_u8* originalImage,
                                           dl_u16 height,
                                           enum CrtColor crtColor);
 
+void convert1bppImageTo8bppCrtEffectImageWithNewWidth(const dl_u8* originalImage,
+                                                      dl_u8* destinationImage,
+                                                      dl_u16 width,
+                                                      dl_u16 height,
+                                                      dl_u16 newWidth,
+                                                      enum CrtColor crtColor);
+
 void convert1bppImageToVRAM(const dl_u8* originalImage,
                             dl_u16* vram,
                             dl_u16 width,

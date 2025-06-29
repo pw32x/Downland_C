@@ -352,6 +352,45 @@ void setGameBackgroundTilemap(dl_u8 tilemapIndex)
 									BG_SIZE_0;	
 }
 
+void buildSplatSpriteResource(dl_u16 tileIndex, const Resources* resources)
+{
+	dl_u16 newWidth = 32;
+	dl_u8 convertedSprite[512];
+	memset(convertedSprite, 0, sizeof(convertedSprite));
+
+	splatSprite.spriteAttributes = &g_32x16SpriteAttributes;
+	splatSprite.tileIndex = tileIndex;
+	splatSprite.tilesPerFrame = 4 * 2;
+
+	convert1bppImageTo8bppCrtEffectImageWithNewWidth(resources->sprite_playerSplat,
+													 convertedSprite,
+													 PLAYER_SPLAT_SPRITE_WIDTH,
+													 PLAYER_SPLAT_SPRITE_ROWS,
+													 newWidth,
+													 CrtColor_Blue);
+
+	tileIndex += convertToTiles(convertedSprite, 
+								newWidth, 
+								PLAYER_SPLAT_SPRITE_ROWS, 
+								CHAR_BASE_BLOCK(4),
+								tileIndex * 64);
+
+	convertToTiles(convertedSprite, 
+				   newWidth, 
+				   PLAYER_SPLAT_SPRITE_ROWS, 
+				   CHAR_BASE_BLOCK(4),
+				   tileIndex * 64);
+
+	// erase the first five rows of the second set of splat tiles
+	dl_u16* vramAddress = (CHAR_BASE_BLOCK(4) + (tileIndex * 64));
+	for (int loop = 0; loop < 5 * 4; loop++)
+	{
+		vramAddress[loop] = 0;
+		vramAddress[loop + 32] = 0;
+		vramAddress[loop + 64] = 0;
+	}
+}
+
 void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 {
 	// setup sprite attributes
@@ -363,8 +402,8 @@ void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 	g_16x16SpriteAttributes.attr1 = ATTR1_SIZE_16;
 	g_16x16SpriteAttributes.attr2 = OBJ_PRIORITY(2);
 
-	g_32x16SpriteAttributes.attr0 = ATTR0_COLOR_256 | ATTR0_SQUARE;
-	g_32x16SpriteAttributes.attr1 = ATTR1_SIZE_16;
+	g_32x16SpriteAttributes.attr0 = ATTR0_COLOR_256 | ATTR0_WIDE;
+	g_32x16SpriteAttributes.attr1 = ATTR1_SIZE_32;
 	g_32x16SpriteAttributes.attr2 = OBJ_PRIORITY(2);
 
 	g_16x8SpriteAttributes.attr0 = ATTR0_COLOR_256 | ATTR0_WIDE;
@@ -396,20 +435,8 @@ void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 	tileIndex = buildTextResource(&characterFont, &g_textSpriteAttributes, resources->characterFont, 8, 7, 39, tileIndex);
 	tileIndex = buildPlayerIconResource(&playerIconSprite, &g_playerIconSpriteAttributes, resources->sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYERICON_NUM_SPRITE_ROWS, PLAYER_SPRITE_COUNT, tileIndex);
 
-	// load the splat tile twice to reserve the tile memory
-	dl_u16 splatTileIndex = tileIndex;
-	tileIndex = buildSpriteResource(&splatSprite, &g_16x16SpriteAttributes, resources->sprite_playerSplat, PLAYER_SPLAT_SPRITE_WIDTH, PLAYER_SPLAT_SPRITE_ROWS, PLAYER_SPLAT_SPRITE_COUNT, splatTileIndex);
-	buildSpriteResource(&splatSprite, &g_16x16SpriteAttributes, resources->sprite_playerSplat, PLAYER_SPLAT_SPRITE_WIDTH, PLAYER_SPLAT_SPRITE_ROWS, PLAYER_SPLAT_SPRITE_COUNT, tileIndex);
-	splatSprite.tileIndex = splatTileIndex;
 
-	// erase the first five rows of the second set of splat tiles
-	dl_u16* vramAddress = (CHAR_BASE_BLOCK(4) + (tileIndex * 64));
-	for (int loop = 0; loop < 5 * 4; loop++)
-	{
-		vramAddress[loop] = 0;
-		vramAddress[loop + 32] = 0;
-		vramAddress[loop + 64] = 0;
-	}
+	buildSplatSpriteResource(tileIndex, resources);
 
 	// create the regen sprite for player icon
 	playerIconSpriteRegen.spriteAttributes = &g_playerIconSpriteAttributes;

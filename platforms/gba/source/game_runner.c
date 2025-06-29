@@ -309,6 +309,49 @@ void buildUI()
 
 void GameRunner_ChangedRoomCallback(const struct GameData* gameData, dl_u8 roomNumber, dl_s8 transitionType);
 
+
+void createBackgrounds(const GameData* gameData, 
+					   const Resources* resources)
+{
+	// change which tilemap to use
+
+	dl_u16* vramTileAddr = (dl_u16*)VRAM;
+
+	dl_u16 tileOffset = g_backgroundTileOffset;
+
+	for (int loop = 0; loop < NUM_ROOMS_AND_ALL; loop++)
+	{
+		if (g_rooms[loop]->draw == NULL)
+			continue;
+
+		dl_u16* vramTileMapAddr = (dl_u16*)MAP_BASE_ADR(GAME_TILEMAP_INDEX - loop);
+
+		g_rooms[loop]->draw(loop, (GameData*)gameData, resources);
+
+		tileOffset = convertBackgroundToVRAM16(gameData->cleanBackground,
+											   vramTileAddr,
+											   vramTileMapAddr,
+											   tileOffset,
+											   FRAMEBUFFER_WIDTH,
+											   FRAMEBUFFER_HEIGHT,
+											   CrtColor_Blue);
+	}
+
+	// we needed an active GameData to render rooms
+	// but we screwed up the current room. Force it 
+	// back to the current room when the game started.
+	dl_u8 roomNumber = gameData->transitionRoomNumber;
+	g_rooms[roomNumber]->draw(roomNumber, (GameData*)gameData, resources);
+}
+
+void setGameBackgroundTilemap(dl_u8 tilemapIndex)
+{
+	BGCTRL[GAME_BACKGROUND_INDEX] = SCREEN_BASE(GAME_TILEMAP_INDEX - tilemapIndex) |
+									BG_16_COLOR |
+									BG_PRIORITY(3) |
+									BG_SIZE_0;	
+}
+
 void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 {
 	// setup sprite attributes
@@ -403,7 +446,12 @@ void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 
 	Game_ChangedRoomCallback = GameRunner_ChangedRoomCallback;
 
+	setGameBackgroundTilemap(TITLESCREEN_ROOM_INDEX);
+
 	Game_Init(gameData, resources);
+
+	createBackgrounds(gameData, resources);
+
 }
 
 void GameRunner_ChangedRoomCallback(const struct GameData* gameData, dl_u8 roomNumber, dl_s8 transitionType)
@@ -706,18 +754,13 @@ void clearBackground()
 
 }
 
-void drawCleanBackground(dl_u8* cleanBackground, dl_u16 tileOffset)
+void drawCleanBackground(const GameData* gameData, 
+						 const Resources* resources,
+						 dl_u8* cleanBackground, 
+						 dl_u16 tileOffset)
 {
-	dl_u16* vramTileAddr = (dl_u16*)VRAM;
-	dl_u16* vramTileMapAddr = (dl_u16*)MAP_BASE_ADR(GAME_TILEMAP_INDEX);
-
-	convertBackgroundToVRAM16(cleanBackground,
-                              vramTileAddr,
-							  vramTileMapAddr,
-							  tileOffset,
-                              FRAMEBUFFER_WIDTH,
-                              FRAMEBUFFER_HEIGHT,
-                              CrtColor_Blue);
+	// change which tilemap to use
+	setGameBackgroundTilemap(gameData->transitionRoomNumber);
 }
 
 void drawTransition(struct GameData* gameData, const Resources* resources)
@@ -728,7 +771,10 @@ void drawTransition(struct GameData* gameData, const Resources* resources)
     }
     else if (!gameData->transitionInitialDelay)
     {
-        drawCleanBackground(gameData->cleanBackground, g_backgroundTileOffset);
+        drawCleanBackground(gameData, 
+							resources, 
+							gameData->cleanBackground, 
+							g_backgroundTileOffset);
     }
 }
 

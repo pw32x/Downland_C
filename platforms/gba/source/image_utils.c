@@ -229,6 +229,8 @@ dl_u16 findDuplicateTile(const dl_u8 tile[32],
         for (dl_u8 counter = 0; counter < 16; counter++)
         {
             differences += tile16[counter] ^ vramTileAddr[counter];
+            if (differences)
+                break;
         }
 
         if (!differences)
@@ -242,13 +244,13 @@ dl_u16 findDuplicateTile(const dl_u8 tile[32],
     return 0xffff;
 }
 
-void convertBackgroundToVRAM16(const dl_u8* originalImage,
-                               dl_u16* vramTileAddr,
-                               dl_u16* vramTileMapAddr,
-                               dl_u16 tileOffset,
-                               dl_u16 width,
-                               dl_u16 height,
-                               enum CrtColor crtColor) 
+dl_u16 convertBackgroundToVRAM16(const dl_u8* originalImage,
+                                 dl_u16* vramTileAddr,
+                                 dl_u16* vramTileMapAddr,
+                                 dl_u16 startTileOffset,
+                                 dl_u16 width,
+                                 dl_u16 height,
+                                 enum CrtColor crtColor) 
 {
     const dl_u8 bytesPerRow = width / 8;
 
@@ -261,14 +263,9 @@ void convertBackgroundToVRAM16(const dl_u8* originalImage,
     dl_u16 tileWidth = width / 8;
     dl_u16 tileHeight = height / 8;
 
-    dl_u8 tile[32]; // 16 colors
-    memset(tile, 0, sizeof(tile));
+    dl_u8 tile[32];
 
-    vramTileAddr += (tileOffset * 16);
-
-    CpuFastSet(tile, vramTileAddr, COPY32 | 8);
-
-    dl_u16 tileCounter = 1;
+    dl_u16 tilesCreated = 0;
 
     for (dl_u16 tileY = 0; tileY < tileHeight; tileY++) 
     {
@@ -316,13 +313,13 @@ void convertBackgroundToVRAM16(const dl_u8* originalImage,
             {
                 dl_u16 duplicateTileIndex = findDuplicateTile(tile, 
                                                               vramTileAddr, 
-                                                              tileCounter);
+                                                              startTileOffset + tilesCreated);
 
                 if (duplicateTileIndex == 0xffff)
                 {
-                    tileIndex = tileCounter;
-                    CpuFastSet(tile, vramTileAddr + (tileCounter * 16), COPY32 | 8);
-                    tileCounter++;
+                    tileIndex = tilesCreated + startTileOffset;
+                    CpuFastSet(tile, vramTileAddr + (tileIndex * 16), COPY32 | 8);
+                    tilesCreated++;
                 }
                 else
                 {
@@ -330,9 +327,11 @@ void convertBackgroundToVRAM16(const dl_u8* originalImage,
                 }
             }
 
-            vramTileMapAddr[tileX + (tileY * 32)] = tileIndex + tileOffset;            
+            vramTileMapAddr[tileX + (tileY * 32)] = tileIndex;            
         }
     }
+
+    return startTileOffset + tilesCreated;
 }
 
 dl_u16 convertToTiles(const dl_u8* sprite, 

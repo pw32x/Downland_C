@@ -152,11 +152,6 @@ int main()
 								  BG_PRIORITY(1) |
 								  BG_SIZE_0;
 
-	BGCTRL[GAME_BACKGROUND_INDEX] = SCREEN_BASE(GAME_TILEMAP_INDEX) |
-									BG_16_COLOR |
-									BG_PRIORITY(3) |
-									BG_SIZE_0;
-
 	// init the OAM 
 	for (int i = 0; i < 128; i++) 
 	{

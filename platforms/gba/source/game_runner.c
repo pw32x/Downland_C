@@ -391,6 +391,63 @@ void buildSplatSpriteResource(dl_u16 tileIndex, const Resources* resources)
 	}
 }
 
+void drawCustomTitleScreenBackground(GameData* gameData, const Resources* resources)
+{
+	dl_u8* framebuffer = gameData->cleanBackground;
+
+	// draw custom background for titlescreen on GBA.
+	const dl_u8 numCommands = 6;
+	BackgroundDrawCommand backgroundDrawCommands[numCommands];
+	memcpy(backgroundDrawCommands, 
+		   resources->roomResources[TITLESCREEN_ROOM_INDEX].backgroundDrawData.backgroundDrawCommands, 
+		   sizeof(BackgroundDrawCommand) * numCommands);
+
+	backgroundDrawCommands[2].drawCount = 9;
+	backgroundDrawCommands[4].drawCount = 9;
+
+	BackgroundDrawData backgroundDrawData;
+	backgroundDrawData.drawCommandCount = numCommands;
+	backgroundDrawData.backgroundDrawCommands = backgroundDrawCommands;
+
+	drawBackground(&backgroundDrawData, 
+				   resources,
+				   framebuffer);
+}
+
+void custom_titleScreen_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resources)
+{
+	drawCustomTitleScreenBackground(gameData, resources);
+
+	dl_u8* framebuffer = gameData->cleanBackground;
+
+	// title screen text
+	drawText(resources->text_downland, resources->characterFont, framebuffer, 0x03c9); // 0x07c9 original coco mem location
+	drawText(resources->text_writtenBy + 8, resources->characterFont, framebuffer, 0x050a - 5); // 0x090A original coco mem location
+	drawText(resources->text_michaelAichlmayer, resources->characterFont, framebuffer, 0x647 + 1 - (0x28 * 8)); // 0x0A47 original coco mem location
+	drawText(resources->text_copyright1983, resources->characterFont, framebuffer, 0x789 - (0x20 * 8)); // 0x0B89 original coco mem location
+	drawText(resources->text_spectralAssociates, resources->characterFont, framebuffer, 0x8c6 - (0x20 * 8)); // 0x0CC6 original coco mem location
+	drawText(resources->text_licensedTo, resources->characterFont, framebuffer, 0xa0a - (0x20 * 8)); // 0x0E0A original coco mem location
+	drawText(resources->text_tandyCorporation, resources->characterFont, framebuffer, 0xb47 - (0x20 * 8)); // 0x0F47 original coco mem location
+	drawText(resources->text_allRightsReserved, resources->characterFont, framebuffer, 0xc86 - (0x20 * 8)); // 0x1086 original coco mem location
+	drawText(resources->text_onePlayer, resources->characterFont, framebuffer, 0xf05 - (0x20 * 8)); // 0x1305 original coco mem location
+	drawText(resources->text_twoPlayer, resources->characterFont, framebuffer, 0xf11 - (0x20 * 8)); // 0x1311 original coco mem location
+	drawText(resources->text_highScore, resources->characterFont, framebuffer, 0x118b - 5 - (0x20 * 8)); // 0x158B original coco mem location
+	drawText(resources->text_playerOne, resources->characterFont, framebuffer, 0x1406 - (0x20 * 17)); // 0x1806 original coco mem location
+	drawText(resources->text_playerTwo, resources->characterFont, framebuffer, 0x1546 - (0x20 * 16)); // 0x1946 original coco mem location
+}
+
+void custom_get_ready_room_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resources)
+{
+	drawCustomTitleScreenBackground(gameData, resources);
+
+	dl_u8* framebuffer = gameData->cleanBackground;
+
+	// get ready text
+	const dl_u8* getReadyString = gameData->currentPlayerData->playerNumber == PLAYER_ONE ? resources->text_getReadyPlayerOne : resources->text_getReadyPlayerTwo;
+
+	drawText(getReadyString, resources->characterFont, framebuffer, 0x0b66);
+}
+
 void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 {
 	// setup sprite attributes
@@ -471,6 +528,9 @@ void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 	extern Room transitionRoom;
 	g_rooms[WIPE_TRANSITION_ROOM_INDEX] = &transitionRoom;
 
+	g_rooms[TITLESCREEN_ROOM_INDEX]->draw = custom_titleScreen_draw;
+	g_rooms[GET_READY_ROOM_INDEX]->draw = custom_get_ready_room_draw;
+
 	Game_ChangedRoomCallback = GameRunner_ChangedRoomCallback;
 
 	setGameBackgroundTilemap(TITLESCREEN_ROOM_INDEX);
@@ -493,6 +553,11 @@ void GameRunner_ChangedRoomCallback(const struct GameData* gameData, dl_u8 roomN
 	{
 		// turn on the UI hud
 		mode |= BG0_ON;
+	}
+	else
+	{
+		g_scrollX = 7;
+		g_scrollY = 13;
 	}
 
 	SetMode(mode);
@@ -772,9 +837,23 @@ void drawTitleScreen(struct GameData* gameData, const Resources* resources)
 	drawDrops(gameData);
 
 	drawSprite(gameData->numPlayers == 1 ? 32 : 128,
-			   123,
+			   115,
 			   0,
 			   &cursorSprite);
+
+	convertScoreToString(gameData->playerData[PLAYER_ONE].score, gameData->playerData[PLAYER_ONE].scoreString);
+	convertScoreToString(gameData->playerData[PLAYER_TWO].score, gameData->playerData[PLAYER_TWO].scoreString);
+
+	if (gameData->playerData[PLAYER_ONE].score > gameData->highScore)
+		gameData->highScore = gameData->playerData[PLAYER_ONE].score;
+	else if (gameData->playerData[PLAYER_TWO].score > gameData->highScore)
+		gameData->highScore = gameData->playerData[PLAYER_TWO].score;
+
+	convertScoreToString(gameData->highScore, gameData->string_highScore);
+
+	drawUIText(gameData->playerData[PLAYER_ONE].scoreString, 136, 118);
+	drawUIText(gameData->playerData[PLAYER_TWO].scoreString, 136, 129);
+	drawUIText(gameData->string_highScore, 136, 140);
 }
 
 void clearBackground()

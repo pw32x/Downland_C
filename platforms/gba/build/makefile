@@ -25,7 +25,7 @@ OUT		    := out
 SOURCES		:= source ../../game ../../game/rooms
 INCLUDES	:= include
 DATA		:= gamedata 
-MUSIC		:=
+MUSIC		:= ../../sounds/22050
 
 #---------------------------------------------------------------------------------
 # options for code generation

@@ -287,5 +287,11 @@
     <ClInclude Include="..\source\gba_defines.h">
       <Filter>source</Filter>
     </ClInclude>
+    <ClInclude Include="..\out\soundbank_bin.h">
+      <Filter>source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\out\soundbank.h">
+      <Filter>source</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

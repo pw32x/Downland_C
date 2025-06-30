@@ -183,6 +183,8 @@
     <ClInclude Include="..\..\..\game\dl_sound.h" />
     <ClInclude Include="..\..\..\game\string_utils.h" />
     <ClInclude Include="..\out\downland_rom.h" />
+    <ClInclude Include="..\out\soundbank.h" />
+    <ClInclude Include="..\out\soundbank_bin.h" />
     <ClInclude Include="..\source\game_runner.h" />
     <ClInclude Include="..\source\gba_defines.h" />
     <ClInclude Include="..\source\image_utils.h" />

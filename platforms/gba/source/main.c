@@ -7,6 +7,11 @@
 
 #include <string.h>
 
+#include <maxmod.h>
+#include "soundbank.h"
+#include "soundbank_bin.h"
+#include "..\..\..\game\dl_sound.h"
+
 #include "..\..\..\game\base_types.h"
 #include "..\..\..\game\resource_types.h"
 #include "..\..\..\game\resource_loader_buffer.h"
@@ -37,12 +42,51 @@ void* dl_alloc(dl_u32 size)
 	return (void*)memory;
 }
 
+mm_sound_effect sounds[SOUND_NUM_SOUNDS] =
+{
+	// id, rate, handle, volume, panning
+	{ { SFX_JUMP }, (int)(1.0f * (1<<10)), 0, 255, 128},
+	{ { SFX_LAND }, (int)(1.0f * (1<<10)), 0, 255, 128 },
+	{ { SFX_TRANSITION }, (int)(1.0f * (1<<10)), 0, 255, 128 },
+	{ { SFX_SPLAT }, (int)(1.0f * (1<<10)), 0, 255, 128 },
+	{ { SFX_PICKUP }, (int)(1.0f * (1<<10)), 0, 255, 128 },
+	{ { SFX_RUN }, (int)(1.0f * (1<<10)), 0, 255, 128 },
+	{ { SFX_CLIMB_UP }, (int)(1.0f * (1<<10)), 0, 255, 128 },
+	{ { SFX_CLIMB_DOWN }, (int)(1.0f * (1<<10)), 0, 255, 128 },
+};
+
+#define NO_SOUND 0xffff
+
+mm_sfxhand soundHandles[SOUND_NUM_SOUNDS] = 
+{ 
+	NO_SOUND, 
+	NO_SOUND,
+	NO_SOUND,
+	NO_SOUND,
+	NO_SOUND,
+	NO_SOUND,
+	NO_SOUND,
+	NO_SOUND
+};
+
 void Sound_Play(dl_u8 soundIndex, dl_u8 loop)
 {
+	if (loop)
+	{
+		if (soundHandles[soundIndex] != NO_SOUND)
+			return;
+		soundHandles[soundIndex] = mmEffectEx(&sounds[soundIndex]);
+	}
+	else
+	{
+		soundHandles[soundIndex] = mmEffectEx(&sounds[soundIndex]);
+	}
 }
 
 void Sound_Stop(dl_u8 soundIndex)
 {
+	mmEffectCancel(soundHandles[soundIndex]);
+	soundHandles[soundIndex] = NO_SOUND;
 }
 
 const u16 backgroundPalette[] = 
@@ -120,8 +164,13 @@ int main()
 	// Set up the interrupt handlers
 	irqInit();
 
-	// Enable Vblank Interrupt to allow VblankIntrWait
+	// Maxmod requires the vblank interrupt to reset sound DMA.
+	// Link the VBlank interrupt to mmVBlank, and enable it. 
+	irqSet( IRQ_VBLANK, mmVBlank );
 	irqEnable(IRQ_VBLANK);
+
+	// initialise maxmod with soundbank and 8 channels
+    mmInitDefault( (mm_addr)soundbank_bin, 8 );
 
 	// Allow Interrupts
 	REG_IME = 1;
@@ -167,6 +216,7 @@ int main()
 		GameRunner_Update(&gameData, &resources);
 
 		VBlankIntrWait();
+		mmFrame();
 
 		GameRunner_Draw(&gameData, &resources);
 	}

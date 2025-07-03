@@ -23,6 +23,7 @@ typedef struct
 SpriteAttributes g_8x8SpriteAttributes;
 SpriteAttributes g_16x8SpriteAttributes;
 SpriteAttributes g_16x16SpriteAttributes;
+SpriteAttributes g_hudTextSpriteAttributes;
 SpriteAttributes g_textSpriteAttributes;
 SpriteAttributes g_playerIconSpriteAttributes;
 SpriteAttributes g_32x16SpriteAttributes;
@@ -300,8 +301,9 @@ void buildUI()
 		tile[loop] = 0x14;
 
 	CpuFastSet(tile, vramTileAddr, COPY32 | 8);
+	// build and copy UI tile
+	vramTileAddr += 16;
 
-	g_backgroundTileOffset = 2;
 
 	// build tilemap for UI bar
 	dl_u16* vramTileMapAddr = (dl_u16*)MAP_BASE_ADR(UI_TILEMAP_INDEX);
@@ -310,6 +312,40 @@ void buildUI()
 		*vramTileMapAddr = 1;
 		vramTileMapAddr++;
 	}
+
+	// build tile for transition background
+    // first line: transparent
+    // second line: non-transparent black
+    // third line: blue
+	dl_u8 transitionTile[64];
+    for (int i = 0; i < 8; i++)
+    {
+        transitionTile[i] = 0x00;
+        transitionTile[i + 8] = 0x04; // non transparent black
+        transitionTile[i + 16] = 0x01; // blue
+    }
+
+	CpuFastSet(transitionTile, vramTileAddr, COPY32 | 16);
+	vramTileAddr += 32;
+
+	// build tilemap for UI bar
+	vramTileMapAddr = (dl_u16*)MAP_BASE_ADR(TRANSITION_TILEMAP_INDEX);
+	for (int loop = 0; loop < 16; loop++)
+	{
+		*vramTileMapAddr = 0x0202;
+		*(vramTileMapAddr + 16) = 0x0101;
+		vramTileMapAddr++;
+	}
+
+	// build tilemap for the transition background
+    vramTileMapAddr = (dl_u16*)MAP_BASE_ADR(TRANSITION_TILEMAP_INDEX);
+    // fill only the first line of bg2 with the transition tile. 
+    for (int i = 0; i < 16 ; i++) 
+    {
+        vramTileMapAddr[i] = 0x0101;
+    }
+
+	g_backgroundTileOffset = 6;
 }
 
 void GameRunner_ChangedRoomCallback(const struct GameData* gameData, dl_u8 roomNumber, dl_s8 transitionType);
@@ -353,7 +389,7 @@ void setGameBackgroundTilemap(dl_u8 tilemapIndex)
 {
 	BGCTRL[GAME_BACKGROUND_INDEX] = SCREEN_BASE(GAME_TILEMAP_INDEX - tilemapIndex) |
 									BG_16_COLOR |
-									BG_PRIORITY(3) |
+									BG_PRIORITY(GAME_BACKGROUND_PRIORITY) |
 									BG_SIZE_0;	
 }
 
@@ -458,27 +494,31 @@ void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 	// setup sprite attributes
 	g_8x8SpriteAttributes.attr0 = ATTR0_COLOR_256 | ATTR0_SQUARE;
 	g_8x8SpriteAttributes.attr1 = ATTR1_SIZE_8;
-	g_8x8SpriteAttributes.attr2 = OBJ_PRIORITY(2);
+	g_8x8SpriteAttributes.attr2 = OBJ_PRIORITY(SPRITE_PRIORITY);
 
 	g_16x16SpriteAttributes.attr0 = ATTR0_COLOR_256 | ATTR0_SQUARE;
 	g_16x16SpriteAttributes.attr1 = ATTR1_SIZE_16;
-	g_16x16SpriteAttributes.attr2 = OBJ_PRIORITY(2);
+	g_16x16SpriteAttributes.attr2 = OBJ_PRIORITY(SPRITE_PRIORITY);
 
 	g_32x16SpriteAttributes.attr0 = ATTR0_COLOR_256 | ATTR0_WIDE;
 	g_32x16SpriteAttributes.attr1 = ATTR1_SIZE_32;
-	g_32x16SpriteAttributes.attr2 = OBJ_PRIORITY(2);
+	g_32x16SpriteAttributes.attr2 = OBJ_PRIORITY(SPRITE_PRIORITY);
 
 	g_16x8SpriteAttributes.attr0 = ATTR0_COLOR_256 | ATTR0_WIDE;
 	g_16x8SpriteAttributes.attr1 = ATTR1_SIZE_8;
-	g_16x8SpriteAttributes.attr2 = OBJ_PRIORITY(2);
+	g_16x8SpriteAttributes.attr2 = OBJ_PRIORITY(SPRITE_PRIORITY);
 
 	g_textSpriteAttributes.attr0 = ATTR0_COLOR_256 | ATTR0_SQUARE;
 	g_textSpriteAttributes.attr1 = ATTR1_SIZE_8;
-	g_textSpriteAttributes.attr2 = 0;
+	g_textSpriteAttributes.attr2 = OBJ_PRIORITY(SPRITE_PRIORITY);
+
+	g_hudTextSpriteAttributes.attr0 = ATTR0_COLOR_256 | ATTR0_SQUARE;
+	g_hudTextSpriteAttributes.attr1 = ATTR1_SIZE_8;
+	g_hudTextSpriteAttributes.attr2 = OBJ_PRIORITY(UI_SPRITE_PRIORITY);
 
 	g_playerIconSpriteAttributes.attr0 = ATTR0_COLOR_256 | ATTR0_WIDE;
 	g_playerIconSpriteAttributes.attr1 = ATTR1_SIZE_8;
-	g_playerIconSpriteAttributes.attr2 = 0;
+	g_playerIconSpriteAttributes.attr2 = OBJ_PRIORITY(UI_SPRITE_PRIORITY);
 
 	dl_u32 cursorSpriteRaw = 0xffffffff;
 
@@ -494,7 +534,7 @@ void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 	tileIndex = buildSpriteResource(&moneyBagSprite, &g_16x16SpriteAttributes, resources->sprite_moneyBag, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, tileIndex);
 	tileIndex = buildSpriteResource(&doorSprite, &g_16x16SpriteAttributes, resources->sprite_door, DOOR_SPRITE_WIDTH, DOOR_SPRITE_ROWS, 1, tileIndex);
 	tileIndex = buildEmptySpriteResource(&regenSprite, &g_16x16SpriteAttributes, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, 1, tileIndex);
-	tileIndex = buildTextResource(&hudCharacterFont, &g_textSpriteAttributes, resources->characterFont, 8, 7, 39, tileIndex, TRUE);
+	tileIndex = buildTextResource(&hudCharacterFont, &g_hudTextSpriteAttributes, resources->characterFont, 8, 7, 39, tileIndex, TRUE);
 	tileIndex = buildTextResource(&characterFont, &g_textSpriteAttributes, resources->characterFont, 8, 7, 39, tileIndex, FALSE);
 	tileIndex = buildPlayerIconResource(&playerIconSprite, &g_playerIconSpriteAttributes, resources->sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYERICON_NUM_SPRITE_ROWS, PLAYER_SPRITE_COUNT, tileIndex);
 
@@ -552,7 +592,7 @@ void GameRunner_ChangedRoomCallback(const struct GameData* gameData, dl_u8 roomN
 	g_oldPlayerX = 0xffff;
 	g_oldPlayerY = 0xffff;
 
-	dl_u32 mode = MODE_0 | BG1_ON | MODE_0 | OBJ_ENABLE | OBJ_1D_MAP;
+	dl_u32 mode = MODE_1 | BG1_ON | BG2_ON | OBJ_ENABLE | OBJ_1D_MAP;
 
 	if (roomNumber != TITLESCREEN_ROOM_INDEX &&
 		roomNumber != GET_READY_ROOM_INDEX)

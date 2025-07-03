@@ -21,6 +21,7 @@
 #include "downland_rom.h"
 #include "game_runner.h"
 #include "gba_defines.h"
+#include "transition_effect.h"
 
 GameData gameData;
 Resources resources;
@@ -149,8 +150,20 @@ void updateControls(JoystickState* joystickState)
 #endif
 }
 
+
+void vblank_handler() 
+{
+    mmVBlank();
+
+    // Update the HDMA effect
+    updateTransitionHDMATable();
+    setupTransitionHDMA();
+}
+
 int main() 
 {
+	g_transitionCounter = TRANSITION_TURN_ON;
+
 	if (!checksumCheckLitteEndian(downland_rom, downland_rom_size))
 		return -1;
 	
@@ -166,7 +179,7 @@ int main()
 
 	// Maxmod requires the vblank interrupt to reset sound DMA.
 	// Link the VBlank interrupt to mmVBlank, and enable it. 
-	irqSet( IRQ_VBLANK, mmVBlank );
+	irqSet(IRQ_VBLANK, vblank_handler);
 	irqEnable(IRQ_VBLANK);
 
 	// initialise maxmod with soundbank and 8 channels
@@ -198,8 +211,13 @@ int main()
 	// set the screen base to 31 (0x600F800) and char base to 0 (0x6000000)
 	BGCTRL[UI_BACKGROUND_INDEX] = SCREEN_BASE(UI_TILEMAP_INDEX) |
 								  BG_16_COLOR |
-								  BG_PRIORITY(1) |
+								  BG_PRIORITY(UI_BACKGROUND_PRIORITY) |
 								  BG_SIZE_0;
+
+	BGCTRL[TRANSITION_BACKGROUND_INDEX] = SCREEN_BASE(TRANSITION_TILEMAP_INDEX) |
+									      BG_256_COLOR |
+									      BG_PRIORITY(TRANSITION_BACKGROUND_PRIORITY) |
+									      BG_SIZE_1;
 
 	// init the OAM 
 	for (int i = 0; i < 128; i++) 
@@ -208,6 +226,19 @@ int main()
 		OAM[i].attr1 = 0;
 		OAM[i].attr2 = 0;
 	}
+
+    // Affine matrix (identity, no scale/rotation)
+    REG_BG2PA = 256;
+    REG_BG2PB = 0;
+    REG_BG2PC = 0;
+    REG_BG2PD = 256;
+
+    REG_BG2X = 0;
+    REG_BG2Y = 0;
+
+	// setp HDMA effect
+    updateTransitionHDMATable();
+    setupTransitionHDMA();
 
 	while (1) 
 	{

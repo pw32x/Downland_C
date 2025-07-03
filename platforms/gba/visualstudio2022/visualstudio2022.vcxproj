@@ -115,6 +115,7 @@
     <ClCompile Include="..\source\game_runner.c" />
     <ClCompile Include="..\source\image_utils.c" />
     <ClCompile Include="..\source\main.c" />
+    <ClCompile Include="..\source\transition_effect.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\build\build.bat" />
@@ -188,6 +189,7 @@
     <ClInclude Include="..\source\game_runner.h" />
     <ClInclude Include="..\source\gba_defines.h" />
     <ClInclude Include="..\source\image_utils.h" />
+    <ClInclude Include="..\source\transition_effect.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

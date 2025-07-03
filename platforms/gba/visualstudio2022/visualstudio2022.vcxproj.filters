@@ -82,6 +82,9 @@
     <ClCompile Include="..\source\game_runner.c">
       <Filter>source</Filter>
     </ClCompile>
+    <ClCompile Include="..\source\transition_effect.c">
+      <Filter>source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\build\build.bat">
@@ -291,6 +294,9 @@
       <Filter>source</Filter>
     </ClInclude>
     <ClInclude Include="..\out\soundbank.h">
+      <Filter>source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\transition_effect.h">
       <Filter>source</Filter>
     </ClInclude>
   </ItemGroup>

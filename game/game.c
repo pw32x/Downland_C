@@ -80,11 +80,6 @@ void Game_EnterRoom(struct GameData* gameData, dl_u8 roomNumber, const Resources
 		Game_ChangedRoomCallback(gameData, roomNumber, -1);
 }
 
-// by overriding transitions, the client platform needs to 
-// handle the transition effect. Do this for platforms that
-// can't do the per-pixel wiping fast enough or at all and 
-// want to do something more viable on their hardware.
-
 void Game_TransitionToRoom(struct GameData* gameData, dl_u8 roomNumber, const Resources* resources)
 {
 	gameData->transitionRoomNumber = roomNumber;

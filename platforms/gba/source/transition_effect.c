@@ -11,7 +11,11 @@ void updateTransitionHDMATable()
 {
 	if (g_transitionCounter == TRANSITION_OFF)
 	{
-		return;
+		// set to zero
+		for (int i = 0; i < 160; i++) 
+		{
+			g_transitionHDMATable[i] = 0;
+		}
 	}
 	else if (g_transitionCounter == TRANSITION_BLACK_SCREEN)
 	{
@@ -22,39 +26,23 @@ void updateTransitionHDMATable()
 	}
 	else
 	{
-		dl_u8 counterToUse = g_transitionCounter >> 1;
-		if (counterToUse < 32)
+		for (int i = 0; i < 160; i++) 
 		{
-			for (int i = 0; i < 160; i++) 
+			dl_u8 index = (i + 1) % 160;
+			dl_u8 currentLine = index % 32;
+
+			dl_u16 value = 2; // default blue line
+
+			if (currentLine > g_transitionCounter)
 			{
-				dl_u8 index = (i + 1) % 160;
-				dl_u8 currentLine = index % 32;
-
-				dl_u16 value = 2; // default blue line
-
-				if (currentLine > counterToUse)
-				{
-					value = 1; // show non-transparent black line
-				}
-				else if (currentLine < counterToUse)
-				{
-					value = 0; // transparent black line
-				}
-
-				g_transitionHDMATable[i] = value << 8; 
+				value = 1; // show non-transparent black line
 			}
-		}
-
-		g_transitionCounter++;
-		if (g_transitionCounter > 64)
-		{
-			g_transitionCounter = TRANSITION_OFF;
-
-			// set to zero
-			for (int i = 0; i < 160; i++) 
+			else if (currentLine < g_transitionCounter)
 			{
-				g_transitionHDMATable[i] = 0;
+				value = 0; // transparent black line
 			}
+
+			g_transitionHDMATable[i] = value << 8; 
 		}
 	}
 }

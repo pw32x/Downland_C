@@ -8,6 +8,7 @@
 
 #include "image_utils.h"
 #include "gba_defines.h"
+#include "transition_effect.h"
 
 #include "..\..\..\game\drops_manager.h"
 #include "..\..\..\game\draw_utils.h"
@@ -566,7 +567,7 @@ void GameRunner_Init(struct GameData* gameData, const Resources* resources)
     m_drawRoomFunctions[9] = drawChamber;
     m_drawRoomFunctions[TITLESCREEN_ROOM_INDEX] = drawTitleScreen;
     m_drawRoomFunctions[TRANSITION_ROOM_INDEX] = drawTransition;
-    m_drawRoomFunctions[WIPE_TRANSITION_ROOM_INDEX] = drawTransition;//drawWipeTransition;
+    m_drawRoomFunctions[WIPE_TRANSITION_ROOM_INDEX] = drawWipeTransition;
     m_drawRoomFunctions[GET_READY_ROOM_INDEX] = drawGetReadyScreen;
 
 	buildUI();
@@ -594,6 +595,16 @@ void GameRunner_ChangedRoomCallback(const struct GameData* gameData, dl_u8 roomN
 
 	dl_u32 mode = MODE_1 | BG1_ON | BG2_ON | OBJ_ENABLE | OBJ_1D_MAP;
 
+	if (roomNumber == WIPE_TRANSITION_ROOM_INDEX || 
+		roomNumber == TRANSITION_ROOM_INDEX)
+	{
+		g_transitionCounter = TRANSITION_BLACK_SCREEN;
+	}
+	else
+	{
+		g_transitionCounter = TRANSITION_OFF;
+	}
+
 	if (roomNumber != TITLESCREEN_ROOM_INDEX &&
 		roomNumber != GET_READY_ROOM_INDEX)
 	{
@@ -614,8 +625,12 @@ void GameRunner_Update(struct GameData* gameData, const Resources* resources)
 	Game_Update(gameData, resources);
 }
 
+void drawUIText(const dl_u8* text, dl_u16 x, dl_u16 y, GameSprite* font);
+
 void GameRunner_Draw(struct GameData* gameData, const Resources* resources)
 {
+	g_transitionCounter = TRANSITION_OFF;
+
 	g_oamIndex = 0;
 
 	m_drawRoomFunctions[gameData->currentRoom->roomNumber](gameData, resources);
@@ -920,10 +935,11 @@ void drawTransition(struct GameData* gameData, const Resources* resources)
 {
 	if (gameData->transitionInitialDelay == 29)
     {
-        clearBackground();
+        g_transitionCounter = TRANSITION_BLACK_SCREEN;
     }
     else if (!gameData->transitionInitialDelay)
     {
+		g_transitionCounter = TRANSITION_OFF;
         drawCleanBackground(gameData, 
 							resources, 
 							gameData->cleanBackground, 
@@ -933,7 +949,41 @@ void drawTransition(struct GameData* gameData, const Resources* resources)
 
 void drawWipeTransition(struct GameData* gameData, const Resources* resources)
 {
+	if (gameData->transitionInitialDelay == 29)
+    {
+        g_transitionCounter = TRANSITION_BLACK_SCREEN;
 
+		PlayerData* playerData = gameData->currentPlayerData;
+
+		dl_u16 playerX;
+		dl_u16 playerY;
+
+		if (playerData->lastDoor)
+		{
+			playerX = playerData->lastDoor->xLocationInNextRoom;
+			playerY = playerData->lastDoor->yLocationInNextRoom;
+		}
+		else
+		{
+			playerX = PLAYER_START_X;
+			playerY = PLAYER_START_Y;
+		}
+
+		updateScroll(playerX << 1, playerY);
+    }
+    else if (!gameData->transitionInitialDelay)
+    {
+		//g_transitionCounter = TRANSITION_OFF;
+        drawCleanBackground(gameData, 
+							resources, 
+							gameData->cleanBackground, 
+							g_backgroundTileOffset);
+    }
+
+	if (!gameData->transitionCurrentLine)
+		g_transitionCounter = TRANSITION_BLACK_SCREEN;
+	else
+		g_transitionCounter = gameData->transitionCurrentLine;
 }
 
 void drawGetReadyScreen(struct GameData* gameData, const Resources* resources)

@@ -23,6 +23,9 @@
 #define PLAYER_MIDAIR_DEATH			9
 #define PLAYER_STATE_DEBUG			0xff
 
+#define PLAYER_START_X 0x70 // 112
+#define PLAYER_START_Y 0xa5 // 165
+
 void Player_GameInit(PlayerData* playerData, const Resources* resources);
 void Player_RoomInit(PlayerData* playerData, const Resources* resources);
 

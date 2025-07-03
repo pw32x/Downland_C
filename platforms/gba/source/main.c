@@ -90,6 +90,12 @@ void Sound_Stop(dl_u8 soundIndex)
 	soundHandles[soundIndex] = NO_SOUND;
 }
 
+void Sound_StopAll()
+{
+	for (int loop = 0; loop < SOUND_NUM_SOUNDS; loop++)
+		Sound_Stop(loop);
+}
+
 const u16 backgroundPalette[] = 
 {
     RGB5(0,0,0),   // Transparent color (palette index 0)
@@ -244,7 +250,18 @@ int main()
 	{
 		updateControls(&gameData.joystickState);
 
-		GameRunner_Update(&gameData, &resources);
+		if (gameData.joystickState.startPressed)
+		{
+			gameData.paused = !gameData.paused;
+
+			if (gameData.paused)
+				Sound_StopAll();
+		}
+
+		if (!gameData.paused)
+		{
+			GameRunner_Update(&gameData, &resources);
+		}
 
 		VBlankIntrWait();
 		mmFrame();

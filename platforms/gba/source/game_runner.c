@@ -572,9 +572,6 @@ void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 
 	buildUI();
 
-	extern Room transitionRoom;
-	g_rooms[WIPE_TRANSITION_ROOM_INDEX] = &transitionRoom;
-
 	g_rooms[TITLESCREEN_ROOM_INDEX]->draw = custom_titleScreen_draw;
 	g_rooms[GET_READY_ROOM_INDEX]->draw = custom_get_ready_room_draw;
 

@@ -7,8 +7,6 @@
 #include "..\..\..\game\checksum_utils.h"
 #include "..\..\..\game\game.h"
 
-#include "game_runner.h"
-
 PlaydateAPI* g_pd = NULL;
 
 static bool init(PlaydateAPI* pd);
@@ -183,7 +181,7 @@ bool init(PlaydateAPI* pd)
 		pd->sound->sampleplayer->setSample(g_samplePlayers[loop], g_sounds[loop]);
 
 	memset(&gameData, 0, sizeof(GameData));
-	GameRunner_Init(&gameData, &resources);
+	Game_Init(&gameData, &resources);
 
 	return true;
 }
@@ -241,10 +239,8 @@ static int update(void* userdata)
 
 		// update game twice because the original
 		// game runs at 60fps
-		GameRunner_Update(&gameData, &resources);
-		GameRunner_Update(&gameData, &resources);
-
-		GameRunner_Draw(&gameData, &resources);
+		Game_Update(&gameData, &resources);
+		Game_Update(&gameData, &resources);
 
 		uint8_t* backbuffer = g_pd->graphics->getFrame(); // working buffer
 

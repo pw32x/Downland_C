@@ -1,25 +1,53 @@
-//
-//  main.c
-//  Extension
-//
-//  Created by Dave Hayden on 7/30/14.
-//  Copyright (c) 2014 Panic, Inc. All rights reserved.
-//
-
 #include <stdio.h>
 #include <stdlib.h>
 
 #include "pd_api.h"
 
 #include "..\..\..\game\dl_sound.h"
-
 #include "..\..\..\game\base_types.h"
 #include "..\..\..\game\resource_types.h"
 #include "..\..\..\game\resource_loader_buffer.h"
 #include "..\..\..\game\checksum_utils.h"
 #include "..\..\..\game\game.h"
 
+#include "game_runner.h"
+
 PlaydateAPI* g_pd = NULL;
+
+static bool init(PlaydateAPI* pd);
+static int update(void* userdata);
+const char* fontpath = "/System/Fonts/Asheville-Sans-14-Bold.pft";
+LCDFont* font = NULL;
+
+#ifdef _WINDLL
+__declspec(dllexport)
+#endif
+int eventHandler(PlaydateAPI* pd, PDSystemEvent event, uint32_t arg)
+{
+	(void)arg; // arg is currently only used for event = kEventKeyPressed
+
+	if ( event == kEventInit )
+	{
+		if (!init(pd))
+		{
+			return -1;
+		}
+
+		const char* err;
+		font = pd->graphics->loadFont(fontpath, &err);
+		
+		if ( font == NULL )
+			pd->system->error("%s:%i Couldn't load font %s: %s", __FILE__, __LINE__, fontpath, err);
+
+		// Note: If you set an update callback in the kEventInit handler, the system assumes the 
+		// game is pure C and doesn't run any Lua code in the game
+		pd->system->setUpdateCallback(update, pd);
+
+
+	}
+	
+	return 0;
+}
 
 static dl_u8 memory[18288];
 static dl_u8* memoryEnd = NULL;
@@ -43,32 +71,6 @@ void Sound_Play(dl_u8 soundIndex, dl_u8 loop)
 
 void Sound_Stop(dl_u8 soundIndex)
 {
-}
-
-static int update(void* userdata);
-const char* fontpath = "/System/Fonts/Asheville-Sans-14-Bold.pft";
-LCDFont* font = NULL;
-
-#ifdef _WINDLL
-__declspec(dllexport)
-#endif
-int eventHandler(PlaydateAPI* pd, PDSystemEvent event, uint32_t arg)
-{
-	(void)arg; // arg is currently only used for event = kEventKeyPressed
-
-	if ( event == kEventInit )
-	{
-		const char* err;
-		font = pd->graphics->loadFont(fontpath, &err);
-		
-		if ( font == NULL )
-			pd->system->error("%s:%i Couldn't load font %s: %s", __FILE__, __LINE__, fontpath, err);
-
-		// Note: If you set an update callback in the kEventInit handler, the system assumes the game is pure C and doesn't run any Lua code in the game
-		pd->system->setUpdateCallback(update, pd);
-	}
-	
-	return 0;
 }
 
 
@@ -126,9 +128,9 @@ static bool loadFile(const char* romPath, dl_u8* fileBuffer, dl_u32 fileBufferSi
 	return true;
 }
 
-static int update(void* userdata)
+bool init(PlaydateAPI* pd)
 {
-	g_pd = userdata;
+	g_pd = pd;
 
     bool romFoundAndLoaded = false;
     for (int loop = 0; loop < romFileNamesCount; loop++)
@@ -142,9 +144,37 @@ static int update(void* userdata)
         }
     }
 
+    if (!romFoundAndLoaded)
+    {
+        return false;
+    }
+
+	memset(&gameData, 0, sizeof(GameData));
+	GameRunner_Init(&gameData, &resources);
+
+	
+	// half-ass'd Downland to Ascii string conversion
+	dl_u8* runner = resources.text_michaelAichlmayer;
+
+	while (*runner != 0xff)
+	{
+		*runner = *runner + 55;
+
+		runner++;
+	}
+
+	return true;
+}
+
+static int update(void* userdata)
+{
+	GameRunner_Update(&gameData, &resources);
+	GameRunner_Draw(&gameData, &resources);
+
 	g_pd->graphics->clear(kColorWhite);
-	g_pd->graphics->setFont(font);
-	g_pd->graphics->drawText("Hello World!", strlen("Hello World!"), kASCIIEncoding, x, y);
+	g_pd->graphics->setFont(font);	
+
+	g_pd->graphics->drawText(resources.text_michaelAichlmayer, strlen("Hello World!"), kASCIIEncoding, x, y);
 
 	x += dx;
 	y += dy;

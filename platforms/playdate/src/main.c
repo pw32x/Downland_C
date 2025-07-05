@@ -1,6 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-
 #include "pd_api.h"
 
 #include "..\..\..\game\dl_sound.h"
@@ -16,33 +13,41 @@ PlaydateAPI* g_pd = NULL;
 
 static bool init(PlaydateAPI* pd);
 static int update(void* userdata);
-const char* fontpath = "/System/Fonts/Asheville-Sans-14-Bold.pft";
-LCDFont* font = NULL;
+
+GameData gameData;
+Resources resources;
 
 #ifdef _WINDLL
 __declspec(dllexport)
 #endif
 int eventHandler(PlaydateAPI* pd, PDSystemEvent event, uint32_t arg)
 {
-	(void)arg; // arg is currently only used for event = kEventKeyPressed
-
-	if ( event == kEventInit )
+	switch (event)
+	{
+	case kEventInit:
 	{
 		if (!init(pd))
 		{
 			return -1;
 		}
 
-		const char* err;
-		font = pd->graphics->loadFont(fontpath, &err);
-		
-		if ( font == NULL )
-			pd->system->error("%s:%i Couldn't load font %s: %s", __FILE__, __LINE__, fontpath, err);
-
 		// Note: If you set an update callback in the kEventInit handler, the system assumes the 
 		// game is pure C and doesn't run any Lua code in the game
 		pd->system->setUpdateCallback(update, pd);
-
+		break;
+	}
+	case kEventLock:
+	case kEventPause:
+	{
+		gameData.paused = true;
+		break;
+	}
+	case kEventUnlock:
+	case kEventResume:
+	{
+		gameData.paused = false;
+		break;
+	}
 
 	}
 	
@@ -72,18 +77,6 @@ void Sound_Play(dl_u8 soundIndex, dl_u8 loop)
 void Sound_Stop(dl_u8 soundIndex)
 {
 }
-
-
-#define TEXT_WIDTH 86
-#define TEXT_HEIGHT 16
-
-int x = (400-TEXT_WIDTH)/2;
-int y = (240-TEXT_HEIGHT)/2;
-int dx = 1;
-int dy = 2;
-
-GameData gameData;
-Resources resources;
 
 #define FILE_BUFFER_SIZE 8192
 dl_u8 fileBuffer[FILE_BUFFER_SIZE];
@@ -152,40 +145,80 @@ bool init(PlaydateAPI* pd)
 	memset(&gameData, 0, sizeof(GameData));
 	GameRunner_Init(&gameData, &resources);
 
-	
-	// half-ass'd Downland to Ascii string conversion
-	dl_u8* runner = resources.text_michaelAichlmayer;
-
-	while (*runner != 0xff)
-	{
-		*runner = *runner + 55;
-
-		runner++;
-	}
-
 	return true;
+}
+
+
+void updateControls(JoystickState* joystickState)
+{
+	PDButtons buttonState;
+
+	g_pd->system->getButtonState(&buttonState, NULL, NULL);
+
+    // Check D-Pad
+    bool leftDown = buttonState & kButtonLeft;
+    bool rightDown = buttonState & kButtonRight;
+    bool upDown = buttonState & kButtonUp;
+    bool downDown = buttonState & kButtonDown;
+    bool jumpDown = buttonState & kButtonA;
+    //bool startDown = buttonState & KEY_START;
+
+    joystickState->leftPressed = !joystickState->leftDown & leftDown;
+    joystickState->rightPressed = !joystickState->rightDown & rightDown;
+    joystickState->upPressed = !joystickState->upDown & upDown;
+    joystickState->downPressed =  !joystickState->downDown & downDown;
+    joystickState->jumpPressed =  !joystickState->jumpDown & jumpDown;
+    //joystickState->startPressed = !joystickState->startDown & startDown;
+
+    joystickState->leftReleased = joystickState->leftDown & !leftDown;
+    joystickState->rightReleased = joystickState->rightDown & !rightDown;
+    joystickState->upReleased = joystickState->upDown & !upDown;
+    joystickState->downReleased =  joystickState->downDown & !downDown;
+    joystickState->jumpReleased =  joystickState->jumpDown & !jumpDown;
+    //joystickState->startReleased = joystickState->startPressed & !startDown;
+
+    joystickState->leftDown = leftDown;
+    joystickState->rightDown = rightDown;
+    joystickState->upDown = upDown;
+    joystickState->downDown = downDown;
+    joystickState->jumpDown = jumpDown;
+    //joystickState->startDown = startDown;
+
+#ifdef DEV_MODE
+    bool debugStateDown = buttonState & kButtonB;
+
+    joystickState->debugStatePressed = !joystickState->debugStateDown & debugStateDown;
+    joystickState->debugStateReleased = joystickState->debugStatePressed & !debugStateDown;
+    joystickState->debugStateDown = debugStateDown;
+#endif
 }
 
 static int update(void* userdata)
 {
-	GameRunner_Update(&gameData, &resources);
-	GameRunner_Draw(&gameData, &resources);
+	if (!gameData.paused)
+	{
+		updateControls(&gameData.joystickState);
 
-	g_pd->graphics->clear(kColorWhite);
-	g_pd->graphics->setFont(font);	
+		// update game twice because the original
+		// game runs at 60fps
+		GameRunner_Update(&gameData, &resources);
+		GameRunner_Update(&gameData, &resources);
 
-	g_pd->graphics->drawText(resources.text_michaelAichlmayer, strlen("Hello World!"), kASCIIEncoding, x, y);
+		GameRunner_Draw(&gameData, &resources);
 
-	x += dx;
-	y += dy;
-	
-	if ( x < 0 || x > LCD_COLUMNS - TEXT_WIDTH )
-		dx = -dx;
-	
-	if ( y < 0 || y > LCD_ROWS - TEXT_HEIGHT )
-		dy = -dy;
-        
-	g_pd->system->drawFPS(0,0);
+		uint8_t* backbuffer = g_pd->graphics->getFrame(); // working buffer
+
+		g_pd->graphics->clear(kColorBlack);
+
+		for (int loop = 0; loop < FRAMEBUFFER_HEIGHT; loop++)
+		{
+			memcpy(backbuffer + (LCD_ROWSIZE * (loop + 25)) + 9, 
+				   gameData.framebuffer + (FRAMEBUFFER_PITCH * loop),
+				   FRAMEBUFFER_PITCH); 
+		}
+
+		g_pd->graphics->markUpdatedRows(0, LCD_ROWS);
+	}
 
 	return 1;
 }

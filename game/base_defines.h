@@ -7,13 +7,14 @@
 //#define DISABLE_ENEMIES
 
 
-
+#if !defined(TARGET_PLAYDATE) && !defined(TARGET_SIMULATOR)
 #ifdef _WIN32
 #define _WINDOWS
 #endif
 
 #ifdef _WIN64
 #define _WINDOWS
+#endif
 #endif
 
 #define TARGET_FPS 60

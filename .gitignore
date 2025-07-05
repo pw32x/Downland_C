@@ -414,3 +414,8 @@ platforms/saturn/cd/data/SDDRVS.DAT
 platforms/saturn/cd/data/BOOTSND.MAP
 /platforms/gba/out
 platforms/gba/gamedata/downland.rom
+/platforms/playdate/build_vs
+platforms/playdate/Source/downland.rom
+platforms/playdate/Source/pdex.dll
+platforms/playdate/Source/pdex.elf
+/platforms/playdate/Downland.pdx

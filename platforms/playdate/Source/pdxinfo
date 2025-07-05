@@ -1,0 +1,5 @@
+name=Downland
+author=pw_32x
+description=A port of the 1983 Tandy Color Computer game Downland for Playdate
+bundleID=com.panic.downlandplaydate
+imagePath=

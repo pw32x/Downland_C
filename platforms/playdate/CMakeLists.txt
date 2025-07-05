@@ -68,7 +68,7 @@ source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/../../game/rooms" PREFIX "game/ro
 # Build target based on toolchain
 if (TOOLCHAIN STREQUAL "armgcc")
     set(CURRENT_TARGET ${PLAYDATE_GAME_DEVICE})
-    add_executable(${CURRENT_TARGET} src/main.c)
+    add_executable(${CURRENT_TARGET} ${ALL_SOURCES})
 else()
     set(CURRENT_TARGET ${PLAYDATE_GAME_NAME})
     add_library(${CURRENT_TARGET} SHARED ${ALL_SOURCES})

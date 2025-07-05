@@ -19,6 +19,8 @@
 #include "..\..\..\game\checksum_utils.h"
 #include "..\..\..\game\game.h"
 
+PlaydateAPI* g_pd = NULL;
+
 static dl_u8 memory[18288];
 static dl_u8* memoryEnd = NULL;
 void* dl_alloc(dl_u32 size)
@@ -78,13 +80,71 @@ int y = (240-TEXT_HEIGHT)/2;
 int dx = 1;
 int dy = 2;
 
+GameData gameData;
+Resources resources;
+
+#define FILE_BUFFER_SIZE 8192
+dl_u8 fileBuffer[FILE_BUFFER_SIZE];
+
+const char* romFileNames[] = 
+{
+    "downland.bin",
+    "downland.rom",
+    "Downland V1.1 (1983) (26-3046) (Tandy) [a1].ccc"
+};
+
+int romFileNamesCount = sizeof(romFileNames) / sizeof(romFileNames[0]);
+
+
+static bool loadFile(const char* romPath, dl_u8* fileBuffer, dl_u32 fileBufferSize)
+{
+	SDFile* file = g_pd->file->open(romPath, kFileRead);
+
+	if (file == NULL)
+		return false;
+
+    g_pd->file->seek(file, 0L, SEEK_END);
+    dl_u32 fileSize = g_pd->file->tell(file);
+
+    if (fileSize != fileBufferSize)
+    {
+        g_pd->file->close(file);
+        return false;
+    }
+
+    g_pd->file->seek(file, 0L, SEEK_SET);
+
+    int bytesRead = (int)g_pd->file->read(file, fileBuffer, fileBufferSize);
+
+    if (bytesRead != fileBufferSize)
+    {
+        g_pd->file->close(file);
+        return false;
+    }
+
+    g_pd->file->close(file);
+	return true;
+}
+
 static int update(void* userdata)
 {
-	PlaydateAPI* pd = userdata;
-	
-	pd->graphics->clear(kColorWhite);
-	pd->graphics->setFont(font);
-	pd->graphics->drawText("Hello World!", strlen("Hello World!"), kASCIIEncoding, x, y);
+	g_pd = userdata;
+
+    bool romFoundAndLoaded = false;
+    for (int loop = 0; loop < romFileNamesCount; loop++)
+    {
+        if (loadFile(romFileNames[loop], fileBuffer, FILE_BUFFER_SIZE) &&
+            checksumCheckLitteEndian(fileBuffer, FILE_BUFFER_SIZE) &&
+            ResourceLoaderBuffer_Init(fileBuffer, FILE_BUFFER_SIZE, &resources))
+        {
+            romFoundAndLoaded = true;
+            break;
+        }
+    }
+
+	g_pd->graphics->clear(kColorWhite);
+	g_pd->graphics->setFont(font);
+	g_pd->graphics->drawText("Hello World!", strlen("Hello World!"), kASCIIEncoding, x, y);
 
 	x += dx;
 	y += dy;
@@ -95,7 +155,7 @@ static int update(void* userdata)
 	if ( y < 0 || y > LCD_ROWS - TEXT_HEIGHT )
 		dy = -dy;
         
-	pd->system->drawFPS(0,0);
+	g_pd->system->drawFPS(0,0);
 
 	return 1;
 }

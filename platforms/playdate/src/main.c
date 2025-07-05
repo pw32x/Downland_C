@@ -17,6 +17,29 @@ static int update(void* userdata);
 GameData gameData;
 Resources resources;
 
+AudioSample* g_sounds[SOUND_NUM_SOUNDS];
+
+SamplePlayer* g_samplePlayers[SOUND_NUM_SOUNDS];
+
+void Sound_Play(dl_u8 soundIndex, dl_u8 loop)
+{
+	g_pd->sound->sampleplayer->setPaused(g_samplePlayers[loop], false);
+	g_pd->sound->sampleplayer->play(g_samplePlayers[soundIndex], !loop, 1.0f);
+}
+
+void Sound_Stop(dl_u8 soundIndex)
+{
+	g_pd->sound->sampleplayer->stop(g_samplePlayers[soundIndex]);
+}
+
+void Sound_PauseAll(dl_u8 pause)
+{
+	for (int loop = 0; loop < SOUND_NUM_SOUNDS; loop++)
+	{
+		g_pd->sound->sampleplayer->setPaused(g_samplePlayers[loop], pause);
+	}
+}
+
 #ifdef _WINDLL
 __declspec(dllexport)
 #endif
@@ -40,12 +63,14 @@ int eventHandler(PlaydateAPI* pd, PDSystemEvent event, uint32_t arg)
 	case kEventPause:
 	{
 		gameData.paused = true;
+		Sound_PauseAll(gameData.paused);
 		break;
 	}
 	case kEventUnlock:
 	case kEventResume:
 	{
 		gameData.paused = false;
+		Sound_PauseAll(gameData.paused);
 		break;
 	}
 
@@ -70,13 +95,7 @@ void* dl_alloc(dl_u32 size)
 	return (void*)memory;
 }
 
-void Sound_Play(dl_u8 soundIndex, dl_u8 loop)
-{
-}
 
-void Sound_Stop(dl_u8 soundIndex)
-{
-}
 
 #define FILE_BUFFER_SIZE 8192
 dl_u8 fileBuffer[FILE_BUFFER_SIZE];
@@ -141,6 +160,27 @@ bool init(PlaydateAPI* pd)
     {
         return false;
     }
+
+	g_sounds[SOUND_JUMP] = g_pd->sound->sample->load("jump.wav");
+	g_sounds[SOUND_LAND] = g_pd->sound->sample->load("land.wav");
+	g_sounds[SOUND_SCREEN_TRANSITION] = g_pd->sound->sample->load("transition.wav");
+	g_sounds[SOUND_SPLAT] = g_pd->sound->sample->load("splat.wav");
+	g_sounds[SOUND_PICKUP] = g_pd->sound->sample->load("pickup.wav");
+	g_sounds[SOUND_RUN] = g_pd->sound->sample->load("run.wav");
+	g_sounds[SOUND_CLIMB_UP] = g_pd->sound->sample->load("climb_up.wav");
+	g_sounds[SOUND_CLIMB_DOWN] = g_pd->sound->sample->load("climb_down.wav");
+
+	g_samplePlayers[SOUND_JUMP] = g_pd->sound->sampleplayer->newPlayer();
+	g_samplePlayers[SOUND_LAND] = g_pd->sound->sampleplayer->newPlayer();
+	g_samplePlayers[SOUND_SCREEN_TRANSITION] = g_pd->sound->sampleplayer->newPlayer();
+	g_samplePlayers[SOUND_SPLAT] = g_pd->sound->sampleplayer->newPlayer();
+	g_samplePlayers[SOUND_PICKUP] = g_pd->sound->sampleplayer->newPlayer();
+	g_samplePlayers[SOUND_RUN] = g_pd->sound->sampleplayer->newPlayer();
+	g_samplePlayers[SOUND_CLIMB_UP] = g_pd->sound->sampleplayer->newPlayer();
+	g_samplePlayers[SOUND_CLIMB_DOWN] = g_pd->sound->sampleplayer->newPlayer();
+
+	for (int loop = 0; loop < SOUND_NUM_SOUNDS; loop++)
+		pd->sound->sampleplayer->setSample(g_samplePlayers[loop], g_sounds[loop]);
 
 	memset(&gameData, 0, sizeof(GameData));
 	GameRunner_Init(&gameData, &resources);

@@ -18,17 +18,22 @@ static void loadBackgroundDrawData(const dl_u8* fileBuffer,
 								   dl_u16 start, 
 								   BackgroundDrawData* backgroundDrawData)
 {
+	dl_u8 sentinelValue = 0xff;
+	dl_u8 drawCommandCount = 0;
+	const dl_u8* fileBufferRunner;
+	BackgroundDrawCommand* backgroundDrawCommands;
+	BackgroundDrawCommand* backgroundDrawCommandsRunner;
+	dl_u8 repeatCodeIndicator;
+
 	// take into account that the rom starts at c000
 	start -= 0xc000; 
 
 	fileBuffer += start;
-
-	dl_u8 sentinelValue = 0xff;
+	fileBufferRunner = fileBuffer;
 
 	// go through the fileBuffer, counting the number of elements
 	// we need to create.
-	dl_u8 drawCommandCount = 0;
-	const dl_u8* fileBufferRunner = fileBuffer;
+
 	while (*fileBufferRunner != sentinelValue)
 	{
 		drawCommandCount++;
@@ -43,13 +48,13 @@ static void loadBackgroundDrawData(const dl_u8* fileBuffer,
 	}
 
 	// create the list of background draw commands
-	BackgroundDrawCommand* backgroundDrawCommands = (BackgroundDrawCommand*)dl_alloc(drawCommandCount * sizeof(BackgroundDrawCommand));
+	backgroundDrawCommands = (BackgroundDrawCommand*)dl_alloc(drawCommandCount * sizeof(BackgroundDrawCommand));
 
 	// fill the background draw commands array
 	fileBufferRunner = fileBuffer;
-	BackgroundDrawCommand* backgroundDrawCommandsRunner = backgroundDrawCommands;
+	backgroundDrawCommandsRunner = backgroundDrawCommands;
 
-	dl_u8 repeatCodeIndicator = 0x80; // a shape code with this flag means that it repeats
+	repeatCodeIndicator = 0x80; // a shape code with this flag means that it repeats
 
 	while (*fileBufferRunner != sentinelValue)
 	{
@@ -111,14 +116,15 @@ static void loadDoorInfoDataPositions(const dl_u8* fileBuffer,
 									  dl_u16 start, 
 									  DoorInfoData* doorInfoData)
 {
-	// take into account that the rom starts at c000
-	start -= 0xc000; 
-	fileBuffer += start;
-
 	dl_u8 doorInfosCount = 0;
 	dl_u8 sentinelValue = 1; // some initial non-zero value
 
-	const dl_u8* fileBufferRunner = fileBuffer;
+	const dl_u8* fileBufferRunner;
+
+	// take into account that the rom starts at c000
+	start -= 0xc000; 
+	fileBuffer += start;
+	fileBufferRunner = fileBuffer;
 
 	// get the number of doors by going through
 	// the file until we hit 0
@@ -161,14 +167,18 @@ static dl_u8* buildBitShiftedSprites(const dl_u8* spriteData,
 	dl_u8* bitShiftedSpritesRunner = bitShiftedSprites;
 
 	dl_u32 workBuffer;
+	int loop;
+	int shiftAmount;
+	const dl_u8* spriteDataRunner;
+	int rowLoop;
 
-	for (int loop = 0; loop < spriteCount; loop++)
+	for (loop = 0; loop < spriteCount; loop++)
 	{
-		for (int shiftAmount = 0; shiftAmount < NUM_BIT_SHIFTS; shiftAmount++)
+		for (shiftAmount = 0; shiftAmount < NUM_BIT_SHIFTS; shiftAmount++)
 		{
-			const dl_u8* spriteDataRunner = spriteData + (loop * rowCount * bytesPerRow);
+			spriteDataRunner = spriteData + (loop * rowCount * bytesPerRow);
 
-			for (int rowLoop = 0; rowLoop < rowCount; rowLoop++)
+			for (rowLoop = 0; rowLoop < rowCount; rowLoop++)
 			{
 				workBuffer = spriteDataRunner[0] << 16 | spriteDataRunner[1] << 8;
 				workBuffer >>= (shiftAmount * 2);

@@ -7,6 +7,8 @@ void drawDoor(const DoorInfo* doorInfo,
 			  dl_u8* cleanBackground,
 			  dl_u8 drawOnFramebuffer)
 {
+	const dl_u8* doorSprite;
+
 	// draw the door. 
 	dl_u8 y = doorInfo->y;
 	dl_u8 x = doorInfo->x;
@@ -17,10 +19,10 @@ void drawDoor(const DoorInfo* doorInfo,
 	else
 		x -= 4;
 
-	const dl_u8* doorSprite = getBitShiftedSprite(bitShiftedDoorSprites, 
-											   0,
-											   x & 3, 
-											   DOOR_BITSHIFTED_SPRITE_FRAME_SIZE);
+	doorSprite = getBitShiftedSprite(bitShiftedDoorSprites, 
+									 0,
+									 x & 3, 
+									 DOOR_BITSHIFTED_SPRITE_FRAME_SIZE);
 
 	if (drawOnFramebuffer)
 	{

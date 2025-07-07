@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <ProjectGuid>{5D73425F-9AD8-48C5-8F00-99344B6BB2DD}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <NMakeBuildCommandLine>build.bat</NMakeBuildCommandLine>
+    <NMakeCleanCommandLine>clean.bat</NMakeCleanCommandLine>
+    <NMakeReBuildCommandLine>rebuild.bat</NMakeReBuildCommandLine>
+    <NMakePreprocessorDefinitions>_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <NMakeBuildCommandLine>build.bat</NMakeBuildCommandLine>
+    <NMakeCleanCommandLine>clean.bat</NMakeCleanCommandLine>
+    <NMakeReBuildCommandLine>rebuild.bat</NMakeReBuildCommandLine>
+    <NMakePreprocessorDefinitions>WIN32;_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <NMakeBuildCommandLine>build.bat</NMakeBuildCommandLine>
+    <NMakeCleanCommandLine>clean.bat</NMakeCleanCommandLine>
+    <NMakeReBuildCommandLine>rebuild.bat</NMakeReBuildCommandLine>
+    <NMakePreprocessorDefinitions>WIN32;NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <NMakeBuildCommandLine>build.bat</NMakeBuildCommandLine>
+    <NMakeCleanCommandLine>clean.bat</NMakeCleanCommandLine>
+    <NMakeReBuildCommandLine>rebuild.bat</NMakeReBuildCommandLine>
+    <NMakePreprocessorDefinitions>NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\game\ball.c" />
+    <ClCompile Include="..\..\..\game\bird.c" />
+    <ClCompile Include="..\..\..\game\checksum_utils.c" />
+    <ClCompile Include="..\..\..\game\debug_utils.c" />
+    <ClCompile Include="..\..\..\game\dl_rand.c" />
+    <ClCompile Include="..\..\..\game\door_utils.c" />
+    <ClCompile Include="..\..\..\game\draw_utils.c" />
+    <ClCompile Include="..\..\..\game\drops_manager.c" />
+    <ClCompile Include="..\..\..\game\game.c" />
+    <ClCompile Include="..\..\..\game\physics_utils.c" />
+    <ClCompile Include="..\..\..\game\player.c" />
+    <ClCompile Include="..\..\..\game\resource_loader_buffer.c" />
+    <ClCompile Include="..\..\..\game\rooms\chambers.c" />
+    <ClCompile Include="..\..\..\game\rooms\getready.c" />
+    <ClCompile Include="..\..\..\game\rooms\rooms.c" />
+    <ClCompile Include="..\..\..\game\rooms\titlescreen.c" />
+    <ClCompile Include="..\..\..\game\rooms\transitions.c" />
+    <ClCompile Include="..\..\..\game\string_utils.c" />
+    <ClCompile Include="..\src\3d_3do_logo.c" />
+    <ClCompile Include="..\src\abort.c" />
+    <ClCompile Include="..\src\main.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\game\alloc.h" />
+    <ClInclude Include="..\..\..\game\background_types.h" />
+    <ClInclude Include="..\..\..\game\ball.h" />
+    <ClInclude Include="..\..\..\game\base_defines.h" />
+    <ClInclude Include="..\..\..\game\base_types.h" />
+    <ClInclude Include="..\..\..\game\bird.h" />
+    <ClInclude Include="..\..\..\game\checksum_utils.h" />
+    <ClInclude Include="..\..\..\game\debug_utils.h" />
+    <ClInclude Include="..\..\..\game\dl_rand.h" />
+    <ClInclude Include="..\..\..\game\dl_sound.h" />
+    <ClInclude Include="..\..\..\game\door_types.h" />
+    <ClInclude Include="..\..\..\game\door_utils.h" />
+    <ClInclude Include="..\..\..\game\draw_utils.h" />
+    <ClInclude Include="..\..\..\game\drops_manager.h" />
+    <ClInclude Include="..\..\..\game\drops_types.h" />
+    <ClInclude Include="..\..\..\game\game.h" />
+    <ClInclude Include="..\..\..\game\game_types.h" />
+    <ClInclude Include="..\..\..\game\joystick_types.h" />
+    <ClInclude Include="..\..\..\game\physics_utils.h" />
+    <ClInclude Include="..\..\..\game\pickup_types.h" />
+    <ClInclude Include="..\..\..\game\player.h" />
+    <ClInclude Include="..\..\..\game\player_types.h" />
+    <ClInclude Include="..\..\..\game\resource_loader_buffer.h" />
+    <ClInclude Include="..\..\..\game\resource_types.h" />
+    <ClInclude Include="..\..\..\game\rooms\chambers.h" />
+    <ClInclude Include="..\..\..\game\rooms\rooms.h" />
+    <ClInclude Include="..\..\..\game\rooms\room_types.h" />
+    <ClInclude Include="..\..\..\game\string_utils.h" />
+    <ClInclude Include="..\src\abort.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\build\activate-env.bat" />
+    <None Include="..\build\build.bat" />
+    <None Include="..\build\clean.bat" />
+    <None Include="..\build\make.bat" />
+    <None Include="..\build\Makefile" />
+    <None Include="..\build\rebuild.bat" />
+    <None Include="..\build\run.bat" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

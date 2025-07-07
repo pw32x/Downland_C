@@ -2,15 +2,18 @@
 
 #include "base_defines.h"
 #include "dl_rand.h"
-#include <memory.h>
+#include <string.h>
 
 void setPixel(dl_u8* framebuffer, dl_s16 x, dl_s16 y, dl_u8 value) 
 {
+	dl_u8 pixel;
+	int index;
+
     if (x < 0 || x >= FRAMEBUFFER_WIDTH || y < 0 || y >= FRAMEBUFFER_HEIGHT) 
         return;
 
-    dl_u8 pixel = 1 << (7 - (x % 8));
-    int index = (x / 8) + (y * FRAMEBUFFER_PITCH);
+    pixel = 1 << (7 - (x % 8));
+    index = (x / 8) + (y * FRAMEBUFFER_PITCH);
 
     if (value)
         framebuffer[index] |= pixel;  // set bit/pixel
@@ -20,6 +23,9 @@ void setPixel(dl_u8* framebuffer, dl_s16 x, dl_s16 y, dl_u8 value)
 
 void drawText(const dl_u8* text, const dl_u8* characterFont, dl_u8* framebuffer, dl_u16 framebufferPosition)
 {
+	const dl_u8* character;
+	int loop;
+
     dl_u8 rowsPerCharacter = 7;
     framebuffer += framebufferPosition;
 
@@ -27,9 +33,9 @@ void drawText(const dl_u8* text, const dl_u8* characterFont, dl_u8* framebuffer,
     while (*text != 0xff)
     {
         // find the corresponding character in the font
-        const dl_u8* character = &characterFont[*text * rowsPerCharacter]; // index of the character * 7 bytes per character if font
+        character = &characterFont[*text * rowsPerCharacter]; // index of the character * 7 bytes per character if font
 
-        for (int loop = 0; loop < rowsPerCharacter; loop++)
+        for (loop = 0; loop < rowsPerCharacter; loop++)
         {
             *framebuffer = character[loop] & CRT_EFFECT_MASK;
             framebuffer += 0x20; // go down one row in the frame buffer for the next line.
@@ -170,10 +176,12 @@ void eraseSprite_16PixelsWide(const dl_u8* spriteData,
 							  dl_u8* cleanBackground)
 {
 	dl_u16 offset = (x / 4) + (y * FRAMEBUFFER_PITCH);
+	int loop;
+
 	framebuffer += offset;
 	cleanBackground += offset;
 
-	for (int loop = 0; loop < numLines; loop++)
+	for (loop = 0; loop < numLines; loop++)
 	{
 		// remove the bits of the sprite from the frame buffer 
 		// and restore with the clean background
@@ -202,10 +210,12 @@ void eraseSprite_16PixelsWide_simple(dl_u8 x,
 									 dl_u8* cleanBackground)
 {
 	dl_u16 offset = (x / 4) + (y * FRAMEBUFFER_PITCH);
+	int loop;
+
 	framebuffer += offset;
 	cleanBackground += offset;
 
-	for (int loop = 0; loop < numLines; loop++)
+	for (loop = 0; loop < numLines; loop++)
 	{
 		// remove the bits of the sprite from the frame buffer 
 		// and restore with the clean background
@@ -230,10 +240,12 @@ void eraseSprite_24PixelsWide(const dl_u8* spriteData,
 							  dl_u8* cleanBackground)
 {
 	dl_u16 offset = (x / 4) + (y * FRAMEBUFFER_PITCH);
+	int loop;
+
 	framebuffer += offset;
 	cleanBackground += offset;
 
-	for (int loop = 0; loop < numLines; loop++)
+	for (loop = 0; loop < numLines; loop++)
 	{
 		// remove the bits of the sprite from the frame buffer 
 		// and restore with the clean background
@@ -267,10 +279,12 @@ void eraseSprite_24PixelsWide_simple(dl_u8 x,
 									 dl_u8* cleanBackground)
 {
 	dl_u16 offset = (x / 4) + (y * FRAMEBUFFER_PITCH);
+	int loop;
+
 	framebuffer += offset;
 	cleanBackground += offset;
 
-	for (int loop = 0; loop < numLines; loop++)
+	for (loop = 0; loop < numLines; loop++)
 	{
 		// remove the bits of the sprite from the frame buffer 
 		// and restore with the clean background
@@ -783,6 +797,10 @@ void drawBackground(const BackgroundDrawData* backgroundDrawData,
 					const Resources* resources,
 					dl_u8* framebuffer)
 {
+	int counter;
+	int shapeLoop;
+	const BackgroundDrawCommand* backgroundDrawCommandRunner;
+
 	g_framebuffer = framebuffer;
 
 	// clear frame buffer
@@ -793,12 +811,12 @@ void drawBackground(const BackgroundDrawData* backgroundDrawData,
 	g_plotterCurrentX = 16;
 	g_crtMaskIndexToUse = CRT_MASK_NORMAL;
 
-	int counter = backgroundDrawData->drawCommandCount;
-	const BackgroundDrawCommand* backgroundDrawCommandRunner = backgroundDrawData->backgroundDrawCommands;
+	counter = backgroundDrawData->drawCommandCount;
+	backgroundDrawCommandRunner = backgroundDrawData->backgroundDrawCommands;
 
 	while (counter--)
 	{
-		for (int shapeLoop = 0; shapeLoop < backgroundDrawCommandRunner->drawCount; shapeLoop++)
+		for (shapeLoop = 0; shapeLoop < backgroundDrawCommandRunner->drawCount; shapeLoop++)
 		{
 			dl_u8 shapeCode = backgroundDrawCommandRunner->shapeCode;
 			drawPieceFunctions[shapeCode](resources);

@@ -73,10 +73,14 @@ void titleScreen_init(Room* room, GameData* gameData, const Resources* resources
 
 void titleScreen_update(Room* room, GameData* gameData, const Resources* resources)
 {
+	int loop;
+	dl_u16 drawLocation;
+	dl_u16 eraseLocation;
+
 	// run the drops manager three times to simulate
 	// the lack of checking for vsync in the original 
 	// game, making drops fall more often and faster.
-	for (int loop = 0; loop < 3; loop++)
+	for (loop = 0; loop < 3; loop++)
 	{
 		DropsManager_Update(&gameData->dropData, 
 							gameData->framebuffer, 
@@ -98,8 +102,8 @@ void titleScreen_update(Room* room, GameData* gameData, const Resources* resourc
 	}
 
 	// draw the cursor
-	dl_u16 drawLocation = gameData->numPlayers == 1 ? 0xf64 : 0xf70;  // hardcoded locations in the frambuffer
-	dl_u16 eraseLocation = gameData->numPlayers == 1 ? 0xf70 : 0xf64; // based on the original game.
+	drawLocation = gameData->numPlayers == 1 ? 0xf64 : 0xf70;  // hardcoded locations in the frambuffer
+	eraseLocation = gameData->numPlayers == 1 ? 0xf70 : 0xf64; // based on the original game.
 
 	gameData->framebuffer[drawLocation] = 0xff;// draw the cursor (a white horizontal line)
 	gameData->framebuffer[eraseLocation] = 0;  // erase the cursor

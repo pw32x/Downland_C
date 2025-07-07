@@ -55,12 +55,14 @@ void initBallPhysics(BallData* ballData)
 
 void Ball_Init(BallData* ballData, dl_u8 roomNumber, const Resources* resources)
 {
+	const dl_u8* roomsWithBouncingBall;
+
 	ballData->state = BALL_INACTIVE;
 	ballData->enabled = FALSE;
 
 	// check if this room uses the ball. if not, then return and
 	// stay disabled.
-	const dl_u8* roomsWithBouncingBall = resources->roomsWithBouncingBall;
+	roomsWithBouncingBall = resources->roomsWithBouncingBall;
 
 	while (*roomsWithBouncingBall != roomNumber && *roomsWithBouncingBall != 0xff)
 	{
@@ -82,6 +84,8 @@ void Ball_Init(BallData* ballData, dl_u8 roomNumber, const Resources* resources)
 
 void Ball_Update(BallData* ballData, dl_u8* framebuffer, dl_u8* cleanBackground)
 {
+	dl_u8 terrainTest;
+
 	if (!ballData->enabled)
 		return;
 
@@ -150,11 +154,11 @@ void Ball_Update(BallData* ballData, dl_u8* framebuffer, dl_u8* cleanBackground)
 		ballData->x += ballData->speedx;
 		ballData->y += ballData->speedy;	
 
-		dl_u8 terrainTest = testTerrainCollision(ballData->x, 
-											  ballData->y, 
-											  BALL_WALL_SENSOR_YOFFSET, 
-											  ballWideCollisionMasks, 
-											  cleanBackground);
+		terrainTest = testTerrainCollision(ballData->x, 
+										   ballData->y, 
+										   BALL_WALL_SENSOR_YOFFSET, 
+										   ballWideCollisionMasks, 
+										   cleanBackground);
 
 		if (TOUCHES_TERRAIN(terrainTest))
 		{

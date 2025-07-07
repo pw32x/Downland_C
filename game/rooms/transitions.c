@@ -59,6 +59,14 @@ void wipe_transition_init(Room* targetRoom, GameData* gameData, const Resources*
 
 void wipe_transition_update(Room* room, GameData* gameData, const Resources* resources)
 {
+	dl_u8 loopCount;
+	dl_u8 loopCounter;
+	dl_u16 offset;
+	dl_u8* cleanBackgroundRunner;
+	dl_u8* framebufferRunner;
+	int loop;
+	int innerLoop;
+
 	if (gameData->transitionInitialDelay)
 	{
 		gameData->transitionInitialDelay--;
@@ -80,21 +88,21 @@ void wipe_transition_update(Room* room, GameData* gameData, const Resources* res
 
 	// do two lines at every four so that we
 	// can finish when the transition sound effect does.
-	dl_u8 loopCount = gameData->transitionCurrentLine % 4 == 0 ? 2 : 1;
+	loopCount = gameData->transitionCurrentLine % 4 == 0 ? 2 : 1;
 
-	for (dl_u8 loopCounter = 0; loopCounter < loopCount; loopCounter++)
+	for (loopCounter = 0; loopCounter < loopCount; loopCounter++)
 	{
-		dl_u16 offset = gameData->transitionCurrentLine * FRAMEBUFFER_PITCH;
+		offset = gameData->transitionCurrentLine * FRAMEBUFFER_PITCH;
 
-		dl_u8* cleanBackgroundRunner = gameData->cleanBackground + offset;
-		dl_u8* framebufferRunner = gameData->framebuffer + offset;
+		cleanBackgroundRunner = gameData->cleanBackground + offset;
+		framebufferRunner = gameData->framebuffer + offset;
 
 		// the screen is divided in six horizontal strips. Every frame,
 		// a horizontal line of every strip is revealed, copied from the
 		// cleanBuffer to the framebuffer.
-		for (int loop = 0; loop < 6; loop++)
+		for (loop = 0; loop < 6; loop++)
 		{
-			for (int innerLoop = 0; innerLoop < FRAMEBUFFER_PITCH; innerLoop++)
+			for (innerLoop = 0; innerLoop < FRAMEBUFFER_PITCH; innerLoop++)
 			{
 				*framebufferRunner = *cleanBackgroundRunner;
 

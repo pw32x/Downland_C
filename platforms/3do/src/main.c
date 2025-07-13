@@ -1,50 +1,15 @@
-/*
-  ISC License
-
-  Copyright (c) 2024, Antonio SJ Musumeci <trapexit@spawn.link>
-
-  Permission to use, copy, modify, and/or distribute this software for any
-  purpose with or without fee is hereby granted, provided that the above
-  copyright notice and this permission notice appear in all copies.
-
-  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
-  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
-  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
-  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
-  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
-  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
-  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-*/
- 
-
-#include "hardware.h"
-#include "operamath.h"
-//#include <stdio.h>
-//#include <stdarg.h>
-#include "BlockFile.h"
-#include "stdio.h"
-#include "stdlib.h"
-#include "string.h"
-#include "types.h"
-#include "filestream.h"
-#include "filestreamfunctions.h"
-
+// game headers
 #include "game_types.h"
 #include "resource_types.h"
 #include "checksum_utils.h"
 #include "resource_loader_buffer.h"
 
+// 3do headers
 #include "celutils.h"
-#include "displayutils.h"
-#include "types.h"
-#include "varargs.h"
-#include "graphics.h"
-#include "io.h"
-#include "abort.h"
-#include "stdio.h"
-#include "mem.h"
 
+// project headers
 #include "image_utils.h"
+#include "display.h"
 
 GameData gameData;
 Resources resources;
@@ -72,147 +37,6 @@ void Sound_Stop(dl_u8 soundIndex)
 {
 }
 
-#define NUM_SCREENS 2
-
-ScreenContext *sc;
-int  _screen;
-Item _vram_ioreq;
-Item _vbl_ioreq;
-
-
-void InitBasicDisplay()
-{
-    Item rv;
-    Err err;
-    int i = 0;
-
-    err = OpenGraphicsFolio();
-    if(err < 0)
-        abort_err(err);
-
-    sc = (ScreenContext*)AllocMem(sizeof(ScreenContext),MEMTYPE_ANY);
-    if(sc == NULL)
-        return;
-
-    rv = CreateBasicDisplay(sc,DI_TYPE_DEFAULT,NUM_SCREENS);
-
-    if(rv < 0)
-    {
-        FreeMem(sc,sizeof(ScreenContext));
-        sc = NULL;
-        abort("unable to initialize display");
-    }
-    
-    for (i = 0; i < sc->sc_NumScreens; i++)
-    {
-        DisableHAVG(sc->sc_Screens[i]);
-        DisableVAVG(sc->sc_Screens[i]);
-    }
-
-    _vram_ioreq = CreateVRAMIOReq();
-    _vbl_ioreq  = CreateVBLIOReq();
-    _screen     = 0;
-
-}
-
-void ShutdownBasicDisplay()
-{
-  if(sc == NULL)
-    return;
-
-  DeleteIOReq(_vbl_ioreq);
-  DeleteIOReq(_vram_ioreq);
-  DeleteBasicDisplay(sc);
-  FreeMem(sc,sizeof(ScreenContext));
-}
-
-Err clear(const int color_)
-{
-  return SetVRAMPages(_vram_ioreq,
-                      sc->sc_Bitmaps[_screen]->bm_Buffer,
-                      color_,
-                      75,
-                      0xFFFFFFFF);
-}
-
-Err waitvbl()
-{
-  return WaitVBL(_vbl_ioreq,1);
-}
-
-Err display()
-{
-  return DisplayScreen(sc->sc_Screens[_screen],0);
-}
-
-void swap()
-{
-  _screen = !_screen;
-}
-
-Err display_and_swap()
-{
-  Err err;
-
-  err = display();
-  swap();
-
-  return err;
-}
-
-Err draw_cels(CCB *ccb_)
-{
-  return DrawCels(sc->sc_BitmapItems[_screen],ccb_);
-}
-
-// Uses DrawText8 and is therefore slow
-Err
-draw_text8(const int   x_,
-           const int   y_,
-           const char *str_)
-{
-  Err err;
-  GrafCon gcon;
-  Item bitmapItem;
-
-  gcon.gc_PenX = x_;
-  gcon.gc_PenY = y_;
-
-  bitmapItem = sc->sc_BitmapItems[_screen];
-
-  err = DrawText8(&gcon,bitmapItem,(const u8*)str_);
-
-  return 0;
-}
-
-Err
-draw_printf(const int x_,
-            const int y_,
-            const char *fmt_,
-            ...)
-{
-  va_list args;
-  char strbuf[256];
-
-  va_start(args,fmt_);
-  vsprintf(strbuf,fmt_,args);
-  va_end(args);
-
-  return draw_text8(x_,y_,strbuf);
-}
-
-Err
-draw_vprintf(const int   x_,
-             const int   y_,
-             const char *fmt_,
-             va_list     args_)
-{
-  char strbuf[256];
-
-  vsprintf(strbuf,fmt_,args_);
-
-  return draw_text8(x_,y_,strbuf);
-}
 
 #define DOWNLAND_ROM_FILE_SIZE 8192
 dl_u8* g_downlandRomFileBuffer = NULL;

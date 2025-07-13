@@ -15,6 +15,8 @@ OPT      = -O2
 DEFFLAGS = -DNDEBUG=1
 endif
 
+DEFFLAGS += -DDL_PLATFORM_3DO
+
 TDO_DEVKIT_PATH = C:/3do-devkit
 
 INCPATH  = ${TDO_DEVKIT_PATH}/include

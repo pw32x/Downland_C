@@ -2,13 +2,14 @@
 #define DROPS_TYPES_INCLUDE_H
 
 #include "base_types.h"
+#include "base_defines.h"
 
 #define NUM_DROPS 10
 
 #define DROP_WIDTH  4
 #define DROP_HEIGHT	6
 
-typedef __packed struct
+typedef PACKED struct
 {
 	dl_u8 wiggleTimer;
 	dl_u16 speedY;
@@ -18,20 +19,20 @@ typedef __packed struct
 	dl_u8 collisionMask;
 } Drop;
 
-typedef __packed struct
+typedef PACKED struct
 {
 	dl_u8 dropSpawnPointsCount;
 	dl_u8 y;
 	dl_u8 x;
 } DropSpawnArea;
 
-typedef __packed struct
+typedef PACKED struct
 {
 	dl_u8 spawnAreasCount;
 	const DropSpawnArea* dropSpawnAreas;
 } DropSpawnPositions;
 
-typedef __packed struct
+typedef PACKED struct
 {
 	Drop drops[NUM_DROPS];
 	const DropSpawnPositions* dropSpawnPositions;

@@ -87,6 +87,9 @@
     <ClCompile Include="..\..\..\game\rooms\getready.c">
       <Filter>game\rooms</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\image_utils.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\abort.h">
@@ -175,6 +178,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\game\rooms\room_types.h">
       <Filter>game\rooms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\image_utils.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -44,9 +44,12 @@
 #include "stdio.h"
 #include "mem.h"
 
+#include "image_utils.h"
+
 GameData gameData;
 Resources resources;
 
+static dl_u8* g_crtFramebuffer = NULL;
 
 #define DOWNLAND_MEMORY_SIZE 18288
 static dl_u8* g_memory = NULL;
@@ -295,9 +298,18 @@ static dl_u8 loadRom(const char* romPath, dl_u8** fileBuffer)
 	return TRUE;
 }
 
-uint16 myPlut[2] = {
+uint16 twoColorPLUT[2] = 
+{
     0x0000, // index 0: black (R=0, G=0, B=0)
-    0x7FFF  // index 1: white (R=31, G=31, B=31)
+    0x003E  // index 1: white (R=31, G=31, B=31)
+};
+
+uint16 fourColorPLUT[4] = 
+{
+    0x0000, // black (R=0, G=0, B=0)
+    0x003E, // blue (R=0, G=0, B=31)
+    0xFC80, // orange (R=31, G=20, B=0)
+    0x7FFF  // white (R=31, G=31, B=31)
 };
 
 #define SCREEN_WIDTH  320
@@ -336,7 +348,8 @@ uint16 mySpriteBits[] =
 };
 
 CCB myCCB;
-CCB downlandCCB;
+CCB framebufferCCB;
+CCB crtFramebufferCCB;
 
 void InitCCBs(void)
 {
@@ -345,12 +358,21 @@ void InitCCBs(void)
 
     InitCel(&myCCB, 16, 16, 1, INITCEL_CODED);
     myCCB.ccb_SourcePtr   = (CelData *)mySpriteBits;
-    myCCB.ccb_PLUTPtr = myPlut;
+    myCCB.ccb_PLUTPtr = twoColorPLUT;
 
     
-    InitCel(&downlandCCB, 256, 192, 1, INITCEL_CODED);
-    downlandCCB.ccb_SourcePtr   = (CelData *)gameData.framebuffer;
-    downlandCCB.ccb_PLUTPtr = myPlut;
+    InitCel(&framebufferCCB, 256, 192, 1, INITCEL_CODED);
+    framebufferCCB.ccb_SourcePtr   = (CelData *)gameData.framebuffer;
+    framebufferCCB.ccb_PLUTPtr = twoColorPLUT;
+
+
+    InitCel(&crtFramebufferCCB, 256, 192, 8, INITCEL_CODED);
+    //ClearFlag(crtFramebufferCCB.ccb_Flags, CCB_NOBLK);
+
+    crtFramebufferCCB.ccb_Flags |= CCB_BGND;
+
+    crtFramebufferCCB.ccb_SourcePtr   = (CelData *)g_crtFramebuffer;
+    crtFramebufferCCB.ccb_PLUTPtr = fourColorPLUT;
 }
 
 void int_to_bits(int n, char *out, int bits)
@@ -388,6 +410,8 @@ int main(int argc, char* argv)
 
     g_memory = (dl_u8*)malloc(DOWNLAND_MEMORY_SIZE);
     g_memoryEnd = g_memory;
+
+    g_crtFramebuffer = (dl_u8*)malloc(FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT);
 
     for (loop = 0; loop < ROM_FILENAMES_COUNT; loop++)
     {
@@ -427,26 +451,18 @@ int main(int argc, char* argv)
 
     while(true)
     {
-        // do work
-        //ZoomRotateCel(logo, x, y,zoom,angle);
-        //ZoomRotateCel(&myCCB, x, y, zoom, angle);        
-
-        angle += Convert32_F16(1);
-        zoom  += dzoom;
-        if (clamp(min_zoom, max_zoom, &zoom))
-        {
-            dzoom = -dzoom;
-            x = Convert32_F16(ReadHardwareRandomNumber() % sc->sc_BitmapWidth);
-            y = Convert32_F16(ReadHardwareRandomNumber() % sc->sc_BitmapHeight);
-            kprintf("x,y: %d, %d\n",
-                    ConvertF16_32(x),
-                    ConvertF16_32(y));
-        }
-
         Game_Update(&gameData, &resources);
 
-        clear(clearColor);
-        draw_cels(&downlandCCB);
+        //clear(clearColor);
+        //draw_cels(&framebufferCCB);
+
+        convert1bppImageTo8bppCrtEffectImage(gameData.framebuffer,
+                                             g_crtFramebuffer,
+                                             FRAMEBUFFER_WIDTH,
+                                             FRAMEBUFFER_HEIGHT,
+                                             CrtColor_Blue);
+
+        draw_cels(&crtFramebufferCCB);
         //draw_cels(logo);
 
         //draw_cels(&myCCB);
@@ -487,10 +503,10 @@ int main(int argc, char* argv)
         //draw_printf(16, 64,"big %d",bigResult);
         
 
-        drawCommandCount = resources.roomResources[TITLESCREEN_ROOM_INDEX].backgroundDrawData.drawCommandCount;
+        //drawCommandCount = resources.roomResources[TITLESCREEN_ROOM_INDEX].backgroundDrawData.drawCommandCount;
         //draw_printf(16, 0, "command count %d", drawCommandCount);
 
-        backgroundDrawCommands = resources.roomResources[TITLESCREEN_ROOM_INDEX].backgroundDrawData.backgroundDrawCommands;
+        //backgroundDrawCommands = resources.roomResources[TITLESCREEN_ROOM_INDEX].backgroundDrawData.backgroundDrawCommands;
 
         /*
         for (loop = 0; loop < drawCommandCount; loop++)

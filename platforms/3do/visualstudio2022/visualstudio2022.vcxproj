@@ -109,6 +109,7 @@
     <ClCompile Include="..\..\..\game\string_utils.c" />
     <ClCompile Include="..\src\3d_3do_logo.c" />
     <ClCompile Include="..\src\abort.c" />
+    <ClCompile Include="..\src\image_utils.c" />
     <ClCompile Include="..\src\main.c" />
   </ItemGroup>
   <ItemGroup>
@@ -141,6 +142,7 @@
     <ClInclude Include="..\..\..\game\rooms\room_types.h" />
     <ClInclude Include="..\..\..\game\string_utils.h" />
     <ClInclude Include="..\src\abort.h" />
+    <ClInclude Include="..\src\image_utils.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\build\activate-env.bat" />

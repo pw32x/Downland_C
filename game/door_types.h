@@ -14,7 +14,7 @@
 #define DOOR_TOTAL_COUNT 0x22 // 34
 
 // per-room door information stored in rom
-typedef struct
+typedef __packed struct
 {
     dl_u8 y;
     dl_u8 x;
@@ -24,7 +24,7 @@ typedef struct
     dl_u8 globalDoorIndex;
 } DoorInfo;
 
-typedef struct
+typedef __packed struct
 {
     dl_u8 drawInfosCount;
     const DoorInfo* doorInfos;

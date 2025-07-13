@@ -3,26 +3,26 @@
 
 #include "base_types.h"
 
-typedef struct
+typedef  __packed struct
 {
     dl_u8 subpixelIncrement;
     dl_u8 pixelCount;
     dl_u8 orientation;
 } ShapeSegment;
 
-typedef struct
+typedef __packed struct
 {
     dl_u8 segmentCount;
     const ShapeSegment* segments;
 } ShapeDrawData;
 
-typedef struct
+typedef __packed struct
 {
     dl_u8 shapeCode;
     dl_u8 drawCount;
 } BackgroundDrawCommand;
 
-typedef struct
+typedef __packed struct
 {
     dl_u8 drawCommandCount;
     const BackgroundDrawCommand* backgroundDrawCommands;

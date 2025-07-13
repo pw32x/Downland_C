@@ -8,7 +8,7 @@
 #define DROP_WIDTH  4
 #define DROP_HEIGHT	6
 
-typedef struct
+typedef __packed struct
 {
 	dl_u8 wiggleTimer;
 	dl_u16 speedY;
@@ -18,20 +18,20 @@ typedef struct
 	dl_u8 collisionMask;
 } Drop;
 
-typedef struct
+typedef __packed struct
 {
 	dl_u8 dropSpawnPointsCount;
 	dl_u8 y;
 	dl_u8 x;
 } DropSpawnArea;
 
-typedef struct
+typedef __packed struct
 {
 	dl_u8 spawnAreasCount;
 	const DropSpawnArea* dropSpawnAreas;
 } DropSpawnPositions;
 
-typedef struct
+typedef __packed struct
 {
 	Drop drops[NUM_DROPS];
 	const DropSpawnPositions* dropSpawnPositions;

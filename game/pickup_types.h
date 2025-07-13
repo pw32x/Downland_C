@@ -17,7 +17,7 @@
 #define PICKUP_DIAMOND_POINTS	0x190 // 400
 
 // pick up positions stored in rom
-typedef struct
+typedef __packed struct
 {
 	dl_u8 y;
 	dl_u8 x;

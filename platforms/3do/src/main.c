@@ -10,6 +10,7 @@
 // project headers
 #include "image_utils.h"
 #include "display.h"
+#include "game_runner.h"
 
 GameData gameData;
 Resources resources;
@@ -123,7 +124,7 @@ void InitCCBs(void)
     framebufferCCB.ccb_PLUTPtr = twoColorPLUT;
 
 
-    InitCel(&crtFramebufferCCB, 256, 192, 8, INITCEL_CODED);
+    InitCel(&crtFramebufferCCB, 256, 192, 2, INITCEL_CODED);
     //ClearFlag(crtFramebufferCCB.ccb_Flags, CCB_NOBLK);
 
     crtFramebufferCCB.ccb_Flags |= CCB_BGND;
@@ -156,7 +157,7 @@ int main(int argc, char* argv)
     g_memory = (dl_u8*)malloc(DOWNLAND_MEMORY_SIZE);
     g_memoryEnd = g_memory;
 
-    g_crtFramebuffer = (dl_u8*)malloc(FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT);
+    g_crtFramebuffer = (dl_u8*)malloc(FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT / 4);
 
     for (loop = 0; loop < ROM_FILENAMES_COUNT; loop++)
     {
@@ -181,17 +182,18 @@ int main(int argc, char* argv)
     clear(clearColor);
     swap();
 
-    Game_Init(&gameData, &resources);
+    GameRunner_Init(&gameData, &resources);
     InitCCBs();
 
     while(true)
     {
-        Game_Update(&gameData, &resources);
+        GameRunner_Update(&gameData, &resources);
+        GameRunner_Draw(&gameData, &resources);
 
         //clear(clearColor);
         //draw_cels(&framebufferCCB);
 
-        convert1bppImageTo8bppCrtEffectImage(gameData.framebuffer,
+        convert1bppImageTo2bppCrtEffectImage(gameData.framebuffer,
                                              g_crtFramebuffer,
                                              FRAMEBUFFER_WIDTH,
                                              FRAMEBUFFER_HEIGHT,

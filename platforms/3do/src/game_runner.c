@@ -54,6 +54,7 @@ GameSprite playerIconSprite;
 GameSprite playerIconSpriteRegen;
 
 const GameSprite* g_pickUpSprites[3];
+*/
 
 typedef void (*DrawRoomFunction)(struct GameData* gameData, const Resources* resources);
 DrawRoomFunction m_drawRoomFunctions[NUM_ROOMS_AND_ALL];
@@ -70,7 +71,7 @@ void drawGetReadyScreen(struct GameData* gameData, const Resources* resources);
 // scrolling
 
 //m_characterFont(resources->characterFont, 8, 7, 39),
-
+/*
 dl_u16 g_oamIndex = 0;
 
 dl_u16 g_backgroundTileOffset;
@@ -546,6 +547,7 @@ void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 
 	g_scrollX = 7;
 	g_scrollY = 13;
+	*/
 
 	// room draw setup
     m_drawRoomFunctions[0] = drawChamber;
@@ -563,20 +565,18 @@ void GameRunner_Init(struct GameData* gameData, const Resources* resources)
     m_drawRoomFunctions[WIPE_TRANSITION_ROOM_INDEX] = drawWipeTransition;
     m_drawRoomFunctions[GET_READY_ROOM_INDEX] = drawGetReadyScreen;
 
-	buildUI();
+	//buildUI();
 
-	g_rooms[TITLESCREEN_ROOM_INDEX]->draw = custom_titleScreen_draw;
-	g_rooms[GET_READY_ROOM_INDEX]->draw = custom_get_ready_room_draw;
+	//g_rooms[TITLESCREEN_ROOM_INDEX]->draw = custom_titleScreen_draw;
+	//g_rooms[GET_READY_ROOM_INDEX]->draw = custom_get_ready_room_draw;
 
-	Game_ChangedRoomCallback = GameRunner_ChangedRoomCallback;
+	//Game_ChangedRoomCallback = GameRunner_ChangedRoomCallback;
 
-	setGameBackgroundTilemap(TITLESCREEN_ROOM_INDEX);
+	//setGameBackgroundTilemap(TITLESCREEN_ROOM_INDEX);
 
 	Game_Init(gameData, resources);
 
-	createBackgrounds(gameData, resources);
-	*/
-
+	//createBackgrounds(gameData, resources);
 }
 
 /*
@@ -626,9 +626,10 @@ void GameRunner_Draw(struct GameData* gameData, const Resources* resources)
 	g_transitionCounter = TRANSITION_OFF;
 
 	g_oamIndex = 0;
-
+*/
 	m_drawRoomFunctions[gameData->currentRoom->roomNumber](gameData, resources);
 
+	/*
 	BG_OFFSET[GAME_BACKGROUND_INDEX].x = g_scrollX;
 	BG_OFFSET[GAME_BACKGROUND_INDEX].y = g_scrollY;
 
@@ -773,9 +774,11 @@ void updateScroll(dl_u16 playerX, dl_u16 playerY)
 	g_oldPlayerX = playerX;
 	g_oldPlayerY = playerY;
 }
+*/
 
 void drawChamber(struct GameData* gameData, const Resources* resources)
 {
+	/*
 	PlayerData* playerData = gameData->currentPlayerData;
 
 	dl_u16 playerX = (playerData->x >> 8) << 1;
@@ -883,10 +886,12 @@ void drawChamber(struct GameData* gameData, const Resources* resources)
 	drawUIText(playerData->scoreString, 8, 0, &hudCharacterFont); 
 
 	drawUIPlayerLives(playerData);
+	*/
 }
 
 void drawTitleScreen(struct GameData* gameData, const Resources* resources)
 {
+	/*
 	g_scrollX = 7;
 	g_scrollY = 13;
 
@@ -910,24 +915,24 @@ void drawTitleScreen(struct GameData* gameData, const Resources* resources)
 	drawUIText(gameData->playerData[PLAYER_ONE].scoreString, 136, 118, &characterFont);
 	drawUIText(gameData->playerData[PLAYER_TWO].scoreString, 136, 129, &characterFont);
 	drawUIText(gameData->string_highScore, 136, 140, &characterFont);
+	*/
 }
 
-void clearBackground()
-{
-
-}
 
 void drawCleanBackground(const GameData* gameData, 
 						 const Resources* resources,
 						 dl_u8* cleanBackground, 
 						 dl_u16 tileOffset)
 {
+	/*
 	// change which tilemap to use
 	setGameBackgroundTilemap(gameData->transitionRoomNumber);
+	*/
 }
 
 void drawTransition(struct GameData* gameData, const Resources* resources)
 {
+	/*
 	if (gameData->transitionInitialDelay == 29)
     {
         g_transitionCounter = TRANSITION_BLACK_SCREEN;
@@ -940,10 +945,12 @@ void drawTransition(struct GameData* gameData, const Resources* resources)
 							gameData->cleanBackground, 
 							g_backgroundTileOffset);
     }
+	*/
 }
 
 void drawWipeTransition(struct GameData* gameData, const Resources* resources)
 {
+	/*
 	if (gameData->transitionInitialDelay == 29)
     {
         g_transitionCounter = TRANSITION_BLACK_SCREEN;
@@ -979,10 +986,10 @@ void drawWipeTransition(struct GameData* gameData, const Resources* resources)
 		g_transitionCounter = TRANSITION_BLACK_SCREEN;
 	else
 		g_transitionCounter = gameData->transitionCurrentLine;
+		*/
 }
 
 void drawGetReadyScreen(struct GameData* gameData, const Resources* resources)
 {
-	drawDrops(gameData);
+	//drawDrops(gameData);
 }
-*/

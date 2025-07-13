@@ -15,16 +15,24 @@
   ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
-
+ 
 
 #include "hardware.h"
 #include "operamath.h"
+//#include <stdio.h>
+//#include <stdarg.h>
+#include "BlockFile.h"
+#include "stdio.h"
+#include "stdlib.h"
+#include "string.h"
+#include "types.h"
+#include "filestream.h"
+#include "filestreamfunctions.h"
 
 #include "game_types.h"
+#include "resource_types.h"
+#include "checksum_utils.h"
 #include "resource_loader_buffer.h"
-
-GameData gameData;
-Resources resources;
 
 #include "celutils.h"
 #include "displayutils.h"
@@ -36,24 +44,21 @@ Resources resources;
 #include "stdio.h"
 #include "mem.h"
 
+GameData gameData;
+Resources resources;
 
-static dl_u8 memory[18288];
-static dl_u8* memoryEnd = NULL;
+
+#define DOWNLAND_MEMORY_SIZE 18288
+static dl_u8* g_memory = NULL;
+static dl_u8* g_memoryEnd = NULL;
 
 void* dl_alloc(dl_u32 size)
 {
-    dl_u8* memory;
+	dl_u8* newMemoryAlloc = g_memoryEnd;
 
-	if (memoryEnd == NULL)
-	{
-		memoryEnd = memory;
-	}
+	g_memoryEnd += size;
 
-	memory = memoryEnd;
-
-	memoryEnd += size;
-
-	return (void*)memory;
+	return (void*)newMemoryAlloc;
 }
 
 void Sound_Play(dl_u8 soundIndex, dl_u8 loop)
@@ -211,8 +216,7 @@ Err draw_cels(CCB *ccb_)
   return DrawCels(sc->sc_BitmapItems[_screen],ccb_);
 }
 
-  // Uses DrawText8 and is therefore slow
-
+// Uses DrawText8 and is therefore slow
 Err
 draw_text8(const int   x_,
            const int   y_,
@@ -261,10 +265,97 @@ draw_vprintf(const int   x_,
   return draw_text8(x_,y_,strbuf);
 }
 
+#define DOWNLAND_ROM_FILE_SIZE 8192
+dl_u8* g_downlandRomFileBuffer = NULL;
+
+const char* romFileNames[] = 
+{
+    "downland.rom",
+    "downland.bin",
+    "Downland V1.1 (1983) (26-3046) (Tandy) [a1].ccc"
+};
+#define ROM_FILENAMES_COUNT 3
+
+#define READ_SIZE 4096
+int bytesRead = 0;
+int someCount = 0;
+
+static dl_u8 loadRom(const char* romPath, dl_u8** fileBuffer)
+{
+    int32 fileSize;
+
+    *fileBuffer = (dl_u8*)LoadFile(romPath, &fileSize, MEMTYPE_ANY);
+
+    if (*fileBuffer == NULL)
+        return 0;
+
+    if (fileSize != DOWNLAND_ROM_FILE_SIZE)
+        return 0;
+
+	return TRUE;
+}
+
+uint16 myPlut[2] = {
+    0x001F, // index 0: black (R=0, G=0, B=0)
+    0x7FFF  // index 1: white (R=31, G=31, B=31)
+};
+
+#define SCREEN_WIDTH  320
+#define SCREEN_HEIGHT 240
+
+#define CEL_WIDTH     16
+#define CEL_HEIGHT    16
+
+// Scaling factor
+#define SCALE_FACTOR  4
+
+// 16x16, 1bpp → each row = 2 bytes → 16 rows = 32 bytes
+uint16 mySpriteBits[] = {
+    0xFFFF,  0xFFFF, 0xFFFF, 0xFFFF, 
+    0x8001,  0x8001, 0x8001, 0x8001, 
+    0x8001,  0x8001, 0x8001, 0x8001,
+    0x8001,  0x8001, 0x8001, 0x8001,
+    0x8001,  0x8001, 0x8001, 0x8001,
+    0x8001,  0x8001, 0x8001, 0x8001,
+    0x8001,  0x8001, 0x8001, 0x8001,
+    0x8001,  0x8001, 0x8001, 0x8001,
+    0x8001,  0x8001, 0x8001, 0x8001,
+    0x8001,  0x8001, 0x8001, 0x8001,
+    0x8001,  0x8001, 0x8001, 0x8001,
+    0x8001,  0x8001, 0x8001, 0x8001,
+    0x8001,  0x8001, 0x8001, 0x8001,
+    0x8001,  0x8001, 0x8001, 0x8001,
+    0x8001,  0x8001, 0x8001, 0x8001,
+    0xFFFF,   0xFFFF,  0xFFFF,  0xFFFF  
+};
+
+CCB myCCB;
+
+void InitMyCCB(void)
+{
+    // Clear the CCB (important)
+    memset(&myCCB, 0, sizeof(CCB));
+
+    InitCel(&myCCB, 16, 16, 1, INITCEL_CODED);
+    myCCB.ccb_SourcePtr   = (CelData *)mySpriteBits;
+    myCCB.ccb_PLUTPtr = myPlut;
+}
+
+void int_to_bits(int n, char *out, int bits)
+{
+    int i;
+    for (i = bits - 1; i >= 0; i--) 
+    {
+        out[bits - 1 - i] = (n & (1 << i)) ? '1' : '0';
+    }
+    out[bits] = '\0';
+}
 
 int main(int argc, char* argv)
 {
+    CCB* pCCB;
     CCB *logo;
+
     const int clearColor = 0x00000000;
     frac16       x       ;
     frac16       y       ;
@@ -273,6 +364,31 @@ int main(int argc, char* argv)
     frac16       dzoom   ;
     const frac16 max_zoom = Convert32_F16(3);
     const frac16 min_zoom = (Convert32_F16(1) >> 6);
+    char bitstr[33];
+
+    bool romFoundAndLoaded = false;
+    int loop;
+
+    g_memory = (dl_u8*)malloc(DOWNLAND_MEMORY_SIZE);
+    g_memoryEnd = g_memory;
+
+    for (loop = 0; loop < ROM_FILENAMES_COUNT; loop++)
+    {
+        if (loadRom(romFileNames[loop], &g_downlandRomFileBuffer) &&
+            checksumCheckBigEndian(g_downlandRomFileBuffer, DOWNLAND_ROM_FILE_SIZE) &&
+            ResourceLoaderBuffer_Init(g_downlandRomFileBuffer, DOWNLAND_ROM_FILE_SIZE, &resources))
+        {
+            romFoundAndLoaded = true;
+            break;
+        }
+
+        break;
+    }
+
+    if (!romFoundAndLoaded)
+        return -1;
+
+    InitMyCCB();
 
     InitBasicDisplay();
 
@@ -289,12 +405,15 @@ int main(int argc, char* argv)
     zoom     = 0;
     dzoom    = DivSF16(Convert32_F16(1),Convert32_F16(200));
 
-    Game_Init(&gameData, &resources);
+    //Game_Init(&gameData, &resources);
 
     while(true)
     {
         // do work
         ZoomRotateCel(logo, x, y,zoom,angle);
+        //ZoomRotateCel(downlandCel, x, y, zoom, angle);
+
+        ZoomRotateCel(&myCCB, x, y, zoom, angle);        
 
         angle += Convert32_F16(1);
         zoom  += dzoom;
@@ -308,14 +427,60 @@ int main(int argc, char* argv)
                     ConvertF16_32(y));
         }
 
-        Game_Update(&gameData, &resources);
-
-        // draw
+        //Game_Update(&gameData, &resources);
 
         clear(clearColor);
         draw_cels(logo);
-        draw_printf(16,16,"x: %d",ConvertF16_32(x));
-        draw_printf(16,24,"y: %d",ConvertF16_32(y));
+        //draw_cels(downlandCel);
+        draw_cels(&myCCB);
+
+        //draw_printf(16,16,"x: %d",ConvertF16_32(x));
+        //draw_printf(16,24,"y: %d",ConvertF16_32(y));
+        //draw_printf(16,32,"x: %d",ConvertF16_32(zoom));
+        //draw_printf(16,48,"y: %d",ConvertF16_32(angle));
+
+        
+        //int_to_bits(n, bitstr, 32);
+
+        /*
+        //CCB* ccb = &myCCB;
+        pCCB = &myCCB;
+        pCCB = logo;
+        
+
+        int_to_bits(pCCB->ccb_Flags, bitstr, 32); draw_printf(0, 0, "Flags: %s", bitstr);
+        int_to_bits(pCCB->ccb_XPos, bitstr, 32); draw_printf(0, 16, "XPos: %s", bitstr);
+        int_to_bits(pCCB->ccb_YPos, bitstr, 32); draw_printf(0, 32, "YPos: %s", bitstr);
+        int_to_bits(pCCB->ccb_HDX, bitstr, 32); draw_printf(0, 48, "HDX: %s", bitstr);
+        int_to_bits(pCCB->ccb_HDY, bitstr, 32); draw_printf(0, 64, "HDY: %s", bitstr);
+        int_to_bits(pCCB->ccb_VDX, bitstr, 32); draw_printf(0, 80, "VDX: %s", bitstr);
+        int_to_bits(pCCB->ccb_VDY, bitstr, 32); draw_printf(0, 96, "VDY: %s", bitstr);
+        int_to_bits(pCCB->ccb_HDDX, bitstr, 32); draw_printf(0, 112, "HDDX: %s", bitstr);
+        int_to_bits(pCCB->ccb_HDDY, bitstr, 32); draw_printf(0, 128, "HDDY: %s", bitstr);
+        int_to_bits(pCCB->ccb_PIXC, bitstr, 32); draw_printf(0, 144, "PIXC: %s", bitstr);
+        int_to_bits(pCCB->ccb_PRE0, bitstr, 32); draw_printf(0, 156, "PRE0: %s", bitstr);
+        int_to_bits(pCCB->ccb_PRE1, bitstr, 32); draw_printf(0, 168, "PRE1: %s", bitstr);
+        int_to_bits(pCCB->ccb_Width, bitstr, 32); draw_printf(0, 180, "Width: %s", bitstr);
+        int_to_bits(pCCB->ccb_Height, bitstr, 32); draw_printf(0, 192, "Height: %s", bitstr);
+        */
+
+        // logo
+        // flags 0x7F664420
+        // PIXC 0x1F001F00
+        // PRE0 0x3056
+        // PRE1 0x301063
+
+        //fopen(romPath, "rb");
+
+        //draw_printf(16, 16,"bytesRead %d",bytesRead);
+
+
+        //draw_printf(16, 16,"bytesRead %d",bytesRead);
+        //draw_printf(16, 32,"load %d",loadResult);
+        //draw_printf(16, 48,"little %d",littleResult);
+        //draw_printf(16, 64,"big %d",bigResult);
+        //draw_printf(16, 80,"resource %d",resourceBufferResult);
+
         display_and_swap();
 
         waitvbl();

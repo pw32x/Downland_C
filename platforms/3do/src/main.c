@@ -336,8 +336,9 @@ uint16 mySpriteBits[] =
 };
 
 CCB myCCB;
+CCB downlandCCB;
 
-void InitMyCCB(void)
+void InitCCBs(void)
 {
     // Clear the CCB (important)
     memset(&myCCB, 0, sizeof(CCB));
@@ -345,6 +346,11 @@ void InitMyCCB(void)
     InitCel(&myCCB, 16, 16, 1, INITCEL_CODED);
     myCCB.ccb_SourcePtr   = (CelData *)mySpriteBits;
     myCCB.ccb_PLUTPtr = myPlut;
+
+    
+    InitCel(&downlandCCB, 256, 192, 1, INITCEL_CODED);
+    downlandCCB.ccb_SourcePtr   = (CelData *)gameData.framebuffer;
+    downlandCCB.ccb_PLUTPtr = myPlut;
 }
 
 void int_to_bits(int n, char *out, int bits)
@@ -372,8 +378,13 @@ int main(int argc, char* argv)
     const frac16 min_zoom = (Convert32_F16(1) >> 6);
     char bitstr[33];
 
+    dl_u8 segmentCount;
+    const ShapeSegment* segments;
+
     bool romFoundAndLoaded = false;
     int loop;
+    int drawCommandCount = 0;
+    const BackgroundDrawCommand* backgroundDrawCommands;
 
     g_memory = (dl_u8*)malloc(DOWNLAND_MEMORY_SIZE);
     g_memoryEnd = g_memory;
@@ -394,7 +405,7 @@ int main(int argc, char* argv)
     if (!romFoundAndLoaded)
         return -1;
 
-    InitMyCCB();
+
 
     InitBasicDisplay();
 
@@ -411,13 +422,14 @@ int main(int argc, char* argv)
     zoom     = 0;
     dzoom    = DivSF16(Convert32_F16(1),Convert32_F16(200));
 
-    //Game_Init(&gameData, &resources);
+    Game_Init(&gameData, &resources);
+    InitCCBs();
 
     while(true)
     {
         // do work
-        ZoomRotateCel(logo, x, y,zoom,angle);
-        ZoomRotateCel(&myCCB, x, y, zoom, angle);        
+        //ZoomRotateCel(logo, x, y,zoom,angle);
+        //ZoomRotateCel(&myCCB, x, y, zoom, angle);        
 
         angle += Convert32_F16(1);
         zoom  += dzoom;
@@ -431,12 +443,13 @@ int main(int argc, char* argv)
                     ConvertF16_32(y));
         }
 
-        //Game_Update(&gameData, &resources);
+        Game_Update(&gameData, &resources);
 
         clear(clearColor);
-        draw_cels(logo);
+        draw_cels(&downlandCCB);
+        //draw_cels(logo);
 
-        draw_cels(&myCCB);
+        //draw_cels(&myCCB);
 
         //draw_printf(16,16,"x: %d",ConvertF16_32(x));
         //draw_printf(16,24,"y: %d",ConvertF16_32(y));
@@ -472,7 +485,41 @@ int main(int argc, char* argv)
         //draw_printf(16, 32,"load %d",loadResult);
         //draw_printf(16, 48,"little %d",littleResult);
         //draw_printf(16, 64,"big %d",bigResult);
-        //draw_printf(16, 80,"resource %d",resourceBufferResult);
+        
+
+        drawCommandCount = resources.roomResources[TITLESCREEN_ROOM_INDEX].backgroundDrawData.drawCommandCount;
+        //draw_printf(16, 0, "command count %d", drawCommandCount);
+
+        backgroundDrawCommands = resources.roomResources[TITLESCREEN_ROOM_INDEX].backgroundDrawData.backgroundDrawCommands;
+
+        /*
+        for (loop = 0; loop < drawCommandCount; loop++)
+        {
+            draw_printf(16, 16 + (16 * loop), 
+                        "shape: %d, count %d", backgroundDrawCommands->shapeCode, backgroundDrawCommands->drawCount);
+            backgroundDrawCommands++;
+        }
+        */
+
+        /*
+        segmentCount = resources.shapeDrawData_00_Stalactite.segmentCount;
+        segments = resources.shapeDrawData_00_Stalactite.segments;
+        draw_printf(16, 0, "segmentCount %d", segmentCount);
+        
+        for (loop = 0; loop < segmentCount; loop++)
+        {
+            draw_printf(16, 16 + (16 * loop), 
+                        "spi: %d, pc %d, or %d", 
+                        segments->subpixelIncrement,
+                        segments->pixelCount,
+                        segments->orientation);
+
+            segments++;
+        }
+        */
+
+	    // dl_u8 count = shapeDrawData->segmentCount;
+	    // const ShapeSegment* shapeSegmentRunner = shapeDrawData->segments;
 
         display_and_swap();
 

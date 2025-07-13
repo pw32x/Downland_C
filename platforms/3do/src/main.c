@@ -72,60 +72,6 @@ void Sound_Stop(dl_u8 soundIndex)
 {
 }
 
-static
-int
-clamp(const frac16  min_,
-      const frac16  max_,
-      frac16*       val_)
-{
-    if (*val_ > max_)
-    {
-        *val_ = max_;
-        return 1;
-    }
-
-    if (*val_ < min_)
-    {
-        *val_ = min_;
-        return 1;
-    }
-
-  return 0;
-}
-
-static
-void
-ZoomRotateCel(CCB    *ccb_,
-              frac16  x_,
-              frac16  y_,
-              frac16  zoom_,
-              frac16  angle_)
-{
-  int hdx;
-  int hdy;
-  int vdx;
-  int vdy;
-
-  hdx = MulSF16(CosF16(angle_),zoom_);
-  hdy = MulSF16(SinF16(angle_),zoom_);
-  vdx = -hdy;
-  vdy =  hdx;
-
-  ccb_->ccb_HDX = hdx << 4;
-  ccb_->ccb_HDY = hdy << 4;
-  ccb_->ccb_VDX = vdx;
-  ccb_->ccb_VDY = vdy;
-
-  hdx = MulSF16(hdx,Convert32_F16(ccb_->ccb_Width) >> 1);
-  hdy = MulSF16(hdy,Convert32_F16(ccb_->ccb_Width) >> 1);
-  vdx = MulSF16(vdx,Convert32_F16(ccb_->ccb_Height) >> 1);
-  vdy = MulSF16(vdy,Convert32_F16(ccb_->ccb_Height) >> 1);
-
-  ccb_->ccb_XPos = x_ - hdx - vdx;
-  ccb_->ccb_YPos = y_ - hdy - vdy;
-}
-
-
 #define NUM_SCREENS 2
 
 ScreenContext *sc;
@@ -279,10 +225,6 @@ const char* romFileNames[] =
 };
 #define ROM_FILENAMES_COUNT 3
 
-#define READ_SIZE 4096
-int bytesRead = 0;
-int someCount = 0;
-
 static dl_u8 loadRom(const char* romPath, dl_u8** fileBuffer)
 {
     int32 fileSize;
@@ -311,15 +253,6 @@ uint16 fourColorPLUT[4] =
     0xFC80, // orange (R=31, G=20, B=0)
     0x7FFF  // white (R=31, G=31, B=31)
 };
-
-#define SCREEN_WIDTH  320
-#define SCREEN_HEIGHT 240
-
-#define CEL_WIDTH     16
-#define CEL_HEIGHT    16
-
-// Scaling factor
-#define SCALE_FACTOR  4
 
 // The 3do hardware expects at least 8 bytes per row
 // no matter the bit depth used. So for this 16x16 1bpp
@@ -388,25 +321,13 @@ void int_to_bits(int n, char *out, int bits)
 int main(int argc, char* argv)
 {
     CCB* pCCB;
-    CCB *logo;
 
     const int clearColor = 0x00000000;
-    frac16       x       ;
-    frac16       y       ;
-    frac16       angle   ;
-    frac16       zoom    ;
-    frac16       dzoom   ;
-    const frac16 max_zoom = Convert32_F16(3);
-    const frac16 min_zoom = (Convert32_F16(1) >> 6);
-    char bitstr[33];
-
     dl_u8 segmentCount;
     const ShapeSegment* segments;
 
     bool romFoundAndLoaded = false;
     int loop;
-    int drawCommandCount = 0;
-    const BackgroundDrawCommand* backgroundDrawCommands;
 
     g_memory = (dl_u8*)malloc(DOWNLAND_MEMORY_SIZE);
     g_memoryEnd = g_memory;
@@ -429,22 +350,12 @@ int main(int argc, char* argv)
     if (!romFoundAndLoaded)
         return -1;
 
-
-
     InitBasicDisplay();
 
     OpenMathFolio();
 
-    logo = LoadCel("art/3do_logo_unpacked.cel",MEMTYPE_CEL);
-
     clear(clearColor);
     swap();
-
-    x        = sc->sc_BitmapWidth >> 1;
-    y        = sc->sc_BitmapHeight >> 1;
-    angle    = 0;
-    zoom     = 0;
-    dzoom    = DivSF16(Convert32_F16(1),Convert32_F16(200));
 
     Game_Init(&gameData, &resources);
     InitCCBs();
@@ -463,7 +374,6 @@ int main(int argc, char* argv)
                                              CrtColor_Blue);
 
         draw_cels(&crtFramebufferCCB);
-        //draw_cels(logo);
 
         //draw_cels(&myCCB);
 
@@ -478,8 +388,6 @@ int main(int argc, char* argv)
         /*
         //CCB* ccb = &myCCB;
         pCCB = &myCCB;
-        pCCB = logo;
-        
 
         int_to_bits(pCCB->ccb_Flags, bitstr, 32); draw_printf(0, 0, "Flags: %s", bitstr);
         int_to_bits(pCCB->ccb_XPos, bitstr, 32); draw_printf(0, 16, "XPos: %s", bitstr);
@@ -502,41 +410,6 @@ int main(int argc, char* argv)
         //draw_printf(16, 48,"little %d",littleResult);
         //draw_printf(16, 64,"big %d",bigResult);
         
-
-        //drawCommandCount = resources.roomResources[TITLESCREEN_ROOM_INDEX].backgroundDrawData.drawCommandCount;
-        //draw_printf(16, 0, "command count %d", drawCommandCount);
-
-        //backgroundDrawCommands = resources.roomResources[TITLESCREEN_ROOM_INDEX].backgroundDrawData.backgroundDrawCommands;
-
-        /*
-        for (loop = 0; loop < drawCommandCount; loop++)
-        {
-            draw_printf(16, 16 + (16 * loop), 
-                        "shape: %d, count %d", backgroundDrawCommands->shapeCode, backgroundDrawCommands->drawCount);
-            backgroundDrawCommands++;
-        }
-        */
-
-        /*
-        segmentCount = resources.shapeDrawData_00_Stalactite.segmentCount;
-        segments = resources.shapeDrawData_00_Stalactite.segments;
-        draw_printf(16, 0, "segmentCount %d", segmentCount);
-        
-        for (loop = 0; loop < segmentCount; loop++)
-        {
-            draw_printf(16, 16 + (16 * loop), 
-                        "spi: %d, pc %d, or %d", 
-                        segments->subpixelIncrement,
-                        segments->pixelCount,
-                        segments->orientation);
-
-            segments++;
-        }
-        */
-
-	    // dl_u8 count = shapeDrawData->segmentCount;
-	    // const ShapeSegment* shapeSegmentRunner = shapeDrawData->segments;
-
         display_and_swap();
 
         waitvbl();

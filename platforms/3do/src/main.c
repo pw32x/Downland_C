@@ -296,7 +296,7 @@ static dl_u8 loadRom(const char* romPath, dl_u8** fileBuffer)
 }
 
 uint16 myPlut[2] = {
-    0x001F, // index 0: black (R=0, G=0, B=0)
+    0x0000, // index 0: black (R=0, G=0, B=0)
     0x7FFF  // index 1: white (R=31, G=31, B=31)
 };
 
@@ -309,24 +309,30 @@ uint16 myPlut[2] = {
 // Scaling factor
 #define SCALE_FACTOR  4
 
-// 16x16, 1bpp → each row = 2 bytes → 16 rows = 32 bytes
-uint16 mySpriteBits[] = {
-    0xFFFF,  0xFFFF, 0xFFFF, 0xFFFF, 
-    0x8001,  0x8001, 0x8001, 0x8001, 
-    0x8001,  0x8001, 0x8001, 0x8001,
-    0x8001,  0x8001, 0x8001, 0x8001,
-    0x8001,  0x8001, 0x8001, 0x8001,
-    0x8001,  0x8001, 0x8001, 0x8001,
-    0x8001,  0x8001, 0x8001, 0x8001,
-    0x8001,  0x8001, 0x8001, 0x8001,
-    0x8001,  0x8001, 0x8001, 0x8001,
-    0x8001,  0x8001, 0x8001, 0x8001,
-    0x8001,  0x8001, 0x8001, 0x8001,
-    0x8001,  0x8001, 0x8001, 0x8001,
-    0x8001,  0x8001, 0x8001, 0x8001,
-    0x8001,  0x8001, 0x8001, 0x8001,
-    0x8001,  0x8001, 0x8001, 0x8001,
-    0xFFFF,   0xFFFF,  0xFFFF,  0xFFFF  
+// The 3do hardware expects at least 8 bytes per row
+// no matter the bit depth used. So for this 16x16 1bpp
+// sprite where a row would be 2 bytes, six more bytes are
+// needed to pad the row. 
+// It doesn't matter what the padding bytes look like.
+uint16 mySpriteBits[] = 
+{
+//  sprite, filler, filler, filler
+    0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 
+    0x8001, 0xFFFF, 0xFFFF, 0xFFFF, 
+    0x8001, 0xFFFF, 0xFFFF, 0xFFFF,
+    0x8001, 0xFFFF, 0xFFFF, 0xFFFF,
+    0x8001, 0xFFFF, 0xFFFF, 0xFFFF,
+    0x8001, 0xFFFF, 0xFFFF, 0xFFFF,
+    0x8001, 0xFFFF, 0xFFFF, 0xFFFF,
+    0x8001, 0xFFFF, 0xFFFF, 0xFFFF,
+    0x8001, 0xFFFF, 0xFFFF, 0xFFFF,
+    0x8001, 0xFFFF, 0xFFFF, 0xFFFF,
+    0x8001, 0xFFFF, 0xFFFF, 0xFFFF,
+    0x8001, 0xFFFF, 0xFFFF, 0xFFFF,
+    0x8001, 0xFFFF, 0xFFFF, 0xFFFF,
+    0x8001, 0xFFFF, 0xFFFF, 0xFFFF,
+    0x8001, 0xFFFF, 0xFFFF, 0xFFFF,
+    0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF  
 };
 
 CCB myCCB;
@@ -411,8 +417,6 @@ int main(int argc, char* argv)
     {
         // do work
         ZoomRotateCel(logo, x, y,zoom,angle);
-        //ZoomRotateCel(downlandCel, x, y, zoom, angle);
-
         ZoomRotateCel(&myCCB, x, y, zoom, angle);        
 
         angle += Convert32_F16(1);
@@ -431,7 +435,7 @@ int main(int argc, char* argv)
 
         clear(clearColor);
         draw_cels(logo);
-        //draw_cels(downlandCel);
+
         draw_cels(&myCCB);
 
         //draw_printf(16,16,"x: %d",ConvertF16_32(x));
@@ -463,17 +467,6 @@ int main(int argc, char* argv)
         int_to_bits(pCCB->ccb_Width, bitstr, 32); draw_printf(0, 180, "Width: %s", bitstr);
         int_to_bits(pCCB->ccb_Height, bitstr, 32); draw_printf(0, 192, "Height: %s", bitstr);
         */
-
-        // logo
-        // flags 0x7F664420
-        // PIXC 0x1F001F00
-        // PRE0 0x3056
-        // PRE1 0x301063
-
-        //fopen(romPath, "rb");
-
-        //draw_printf(16, 16,"bytesRead %d",bytesRead);
-
 
         //draw_printf(16, 16,"bytesRead %d",bytesRead);
         //draw_printf(16, 32,"load %d",loadResult);

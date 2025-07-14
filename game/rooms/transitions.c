@@ -7,6 +7,8 @@
 #include "..\drops_manager.h"
 #include "..\dl_sound.h"
 
+#define INITIAL_TRANSITION_DELAY 1 // 30
+
 // This simulates the pause before a room appears in the original game.
 // In the original game, the pause is because the background is being
 // drawn in the clearBackground off-screen buffer.
@@ -17,7 +19,7 @@ void transition_init(Room* targetRoom, GameData* gameData, const Resources* reso
 	targetRoom->draw(gameData->transitionRoomNumber, (struct GameData*)gameData, resources);
 
 	// setup screen transition
-	gameData->transitionInitialDelay = 30;
+	gameData->transitionInitialDelay = INITIAL_TRANSITION_DELAY;
 	memset(gameData->framebuffer, 0, FRAMEBUFFER_SIZE_IN_BYTES);
 }
 
@@ -52,7 +54,7 @@ void wipe_transition_init(Room* targetRoom, GameData* gameData, const Resources*
 	targetRoom->draw(gameData->transitionRoomNumber, (struct GameData*)gameData, resources);
 
 	// setup screen transition
-	gameData->transitionInitialDelay = 30;
+	gameData->transitionInitialDelay = INITIAL_TRANSITION_DELAY;
 	gameData->transitionCurrentLine = 0;
 	gameData->transitionFrameDelay = 0;
 }

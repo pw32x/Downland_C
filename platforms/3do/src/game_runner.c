@@ -1,9 +1,17 @@
 #include "game_runner.h"
 
-#include "image_utils.h"
-#include "drops_manager.h"
+// game includes
 #include "draw_utils.h"
 #include "rooms\chambers.h"
+
+// project includes
+#include "image_utils.h"
+#include "drops_manager.h"
+#include "display.h"
+
+// 3do includes
+#include "celutils.h"
+#include "display.h"
 
 /*
 typedef struct
@@ -29,12 +37,13 @@ dl_s16 g_scrollY;
 
 dl_u16 g_oldPlayerX = 0;
 dl_u16 g_oldPlayerY = 0;
+*/
 
 typedef struct
 {
-	const SpriteAttributes* spriteAttributes;
-	dl_u16 tileIndex;
-	dl_u8 tilesPerFrame;
+	CCB* ccb;
+	dl_u8* spriteData;
+	dl_u16 sizePerFrame;
 } GameSprite;
 
 GameSprite playerSprite;
@@ -54,7 +63,19 @@ GameSprite playerIconSprite;
 GameSprite playerIconSpriteRegen;
 
 const GameSprite* g_pickUpSprites[3];
-*/
+
+CCB g_crtFramebufferCCB;
+GameSprite crtFramebufferSprite;
+
+dl_u16 g_gamePalette[4] = 
+{
+    0x0000, // black (R=0, G=0, B=0)
+    0x003E, // blue (R=0, G=0, B=31)
+    0xFC80, // orange (R=31, G=20, B=0)
+    0x7FFF  // white (R=31, G=31, B=31)
+};
+
+
 
 typedef void (*DrawRoomFunction)(struct GameData* gameData, const Resources* resources);
 DrawRoomFunction m_drawRoomFunctions[NUM_ROOMS_AND_ALL];
@@ -483,6 +504,54 @@ void custom_get_ready_room_draw(dl_u8 roomNumber, GameData* gameData, const Reso
 	drawText(getReadyString, resources->characterFont, framebuffer, 0x0b66);
 }*/
 
+void InitGameSprite(GameSprite* gameSprite, 
+					CCB* ccb,
+					dl_u8* originalSpriteData,
+					dl_u16 frameWidth, 
+					dl_u16 frameHeight, 
+					dl_u8 framesCount)
+{
+	dl_u8 pixelsPerByte = 4;
+	dl_u32 sizePerFrame = (frameWidth / pixelsPerByte) * frameHeight;
+	dl_u32 memSize = sizePerFrame * framesCount;
+	dl_u8* buffer = (dl_u8*)malloc(memSize);
+    InitCel(ccb, frameWidth, frameHeight, 2, INITCEL_CODED);
+    ccb->ccb_PLUTPtr = g_gamePalette;
+	ccb->ccb_SourcePtr = (CelData *)buffer;
+
+	gameSprite->ccb = ccb;
+	gameSprite->spriteData = buffer;
+	gameSprite->sizePerFrame = sizePerFrame;
+}
+
+void DrawGameSprite(GameSprite* gameSprite, dl_u8 frameNumber, GameData* gameData)
+{
+	dl_u8* frame = NULL;
+	CCB* ccb = NULL;
+
+	convert1bppImageTo2bppCrtEffectImage(gameData->framebuffer,
+                                         (dl_u8*)crtFramebufferSprite.spriteData,
+                                         FRAMEBUFFER_WIDTH,
+                                         FRAMEBUFFER_HEIGHT,
+                                         CrtColor_Blue);
+
+
+	ccb = gameSprite->ccb;
+	frame = gameSprite->spriteData + (gameSprite->sizePerFrame * frameNumber);
+    
+	ccb->ccb_SourcePtr = (CelData *)frame;
+	draw_cels(ccb);
+
+	//draw_printf(16, 16,"gameSprite->spriteData %d", gameSprite->spriteData);
+	//draw_printf(16, 32,"ccb->ccb_SourcePtr %d", ccb->ccb_SourcePtr);
+	//draw_printf(16, 48,"buffer %d", buffer);
+	////gameSprite->ccb->ccb_SourcePtr = (CelData*)buffer;
+	//draw_printf(16, 64,"ccb->ccb_SourcePtr %d", ccb->ccb_SourcePtr);
+	//draw_printf(16, 80,"ccbccb_SourcePtr %d", ccbccb_SourcePtr);
+	//draw_printf(16, 96,"g_crtFramebufferCCB %d", g_crtFramebufferCCB.ccb_SourcePtr);
+	//draw_printf(16, 112,"frame %d", frame);
+}
+
 void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 {
 	/*
@@ -540,11 +609,13 @@ void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 	playerIconSpriteRegen.spriteAttributes = &g_playerIconSpriteAttributes;
 	playerIconSpriteRegen.tileIndex = regenSprite.tileIndex;
 	playerIconSpriteRegen.tilesPerFrame = regenSprite.tilesPerFrame;
+	*/
 
 	g_pickUpSprites[0] = &diamondSprite;
 	g_pickUpSprites[1] = &moneyBagSprite;
 	g_pickUpSprites[2] = &keySprite;
 
+	/*
 	g_scrollX = 7;
 	g_scrollY = 13;
 	*/
@@ -565,6 +636,8 @@ void GameRunner_Init(struct GameData* gameData, const Resources* resources)
     m_drawRoomFunctions[WIPE_TRANSITION_ROOM_INDEX] = drawWipeTransition;
     m_drawRoomFunctions[GET_READY_ROOM_INDEX] = drawGetReadyScreen;
 
+
+
 	//buildUI();
 
 	//g_rooms[TITLESCREEN_ROOM_INDEX]->draw = custom_titleScreen_draw;
@@ -577,6 +650,9 @@ void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 	Game_Init(gameData, resources);
 
 	//createBackgrounds(gameData, resources);
+
+	InitGameSprite(&crtFramebufferSprite, &g_crtFramebufferCCB, NULL, FRAMEBUFFER_WIDTH, FRAMEBUFFER_HEIGHT, 1);
+    crtFramebufferSprite.ccb->ccb_Flags |= CCB_BGND; // make black pixels not transparent
 }
 
 /*
@@ -641,10 +717,11 @@ void GameRunner_Draw(struct GameData* gameData, const Resources* resources)
 	}
 	*/
 }
-/*
+
 // draw sprite, affected by scrolling
 void drawSprite(dl_u16 x, dl_u16 y, dl_u8 frame, const GameSprite* gameSprite)
 {
+	/*
 	x -= g_scrollX;
 	y -= g_scrollY;
 	dl_u16 tileIndex = gameSprite->tileIndex + (frame * gameSprite->tilesPerFrame);
@@ -654,8 +731,10 @@ void drawSprite(dl_u16 x, dl_u16 y, dl_u8 frame, const GameSprite* gameSprite)
 	OAM[g_oamIndex].attr2 = gameSprite->spriteAttributes->attr2 | (tileIndex << 1);
 
 	g_oamIndex++;
+	*/
 }
 
+/*
 // draw sprite not affected by scrolling
 void drawSpriteAbs(dl_u16 x, dl_u16 y, dl_u8 character, const GameSprite* gameSprite)
 {
@@ -667,13 +746,15 @@ void drawSpriteAbs(dl_u16 x, dl_u16 y, dl_u8 character, const GameSprite* gameSp
 
 	g_oamIndex++;
 }
+*/
 
 void drawDrops(const GameData* gameData)
 {
     // draw drops
+	int loop;
     const Drop* dropsRunner = gameData->dropData.drops;
 
-    for (int loop = 0; loop < NUM_DROPS; loop++)
+    for (loop = 0; loop < NUM_DROPS; loop++)
     {
         if ((dl_s8)dropsRunner->wiggleTimer < 0 || // wiggling
             dropsRunner->wiggleTimer > 1)   // falling
@@ -688,6 +769,7 @@ void drawDrops(const GameData* gameData)
     }
 }
 
+/*
 void drawUIText(const dl_u8* text, dl_u16 x, dl_u16 y, GameSprite* font)
 {
     // for each character
@@ -778,6 +860,7 @@ void updateScroll(dl_u16 playerX, dl_u16 playerY)
 
 void drawChamber(struct GameData* gameData, const Resources* resources)
 {
+	DrawGameSprite(&crtFramebufferSprite, 0, gameData);
 	/*
 	PlayerData* playerData = gameData->currentPlayerData;
 
@@ -787,9 +870,11 @@ void drawChamber(struct GameData* gameData, const Resources* resources)
 	updateScroll(playerX, playerY);
 
 	dl_u16 currentTimer = playerData->roomTimers[playerData->currentRoom->roomNumber];
+	*/
 
 	drawDrops(gameData);
 
+	/*
     // draw ball
     if (gameData->ballData.enabled)
     {
@@ -891,11 +976,12 @@ void drawChamber(struct GameData* gameData, const Resources* resources)
 
 void drawTitleScreen(struct GameData* gameData, const Resources* resources)
 {
-	/*
-	g_scrollX = 7;
-	g_scrollY = 13;
+	DrawGameSprite(&crtFramebufferSprite, 0, gameData);
 
 	drawDrops(gameData);
+
+	/*
+
 
 	drawSprite(gameData->numPlayers == 1 ? 32 : 128,
 			   115,
@@ -920,36 +1006,37 @@ void drawTitleScreen(struct GameData* gameData, const Resources* resources)
 
 
 void drawCleanBackground(const GameData* gameData, 
-						 const Resources* resources,
-						 dl_u8* cleanBackground, 
-						 dl_u16 tileOffset)
+						 const Resources* resources)
 {
-	/*
-	// change which tilemap to use
-	setGameBackgroundTilemap(gameData->transitionRoomNumber);
-	*/
+//	convert1bppImageTo2bppCrtEffectImage(gameData->cleanBackground,
+//                                         (dl_u8*)crtFramebufferSprite.spriteData,
+//                                         FRAMEBUFFER_WIDTH,
+//                                         FRAMEBUFFER_HEIGHT,
+//                                         CrtColor_Blue);
 }
 
 void drawTransition(struct GameData* gameData, const Resources* resources)
 {
-	/*
-	if (gameData->transitionInitialDelay == 29)
+	if (!gameData->transitionInitialDelay)
     {
-        g_transitionCounter = TRANSITION_BLACK_SCREEN;
-    }
-    else if (!gameData->transitionInitialDelay)
-    {
-		g_transitionCounter = TRANSITION_OFF;
         drawCleanBackground(gameData, 
-							resources, 
-							gameData->cleanBackground, 
-							g_backgroundTileOffset);
+							resources);
     }
-	*/
+
+	DrawGameSprite(&crtFramebufferSprite, 0, gameData);
 }
 
 void drawWipeTransition(struct GameData* gameData, const Resources* resources)
 {
+	if (!gameData->transitionInitialDelay)
+    {
+		//g_transitionCounter = TRANSITION_OFF;
+        drawCleanBackground(gameData, 
+							resources);
+    }
+
+	DrawGameSprite(&crtFramebufferSprite, 0, gameData);
+
 	/*
 	if (gameData->transitionInitialDelay == 29)
     {
@@ -991,5 +1078,6 @@ void drawWipeTransition(struct GameData* gameData, const Resources* resources)
 
 void drawGetReadyScreen(struct GameData* gameData, const Resources* resources)
 {
-	//drawDrops(gameData);
+	DrawGameSprite(&crtFramebufferSprite, 0, gameData);
+	drawDrops(gameData);
 }

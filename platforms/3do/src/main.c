@@ -193,6 +193,7 @@ int main(int argc, char* argv)
         //clear(clearColor);
         //draw_cels(&framebufferCCB);
 
+        /*
         convert1bppImageTo2bppCrtEffectImage(gameData.framebuffer,
                                              g_crtFramebuffer,
                                              FRAMEBUFFER_WIDTH,
@@ -200,7 +201,7 @@ int main(int argc, char* argv)
                                              CrtColor_Blue);
 
         draw_cels(&crtFramebufferCCB);
-
+        */
         //draw_cels(&myCCB);
 
         //draw_printf(16,16,"x: %d",ConvertF16_32(x));

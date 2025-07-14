@@ -41,7 +41,8 @@ dl_u16 g_oldPlayerY = 0;
 
 typedef struct
 {
-	CCB* ccb;
+	CCB ccb;
+	// x, y, picx, pre0, pre1, flags
 	dl_u8* spriteData;
 	dl_u16 sizePerFrame;
 } GameSprite;
@@ -64,8 +65,7 @@ GameSprite playerIconSpriteRegen;
 
 const GameSprite* g_pickUpSprites[3];
 
-CCB g_crtFramebufferCCB;
-GameSprite crtFramebufferSprite;
+GameSprite g_crtFramebufferSprite;
 
 dl_u16 g_gamePalette[4] = 
 {
@@ -505,7 +505,6 @@ void custom_get_ready_room_draw(dl_u8 roomNumber, GameData* gameData, const Reso
 }*/
 
 void InitGameSprite(GameSprite* gameSprite, 
-					CCB* ccb,
 					dl_u8* originalSpriteData,
 					dl_u16 frameWidth, 
 					dl_u16 frameHeight, 
@@ -515,11 +514,13 @@ void InitGameSprite(GameSprite* gameSprite,
 	dl_u32 sizePerFrame = (frameWidth / pixelsPerByte) * frameHeight;
 	dl_u32 memSize = sizePerFrame * framesCount;
 	dl_u8* buffer = (dl_u8*)malloc(memSize);
+
+	CCB* ccb = &gameSprite->ccb;
+
     InitCel(ccb, frameWidth, frameHeight, 2, INITCEL_CODED);
     ccb->ccb_PLUTPtr = g_gamePalette;
 	ccb->ccb_SourcePtr = (CelData *)buffer;
 
-	gameSprite->ccb = ccb;
 	gameSprite->spriteData = buffer;
 	gameSprite->sizePerFrame = sizePerFrame;
 }
@@ -530,13 +531,13 @@ void DrawGameSprite(GameSprite* gameSprite, dl_u8 frameNumber, GameData* gameDat
 	CCB* ccb = NULL;
 
 	convert1bppImageTo2bppCrtEffectImage(gameData->framebuffer,
-                                         (dl_u8*)crtFramebufferSprite.spriteData,
+                                         (dl_u8*)gameSprite->spriteData,
                                          FRAMEBUFFER_WIDTH,
                                          FRAMEBUFFER_HEIGHT,
                                          CrtColor_Blue);
 
 
-	ccb = gameSprite->ccb;
+	ccb = &gameSprite->ccb;
 	frame = gameSprite->spriteData + (gameSprite->sizePerFrame * frameNumber);
     
 	ccb->ccb_SourcePtr = (CelData *)frame;
@@ -651,8 +652,8 @@ void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 
 	//createBackgrounds(gameData, resources);
 
-	InitGameSprite(&crtFramebufferSprite, &g_crtFramebufferCCB, NULL, FRAMEBUFFER_WIDTH, FRAMEBUFFER_HEIGHT, 1);
-    crtFramebufferSprite.ccb->ccb_Flags |= CCB_BGND; // make black pixels not transparent
+	InitGameSprite(&g_crtFramebufferSprite, NULL, FRAMEBUFFER_WIDTH, FRAMEBUFFER_HEIGHT, 1);
+    g_crtFramebufferSprite.ccb.ccb_Flags |= CCB_BGND; // make black pixels not transparent
 }
 
 /*
@@ -860,7 +861,7 @@ void updateScroll(dl_u16 playerX, dl_u16 playerY)
 
 void drawChamber(struct GameData* gameData, const Resources* resources)
 {
-	DrawGameSprite(&crtFramebufferSprite, 0, gameData);
+	DrawGameSprite(&g_crtFramebufferSprite, 0, gameData);
 	/*
 	PlayerData* playerData = gameData->currentPlayerData;
 
@@ -976,7 +977,7 @@ void drawChamber(struct GameData* gameData, const Resources* resources)
 
 void drawTitleScreen(struct GameData* gameData, const Resources* resources)
 {
-	DrawGameSprite(&crtFramebufferSprite, 0, gameData);
+	DrawGameSprite(&g_crtFramebufferSprite, 0, gameData);
 
 	drawDrops(gameData);
 
@@ -1009,7 +1010,7 @@ void drawCleanBackground(const GameData* gameData,
 						 const Resources* resources)
 {
 //	convert1bppImageTo2bppCrtEffectImage(gameData->cleanBackground,
-//                                         (dl_u8*)crtFramebufferSprite.spriteData,
+//                                         (dl_u8*)g_crtFramebufferSprite.spriteData,
 //                                         FRAMEBUFFER_WIDTH,
 //                                         FRAMEBUFFER_HEIGHT,
 //                                         CrtColor_Blue);
@@ -1023,7 +1024,7 @@ void drawTransition(struct GameData* gameData, const Resources* resources)
 							resources);
     }
 
-	DrawGameSprite(&crtFramebufferSprite, 0, gameData);
+	DrawGameSprite(&g_crtFramebufferSprite, 0, gameData);
 }
 
 void drawWipeTransition(struct GameData* gameData, const Resources* resources)
@@ -1035,7 +1036,7 @@ void drawWipeTransition(struct GameData* gameData, const Resources* resources)
 							resources);
     }
 
-	DrawGameSprite(&crtFramebufferSprite, 0, gameData);
+	DrawGameSprite(&g_crtFramebufferSprite, 0, gameData);
 
 	/*
 	if (gameData->transitionInitialDelay == 29)
@@ -1078,6 +1079,6 @@ void drawWipeTransition(struct GameData* gameData, const Resources* resources)
 
 void drawGetReadyScreen(struct GameData* gameData, const Resources* resources)
 {
-	DrawGameSprite(&crtFramebufferSprite, 0, gameData);
+	DrawGameSprite(&g_crtFramebufferSprite, 0, gameData);
 	drawDrops(gameData);
 }

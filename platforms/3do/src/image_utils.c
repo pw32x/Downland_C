@@ -98,10 +98,11 @@ void convert1bppImageTo2bppCrtEffectImage(const dl_u8* originalImage,
                                           dl_u8* destinationImage,
                                           dl_u16 width,
                                           dl_u16 height,
+                                          dl_u16 destinationBufferWidth,
                                           enum CrtColor crtColor)
 {
     dl_u16 bytesPerRow = width / 8;
-    dl_u16 outputBytesPerRow = width / 4;
+    dl_u16 outputBytesPerRow = destinationBufferWidth / 4;
 
     dl_u8 BLACK  = 0x0;
     dl_u8 BLUE   = (crtColor == CrtColor_Blue) ? 0x1 : 0x2;

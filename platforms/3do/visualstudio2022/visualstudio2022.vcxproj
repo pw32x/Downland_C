@@ -144,6 +144,7 @@
     <ClInclude Include="..\..\..\game\rooms\rooms.h" />
     <ClInclude Include="..\..\..\game\rooms\room_types.h" />
     <ClInclude Include="..\..\..\game\string_utils.h" />
+    <ClInclude Include="..\src\3do_defines.h" />
     <ClInclude Include="..\src\abort.h" />
     <ClInclude Include="..\src\display.h" />
     <ClInclude Include="..\src\game_runner.h" />

@@ -3,11 +3,14 @@
 // game includes
 #include "draw_utils.h"
 #include "rooms\chambers.h"
+#include "string_utils.h"
+#include "base_defines.h"
 
 // project includes
 #include "image_utils.h"
 #include "drops_manager.h"
 #include "display.h"
+#include "3do_defines.h"
 
 // 3do includes
 #include "celutils.h"
@@ -570,6 +573,8 @@ void DrawGameSprite(GameSprite* gameSprite, dl_u8 frameNumber, GameData* gameDat
 
 void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 {
+	dl_u32 cursorSpriteRaw = 0xffffffff;
+
 	/*
 	// setup sprite attributes
 	g_8x8SpriteAttributes.attr0 = ATTR0_COLOR_256 | ATTR0_SQUARE;
@@ -669,7 +674,7 @@ void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 
 	InitGameSprite(&dropsSprite, resources->sprites_drops, DROP_SPRITE_WIDTH, DROP_SPRITE_ROWS, DROP_SPRITE_COUNT);
 	InitGameSprite(&playerSprite,resources->sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYER_SPRITE_COUNT);
-	//InitGameSprite(&cursorSprite,(dl_u8*)&cursorSpriteRaw, 8, 1, 1);
+	InitGameSprite(&cursorSprite,(dl_u8*)&cursorSpriteRaw, 8, 1, 1);
 	InitGameSprite(&ballSprite, resources->sprites_bouncyBall, BALL_SPRITE_WIDTH, BALL_SPRITE_ROWS, BALL_SPRITE_COUNT);
 	InitGameSprite(&birdSprite, resources->sprites_bird, BIRD_SPRITE_WIDTH, BIRD_SPRITE_ROWS, BIRD_SPRITE_COUNT);
 	InitGameSprite(&keySprite, resources->sprite_key, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1);
@@ -678,7 +683,7 @@ void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 	InitGameSprite(&doorSprite, resources->sprite_door, DOOR_SPRITE_WIDTH, DOOR_SPRITE_ROWS, 1);
 	//buildEmptySpriteResource(&regenSprite, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, 1);
 	//buildTextResource(&hudCharacterFont, resources->characterFont, 8, 7, 39, tile);
-	//buildTextResource(&characterFont, resources->characterFont, 8, 7, 39, tileI);
+	InitGameSprite(&characterFont, resources->characterFont, 8, 7, 39);
 	//buildPlayerIconResource(&playerIconSprite, resources->sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYERICON_NUM_SPRITE_ROWS, PLAYER_SPRITE_COUNT);
 
 	InitGameSprite(&g_crtFramebufferSprite, NULL, FRAMEBUFFER_WIDTH, FRAMEBUFFER_HEIGHT, 1);
@@ -753,8 +758,8 @@ void GameRunner_Draw(struct GameData* gameData, const Resources* resources)
 // draw sprite, affected by scrolling
 void drawSprite(dl_u16 x, dl_u16 y, dl_u8 frame, GameSprite* gameSprite)
 {
-	gameSprite->ccb.ccb_XPos = (x << 16);
-	gameSprite->ccb.ccb_YPos = (y << 16);
+	gameSprite->ccb.ccb_XPos = ((x + SCREEN_OFFSET_X) << 16);
+	gameSprite->ccb.ccb_YPos = ((y + SCREEN_OFFSET_Y) << 16);
 
 	draw_cels(&gameSprite->ccb);
 
@@ -806,19 +811,20 @@ void drawDrops(const GameData* gameData)
     }
 }
 
-/*
+
 void drawUIText(const dl_u8* text, dl_u16 x, dl_u16 y, GameSprite* font)
 {
     // for each character
     while (*text != 0xff)
     {
-		drawSpriteAbs(x, y, *text, font);
+		drawSprite(x, y, *text, font);
 
         text++;
         x += 8;
     }
 }
 
+/*
 void drawUIPlayerLives(const PlayerData* playerData)
 {
 	dl_u8 x = 80;//PLAYERLIVES_ICON_X;
@@ -897,7 +903,7 @@ void updateScroll(dl_u16 playerX, dl_u16 playerY)
 
 void drawChamber(struct GameData* gameData, const Resources* resources)
 {
-	DrawGameSprite(&g_crtFramebufferSprite, 0, gameData);
+	drawSprite(0, 0, 0, &g_crtFramebufferSprite);
 	/*
 	PlayerData* playerData = gameData->currentPlayerData;
 
@@ -1011,34 +1017,19 @@ void drawChamber(struct GameData* gameData, const Resources* resources)
 	*/
 }
 
+#define LOCATION2X(location) (location & 31)
+#define LOCATION2Y(location) (location >> 5)
+
 void drawTitleScreen(struct GameData* gameData, const Resources* resources)
 {
-	DrawGameSprite(&g_crtFramebufferSprite, 0, gameData);
+	drawSprite(0, 0, 0, &g_crtFramebufferSprite);
 
 	drawDrops(gameData);
 
-	/*
-
-
 	drawSprite(gameData->numPlayers == 1 ? 32 : 128,
-			   115,
+			   123,
 			   0,
 			   &cursorSprite);
-
-	convertScoreToString(gameData->playerData[PLAYER_ONE].score, gameData->playerData[PLAYER_ONE].scoreString);
-	convertScoreToString(gameData->playerData[PLAYER_TWO].score, gameData->playerData[PLAYER_TWO].scoreString);
-
-	if (gameData->playerData[PLAYER_ONE].score > gameData->highScore)
-		gameData->highScore = gameData->playerData[PLAYER_ONE].score;
-	else if (gameData->playerData[PLAYER_TWO].score > gameData->highScore)
-		gameData->highScore = gameData->playerData[PLAYER_TWO].score;
-
-	convertScoreToString(gameData->highScore, gameData->string_highScore);
-
-	drawUIText(gameData->playerData[PLAYER_ONE].scoreString, 136, 118, &characterFont);
-	drawUIText(gameData->playerData[PLAYER_TWO].scoreString, 136, 129, &characterFont);
-	drawUIText(gameData->string_highScore, 136, 140, &characterFont);
-	*/
 }
 
 
@@ -1061,7 +1052,7 @@ void drawTransition(struct GameData* gameData, const Resources* resources)
 							resources);
     }
 
-	DrawGameSprite(&g_crtFramebufferSprite, 0, gameData);
+	drawSprite(0, 0, 0, &g_crtFramebufferSprite);
 }
 
 void drawWipeTransition(struct GameData* gameData, const Resources* resources)
@@ -1072,7 +1063,7 @@ void drawWipeTransition(struct GameData* gameData, const Resources* resources)
 							resources);
     }
 
-	DrawGameSprite(&g_crtFramebufferSprite, 0, gameData);
+	drawSprite(0, 0, 0, &g_crtFramebufferSprite);
 
 	/*
 	if (gameData->transitionInitialDelay == 29)
@@ -1115,6 +1106,6 @@ void drawWipeTransition(struct GameData* gameData, const Resources* resources)
 
 void drawGetReadyScreen(struct GameData* gameData, const Resources* resources)
 {
-	DrawGameSprite(&g_crtFramebufferSprite, 0, gameData);
+	drawSprite(0, 0, 0, &g_crtFramebufferSprite);
 	drawDrops(gameData);
 }

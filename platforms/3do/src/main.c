@@ -6,6 +6,8 @@
 
 // 3do headers
 #include "celutils.h"
+#include "event.h"
+#include "controlpad.h"
 
 // project headers
 #include "image_utils.h"
@@ -14,8 +16,6 @@
 
 GameData gameData;
 Resources resources;
-
-static dl_u8* g_crtFramebuffer = NULL;
 
 #define DOWNLAND_MEMORY_SIZE 18288
 static dl_u8* g_memory = NULL;
@@ -38,6 +38,61 @@ void Sound_Stop(dl_u8 soundIndex)
 {
 }
 
+#define CONTROL_FLAGS (ControlUp | ControlDown | ControlLeft | ControlRight | ControlStart | ControlA | ControlB | ControlC)
+void Update_Controls(JoystickState* joystickState)
+{
+    uint32 button;
+    bool leftDown;
+    bool rightDown;
+    bool upDown;
+    bool downDown;
+    bool jumpDown;
+    bool startDown;
+    bool debugStateDown;
+
+    DoControlPad (1, &button, CONTROL_FLAGS);
+
+    // Check D-Pad
+    leftDown = (button & ControlLeft) != 0;
+    rightDown = (button & ControlRight) != 0;
+    upDown = (button & ControlUp) != 0;
+    downDown = (button & ControlDown) != 0;
+    jumpDown = (button & ControlA) || (button & ControlC);
+    startDown = (button & ControlStart) != 0;
+
+#ifdef DEV_MODE
+    debugStateDown = button & ControlB;
+#endif
+
+    joystickState->leftPressed = !joystickState->leftDown & leftDown;
+    joystickState->rightPressed = !joystickState->rightDown & rightDown;
+    joystickState->upPressed = !joystickState->upDown & upDown;
+    joystickState->downPressed =  !joystickState->downDown & downDown;
+    joystickState->jumpPressed =  !joystickState->jumpDown & jumpDown;
+    joystickState->startPressed = !joystickState->startDown & startDown;
+
+    joystickState->leftReleased = joystickState->leftDown & !leftDown;
+    joystickState->rightReleased = joystickState->rightDown & !rightDown;
+    joystickState->upReleased = joystickState->upDown & !upDown;
+    joystickState->downReleased =  joystickState->downDown & !downDown;
+    joystickState->jumpReleased =  joystickState->jumpDown & !jumpDown;
+    joystickState->startReleased = joystickState->startPressed & !startDown;
+
+    joystickState->leftDown = leftDown;
+    joystickState->rightDown = rightDown;
+    joystickState->upDown = upDown;
+    joystickState->downDown = downDown;
+    joystickState->jumpDown = jumpDown;
+    joystickState->startDown = startDown;
+
+#ifdef DEV_MODE
+    debugStateDown = false;//port->IsHeld(Digital::Button::B);
+
+    joystickState->debugStatePressed = !joystickState->debugStateDown & debugStateDown;
+    joystickState->debugStateReleased = joystickState->debugStatePressed & !debugStateDown;
+    joystickState->debugStateDown = debugStateDown;
+#endif
+}
 
 #define DOWNLAND_ROM_FILE_SIZE 8192
 dl_u8* g_downlandRomFileBuffer = NULL;
@@ -65,74 +120,6 @@ static dl_u8 loadRom(const char* romPath, dl_u8** fileBuffer)
 	return TRUE;
 }
 
-uint16 twoColorPLUT[2] = 
-{
-    0x0000, // index 0: black (R=0, G=0, B=0)
-    0x003E  // index 1: white (R=31, G=31, B=31)
-};
-
-uint16 fourColorPLUT[4] = 
-{
-    0x0000, // black (R=0, G=0, B=0)
-    0x003E, // blue (R=0, G=0, B=31)
-    0xFC80, // orange (R=31, G=20, B=0)
-    0x7FFF  // white (R=31, G=31, B=31)
-};
-
-// The 3do hardware expects at least 8 bytes per row
-// no matter the bit depth used. So for this 16x16 1bpp
-// sprite where a row would be 2 bytes, six more bytes are
-// needed to pad the row. 
-// It doesn't matter what the padding bytes look like.
-uint16 mySpriteBits[] = 
-{
-//  sprite, filler, filler, filler
-    0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 
-    0x8001, 0xFFFF, 0xFFFF, 0xFFFF, 
-    0x8001, 0xFFFF, 0xFFFF, 0xFFFF,
-    0x8001, 0xFFFF, 0xFFFF, 0xFFFF,
-    0x8001, 0xFFFF, 0xFFFF, 0xFFFF,
-    0x8001, 0xFFFF, 0xFFFF, 0xFFFF,
-    0x8001, 0xFFFF, 0xFFFF, 0xFFFF,
-    0x8001, 0xFFFF, 0xFFFF, 0xFFFF,
-    0x8001, 0xFFFF, 0xFFFF, 0xFFFF,
-    0x8001, 0xFFFF, 0xFFFF, 0xFFFF,
-    0x8001, 0xFFFF, 0xFFFF, 0xFFFF,
-    0x8001, 0xFFFF, 0xFFFF, 0xFFFF,
-    0x8001, 0xFFFF, 0xFFFF, 0xFFFF,
-    0x8001, 0xFFFF, 0xFFFF, 0xFFFF,
-    0x8001, 0xFFFF, 0xFFFF, 0xFFFF,
-    0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF  
-};
-
-CCB myCCB;
-CCB framebufferCCB;
-CCB crtFramebufferCCB;
-
-void InitCCBs(void)
-{
-    // Clear the CCB (important)
-    memset(&myCCB, 0, sizeof(CCB));
-
-    InitCel(&myCCB, 16, 16, 1, INITCEL_CODED);
-    myCCB.ccb_SourcePtr   = (CelData *)mySpriteBits;
-    myCCB.ccb_PLUTPtr = twoColorPLUT;
-
-    
-    InitCel(&framebufferCCB, 256, 192, 1, INITCEL_CODED);
-    framebufferCCB.ccb_SourcePtr   = (CelData *)gameData.framebuffer;
-    framebufferCCB.ccb_PLUTPtr = twoColorPLUT;
-
-
-    InitCel(&crtFramebufferCCB, 256, 192, 2, INITCEL_CODED);
-    //ClearFlag(crtFramebufferCCB.ccb_Flags, CCB_NOBLK);
-
-    crtFramebufferCCB.ccb_Flags |= CCB_BGND;
-
-    crtFramebufferCCB.ccb_SourcePtr   = (CelData *)g_crtFramebuffer;
-    crtFramebufferCCB.ccb_PLUTPtr = fourColorPLUT;
-}
-
 void int_to_bits(int n, char *out, int bits)
 {
     int i;
@@ -145,19 +132,13 @@ void int_to_bits(int n, char *out, int bits)
 
 int main(int argc, char* argv)
 {
-    CCB* pCCB;
-
     const int clearColor = 0x00000000;
-    dl_u8 segmentCount;
-    const ShapeSegment* segments;
 
     bool romFoundAndLoaded = false;
     int loop;
 
     g_memory = (dl_u8*)malloc(DOWNLAND_MEMORY_SIZE);
     g_memoryEnd = g_memory;
-
-    g_crtFramebuffer = (dl_u8*)malloc(FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT / 4);
 
     for (loop = 0; loop < ROM_FILENAMES_COUNT; loop++)
     {
@@ -176,33 +157,24 @@ int main(int argc, char* argv)
         return -1;
 
     InitBasicDisplay();
-
     OpenMathFolio();
+    InitControlPad(2);
 
     clear(clearColor);
     swap();
 
     GameRunner_Init(&gameData, &resources);
-    InitCCBs();
 
     while(true)
     {
-        GameRunner_Update(&gameData, &resources);
+        Update_Controls(&gameData.joystickState);
+
+        if (!gameData.paused)
+        {
+            GameRunner_Update(&gameData, &resources);
+        }
+
         GameRunner_Draw(&gameData, &resources);
-
-        //clear(clearColor);
-        //draw_cels(&framebufferCCB);
-
-        /*
-        convert1bppImageTo2bppCrtEffectImage(gameData.framebuffer,
-                                             g_crtFramebuffer,
-                                             FRAMEBUFFER_WIDTH,
-                                             FRAMEBUFFER_HEIGHT,
-                                             CrtColor_Blue);
-
-        draw_cels(&crtFramebufferCCB);
-        */
-        //draw_cels(&myCCB);
 
         //draw_printf(16,16,"x: %d",ConvertF16_32(x));
         //draw_printf(16,24,"y: %d",ConvertF16_32(y));
@@ -211,6 +183,26 @@ int main(int argc, char* argv)
 
         
         //int_to_bits(n, bitstr, 32);
+
+        /*
+        if (gameData.joystickState.leftPressed)
+            draw_printf(16, 0,"left pressed");
+        if (gameData.joystickState.rightPressed)
+            draw_printf(16, 16,"right pressed");
+        if (gameData.joystickState.upPressed)
+            draw_printf(16, 32,"up pressed");
+        if (gameData.joystickState.downPressed)
+            draw_printf(16, 48,"down pressed");
+        if (gameData.joystickState.jumpPressed)
+            draw_printf(16, 64,"jump pressed");
+        if (gameData.joystickState.startPressed)
+            draw_printf(16, 80,"start pressed");
+
+        draw_printf(16, 96, "button %d", button);
+
+        if (button & ControlLeft)
+            draw_printf(16, 0,"left pressed");
+        */
 
         /*
         //CCB* ccb = &myCCB;

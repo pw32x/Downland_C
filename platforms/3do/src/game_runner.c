@@ -62,107 +62,6 @@ void drawGetReadyScreen(struct GameData* gameData, const Resources* resources);
 
 
 /*
-dl_u16 buildSpriteResource(GameSprite* gameSprite,
-						   const SpriteAttributes* spriteAttributes,
-						   const dl_u8* sprite, 
-						   dl_u8 width, 
-						   dl_u8 height, 
-						   dl_u8 spriteCount,
-						   dl_u16 tileIndex)
-{
-	dl_u8 convertedSprite[384];
-	memset(convertedSprite, 0, sizeof(convertedSprite));
-
-	gameSprite->spriteAttributes = spriteAttributes;
-	gameSprite->tileIndex = tileIndex;
-
-	const dl_u8* spriteRunner = sprite;
-
-	gameSprite->tilesPerFrame = ((width + 7) / 8) * ((height + 7) / 8);
-
-
-	for (int loop = 0; loop < spriteCount; loop++)
-    {
-
-		convert1bppImageTo8bppCrtEffectImage(spriteRunner,
-											 convertedSprite,
-											 width,
-											 height,
-											 CrtColor_Blue);
-
-		tileIndex += convertToTiles(convertedSprite, 
-									width, 
-									height, 
-									CHAR_BASE_BLOCK(4),
-									tileIndex * 64);
-
-		spriteRunner += (width / 8) * height;
-	}
-
-	return tileIndex;
-}
-
-dl_u16 buildTextResource(GameSprite* gameSprite,
-						 const SpriteAttributes* spriteAttributes,
-						 const dl_u8* sprite, 
-						 dl_u8 width, 
-						 dl_u8 height, 
-						 dl_u8 spriteCount,
-						 dl_u16 tileIndex,
-						 dl_u8 addDots)
-{
-	dl_u8 convertedSprite[64];
-	memset(convertedSprite, 0, sizeof(convertedSprite));
-
-	gameSprite->spriteAttributes = spriteAttributes;
-	gameSprite->tileIndex = tileIndex;
-
-	const dl_u8* spriteRunner = sprite;
-
-	gameSprite->tilesPerFrame = ((width + 7) / 8) * ((height + 7) / 8);
-
-
-	for (int loop = 0; loop < spriteCount; loop++)
-    {
-
-		convert1bppImageTo8bppCrtEffectImage(spriteRunner,
-											 convertedSprite,
-											 width,
-											 height,
-											 CrtColor_Blue);
-
-		// convert the 0 pixel indexes to non-transparently black at index 4
-		// convert the white pixels to blue
-		for (int loop2 = 0; loop2 < 64; loop2++)
-		{
-			if (convertedSprite[loop2] == 0)
-				convertedSprite[loop2] = 4;
-			if (convertedSprite[loop2] == 3)
-				convertedSprite[loop2] = 1;
-		}
-
-		if (addDots)
-		{
-			// add a dotted line at the bottom
-			for (int loop2 = 56; loop2 < 64; loop2 += 2)
-			{
-				convertedSprite[loop2] = 4;
-				convertedSprite[loop2 + 1] = 1;
-			}
-		}
-
-		tileIndex += convertToTiles(convertedSprite, 
-									width, 
-									height, 
-									CHAR_BASE_BLOCK(4),
-									tileIndex * 64);
-
-		spriteRunner += (width / 8) * height;
-	}
-
-	return tileIndex;
-}
-
 dl_u16 buildPlayerIconResource(GameSprite* gameSprite,
 							   const SpriteAttributes* spriteAttributes,
 							   const dl_u8* sprite, 
@@ -220,49 +119,28 @@ dl_u16 buildPlayerIconResource(GameSprite* gameSprite,
 	return tileIndex;
 }
 
-dl_u16 buildEmptySpriteResource(GameSprite* gameSprite,
-								const SpriteAttributes* spriteAttributes,
-								dl_u8 width, 
-								dl_u8 height, 
-								dl_u8 spriteCount,
-								dl_u16 tileIndex)
-{
-	gameSprite->spriteAttributes = spriteAttributes;
-	gameSprite->tileIndex = tileIndex;
-	gameSprite->tilesPerFrame = ((width + 7) / 8) * ((height + 7) / 8);
-
-	tileIndex += gameSprite->tilesPerFrame;
-
-	return tileIndex;
-}
+*/
 
 void updateRegenSprite(const Resources* resources, dl_u8 currentPlayerSpriteNumber)
 {
-	const dl_u16 bufferSize = (PLAYER_SPRITE_WIDTH / 8) * PLAYER_SPRITE_ROWS;
-	dl_u8 convertedSprite[384];
-	dl_u8 regenBuffer[bufferSize];
-    memset(regenBuffer, 0, bufferSize);
+#define ORIGINAL_SPRITE_FRAME_SIZE ((PLAYER_SPRITE_WIDTH / 8) * PLAYER_SPRITE_ROWS)
 
-    const dl_u8* originalSprite = resources->sprites_player;
-    originalSprite += currentPlayerSpriteNumber * bufferSize;
+	const dl_u8* originalSpriteFrame = resources->sprites_player + (currentPlayerSpriteNumber * ORIGINAL_SPRITE_FRAME_SIZE);
+	dl_u8 regenBuffer[ORIGINAL_SPRITE_FRAME_SIZE];
 
-    drawSprite_16PixelsWide_static_IntoSpriteBuffer(originalSprite, 
+	memset(regenBuffer, 0, ORIGINAL_SPRITE_FRAME_SIZE);
+
+    drawSprite_16PixelsWide_static_IntoSpriteBuffer(originalSpriteFrame, 
 													PLAYER_SPRITE_ROWS,
 													regenBuffer);
 
-	convert1bppImageTo8bppCrtEffectImage(regenBuffer,
-										 convertedSprite,
+	convert1bppImageTo2bppCrtEffectImage(regenBuffer,
+										 (dl_u8*)regenSprite.ccb.ccb_SourcePtr,
 										 PLAYER_SPRITE_WIDTH,
 										 PLAYER_SPRITE_ROWS,
+										 32, // totally hardcoded width
 										 CrtColor_Blue);
-
-	convertToTiles(convertedSprite, 
-				   PLAYER_SPRITE_WIDTH, 
-				   PLAYER_SPRITE_ROWS, 
-				   CHAR_BASE_BLOCK(4),
-				   regenSprite.tileIndex * 64);
 }
-*/
 
 
 //void GameRunner_ChangedRoomCallback(const struct GameData* gameData, dl_u8 roomNumber, dl_s8 transitionType);
@@ -326,47 +204,6 @@ void InitSplatSprite(GameSprite* gameSprite,
 		bufferRunner[loop] = 0;
 	}
 }
-
-/*
-void buildSplatSpriteResource(dl_u16 tileIndex, const Resources* resources)
-{
-	dl_u16 newWidth = 32;
-	dl_u8 convertedSprite[512];
-	memset(convertedSprite, 0, sizeof(convertedSprite));
-
-	splatSprite.spriteAttributes = &g_32x16SpriteAttributes;
-	splatSprite.tileIndex = tileIndex;
-	splatSprite.tilesPerFrame = 4 * 2;
-
-	convert1bppImageTo8bppCrtEffectImageWithNewWidth(resources->sprite_playerSplat,
-													 convertedSprite,
-													 PLAYER_SPLAT_SPRITE_WIDTH,
-													 PLAYER_SPLAT_SPRITE_ROWS,
-													 newWidth,
-													 CrtColor_Blue);
-
-	tileIndex += convertToTiles(convertedSprite, 
-								newWidth, 
-								PLAYER_SPLAT_SPRITE_ROWS, 
-								CHAR_BASE_BLOCK(4),
-								tileIndex * 64);
-
-	convertToTiles(convertedSprite, 
-				   newWidth, 
-				   PLAYER_SPLAT_SPRITE_ROWS, 
-				   CHAR_BASE_BLOCK(4),
-				   tileIndex * 64);
-
-	// erase the first five rows of the second set of splat tiles
-	dl_u16* vramAddress = (CHAR_BASE_BLOCK(4) + (tileIndex * 64));
-	for (int loop = 0; loop < 5 * 4; loop++)
-	{
-		vramAddress[loop] = 0;
-		vramAddress[loop + 32] = 0;
-		vramAddress[loop + 64] = 0;
-	}
-}
-*/
 
 void InitGameSprite(GameSprite* gameSprite, 
 					const dl_u8* originalSpriteData,
@@ -477,32 +314,6 @@ void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 {
 	dl_u32 cursorSpriteRaw = 0xffffffff;
 
-	/*
-	// load tile resources
-	dl_u16 tileIndex = 0;
-	tileIndex = buildSpriteResource(&dropsSprite, &g_8x8SpriteAttributes, resources->sprites_drops, DROP_SPRITE_WIDTH, DROP_SPRITE_ROWS, DROP_SPRITE_COUNT, tileIndex);
-	tileIndex = buildSpriteResource(&playerSprite, &g_16x16SpriteAttributes, resources->sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYER_SPRITE_COUNT, tileIndex);
-	tileIndex = buildSpriteResource(&cursorSprite, &g_8x8SpriteAttributes, (dl_u8*)&cursorSpriteRaw, 8, 1, 1, tileIndex);
-	tileIndex = buildSpriteResource(&ballSprite, &g_16x8SpriteAttributes, resources->sprites_bouncyBall, BALL_SPRITE_WIDTH, BALL_SPRITE_ROWS, BALL_SPRITE_COUNT, tileIndex);
-	tileIndex = buildSpriteResource(&birdSprite, &g_16x8SpriteAttributes, resources->sprites_bird, BIRD_SPRITE_WIDTH, BIRD_SPRITE_ROWS, BIRD_SPRITE_COUNT, tileIndex);
-	tileIndex = buildSpriteResource(&keySprite, &g_16x16SpriteAttributes, resources->sprite_key, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, tileIndex);
-	tileIndex = buildSpriteResource(&diamondSprite, &g_16x16SpriteAttributes, resources->sprite_diamond, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, tileIndex);
-	tileIndex = buildSpriteResource(&moneyBagSprite, &g_16x16SpriteAttributes, resources->sprite_moneyBag, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, tileIndex);
-	tileIndex = buildSpriteResource(&doorSprite, &g_16x16SpriteAttributes, resources->sprite_door, DOOR_SPRITE_WIDTH, DOOR_SPRITE_ROWS, 1, tileIndex);
-	tileIndex = buildEmptySpriteResource(&regenSprite, &g_16x16SpriteAttributes, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, 1, tileIndex);
-	tileIndex = buildTextResource(&characterFont, &g_textSpriteAttributes, resources->characterFont, 8, 7, 39, tileIndex, FALSE);
-	tileIndex = buildPlayerIconResource(&playerIconSprite, &g_playerIconSpriteAttributes, resources->sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYERICON_NUM_SPRITE_ROWS, PLAYER_SPRITE_COUNT, tileIndex);
-
-
-	buildSplatSpriteResource(tileIndex, resources);
-
-	// create the regen sprite for player icon
-	playerIconSpriteRegen.spriteAttributes = &g_playerIconSpriteAttributes;
-	playerIconSpriteRegen.tileIndex = regenSprite.tileIndex;
-	playerIconSpriteRegen.tilesPerFrame = regenSprite.tilesPerFrame;
-	*/
-
-
 	InitGameSprite(&dropsSprite, resources->sprites_drops, DROP_SPRITE_WIDTH, DROP_SPRITE_ROWS, DROP_SPRITE_COUNT);
 	InitGameSprite(&playerSprite,resources->sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYER_SPRITE_COUNT);
 	InitGameSprite(&cursorSprite,(dl_u8*)&cursorSpriteRaw, 8, 1, 1);
@@ -512,8 +323,7 @@ void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 	InitGameSprite(&diamondSprite, resources->sprite_diamond, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1);
 	InitGameSprite(&moneyBagSprite, resources->sprite_moneyBag, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1);
 	InitGameSprite(&doorSprite, resources->sprite_door, DOOR_SPRITE_WIDTH, DOOR_SPRITE_ROWS, 1);
-	//buildEmptySpriteResource(&regenSprite, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, 1);
-	//buildTextResource(&hudCharacterFont, resources->characterFont, 8, 7, 39, tile);
+	InitGameSprite(&regenSprite, NULL, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, 1);
 	InitFontSprite(&characterFont, resources->characterFont, 8, 7, 39);
 	//buildPlayerIconResource(&playerIconSprite, resources->sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYERICON_NUM_SPRITE_ROWS, PLAYER_SPRITE_COUNT);
 
@@ -545,7 +355,6 @@ void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 	g_rooms[WIPE_TRANSITION_ROOM_INDEX]->update = g_rooms[TRANSITION_ROOM_INDEX]->update;
 
 	//Game_ChangedRoomCallback = GameRunner_ChangedRoomCallback;
-
 
 	Game_Init(gameData, resources);
 }
@@ -625,7 +434,6 @@ void drawDrops(const GameData* gameData)
         dropsRunner++;
     }
 }
-
 
 void drawUIText(const dl_u8* text, dl_u16 xyLocation)
 {
@@ -714,7 +522,6 @@ void drawChamber(struct GameData* gameData, const Resources* resources)
 				   &splatSprite);
         break;
     case PLAYER_STATE_REGENERATION: 
-		/*
         if (!gameData->paused)
         {
 			updateRegenSprite(resources, playerData->currentSpriteNumber);
@@ -724,7 +531,7 @@ void drawChamber(struct GameData* gameData, const Resources* resources)
                    playerY,
                    0,
 				   &regenSprite);
-		*/
+
         break;
     default: 
         drawSprite(playerX,

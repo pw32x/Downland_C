@@ -36,7 +36,6 @@ GameSprite doorSprite;
 GameSprite regenSprite;
 GameSprite splatSprite;
 GameSprite characterFont;
-GameSprite hudCharacterFont;
 GameSprite playerIconSprite;
 GameSprite playerIconSpriteRegen;
 
@@ -268,6 +267,66 @@ void updateRegenSprite(const Resources* resources, dl_u8 currentPlayerSpriteNumb
 
 //void GameRunner_ChangedRoomCallback(const struct GameData* gameData, dl_u8 roomNumber, dl_s8 transitionType);
 
+void InitSplatSprite(GameSprite* gameSprite, 
+					 const dl_u8* originalSpriteData,
+  					 dl_u16 frameWidth,
+					 dl_u16 frameHeight)
+{
+	dl_u8 frameCount = 2;
+	dl_u8 pixelsPerByte = 4;
+	dl_u8 bytesPerRow = (frameWidth / pixelsPerByte);
+	dl_u32 sizePerFrame;
+	dl_u32 memSize;
+	dl_u8* buffer;
+	dl_u8* bufferRunner;
+	dl_u16 actualFrameWidth;
+	CCB* ccb;
+	dl_u16 loop;
+	dl_u16 originalSpriteFrameSize = (frameWidth / 8) * frameHeight;
+
+	if (bytesPerRow < 8)
+		bytesPerRow = 8;
+
+	actualFrameWidth = bytesPerRow * pixelsPerByte;
+
+	sizePerFrame = bytesPerRow * frameHeight;
+	memSize = sizePerFrame * frameCount;
+	buffer = (dl_u8*)malloc(memSize);
+
+	ccb = &gameSprite->ccb;
+
+    InitCel(ccb, frameWidth, frameHeight, 2, INITCEL_CODED);
+    ccb->ccb_PLUTPtr = g_gamePalette;
+	ccb->ccb_SourcePtr = (CelData *)buffer;
+
+	gameSprite->spriteData = buffer;
+	gameSprite->sizePerFrame = sizePerFrame;
+
+	if (originalSpriteData != NULL)
+	{
+		bufferRunner = buffer;
+		for (loop = 0; loop < frameCount; loop++)
+		{
+			convert1bppImageTo2bppCrtEffectImage(originalSpriteData,
+												 (dl_u8*)bufferRunner,
+												 frameWidth,
+												 frameHeight,
+												 actualFrameWidth,
+												 CrtColor_Blue);
+
+			bufferRunner += sizePerFrame;
+			// originalSpriteData += originalSpriteFrameSize; // use the same frame twice
+		}
+	}
+
+	// erase the first five rows of the second frame
+	bufferRunner = buffer + sizePerFrame;
+	for (loop = 0; loop < 5 * 8; loop++)
+	{
+		bufferRunner[loop] = 0;
+	}
+}
+
 /*
 void buildSplatSpriteResource(dl_u16 tileIndex, const Resources* resources)
 {
@@ -362,25 +421,56 @@ void InitGameSprite(GameSprite* gameSprite,
 	}
 }
 
-void DrawGameSprite(GameSprite* gameSprite, dl_u8 frameNumber, GameData* gameData)
+void InitFontSprite(GameSprite* gameSprite, 
+					const dl_u8* originalSpriteData,
+					dl_u16 frameWidth, 
+					dl_u16 frameHeight, 
+					dl_u8 frameCount)
 {
-	dl_u8* frame = NULL;
-	CCB* ccb = NULL;
+	dl_u8 pixelsPerByte = 4;
+	dl_u8 bytesPerRow = (frameWidth / pixelsPerByte);
+	dl_u32 sizePerFrame;
+	dl_u32 memSize;
+	dl_u8* buffer;
+	dl_u8* bufferRunner;
+	dl_u16 actualFrameWidth;
+	CCB* ccb;
+	dl_u8 loop;
+	dl_u16 originalSpriteFrameSize = (frameWidth / 8) * frameHeight;
+
+	if (bytesPerRow < 8)
+		bytesPerRow = 8;
+
+	actualFrameWidth = bytesPerRow * pixelsPerByte;
+
+	sizePerFrame = bytesPerRow * frameHeight;
+	memSize = sizePerFrame * frameCount;
+	buffer = (dl_u8*)malloc(memSize);
 
 	ccb = &gameSprite->ccb;
-	frame = gameSprite->spriteData + (gameSprite->sizePerFrame * frameNumber);
-    
-	ccb->ccb_SourcePtr = (CelData *)frame;
-	draw_cels(ccb);
 
-	//draw_printf(16, 16,"gameSprite->spriteData %d", gameSprite->spriteData);
-	//draw_printf(16, 32,"ccb->ccb_SourcePtr %d", ccb->ccb_SourcePtr);
-	//draw_printf(16, 48,"buffer %d", buffer);
-	////gameSprite->ccb->ccb_SourcePtr = (CelData*)buffer;
-	//draw_printf(16, 64,"ccb->ccb_SourcePtr %d", ccb->ccb_SourcePtr);
-	//draw_printf(16, 80,"ccbccb_SourcePtr %d", ccbccb_SourcePtr);
-	//draw_printf(16, 96,"g_crtFramebufferCCB %d", g_crtFramebufferCCB.ccb_SourcePtr);
-	//draw_printf(16, 112,"frame %d", frame);
+    InitCel(ccb, frameWidth, frameHeight, 2, INITCEL_CODED);
+    ccb->ccb_PLUTPtr = g_gamePalette;
+	ccb->ccb_SourcePtr = (CelData *)buffer;
+
+	gameSprite->spriteData = buffer;
+	gameSprite->sizePerFrame = sizePerFrame;
+
+	if (originalSpriteData != NULL)
+	{
+		bufferRunner = buffer;
+		for (loop = 0; loop < frameCount; loop++)
+		{
+			convert1bppImageTo2bppBlueImage(originalSpriteData,
+										    (dl_u8*)bufferRunner,
+										    frameWidth,
+										    frameHeight,
+										    actualFrameWidth);
+
+			bufferRunner += sizePerFrame;
+			originalSpriteData += originalSpriteFrameSize;
+		}
+	}
 }
 
 void GameRunner_Init(struct GameData* gameData, const Resources* resources)
@@ -400,7 +490,6 @@ void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 	tileIndex = buildSpriteResource(&moneyBagSprite, &g_16x16SpriteAttributes, resources->sprite_moneyBag, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, tileIndex);
 	tileIndex = buildSpriteResource(&doorSprite, &g_16x16SpriteAttributes, resources->sprite_door, DOOR_SPRITE_WIDTH, DOOR_SPRITE_ROWS, 1, tileIndex);
 	tileIndex = buildEmptySpriteResource(&regenSprite, &g_16x16SpriteAttributes, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, 1, tileIndex);
-	tileIndex = buildTextResource(&hudCharacterFont, &g_hudTextSpriteAttributes, resources->characterFont, 8, 7, 39, tileIndex, TRUE);
 	tileIndex = buildTextResource(&characterFont, &g_textSpriteAttributes, resources->characterFont, 8, 7, 39, tileIndex, FALSE);
 	tileIndex = buildPlayerIconResource(&playerIconSprite, &g_playerIconSpriteAttributes, resources->sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYERICON_NUM_SPRITE_ROWS, PLAYER_SPRITE_COUNT, tileIndex);
 
@@ -425,8 +514,10 @@ void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 	InitGameSprite(&doorSprite, resources->sprite_door, DOOR_SPRITE_WIDTH, DOOR_SPRITE_ROWS, 1);
 	//buildEmptySpriteResource(&regenSprite, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, 1);
 	//buildTextResource(&hudCharacterFont, resources->characterFont, 8, 7, 39, tile);
-	InitGameSprite(&characterFont, resources->characterFont, 8, 7, 39);
+	InitFontSprite(&characterFont, resources->characterFont, 8, 7, 39);
 	//buildPlayerIconResource(&playerIconSprite, resources->sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYERICON_NUM_SPRITE_ROWS, PLAYER_SPRITE_COUNT);
+
+	InitSplatSprite(&splatSprite, resources->sprite_playerSplat, PLAYER_SPLAT_SPRITE_WIDTH, PLAYER_SPLAT_SPRITE_ROWS);
 
 	InitGameSprite(&g_crtFramebufferSprite, NULL, FRAMEBUFFER_WIDTH, FRAMEBUFFER_HEIGHT, 1);
     g_crtFramebufferSprite.ccb.ccb_Flags |= CCB_BGND; // make black pixels not transparent
@@ -498,8 +589,6 @@ void GameRunner_Update(struct GameData* gameData, const Resources* resources)
 	Game_Update(gameData, resources);
 }
 
-//void drawUIText(const dl_u8* text, dl_u16 x, dl_u16 y, GameSprite* font);
-
 void GameRunner_Draw(struct GameData* gameData, const Resources* resources)
 {
 	m_drawRoomFunctions[gameData->currentRoom->roomNumber](gameData, resources);
@@ -537,13 +626,16 @@ void drawDrops(const GameData* gameData)
     }
 }
 
-void drawUIText(const dl_u8* text, dl_u16 x, dl_u16 y, GameSprite* font)
+
+void drawUIText(const dl_u8* text, dl_u16 xyLocation)
 {
+    dl_u16 x = ((xyLocation % 32) * 8);
+    dl_u16 y = (xyLocation / 32);
+
     // for each character
     while (*text != 0xff)
     {
-		drawSprite(x, y, *text, font);
-
+        drawSprite(x, y, *text, &characterFont);
         text++;
         x += 8;
     }
@@ -616,12 +708,10 @@ void drawChamber(struct GameData* gameData, const Resources* resources)
     switch (playerData->state)
     {
     case PLAYER_STATE_SPLAT: 
-		/*
         drawSprite(playerX,
                    playerY + 7,
                    playerData->splatFrameNumber,
 				   &splatSprite);
-		*/
         break;
     case PLAYER_STATE_REGENERATION: 
 		/*
@@ -685,8 +775,11 @@ void drawChamber(struct GameData* gameData, const Resources* resources)
 	}
 
     // draw text
-	drawUIText(gameData->string_timer, 24 * 8, 0, &hudCharacterFont);
-	drawUIText(playerData->scoreString, 8, 0, &hudCharacterFont); 
+	drawUIText(gameData->string_timer, TIMER_DRAW_LOCATION);
+	drawUIText(resources->text_pl1, PLAYERLIVES_TEXT_DRAW_LOCATION);
+	drawUIText(resources->text_chamber, CHAMBER_TEXT_DRAW_LOCATION);
+	drawUIText(gameData->string_roomNumber, CHAMBER_NUMBER_TEXT_DRAW_LOCATION);
+	drawUIText(playerData->scoreString, SCORE_DRAW_LOCATION);  
 
 	drawUIPlayerLives(playerData);
 }

@@ -313,23 +313,26 @@ void InitGameSprite(GameSprite* gameSprite,
 					const dl_u8* originalSpriteData,
 					dl_u16 frameWidth, 
 					dl_u16 frameHeight, 
-					dl_u8 framesCount)
+					dl_u8 frameCount)
 {
 	dl_u8 pixelsPerByte = 4;
 	dl_u8 bytesPerRow = (frameWidth / pixelsPerByte);
 	dl_u32 sizePerFrame;
 	dl_u32 memSize;
 	dl_u8* buffer;
-	dl_u16 bufferWidth;
+	dl_u8* bufferRunner;
+	dl_u16 actualFrameWidth;
 	CCB* ccb;
+	dl_u8 loop;
+	dl_u16 originalSpriteFrameSize = (frameWidth / 8) * frameHeight;
 
 	if (bytesPerRow < 8)
 		bytesPerRow = 8;
 
-	bufferWidth = bytesPerRow * pixelsPerByte;
+	actualFrameWidth = bytesPerRow * pixelsPerByte;
 
 	sizePerFrame = bytesPerRow * frameHeight;
-	memSize = sizePerFrame * framesCount;
+	memSize = sizePerFrame * frameCount;
 	buffer = (dl_u8*)malloc(memSize);
 
 	ccb = &gameSprite->ccb;
@@ -343,12 +346,19 @@ void InitGameSprite(GameSprite* gameSprite,
 
 	if (originalSpriteData != NULL)
 	{
-		convert1bppImageTo2bppCrtEffectImage(originalSpriteData,
-											 (dl_u8*)gameSprite->spriteData,
-											 frameWidth,
-											 frameHeight,
-											 bufferWidth,
-											 CrtColor_Blue);
+		bufferRunner = buffer;
+		for (loop = 0; loop < frameCount; loop++)
+		{
+			convert1bppImageTo2bppCrtEffectImage(originalSpriteData,
+												 (dl_u8*)bufferRunner,
+												 frameWidth,
+												 frameHeight,
+												 actualFrameWidth,
+												 CrtColor_Blue);
+
+			bufferRunner += sizePerFrame;
+			originalSpriteData += originalSpriteFrameSize;
+		}
 	}
 }
 
@@ -496,10 +506,12 @@ void GameRunner_Draw(struct GameData* gameData, const Resources* resources)
 }
 
 // draw sprite, affected by scrolling
-void drawSprite(dl_u16 x, dl_u16 y, dl_u8 frame, GameSprite* gameSprite)
+void drawSprite(dl_u16 x, dl_u16 y, dl_u8 frameNumber, GameSprite* gameSprite)
 {
 	gameSprite->ccb.ccb_XPos = ((x + SCREEN_OFFSET_X) << 16);
 	gameSprite->ccb.ccb_YPos = ((y + SCREEN_OFFSET_Y) << 16);
+
+	gameSprite->ccb.ccb_SourcePtr = (CelData *)(gameSprite->spriteData + (gameSprite->sizePerFrame * frameNumber));
 
 	draw_cels(&gameSprite->ccb);
 }

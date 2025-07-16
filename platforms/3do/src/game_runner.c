@@ -449,29 +449,38 @@ void drawUIText(const dl_u8* text, dl_u16 xyLocation)
     }
 }
 
+#define SET_PRE0_HEIGHT(ccb_PRE0, height)  (ccb_PRE0 & ~0xFC0) | ((height - 1) << 6)
+
 void drawUIPlayerLives(const PlayerData* playerData)
 {
 	dl_u8 x = PLAYERLIVES_ICON_X;
 	dl_u8 y = PLAYERLIVES_ICON_Y;
 	dl_u8 loop;
 
+	int32 spritePRE0 = playerSprite.ccb.ccb_PRE0;
+	playerSprite.ccb.ccb_PRE0 = SET_PRE0_HEIGHT(playerSprite.ccb.ccb_PRE0, PLAYERICON_NUM_SPRITE_ROWS);
+	regenSprite.ccb.ccb_PRE0 = SET_PRE0_HEIGHT(regenSprite.ccb.ccb_PRE0, PLAYERICON_NUM_SPRITE_ROWS);
+
     for (loop = 0; loop < playerData->lives; loop++)
 	{
-        drawSprite(x, 
+        drawSprite(x << 1, 
 				   y, 
 				   playerData->currentSpriteNumber,
-				   &playerIconSprite);
+				   &playerSprite);
 
 		x += PLAYERLIVES_ICON_SPACING;
     }
 
 	if (playerData->state == PLAYER_STATE_REGENERATION)
 	{
-        drawSprite(x, 
+        drawSprite(x << 1, 
                    y, 
 				   0,
-				   &playerIconSpriteRegen);		
+				   &regenSprite);		
     }   
+
+	playerSprite.ccb.ccb_PRE0 = spritePRE0;
+	regenSprite.ccb.ccb_PRE0 = spritePRE0;
 }
 
 void drawChamber(struct GameData* gameData, const Resources* resources)

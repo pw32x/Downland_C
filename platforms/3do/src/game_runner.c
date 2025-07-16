@@ -48,7 +48,15 @@ dl_u16 g_gamePalette[4] =
     0x0000, // black (R=0, G=0, B=0)
     0x003E, // blue (R=0, G=0, B=31)
     0x7E40, // orange (R=31, G=20, B=0)
-    0x7FFF  // white (R=31, G=31, B=31)
+    0x7FFF, // white (R=31, G=31, B=31)
+};
+
+dl_u16 g_blackPalette[4] = 
+{
+    0x0000,
+    0x0000,
+    0x0000,
+    0x0000,
 };
 
 typedef void (*DrawRoomFunction)(struct GameData* gameData, const Resources* resources);
@@ -59,67 +67,6 @@ void drawTitleScreen(struct GameData* gameData, const Resources* resources);
 void drawTransition(struct GameData* gameData, const Resources* resources);
 void drawWipeTransition(struct GameData* gameData, const Resources* resources);
 void drawGetReadyScreen(struct GameData* gameData, const Resources* resources);
-
-
-/*
-dl_u16 buildPlayerIconResource(GameSprite* gameSprite,
-							   const SpriteAttributes* spriteAttributes,
-							   const dl_u8* sprite, 
-							   dl_u8 width, 
-							   dl_u8 height, 
-							   dl_u8 clipHeight,
-							   dl_u8 spriteCount,
-							   dl_u16 tileIndex)
-{
-	// use the player sprite but only the top part
-
-	dl_u8 convertedSprite[256];
-	memset(convertedSprite, 0, sizeof(convertedSprite));
-
-	gameSprite->spriteAttributes = spriteAttributes;
-	gameSprite->tileIndex = tileIndex;
-
-	const dl_u8* spriteRunner = sprite;
-
-	gameSprite->tilesPerFrame = ((width + 7) / 8) * ((clipHeight + 7) / 8);
-
-
-	for (int loop = 0; loop < spriteCount; loop++)
-    {
-
-		convert1bppImageTo8bppCrtEffectImage(spriteRunner,
-											 convertedSprite,
-											 width,
-											 height,
-											 CrtColor_Blue);
-
-		// convert the 0 pixel indexes to non-transparently black at index 4
-		for (int loop2 = 0; loop2 < 256; loop2++)
-		{
-			if (convertedSprite[loop2] == 0)
-				convertedSprite[loop2] = 4;
-		}
-
-		// add a dotted line at the bottom
-		for (int loop2 = 112; loop2 < 128; loop2 += 2)
-		{
-			convertedSprite[loop2] = 4;
-			convertedSprite[loop2 + 1] = 1;
-		}
-
-		tileIndex += convertToTiles(convertedSprite, 
-									width, 
-									clipHeight, 
-									CHAR_BASE_BLOCK(4),
-									tileIndex * 64);
-
-		spriteRunner += (width / 8) * height;
-	}
-
-	return tileIndex;
-}
-
-*/
 
 void updateRegenSprite(const Resources* resources, dl_u8 currentPlayerSpriteNumber)
 {
@@ -143,7 +90,7 @@ void updateRegenSprite(const Resources* resources, dl_u8 currentPlayerSpriteNumb
 }
 
 
-//void GameRunner_ChangedRoomCallback(const struct GameData* gameData, dl_u8 roomNumber, dl_s8 transitionType);
+void GameRunner_ChangedRoomCallback(const struct GameData* gameData, dl_u8 roomNumber, dl_s8 transitionType);
 
 void InitSplatSprite(GameSprite* gameSprite, 
 					 const dl_u8* originalSpriteData,
@@ -310,6 +257,57 @@ void InitFontSprite(GameSprite* gameSprite,
 	}
 }
 
+dl_u8 transitionSpriteData[] = 
+{
+	0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11,
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+};
+
+CCB transitionCCB;
+void InitTransitionSprite()
+{
+    InitCel(&transitionCCB, 16, 32, 4, INITCEL_CODED);
+	transitionCCB.ccb_Flags |= CCB_BGND;
+    transitionCCB.ccb_PLUTPtr = g_gamePalette;
+
+	transitionCCB.ccb_HDX = 256 << 16;  // 8.0 fixed point
+    transitionCCB.ccb_HDY = 0;
+    transitionCCB.ccb_VDX = 0;
+    transitionCCB.ccb_VDY = 1 << 16;  // no vertical scaling
+
+	transitionCCB.ccb_SourcePtr = (CelData *)transitionSpriteData;
+}
+
 void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 {
 	dl_u32 cursorSpriteRaw = 0xffffffff;
@@ -332,6 +330,8 @@ void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 	InitGameSprite(&g_crtFramebufferSprite, NULL, FRAMEBUFFER_WIDTH, FRAMEBUFFER_HEIGHT, 1);
     g_crtFramebufferSprite.ccb.ccb_Flags |= CCB_BGND; // make black pixels not transparent
 
+	InitTransitionSprite();
+
 	g_pickUpSprites[0] = &diamondSprite;
 	g_pickUpSprites[1] = &moneyBagSprite;
 	g_pickUpSprites[2] = &keySprite;
@@ -352,46 +352,19 @@ void GameRunner_Init(struct GameData* gameData, const Resources* resources)
     m_drawRoomFunctions[WIPE_TRANSITION_ROOM_INDEX] = drawWipeTransition;
     m_drawRoomFunctions[GET_READY_ROOM_INDEX] = drawGetReadyScreen;
 
-	g_rooms[WIPE_TRANSITION_ROOM_INDEX]->update = g_rooms[TRANSITION_ROOM_INDEX]->update;
+	//g_rooms[WIPE_TRANSITION_ROOM_INDEX]->update = g_rooms[TRANSITION_ROOM_INDEX]->update;
 
-	//Game_ChangedRoomCallback = GameRunner_ChangedRoomCallback;
+	Game_ChangedRoomCallback = GameRunner_ChangedRoomCallback;
 
 	Game_Init(gameData, resources);
 }
 
-/*
+
 void GameRunner_ChangedRoomCallback(const struct GameData* gameData, dl_u8 roomNumber, dl_s8 transitionType)
 {
-	g_oldPlayerX = 0xffff;
-	g_oldPlayerY = 0xffff;
-
-	dl_u32 mode = MODE_1 | BG1_ON | BG2_ON | OBJ_ENABLE | OBJ_1D_MAP;
-
-	if (roomNumber == WIPE_TRANSITION_ROOM_INDEX || 
-		roomNumber == TRANSITION_ROOM_INDEX)
-	{
-		g_transitionCounter = TRANSITION_BLACK_SCREEN;
-	}
-	else
-	{
-		g_transitionCounter = TRANSITION_OFF;
-	}
-
-	if (roomNumber != TITLESCREEN_ROOM_INDEX &&
-		roomNumber != GET_READY_ROOM_INDEX)
-	{
-		// turn on the UI hud
-		mode |= BG0_ON;
-	}
-	else
-	{
-		g_scrollX = 7;
-		g_scrollY = 13;
-	}
-
-	SetMode(mode);
+	transitionCCB.ccb_PLUTPtr = g_blackPalette;
 }
-*/
+
 
 void GameRunner_Update(struct GameData* gameData, const Resources* resources)
 {
@@ -626,7 +599,7 @@ void drawCleanBackground(const GameData* gameData,
 
 void drawTransition(struct GameData* gameData, const Resources* resources)
 {
-	if (!gameData->transitionInitialDelay)
+	if (gameData->transitionInitialDelay == 29)
     {
         drawCleanBackground(gameData, 
 							resources);
@@ -637,51 +610,31 @@ void drawTransition(struct GameData* gameData, const Resources* resources)
 
 void drawWipeTransition(struct GameData* gameData, const Resources* resources)
 {
-	if (!gameData->transitionInitialDelay)
+	dl_u8 loop = 0;
+	dl_u16 x = 0;
+	dl_u16 y = gameData->transitionCurrentLine;
+
+	if (gameData->transitionInitialDelay == 29)
     {
         drawCleanBackground(gameData, 
 							resources);
     }
+	else if (!gameData->transitionInitialDelay)
+	{
+		transitionCCB.ccb_PLUTPtr = g_gamePalette;
+	}
 
 	drawSprite(0, 0, 0, &g_crtFramebufferSprite);
 
-	/*
-	if (gameData->transitionInitialDelay == 29)
-    {
-        g_transitionCounter = TRANSITION_BLACK_SCREEN;
+	for (loop = 0; loop < 6; loop++)
+	{
+		transitionCCB.ccb_XPos = ((x + SCREEN_OFFSET_X) << 16);
+		transitionCCB.ccb_YPos = ((y + SCREEN_OFFSET_Y) << 16);
+		transitionCCB.ccb_PRE0 = SET_PRE0_HEIGHT(transitionCCB.ccb_PRE0, 32 - gameData->transitionCurrentLine);
+		draw_cels(&transitionCCB);
 
-		PlayerData* playerData = gameData->currentPlayerData;
-
-		dl_u16 playerX;
-		dl_u16 playerY;
-
-		if (playerData->lastDoor)
-		{
-			playerX = playerData->lastDoor->xLocationInNextRoom;
-			playerY = playerData->lastDoor->yLocationInNextRoom;
-		}
-		else
-		{
-			playerX = PLAYER_START_X;
-			playerY = PLAYER_START_Y;
-		}
-
-		updateScroll(playerX << 1, playerY);
-    }
-    else if (!gameData->transitionInitialDelay)
-    {
-		//g_transitionCounter = TRANSITION_OFF;
-        drawCleanBackground(gameData, 
-							resources, 
-							gameData->cleanBackground, 
-							g_backgroundTileOffset);
-    }
-
-	if (!gameData->transitionCurrentLine)
-		g_transitionCounter = TRANSITION_BLACK_SCREEN;
-	else
-		g_transitionCounter = gameData->transitionCurrentLine;
-		*/
+		y += 32;
+	}
 }
 
 void drawGetReadyScreen(struct GameData* gameData, const Resources* resources)

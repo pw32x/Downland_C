@@ -7,7 +7,7 @@
 #include "..\drops_manager.h"
 #include "..\dl_sound.h"
 
-#define INITIAL_TRANSITION_DELAY 1 // 30
+#define INITIAL_TRANSITION_DELAY 30
 
 // This simulates the pause before a room appears in the original game.
 // In the original game, the pause is because the background is being

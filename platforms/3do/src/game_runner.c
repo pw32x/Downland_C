@@ -599,13 +599,31 @@ void drawCleanBackground(const GameData* gameData,
 
 void drawTransition(struct GameData* gameData, const Resources* resources)
 {
+	dl_u8 loop = 0;
+	dl_u16 x = 0;
+	dl_u16 y = 0;
+
 	if (gameData->transitionInitialDelay == 29)
     {
         drawCleanBackground(gameData, 
 							resources);
     }
+	else if (!gameData->transitionInitialDelay)
+	{
+		transitionCCB.ccb_PLUTPtr = g_gamePalette;
+	}
 
 	drawSprite(0, 0, 0, &g_crtFramebufferSprite);
+
+	for (loop = 0; loop < 6; loop++)
+	{
+		transitionCCB.ccb_XPos = ((x + SCREEN_OFFSET_X) << 16);
+		transitionCCB.ccb_YPos = ((y + SCREEN_OFFSET_Y) << 16);
+		transitionCCB.ccb_PRE0 = SET_PRE0_HEIGHT(transitionCCB.ccb_PRE0, 32);
+		draw_cels(&transitionCCB);
+
+		y += 32;
+	}
 }
 
 void drawWipeTransition(struct GameData* gameData, const Resources* resources)

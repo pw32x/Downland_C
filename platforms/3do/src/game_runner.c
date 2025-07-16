@@ -16,32 +16,6 @@
 #include "celutils.h"
 #include "display.h"
 
-/*
-typedef struct
-{
-	dl_u16 attr0;
-	dl_u16 attr1;
-	dl_u16 attr2;
-} SpriteAttributes;
-
-SpriteAttributes g_8x8SpriteAttributes;
-SpriteAttributes g_16x8SpriteAttributes;
-SpriteAttributes g_16x16SpriteAttributes;
-SpriteAttributes g_hudTextSpriteAttributes;
-SpriteAttributes g_textSpriteAttributes;
-SpriteAttributes g_playerIconSpriteAttributes;
-SpriteAttributes g_32x16SpriteAttributes;
-
-#define SCROLL_MAX_X 16
-#define SCROLL_MAX_Y 32
-
-dl_s16 g_scrollX;
-dl_s16 g_scrollY;
-
-dl_u16 g_oldPlayerX = 0;
-dl_u16 g_oldPlayerY = 0;
-*/
-
 typedef struct
 {
 	CCB ccb;
@@ -78,8 +52,6 @@ dl_u16 g_gamePalette[4] =
     0x7FFF  // white (R=31, G=31, B=31)
 };
 
-
-
 typedef void (*DrawRoomFunction)(struct GameData* gameData, const Resources* resources);
 DrawRoomFunction m_drawRoomFunctions[NUM_ROOMS_AND_ALL];
 
@@ -89,17 +61,8 @@ void drawTransition(struct GameData* gameData, const Resources* resources);
 void drawWipeTransition(struct GameData* gameData, const Resources* resources);
 void drawGetReadyScreen(struct GameData* gameData, const Resources* resources);
 
-// character font
-// player icons
-// sound
-// scrolling
 
-//m_characterFont(resources->characterFont, 8, 7, 39),
 /*
-dl_u16 g_oamIndex = 0;
-
-dl_u16 g_backgroundTileOffset;
-
 dl_u16 buildSpriteResource(GameSprite* gameSprite,
 						   const SpriteAttributes* spriteAttributes,
 						   const dl_u8* sprite, 
@@ -300,117 +263,12 @@ void updateRegenSprite(const Resources* resources, dl_u8 currentPlayerSpriteNumb
 				   CHAR_BASE_BLOCK(4),
 				   regenSprite.tileIndex * 64);
 }
-
-void buildUI()
-{
-	// build the background for score and lives
-	dl_u16* vramTileAddr = (dl_u16*)VRAM;
-
-	// copy empty tile
-	dl_u8 tile[32];
-	memset(tile, 0x0, sizeof(tile));
-	CpuFastSet(tile, vramTileAddr, COPY32 | 8);
-
-	// build and copy UI tile
-	vramTileAddr += 16;
-
-	memset(tile, 0x44, sizeof(tile));
-	for (int loop = 28; loop < 32; loop++)
-		tile[loop] = 0x14;
-
-	CpuFastSet(tile, vramTileAddr, COPY32 | 8);
-	// build and copy UI tile
-	vramTileAddr += 16;
+*/
 
 
-	// build tilemap for UI bar
-	dl_u16* vramTileMapAddr = (dl_u16*)MAP_BASE_ADR(UI_TILEMAP_INDEX);
-	for (int loop = 0; loop < 30; loop++)
-	{
-		*vramTileMapAddr = 1;
-		vramTileMapAddr++;
-	}
+//void GameRunner_ChangedRoomCallback(const struct GameData* gameData, dl_u8 roomNumber, dl_s8 transitionType);
 
-	// build tile for transition background
-    // first line: transparent
-    // second line: non-transparent black
-    // third line: blue
-	dl_u8 transitionTile[64];
-    for (int i = 0; i < 8; i++)
-    {
-        transitionTile[i] = 0x00;
-        transitionTile[i + 8] = 0x04; // non transparent black
-        transitionTile[i + 16] = 0x01; // blue
-    }
-
-	CpuFastSet(transitionTile, vramTileAddr, COPY32 | 16);
-	vramTileAddr += 32;
-
-	// build tilemap for UI bar
-	vramTileMapAddr = (dl_u16*)MAP_BASE_ADR(TRANSITION_TILEMAP_INDEX);
-	for (int loop = 0; loop < 16; loop++)
-	{
-		*vramTileMapAddr = 0x0202;
-		*(vramTileMapAddr + 16) = 0x0101;
-		vramTileMapAddr++;
-	}
-
-	// build tilemap for the transition background
-    vramTileMapAddr = (dl_u16*)MAP_BASE_ADR(TRANSITION_TILEMAP_INDEX);
-    // fill only the first line of bg2 with the transition tile. 
-    for (int i = 0; i < 16 ; i++) 
-    {
-        vramTileMapAddr[i] = 0x0101;
-    }
-
-	g_backgroundTileOffset = 6;
-}
-
-void GameRunner_ChangedRoomCallback(const struct GameData* gameData, dl_u8 roomNumber, dl_s8 transitionType);
-
-
-void createBackgrounds(const GameData* gameData, 
-					   const Resources* resources)
-{
-	// change which tilemap to use
-
-	dl_u16* vramTileAddr = (dl_u16*)VRAM;
-
-	dl_u16 tileOffset = g_backgroundTileOffset;
-
-	for (int loop = 0; loop < NUM_ROOMS_AND_ALL; loop++)
-	{
-		if (g_rooms[loop]->draw == NULL)
-			continue;
-
-		dl_u16* vramTileMapAddr = (dl_u16*)MAP_BASE_ADR(GAME_TILEMAP_INDEX - loop);
-
-		g_rooms[loop]->draw(loop, (GameData*)gameData, resources);
-
-		tileOffset = convertBackgroundToVRAM16(gameData->cleanBackground,
-											   vramTileAddr,
-											   vramTileMapAddr,
-											   tileOffset,
-											   FRAMEBUFFER_WIDTH,
-											   FRAMEBUFFER_HEIGHT,
-											   CrtColor_Blue);
-	}
-
-	// we needed an active GameData to render rooms
-	// but we screwed up the current room. Force it 
-	// back to the current room when the game started.
-	dl_u8 roomNumber = gameData->transitionRoomNumber;
-	g_rooms[roomNumber]->draw(roomNumber, (GameData*)gameData, resources);
-}
-
-void setGameBackgroundTilemap(dl_u8 tilemapIndex)
-{
-	BGCTRL[GAME_BACKGROUND_INDEX] = SCREEN_BASE(GAME_TILEMAP_INDEX - tilemapIndex) |
-									BG_16_COLOR |
-									BG_PRIORITY(GAME_BACKGROUND_PRIORITY) |
-									BG_SIZE_0;	
-}
-
+/*
 void buildSplatSpriteResource(dl_u16 tileIndex, const Resources* resources)
 {
 	dl_u16 newWidth = 32;
@@ -449,63 +307,7 @@ void buildSplatSpriteResource(dl_u16 tileIndex, const Resources* resources)
 		vramAddress[loop + 64] = 0;
 	}
 }
-
-void drawCustomTitleScreenBackground(GameData* gameData, const Resources* resources)
-{
-	dl_u8* framebuffer = gameData->cleanBackground;
-
-	// draw custom background for titlescreen on GBA.
-	const dl_u8 numCommands = 6;
-	BackgroundDrawCommand backgroundDrawCommands[numCommands];
-	memcpy(backgroundDrawCommands, 
-		   resources->roomResources[TITLESCREEN_ROOM_INDEX].backgroundDrawData.backgroundDrawCommands, 
-		   sizeof(BackgroundDrawCommand) * numCommands);
-
-	backgroundDrawCommands[2].drawCount = 9;
-	backgroundDrawCommands[4].drawCount = 9;
-
-	BackgroundDrawData backgroundDrawData;
-	backgroundDrawData.drawCommandCount = numCommands;
-	backgroundDrawData.backgroundDrawCommands = backgroundDrawCommands;
-
-	drawBackground(&backgroundDrawData, 
-				   resources,
-				   framebuffer);
-}
-
-void custom_titleScreen_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resources)
-{
-	drawCustomTitleScreenBackground(gameData, resources);
-
-	dl_u8* framebuffer = gameData->cleanBackground;
-
-	// title screen text
-	drawText(resources->text_downland, resources->characterFont, framebuffer, 0x03c9); // 0x07c9 original coco mem location
-	drawText(resources->text_writtenBy + 8, resources->characterFont, framebuffer, 0x050a - 5); // 0x090A original coco mem location
-	drawText(resources->text_michaelAichlmayer, resources->characterFont, framebuffer, 0x647 + 1 - (0x28 * 8)); // 0x0A47 original coco mem location
-	drawText(resources->text_copyright1983, resources->characterFont, framebuffer, 0x789 - (0x20 * 8)); // 0x0B89 original coco mem location
-	drawText(resources->text_spectralAssociates, resources->characterFont, framebuffer, 0x8c6 - (0x20 * 8)); // 0x0CC6 original coco mem location
-	drawText(resources->text_licensedTo, resources->characterFont, framebuffer, 0xa0a - (0x20 * 8)); // 0x0E0A original coco mem location
-	drawText(resources->text_tandyCorporation, resources->characterFont, framebuffer, 0xb47 - (0x20 * 8)); // 0x0F47 original coco mem location
-	drawText(resources->text_allRightsReserved, resources->characterFont, framebuffer, 0xc86 - (0x20 * 8)); // 0x1086 original coco mem location
-	drawText(resources->text_onePlayer, resources->characterFont, framebuffer, 0xf05 - (0x20 * 8)); // 0x1305 original coco mem location
-	drawText(resources->text_twoPlayer, resources->characterFont, framebuffer, 0xf11 - (0x20 * 8)); // 0x1311 original coco mem location
-	drawText(resources->text_highScore, resources->characterFont, framebuffer, 0x118b - 5 - (0x20 * 8)); // 0x158B original coco mem location
-	drawText(resources->text_playerOne, resources->characterFont, framebuffer, 0x1406 - (0x20 * 17)); // 0x1806 original coco mem location
-	drawText(resources->text_playerTwo, resources->characterFont, framebuffer, 0x1546 - (0x20 * 16)); // 0x1946 original coco mem location
-}
-
-void custom_get_ready_room_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resources)
-{
-	drawCustomTitleScreenBackground(gameData, resources);
-
-	dl_u8* framebuffer = gameData->cleanBackground;
-
-	// get ready text
-	const dl_u8* getReadyString = gameData->currentPlayerData->playerNumber == PLAYER_ONE ? resources->text_getReadyPlayerOne : resources->text_getReadyPlayerTwo;
-
-	drawText(getReadyString, resources->characterFont, framebuffer, 0x0b66);
-}*/
+*/
 
 void InitGameSprite(GameSprite* gameSprite, 
 					const dl_u8* originalSpriteData,
@@ -576,37 +378,6 @@ void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 	dl_u32 cursorSpriteRaw = 0xffffffff;
 
 	/*
-	// setup sprite attributes
-	g_8x8SpriteAttributes.attr0 = ATTR0_COLOR_256 | ATTR0_SQUARE;
-	g_8x8SpriteAttributes.attr1 = ATTR1_SIZE_8;
-	g_8x8SpriteAttributes.attr2 = OBJ_PRIORITY(SPRITE_PRIORITY);
-
-	g_16x16SpriteAttributes.attr0 = ATTR0_COLOR_256 | ATTR0_SQUARE;
-	g_16x16SpriteAttributes.attr1 = ATTR1_SIZE_16;
-	g_16x16SpriteAttributes.attr2 = OBJ_PRIORITY(SPRITE_PRIORITY);
-
-	g_32x16SpriteAttributes.attr0 = ATTR0_COLOR_256 | ATTR0_WIDE;
-	g_32x16SpriteAttributes.attr1 = ATTR1_SIZE_32;
-	g_32x16SpriteAttributes.attr2 = OBJ_PRIORITY(SPRITE_PRIORITY);
-
-	g_16x8SpriteAttributes.attr0 = ATTR0_COLOR_256 | ATTR0_WIDE;
-	g_16x8SpriteAttributes.attr1 = ATTR1_SIZE_8;
-	g_16x8SpriteAttributes.attr2 = OBJ_PRIORITY(SPRITE_PRIORITY);
-
-	g_textSpriteAttributes.attr0 = ATTR0_COLOR_256 | ATTR0_SQUARE;
-	g_textSpriteAttributes.attr1 = ATTR1_SIZE_8;
-	g_textSpriteAttributes.attr2 = OBJ_PRIORITY(SPRITE_PRIORITY);
-
-	g_hudTextSpriteAttributes.attr0 = ATTR0_COLOR_256 | ATTR0_SQUARE;
-	g_hudTextSpriteAttributes.attr1 = ATTR1_SIZE_8;
-	g_hudTextSpriteAttributes.attr2 = OBJ_PRIORITY(UI_SPRITE_PRIORITY);
-
-	g_playerIconSpriteAttributes.attr0 = ATTR0_COLOR_256 | ATTR0_WIDE;
-	g_playerIconSpriteAttributes.attr1 = ATTR1_SIZE_8;
-	g_playerIconSpriteAttributes.attr2 = OBJ_PRIORITY(UI_SPRITE_PRIORITY);
-
-	dl_u32 cursorSpriteRaw = 0xffffffff;
-
 	// load tile resources
 	dl_u16 tileIndex = 0;
 	tileIndex = buildSpriteResource(&dropsSprite, &g_8x8SpriteAttributes, resources->sprites_drops, DROP_SPRITE_WIDTH, DROP_SPRITE_ROWS, DROP_SPRITE_COUNT, tileIndex);
@@ -632,14 +403,27 @@ void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 	playerIconSpriteRegen.tilesPerFrame = regenSprite.tilesPerFrame;
 	*/
 
+
+	InitGameSprite(&dropsSprite, resources->sprites_drops, DROP_SPRITE_WIDTH, DROP_SPRITE_ROWS, DROP_SPRITE_COUNT);
+	InitGameSprite(&playerSprite,resources->sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYER_SPRITE_COUNT);
+	InitGameSprite(&cursorSprite,(dl_u8*)&cursorSpriteRaw, 8, 1, 1);
+	InitGameSprite(&ballSprite, resources->sprites_bouncyBall, BALL_SPRITE_WIDTH, BALL_SPRITE_ROWS, BALL_SPRITE_COUNT);
+	InitGameSprite(&birdSprite, resources->sprites_bird, BIRD_SPRITE_WIDTH, BIRD_SPRITE_ROWS, BIRD_SPRITE_COUNT);
+	InitGameSprite(&keySprite, resources->sprite_key, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1);
+	InitGameSprite(&diamondSprite, resources->sprite_diamond, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1);
+	InitGameSprite(&moneyBagSprite, resources->sprite_moneyBag, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1);
+	InitGameSprite(&doorSprite, resources->sprite_door, DOOR_SPRITE_WIDTH, DOOR_SPRITE_ROWS, 1);
+	//buildEmptySpriteResource(&regenSprite, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, 1);
+	//buildTextResource(&hudCharacterFont, resources->characterFont, 8, 7, 39, tile);
+	InitGameSprite(&characterFont, resources->characterFont, 8, 7, 39);
+	//buildPlayerIconResource(&playerIconSprite, resources->sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYERICON_NUM_SPRITE_ROWS, PLAYER_SPRITE_COUNT);
+
+	InitGameSprite(&g_crtFramebufferSprite, NULL, FRAMEBUFFER_WIDTH, FRAMEBUFFER_HEIGHT, 1);
+    g_crtFramebufferSprite.ccb.ccb_Flags |= CCB_BGND; // make black pixels not transparent
+
 	g_pickUpSprites[0] = &diamondSprite;
 	g_pickUpSprites[1] = &moneyBagSprite;
 	g_pickUpSprites[2] = &keySprite;
-
-	/*
-	g_scrollX = 7;
-	g_scrollY = 13;
-	*/
 
 	// room draw setup
     m_drawRoomFunctions[0] = drawChamber;
@@ -659,37 +443,10 @@ void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 
 	g_rooms[WIPE_TRANSITION_ROOM_INDEX]->update = g_rooms[TRANSITION_ROOM_INDEX]->update;
 
-	//buildUI();
-
-	//g_rooms[TITLESCREEN_ROOM_INDEX]->draw = custom_titleScreen_draw;
-	//g_rooms[GET_READY_ROOM_INDEX]->draw = custom_get_ready_room_draw;
-
 	//Game_ChangedRoomCallback = GameRunner_ChangedRoomCallback;
 
-	//setGameBackgroundTilemap(TITLESCREEN_ROOM_INDEX);
 
 	Game_Init(gameData, resources);
-
-	//createBackgrounds(gameData, resources);
-
-	InitGameSprite(&dropsSprite, resources->sprites_drops, DROP_SPRITE_WIDTH, DROP_SPRITE_ROWS, DROP_SPRITE_COUNT);
-	InitGameSprite(&playerSprite,resources->sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYER_SPRITE_COUNT);
-	InitGameSprite(&cursorSprite,(dl_u8*)&cursorSpriteRaw, 8, 1, 1);
-	InitGameSprite(&ballSprite, resources->sprites_bouncyBall, BALL_SPRITE_WIDTH, BALL_SPRITE_ROWS, BALL_SPRITE_COUNT);
-	InitGameSprite(&birdSprite, resources->sprites_bird, BIRD_SPRITE_WIDTH, BIRD_SPRITE_ROWS, BIRD_SPRITE_COUNT);
-	InitGameSprite(&keySprite, resources->sprite_key, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1);
-	InitGameSprite(&diamondSprite, resources->sprite_diamond, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1);
-	InitGameSprite(&moneyBagSprite, resources->sprite_moneyBag, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1);
-	InitGameSprite(&doorSprite, resources->sprite_door, DOOR_SPRITE_WIDTH, DOOR_SPRITE_ROWS, 1);
-	//buildEmptySpriteResource(&regenSprite, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, 1);
-	//buildTextResource(&hudCharacterFont, resources->characterFont, 8, 7, 39, tile);
-	InitGameSprite(&characterFont, resources->characterFont, 8, 7, 39);
-	//buildPlayerIconResource(&playerIconSprite, resources->sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYERICON_NUM_SPRITE_ROWS, PLAYER_SPRITE_COUNT);
-
-	InitGameSprite(&g_crtFramebufferSprite, NULL, FRAMEBUFFER_WIDTH, FRAMEBUFFER_HEIGHT, 1);
-    g_crtFramebufferSprite.ccb.ccb_Flags |= CCB_BGND; // make black pixels not transparent
-
-
 }
 
 /*
@@ -735,24 +492,7 @@ void GameRunner_Update(struct GameData* gameData, const Resources* resources)
 
 void GameRunner_Draw(struct GameData* gameData, const Resources* resources)
 {
-	/*
-	g_transitionCounter = TRANSITION_OFF;
-
-	g_oamIndex = 0;
-*/
 	m_drawRoomFunctions[gameData->currentRoom->roomNumber](gameData, resources);
-
-	/*
-	BG_OFFSET[GAME_BACKGROUND_INDEX].x = g_scrollX;
-	BG_OFFSET[GAME_BACKGROUND_INDEX].y = g_scrollY;
-
-	for (int i = g_oamIndex; i < 128; i++) 
-	{
-		OAM[i].attr0 = ATTR0_DISABLED;
-		OAM[i].attr1 = 0;
-		OAM[i].attr2 = 0;
-	}
-	*/
 }
 
 // draw sprite, affected by scrolling
@@ -762,33 +502,7 @@ void drawSprite(dl_u16 x, dl_u16 y, dl_u8 frame, GameSprite* gameSprite)
 	gameSprite->ccb.ccb_YPos = ((y + SCREEN_OFFSET_Y) << 16);
 
 	draw_cels(&gameSprite->ccb);
-
-	/*
-	x -= g_scrollX;
-	y -= g_scrollY;
-	dl_u16 tileIndex = gameSprite->tileIndex + (frame * gameSprite->tilesPerFrame);
-
-	OAM[g_oamIndex].attr0 = gameSprite->spriteAttributes->attr0 | (y & 0xff);
-	OAM[g_oamIndex].attr1 = gameSprite->spriteAttributes->attr1 | (x & 0x1ff);
-	OAM[g_oamIndex].attr2 = gameSprite->spriteAttributes->attr2 | (tileIndex << 1);
-
-	g_oamIndex++;
-	*/
 }
-
-/*
-// draw sprite not affected by scrolling
-void drawSpriteAbs(dl_u16 x, dl_u16 y, dl_u8 character, const GameSprite* gameSprite)
-{
-	dl_u16 tileIndex = gameSprite->tileIndex + (character * gameSprite->tilesPerFrame);
-
-	OAM[g_oamIndex].attr0 = gameSprite->spriteAttributes->attr0 | (y & 0xff);
-	OAM[g_oamIndex].attr1 = gameSprite->spriteAttributes->attr1 | (x & 0x1ff);
-	OAM[g_oamIndex].attr2 = gameSprite->spriteAttributes->attr2 | (tileIndex << 1);
-
-	g_oamIndex++;
-}
-*/
 
 void drawDrops(const GameData* gameData)
 {
@@ -811,7 +525,6 @@ void drawDrops(const GameData* gameData)
     }
 }
 
-
 void drawUIText(const dl_u8* text, dl_u16 x, dl_u16 y, GameSprite* font)
 {
     // for each character
@@ -824,83 +537,30 @@ void drawUIText(const dl_u8* text, dl_u16 x, dl_u16 y, GameSprite* font)
     }
 }
 
-
 void drawUIPlayerLives(const PlayerData* playerData)
 {
-	dl_u8 x = 80;//PLAYERLIVES_ICON_X;
-	dl_u8 y = 0;//PLAYERLIVES_ICON_Y;
+	dl_u8 x = PLAYERLIVES_ICON_X;
+	dl_u8 y = PLAYERLIVES_ICON_Y;
 	dl_u8 loop;
 
     for (loop = 0; loop < playerData->lives; loop++)
 	{
         drawSprite(x, 
-					  y, 
-					  playerData->currentSpriteNumber,
-					  &playerIconSprite);
+				   y, 
+				   playerData->currentSpriteNumber,
+				   &playerIconSprite);
 
-		x += 24;//PLAYERLIVES_ICON_SPACING;
+		x += PLAYERLIVES_ICON_SPACING;
     }
 
 	if (playerData->state == PLAYER_STATE_REGENERATION)
 	{
         drawSprite(x, 
-                      y, 
-					  0,
-					  &playerIconSpriteRegen);		
-    }
+                   y, 
+				   0,
+				   &playerIconSpriteRegen);		
+    }   
 }
-/*
-void updateScroll(dl_u16 playerX, dl_u16 playerY)
-{
-	if (g_oldPlayerX == 0xffff)
-	{
-		g_oldPlayerX = playerX;
-		g_oldPlayerY = playerY;
-
-		g_scrollX = playerX > 128 ? SCROLL_MAX_X : 0;
-		g_scrollY = playerY > 96 ? SCROLL_MAX_Y : 0;
-	}
-
-	dl_u16 screenX = playerX - g_scrollX;
-	dl_u16 screenY = playerY - g_scrollY;
-	
-	dl_s16 deltaX = (dl_s16)playerX - (dl_s16)g_oldPlayerX;
-	dl_s16 deltaY = (dl_s16)playerY - (dl_s16)g_oldPlayerY;
-	
-	if (deltaX < 0 && screenX < 100)
-	{
-		g_scrollX += deltaX;
-	}
-	
-	if (deltaX > 0 && screenX > 140)
-	{
-		g_scrollX += deltaX;
-	}
-
-	if (deltaY < 0 && screenY < 60)
-	{
-		g_scrollY += deltaY;
-	}
-	
-	if (deltaY > 0 && screenY > 100)
-	{
-		g_scrollY += deltaY;
-	}
-	
-	if (g_scrollX < 0)
-		g_scrollX = 0;
-	if (g_scrollX > SCROLL_MAX_X)
-		g_scrollX = SCROLL_MAX_X;
-
-	if (g_scrollY < 0)
-		g_scrollY = 0;
-	if (g_scrollY > SCROLL_MAX_Y)
-		g_scrollY = SCROLL_MAX_Y;
-	
-	g_oldPlayerX = playerX;
-	g_oldPlayerY = playerY;
-}
-*/
 
 void drawChamber(struct GameData* gameData, const Resources* resources)
 {
@@ -918,10 +578,6 @@ void drawChamber(struct GameData* gameData, const Resources* resources)
 	dl_u16 currentTimer = playerData->roomTimers[playerData->currentRoom->roomNumber];
 
 	drawSprite(0, 0, 0, &g_crtFramebufferSprite);
-
-	//updateScroll(playerX, playerY);
-
-	
 
 	drawDrops(gameData);
 
@@ -1022,9 +678,6 @@ void drawChamber(struct GameData* gameData, const Resources* resources)
 
 	drawUIPlayerLives(playerData);
 }
-
-#define LOCATION2X(location) (location & 31)
-#define LOCATION2Y(location) (location >> 5)
 
 void drawTitleScreen(struct GameData* gameData, const Resources* resources)
 {

@@ -66,7 +66,7 @@ GameSprite hudCharacterFont;
 GameSprite playerIconSprite;
 GameSprite playerIconSpriteRegen;
 
-const GameSprite* g_pickUpSprites[3];
+GameSprite* g_pickUpSprites[3];
 
 GameSprite g_crtFramebufferSprite;
 
@@ -74,7 +74,7 @@ dl_u16 g_gamePalette[4] =
 {
     0x0000, // black (R=0, G=0, B=0)
     0x003E, // blue (R=0, G=0, B=31)
-    0xFC80, // orange (R=31, G=20, B=0)
+    0x7E40, // orange (R=31, G=20, B=0)
     0x7FFF  // white (R=31, G=31, B=31)
 };
 
@@ -657,7 +657,7 @@ void GameRunner_Init(struct GameData* gameData, const Resources* resources)
     m_drawRoomFunctions[WIPE_TRANSITION_ROOM_INDEX] = drawWipeTransition;
     m_drawRoomFunctions[GET_READY_ROOM_INDEX] = drawGetReadyScreen;
 
-
+	g_rooms[WIPE_TRANSITION_ROOM_INDEX]->update = g_rooms[TRANSITION_ROOM_INDEX]->update;
 
 	//buildUI();
 
@@ -824,15 +824,16 @@ void drawUIText(const dl_u8* text, dl_u16 x, dl_u16 y, GameSprite* font)
     }
 }
 
-/*
+
 void drawUIPlayerLives(const PlayerData* playerData)
 {
 	dl_u8 x = 80;//PLAYERLIVES_ICON_X;
 	dl_u8 y = 0;//PLAYERLIVES_ICON_Y;
+	dl_u8 loop;
 
-    for (dl_u8 loop = 0; loop < playerData->lives; loop++)
+    for (loop = 0; loop < playerData->lives; loop++)
 	{
-        drawSpriteAbs(x, 
+        drawSprite(x, 
 					  y, 
 					  playerData->currentSpriteNumber,
 					  &playerIconSprite);
@@ -842,13 +843,13 @@ void drawUIPlayerLives(const PlayerData* playerData)
 
 	if (playerData->state == PLAYER_STATE_REGENERATION)
 	{
-        drawSpriteAbs(x, 
+        drawSprite(x, 
                       y, 
 					  0,
 					  &playerIconSpriteRegen);		
     }
 }
-
+/*
 void updateScroll(dl_u16 playerX, dl_u16 playerY)
 {
 	if (g_oldPlayerX == 0xffff)
@@ -903,26 +904,31 @@ void updateScroll(dl_u16 playerX, dl_u16 playerY)
 
 void drawChamber(struct GameData* gameData, const Resources* resources)
 {
-	drawSprite(0, 0, 0, &g_crtFramebufferSprite);
-	/*
 	PlayerData* playerData = gameData->currentPlayerData;
-
 	dl_u16 playerX = (playerData->x >> 8) << 1;
 	dl_u16 playerY = (playerData->y >> 8);
-
-	updateScroll(playerX, playerY);
-
+	const BallData* ballData = &gameData->ballData;
+	const BirdData* birdData = &gameData->birdData;
+	const Pickup* pickups;
+	int roomNumber;
+	const DoorInfoData* doorInfoData;
+	const DoorInfo* doorInfoRunner;
+	dl_u8 loop;
+	int xPosition;
 	dl_u16 currentTimer = playerData->roomTimers[playerData->currentRoom->roomNumber];
-	*/
+
+	drawSprite(0, 0, 0, &g_crtFramebufferSprite);
+
+	//updateScroll(playerX, playerY);
+
+	
 
 	drawDrops(gameData);
 
-	/*
+
     // draw ball
     if (gameData->ballData.enabled)
     {
-        const BallData* ballData = &gameData->ballData;
-
 		drawSprite((ballData->x >> 8) << 1,
 				   ballData->y >> 8,
 				   (dl_s8)ballData->fallStateCounter < 0,
@@ -932,8 +938,6 @@ void drawChamber(struct GameData* gameData, const Resources* resources)
     // draw bird
     if (gameData->birdData.state && currentTimer == 0)
     {
-        const BirdData* birdData = &gameData->birdData;
-
 		drawSprite((birdData->x >> 8) << 1,
 				   birdData->y >> 8,
 				   birdData->animationFrame,
@@ -944,13 +948,15 @@ void drawChamber(struct GameData* gameData, const Resources* resources)
     switch (playerData->state)
     {
     case PLAYER_STATE_SPLAT: 
+		/*
         drawSprite(playerX,
                    playerY + 7,
                    playerData->splatFrameNumber,
 				   &splatSprite);
+		*/
         break;
     case PLAYER_STATE_REGENERATION: 
-
+		/*
         if (!gameData->paused)
         {
 			updateRegenSprite(resources, playerData->currentSpriteNumber);
@@ -960,6 +966,7 @@ void drawChamber(struct GameData* gameData, const Resources* resources)
                    playerY,
                    0,
 				   &regenSprite);
+		*/
         break;
     default: 
         drawSprite(playerX,
@@ -969,8 +976,8 @@ void drawChamber(struct GameData* gameData, const Resources* resources)
     }
 
 	// draw pickups
-    const Pickup* pickups = playerData->gamePickups[gameData->currentRoom->roomNumber];
-    for (int loop = 0; loop < NUM_PICKUPS_PER_ROOM; loop++)
+    pickups = playerData->gamePickups[gameData->currentRoom->roomNumber];
+    for (loop = 0; loop < NUM_PICKUPS_PER_ROOM; loop++)
     {
 		if ((pickups->state & playerData->playerMask))
 		{
@@ -984,16 +991,16 @@ void drawChamber(struct GameData* gameData, const Resources* resources)
     }
 
 	// draw doors
-    int roomNumber = gameData->currentRoom->roomNumber;
-	const DoorInfoData* doorInfoData = &resources->roomResources[roomNumber].doorInfoData;
-	const DoorInfo* doorInfoRunner = doorInfoData->doorInfos;
+    roomNumber = gameData->currentRoom->roomNumber;
+	doorInfoData = &resources->roomResources[roomNumber].doorInfoData;
+	doorInfoRunner = doorInfoData->doorInfos;
 
-	for (dl_u8 loop = 0; loop < doorInfoData->drawInfosCount; loop++)
+	for (loop = 0; loop < doorInfoData->drawInfosCount; loop++)
 	{
         if (playerData->doorStateData[doorInfoRunner->globalDoorIndex] & playerData->playerMask &&
 			doorInfoRunner->x != 0xff)
 		{
-			int xPosition = doorInfoRunner->x;
+			xPosition = doorInfoRunner->x;
 			// adjust the door position, as per the original game.
 			if (xPosition > 40) 
 				xPosition += 7;
@@ -1014,7 +1021,6 @@ void drawChamber(struct GameData* gameData, const Resources* resources)
 	drawUIText(playerData->scoreString, 8, 0, &hudCharacterFont); 
 
 	drawUIPlayerLives(playerData);
-	*/
 }
 
 #define LOCATION2X(location) (location & 31)

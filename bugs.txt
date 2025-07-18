@@ -1,6 +1,8 @@
         
 Bugs
 
+    Gameplay: possible bug trying to touch pickups while hanging from rope
+
     Gameplay: the bird doesn't disappear when you die?
 
     Gameplay: chamber 1, picking up the first treasure sometimes kills the player?

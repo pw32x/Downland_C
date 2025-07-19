@@ -114,6 +114,7 @@
     <ClCompile Include="..\src\game_runner.c" />
     <ClCompile Include="..\src\image_utils.c" />
     <ClCompile Include="..\src\main.c" />
+    <ClCompile Include="..\src\sound_manager.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\game\alloc.h" />
@@ -149,6 +150,7 @@
     <ClInclude Include="..\src\display.h" />
     <ClInclude Include="..\src\game_runner.h" />
     <ClInclude Include="..\src\image_utils.h" />
+    <ClInclude Include="..\src\sound_manager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\build\activate-env.bat" />

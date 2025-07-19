@@ -13,6 +13,7 @@
 #include "image_utils.h"
 #include "display.h"
 #include "game_runner.h"
+#include "sound_manager.h"
 
 GameData gameData;
 Resources resources;
@@ -32,14 +33,16 @@ void* dl_alloc(dl_u32 size)
 
 void Sound_Play(dl_u8 soundIndex, dl_u8 loop)
 {
+    SoundManager_Play(soundIndex, loop);
 }
 
 void Sound_Stop(dl_u8 soundIndex)
 {
+    SoundManager_Stop(soundIndex);
 }
 
 #define CONTROL_FLAGS (ControlUp | ControlDown | ControlLeft | ControlRight | ControlStart | ControlA | ControlB | ControlC)
-void Update_Controls(JoystickState* joystickState)
+void Update_Controls(int controllerIndex, JoystickState* joystickState)
 {
     uint32 button;
     bool leftDown;
@@ -50,7 +53,7 @@ void Update_Controls(JoystickState* joystickState)
     bool startDown;
     bool debugStateDown;
 
-    DoControlPad (1, &button, CONTROL_FLAGS);
+    DoControlPad (controllerIndex + 1, &button, CONTROL_FLAGS);
 
     // Check D-Pad
     leftDown = (button & ControlLeft) != 0;
@@ -130,12 +133,13 @@ void int_to_bits(int n, char *out, int bits)
     out[bits] = '\0';
 }
 
-int main(int argc, char* argv)
+int main(int argc, char *argv[])
 {
     const int clearColor = 0x00000000;
 
     bool romFoundAndLoaded = false;
     int loop;
+    int controllerIndex = 0;
 
     g_memory = (dl_u8*)malloc(DOWNLAND_MEMORY_SIZE);
     g_memoryEnd = g_memory;
@@ -158,7 +162,10 @@ int main(int argc, char* argv)
 
     InitBasicDisplay();
     OpenMathFolio();
+    OpenAudioFolio();
     InitControlPad(2);
+
+    SoundManager_Init();
 
     clear(clearColor);
     swap();
@@ -167,67 +174,31 @@ int main(int argc, char* argv)
 
     while(true)
     {
-        Update_Controls(&gameData.joystickState);
+        if (gameData.currentPlayerData != NULL)
+        {
+            controllerIndex = gameData.currentPlayerData->playerNumber;
+        }
+
+        Update_Controls(controllerIndex, &gameData.joystickState);
+
+        if (gameData.joystickState.startPressed)
+        {
+            gameData.paused = !gameData.paused;
+
+            if (gameData.paused)
+                SoundManager_PauseAll();
+            else 
+                SoundManager_ResumeAll();
+        }
 
         if (!gameData.paused)
         {
             GameRunner_Update(&gameData, &resources);
         }
 
+        SoundManager_Update();
+
         GameRunner_Draw(&gameData, &resources);
-
-        //draw_printf(16,16,"x: %d",ConvertF16_32(x));
-        //draw_printf(16,24,"y: %d",ConvertF16_32(y));
-        //draw_printf(16,32,"x: %d",ConvertF16_32(zoom));
-        //draw_printf(16,48,"y: %d",ConvertF16_32(angle));
-
-        
-        //int_to_bits(n, bitstr, 32);
-
-        /*
-        if (gameData.joystickState.leftPressed)
-            draw_printf(16, 0,"left pressed");
-        if (gameData.joystickState.rightPressed)
-            draw_printf(16, 16,"right pressed");
-        if (gameData.joystickState.upPressed)
-            draw_printf(16, 32,"up pressed");
-        if (gameData.joystickState.downPressed)
-            draw_printf(16, 48,"down pressed");
-        if (gameData.joystickState.jumpPressed)
-            draw_printf(16, 64,"jump pressed");
-        if (gameData.joystickState.startPressed)
-            draw_printf(16, 80,"start pressed");
-
-        draw_printf(16, 96, "button %d", button);
-
-        if (button & ControlLeft)
-            draw_printf(16, 0,"left pressed");
-        */
-
-        /*
-        //CCB* ccb = &myCCB;
-        pCCB = &myCCB;
-
-        int_to_bits(pCCB->ccb_Flags, bitstr, 32); draw_printf(0, 0, "Flags: %s", bitstr);
-        int_to_bits(pCCB->ccb_XPos, bitstr, 32); draw_printf(0, 16, "XPos: %s", bitstr);
-        int_to_bits(pCCB->ccb_YPos, bitstr, 32); draw_printf(0, 32, "YPos: %s", bitstr);
-        int_to_bits(pCCB->ccb_HDX, bitstr, 32); draw_printf(0, 48, "HDX: %s", bitstr);
-        int_to_bits(pCCB->ccb_HDY, bitstr, 32); draw_printf(0, 64, "HDY: %s", bitstr);
-        int_to_bits(pCCB->ccb_VDX, bitstr, 32); draw_printf(0, 80, "VDX: %s", bitstr);
-        int_to_bits(pCCB->ccb_VDY, bitstr, 32); draw_printf(0, 96, "VDY: %s", bitstr);
-        int_to_bits(pCCB->ccb_HDDX, bitstr, 32); draw_printf(0, 112, "HDDX: %s", bitstr);
-        int_to_bits(pCCB->ccb_HDDY, bitstr, 32); draw_printf(0, 128, "HDDY: %s", bitstr);
-        int_to_bits(pCCB->ccb_PIXC, bitstr, 32); draw_printf(0, 144, "PIXC: %s", bitstr);
-        int_to_bits(pCCB->ccb_PRE0, bitstr, 32); draw_printf(0, 156, "PRE0: %s", bitstr);
-        int_to_bits(pCCB->ccb_PRE1, bitstr, 32); draw_printf(0, 168, "PRE1: %s", bitstr);
-        int_to_bits(pCCB->ccb_Width, bitstr, 32); draw_printf(0, 180, "Width: %s", bitstr);
-        int_to_bits(pCCB->ccb_Height, bitstr, 32); draw_printf(0, 192, "Height: %s", bitstr);
-        */
-
-        //draw_printf(16, 16,"bytesRead %d",bytesRead);
-        //draw_printf(16, 32,"load %d",loadResult);
-        //draw_printf(16, 48,"little %d",littleResult);
-        //draw_printf(16, 64,"big %d",bigResult);
         
         display_and_swap();
 
@@ -236,3 +207,4 @@ int main(int argc, char* argv)
 
     return 0;
 }
+

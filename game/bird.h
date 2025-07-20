@@ -6,6 +6,9 @@
 
 // It's a bird! It's a bat! It's a flying tomato!
 
+#define BIRD_INACTIVE			0
+#define BIRD_ACTIVE				1
+
 typedef struct
 {
 	dl_u8 state;	// 0 - inactive

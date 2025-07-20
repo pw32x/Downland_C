@@ -3,9 +3,6 @@
 #include "debug_utils.h"
 #include "dl_rand.h"
 
-#define BIRD_INACTIVE			0
-#define BIRD_ACTIVE				1
-
 #define BIRD_START_X 0x23 // 35
 #define BIRD_START_Y 0x1a // 26
 
@@ -46,6 +43,13 @@ void Bird_Update(BirdData* birdData, dl_u16 currentRoomTimer, dl_u8* framebuffer
 	dl_u8 newPixelX;
 	dl_u8 newPixelY;
 
+	eraseSprite_24PixelsWide(birdData->currentSprite,
+							 GET_HIGH_BYTE(birdData->x),
+							 GET_HIGH_BYTE(birdData->y),
+							 BIRD_SPRITE_ROWS,
+							 framebuffer, 
+							 cleanBackground);
+
 	if (currentRoomTimer > 0)
 		return;
 
@@ -55,12 +59,7 @@ void Bird_Update(BirdData* birdData, dl_u16 currentRoomTimer, dl_u8* framebuffer
 		return;
 	}
 	
-	eraseSprite_24PixelsWide(birdData->currentSprite,
-							 GET_HIGH_BYTE(birdData->x),
-							 GET_HIGH_BYTE(birdData->y),
-							 BIRD_SPRITE_ROWS,
-							 framebuffer, 
-							 cleanBackground);
+
 
 	birdData->animationCounter++;
 	birdData->animationFrame = (birdData->animationCounter >> 3) & 0x1;

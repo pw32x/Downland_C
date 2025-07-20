@@ -242,6 +242,17 @@ void chamber_update(Room* room, GameData* gameData, const Resources* resources)
 			}
 			else
 			{
+				if (gameData->birdData.state == BIRD_ACTIVE)
+				{
+					gameData->birdData.state = BIRD_INACTIVE;
+				}
+
+				if (!currentTimer)
+				{
+					currentTimer = ROOM_TIMER_HALF_TIME;
+					playerData->roomTimers[playerData->currentRoom->roomNumber] = currentTimer;
+				}
+
 				Player_StartRegen(playerData);
 			}
 		}

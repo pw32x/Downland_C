@@ -21,6 +21,7 @@
 #define PLAYERTWO_BITMASK 0x2
 
 #define ROOM_TIMER_DEFAULT 4096
+#define ROOM_TIMER_HALF_TIME 2048
 
 typedef struct
 {

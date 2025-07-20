@@ -2,6 +2,7 @@
 #define DROPS_MANAGER_INCLUDE_H
 
 #include "base_types.h"
+#include "base_defines.h"
 #include "drops_types.h"
 
 #define DROP_SPRITE_WIDTH 16

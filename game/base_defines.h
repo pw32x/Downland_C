@@ -6,6 +6,11 @@
 #define START_AT_TITLESCREEN
 //#define DISABLE_ENEMIES
 
+#if defined(DL_PLATFORM_3DO)
+#define PACKED __packed
+#else
+#define PACKED
+#endif
 
 #if !defined(TARGET_PLAYDATE) && !defined(TARGET_SIMULATOR)
 #ifdef _WIN32

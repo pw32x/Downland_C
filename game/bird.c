@@ -43,6 +43,9 @@ void Bird_Init(BirdData* birdData, dl_u8 roomNumber, const Resources* resources)
 
 void Bird_Update(BirdData* birdData, dl_u16 currentRoomTimer, dl_u8* framebuffer, dl_u8* cleanBackground)
 {
+	dl_u8 newPixelX;
+	dl_u8 newPixelY;
+
 	if (currentRoomTimer > 0)
 		return;
 
@@ -62,7 +65,7 @@ void Bird_Update(BirdData* birdData, dl_u16 currentRoomTimer, dl_u8* framebuffer
 	birdData->animationCounter++;
 	birdData->animationFrame = (birdData->animationCounter >> 3) & 0x1;
 
-	dl_u8 newPixelY = GET_HIGH_BYTE(birdData->y + birdData->speedy);
+	newPixelY = GET_HIGH_BYTE(birdData->y + birdData->speedy);
 
 	if (newPixelY <= SCREEN_BOUNDS_TOP || 
 		newPixelY >= SCREEN_BOUNDS_BOTTOM)
@@ -72,7 +75,7 @@ void Bird_Update(BirdData* birdData, dl_u16 currentRoomTimer, dl_u8* framebuffer
 
 	birdData->y += birdData->speedy;
 
-	dl_u8 newPixelX = GET_HIGH_BYTE(birdData->x + birdData->speedx);
+	newPixelX = GET_HIGH_BYTE(birdData->x + birdData->speedx);
 
 	if (newPixelX <= SCREEN_BOUNDS_LEFT || 
 		newPixelX >= SCREEN_BOUNDS_RIGHT)

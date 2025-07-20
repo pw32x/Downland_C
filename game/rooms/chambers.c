@@ -39,13 +39,14 @@ void drawPlayerLives(dl_u8 playerLives,
 {
 	dl_u8 x = PLAYERLIVES_ICON_X;
 	dl_u8 y = PLAYERLIVES_ICON_Y;
+	dl_u8 loop;
 
 	const dl_u8* currentSprite = getBitShiftedSprite(playerBitShiftedSprites, 
 											currentSpriteNumber, 
 											0, 
 											PLAYER_BITSHIFTED_SPRITE_FRAME_SIZE);
 
-	for (dl_u8 loop = 0; loop < playerLives; loop++)
+	for (loop = 0; loop < playerLives; loop++)
 	{
 		drawSprite_24PixelsWide_noblend(currentSprite,
 										x, 
@@ -74,7 +75,9 @@ void drawPlayerLives(dl_u8 playerLives,
 
 void updateTimers(dl_u8 roomNumber, dl_u16* roomTimers)
 {
-	for (int loop = 0; loop < NUM_ROOMS; loop++)
+	int loop;
+
+	for (loop = 0; loop < NUM_ROOMS; loop++)
 	{
 		if (loop == roomNumber)
 		{
@@ -94,15 +97,21 @@ void updateTimers(dl_u8 roomNumber, dl_u16* roomTimers)
 
 void chamber_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resources)
 {
+#ifndef DISABLE_DOOR_DRAWING
+	const DoorInfoData* doorInfoData;
+	const DoorInfo* doorInfoRunner;
+	dl_u8 loop;
+#endif
+
 	drawBackground(&resources->roomResources[roomNumber].backgroundDrawData, 
 				   resources,
 				   gameData->cleanBackground);
 
 #ifndef DISABLE_DOOR_DRAWING
 	// draw active doors in the room
-	const DoorInfoData* doorInfoData = &resources->roomResources[roomNumber].doorInfoData;
-	const DoorInfo* doorInfoRunner = doorInfoData->doorInfos;
-	for (dl_u8 loop = 0; loop < doorInfoData->drawInfosCount; loop++)
+	doorInfoData = &resources->roomResources[roomNumber].doorInfoData;
+	doorInfoRunner = doorInfoData->doorInfos;
+	for (loop = 0; loop < doorInfoData->drawInfosCount; loop++)
 	{
 		if ((doorInfoRunner->y != 0xff) &&
 			(gameData->currentPlayerData->doorStateData[doorInfoRunner->globalDoorIndex] & 
@@ -161,6 +170,10 @@ void chamber_init(Room* room, GameData* gameData, const Resources* resources)
 void chamber_update(Room* room, GameData* gameData, const Resources* resources)
 {
 	PlayerData* playerData = gameData->currentPlayerData;
+	dl_u16 currentTimer;
+	const DoorInfo* lastDoor;
+	dl_u8 playerLives;
+	PlayerData* temp;
 
 	// in the original rom, pickups are indeed drawn every frame
 	// otherwise, falling drops will erase them
@@ -170,7 +183,7 @@ void chamber_update(Room* room, GameData* gameData, const Resources* resources)
 				gameData->framebuffer);
 
 	updateTimers(playerData->currentRoom->roomNumber, playerData->roomTimers);
-	dl_u16 currentTimer = playerData->roomTimers[playerData->currentRoom->roomNumber];
+	currentTimer = playerData->roomTimers[playerData->currentRoom->roomNumber];
 
 #ifndef DISABLE_ENEMIES
 	DropsManager_Update(&gameData->dropData, 
@@ -180,9 +193,9 @@ void chamber_update(Room* room, GameData* gameData, const Resources* resources)
 						resources->sprites_drops);	
 #endif
 
-	const DoorInfo* lastDoor = playerData->lastDoor;
+	lastDoor = playerData->lastDoor;
 
-	dl_u8 playerLives = playerData->lives;
+	playerLives = playerData->lives;
 
 	Player_Update(playerData, 
 				  &gameData->joystickState, 
@@ -201,7 +214,7 @@ void chamber_update(Room* room, GameData* gameData, const Resources* resources)
 			!gameData->otherPlayerData->gameOver)
 		{
 			// switch players
-			PlayerData* temp = gameData->otherPlayerData;
+			temp = gameData->otherPlayerData;
 			gameData->otherPlayerData = gameData->currentPlayerData;
 			gameData->currentPlayerData = temp;
 

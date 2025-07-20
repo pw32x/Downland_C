@@ -1,6 +1,6 @@
 #include "player.h"
 
-#include <memory.h>
+#include <string.h>
 
 #include "base_defines.h"
 #include "draw_utils.h"
@@ -95,6 +95,10 @@ dl_u16 ropeCollisionMasks[4] =
 
 void playerKill(PlayerData* playerData, dl_u8* framebuffer, dl_u8* cleanBackground)
 {
+	dl_u8 x;
+	dl_u8 y;
+	const dl_u8* splatSprite;
+
 	playerData->speedx = 0;
 	playerData->speedy = 0;
 	playerData->regenerationCounter = 0;
@@ -111,8 +115,8 @@ void playerKill(PlayerData* playerData, dl_u8* framebuffer, dl_u8* cleanBackgrou
 		Sound_Play(SOUND_SPLAT, FALSE);
 		playerData->cantMoveCounter = PLAYER_SPLAT_WAIT_TIME;
 
-		dl_u8 x = GET_HIGH_BYTE(playerData->x);
-		dl_u8 y = GET_HIGH_BYTE(playerData->y);
+		x = GET_HIGH_BYTE(playerData->x);
+		y = GET_HIGH_BYTE(playerData->y);
 
 		// erase the player, then draw the splat sprite
 		// we won't redraw this again, like the original game
@@ -122,10 +126,10 @@ void playerKill(PlayerData* playerData, dl_u8* framebuffer, dl_u8* cleanBackgrou
 										framebuffer, 
 										cleanBackground);
 
-		const dl_u8* splatSprite = getBitShiftedSprite(playerData->bitShiftedSplatSprite, 
-											  0,
-											  x & 3, 
-											  PLAYER_SPLAT_SPRITE_FRAME_SIZE);
+		splatSprite = getBitShiftedSprite(playerData->bitShiftedSplatSprite, 
+										  0,
+										  x & 3, 
+										  PLAYER_SPLAT_SPRITE_FRAME_SIZE);
 
 		drawSprite_24PixelsWide(splatSprite, 
 								x, 
@@ -163,13 +167,16 @@ void initPickups(RoomPickups roomPickups,
 				 const PickupPosition* roomPickupPositions,
 				 const dl_u8* keyPickUpDoorIndexes)
 {
+	int loop;
+	int innerLoop;
+
 	// init all the keys for all the rooms for both players
 
 	dl_u8 pickUpTypes[NUM_PICKUPS_PER_ROOM];
 	pickUpTypes[0] = PICKUP_TYPE_KEY; // the first two pickups are always keys
 	pickUpTypes[1] = PICKUP_TYPE_KEY;
 
-	for (int loop = 0; loop < NUM_ROOMS; loop++)
+	for (loop = 0; loop < NUM_ROOMS; loop++)
 	{
 		Pickup* pickups = roomPickups[loop];
 
@@ -178,7 +185,7 @@ void initPickups(RoomPickups roomPickups,
 		pickUpTypes[3] = dl_rand() % 2;
 		pickUpTypes[4] = dl_rand() % 2;
 
-		for (int innerLoop = 0; innerLoop < NUM_PICKUPS_PER_ROOM; innerLoop++)
+		for (innerLoop = 0; innerLoop < NUM_PICKUPS_PER_ROOM; innerLoop++)
 		{
 			pickups[innerLoop].type = pickUpTypes[innerLoop];
 			pickups[innerLoop].state = INIT_PICKUP_STATE;
@@ -203,9 +210,9 @@ void initPickups(RoomPickups roomPickups,
 
 void initDoors(dl_u8* doorStateData, const dl_u8* offsetsToDoorsAlreadyActivated)
 {
-	memset(doorStateData, 0, DOOR_TOTAL_COUNT);
-
 	dl_u8 alreadyOpenedState = 0x3; // set the two bits for each player
+
+	memset(doorStateData, 0, DOOR_TOTAL_COUNT);
 
 	while (*offsetsToDoorsAlreadyActivated != 0xff)
 	{
@@ -217,9 +224,9 @@ void initDoors(dl_u8* doorStateData, const dl_u8* offsetsToDoorsAlreadyActivated
 
 void playerStartGameLoop(PlayerData* playerData, const Resources* resources)
 {
-	playerData->facingDirection = PLAYER_FACING_LEFT;
-
 	const dl_u8* keyPickUpDoorIndexes = playerData->gameCompletionCount == 0 ? resources->keyPickUpDoorIndexes : resources->keyPickUpDoorIndexesHardMode;
+
+	playerData->facingDirection = PLAYER_FACING_LEFT;
 
 	initPickups(playerData->gamePickups, 
 				resources->roomPickupPositions,
@@ -239,6 +246,8 @@ void Player_CompleteGameLoop(PlayerData* playerData, const Resources* resources)
 
 void Player_GameInit(PlayerData* playerData, const Resources* resources)
 {
+	int loop;
+
 	playerStartGameLoop(playerData, resources);
 
 	playerData->lastDoor = NULL;
@@ -253,7 +262,7 @@ void Player_GameInit(PlayerData* playerData, const Resources* resources)
 	playerData->bitShiftedSplatSprite = resources->bitShiftedSprites_playerSplat;
 
 	// init timers
-	for (int loop = 0; loop < NUM_ROOMS; loop++)
+	for (loop = 0; loop < NUM_ROOMS; loop++)
 		playerData->roomTimers[loop] = ROOM_TIMER_DEFAULT;
 }
 
@@ -318,6 +327,15 @@ void Player_Update(PlayerData* playerData,
 				   const DoorInfoData* doorInfoData,
 				   dl_u8* doorStateData)
 {
+	dl_u8 x;
+	dl_u8 y;
+	dl_u8 testResult;
+	dl_u8 processLeftRight;
+	dl_u8 loop;
+	dl_u8 ropeX;
+	dl_u16 location;
+	const DoorInfo* doorInfoRunner;
+
 	playerData->globalAnimationCounter++;
 
 	if (playerData->state == PLAYER_MIDAIR_DEATH)
@@ -338,8 +356,8 @@ void Player_Update(PlayerData* playerData,
 		{
 			playerData->splatFrameNumber = 1;
 
-			dl_u8 x = GET_HIGH_BYTE(playerData->x);
-			dl_u8 y = GET_HIGH_BYTE(playerData->y);
+			x = GET_HIGH_BYTE(playerData->x);
+			y = GET_HIGH_BYTE(playerData->y);
 
 			// erase the top 12 lines of the player sprite
 			// to simulate animation of the splat sprite.
@@ -641,13 +659,13 @@ void Player_Update(PlayerData* playerData,
 	else if (playerData->state == PLAYER_STATE_CLIMB)
 	{
 		playerData->speedy = 0;
-		dl_u8 testResult = testTerrainCollision(playerData->x, 
-											 playerData->y, 
-											 PLAYER_OFF_ROPE_SENSOR_YOFFSET, 
-											 ropeCollisionMasks,
-											 cleanBackground);
+		testResult = testTerrainCollision(playerData->x, 
+										  playerData->y, 
+										  PLAYER_OFF_ROPE_SENSOR_YOFFSET, 
+										  ropeCollisionMasks,
+										  cleanBackground);
 
-		dl_u8 processLeftRight = TRUE;
+		processLeftRight = TRUE;
 
 		if (joystickState->jumpPressed)
 		{
@@ -911,11 +929,11 @@ void Player_Update(PlayerData* playerData,
 		// erase the rope behind the player so that it 
 		// doesn't blend with the player sprite, making it
 		// appear on top
-		for (dl_u8 loop = 0; loop < 12; loop++)
+		for (loop = 0; loop < 12; loop++)
 		{
 			// turn off the pixels on the rope
-			dl_u8 ropeX = GET_HIGH_BYTE(playerData->x) + 3;
-			dl_u16 location = GET_FRAMEBUFFER_LOCATION(ropeX, GET_HIGH_BYTE(playerData->y) + loop);
+			ropeX = GET_HIGH_BYTE(playerData->x) + 3;
+			location = GET_FRAMEBUFFER_LOCATION(ropeX, GET_HIGH_BYTE(playerData->y) + loop);
 			framebuffer[location] &= ~pixelMasks[ropeX & 3];
 		}
 	}
@@ -938,8 +956,8 @@ void Player_Update(PlayerData* playerData,
 	}
 
 	// door touching check
-	const DoorInfo* doorInfoRunner = doorInfoData->doorInfos;
-	for (dl_u8 loop = 0; loop < doorInfoData->drawInfosCount; loop++)
+	doorInfoRunner = doorInfoData->doorInfos;
+	for (loop = 0; loop < doorInfoData->drawInfosCount; loop++)
 	{
 		if (GET_HIGH_BYTE(playerData->y) == doorInfoRunner->y &&
 			GET_HIGH_BYTE(playerData->x) == doorInfoRunner->x)
@@ -963,6 +981,11 @@ dl_u8 utilityBuffer[PLAYER_BITSHIFTED_COLLISION_MASK_FRAME_SIZE];
 
 dl_u8 Player_HasCollision(PlayerData* playerData, dl_u8* framebuffer, dl_u8* cleanBackground)
 {
+	dl_u8* cleanBackgroundRunner;
+	dl_u8* collisionTestBufferRunner;
+	dl_u8 loop;
+	const dl_u8* currentSprite;
+
 	dl_u8 sensorX = GET_HIGH_BYTE(playerData->x);
 
 	const dl_u8* currentCollisionMask = getBitShiftedSprite(playerData->bitShiftedCollisionMasks, 
@@ -974,12 +997,12 @@ dl_u8 Player_HasCollision(PlayerData* playerData, dl_u8* framebuffer, dl_u8* cle
 	dl_u16 location = GET_FRAMEBUFFER_LOCATION(sensorX, sensorY);
 
 	framebuffer = &framebuffer[location];
-	dl_u8* cleanBackgroundRunner = &cleanBackground[location];
+	cleanBackgroundRunner = &cleanBackground[location];
 
-	dl_u8* collisionTestBufferRunner = collisionTestBuffer;
+	collisionTestBufferRunner = collisionTestBuffer;
 
 
-	for (dl_u8 loop = 0; loop < PLAYER_COLLISION_MASK_ROWS; loop++)
+	for (loop = 0; loop < PLAYER_COLLISION_MASK_ROWS; loop++)
 	{
 		collisionTestBufferRunner[0] = (framebuffer[0] & currentCollisionMask[0]) | cleanBackgroundRunner[0];
 		collisionTestBufferRunner[1] = (framebuffer[1] & currentCollisionMask[1]) | cleanBackgroundRunner[1];
@@ -993,11 +1016,11 @@ dl_u8 Player_HasCollision(PlayerData* playerData, dl_u8* framebuffer, dl_u8* cle
 		currentCollisionMask += 3;
 	}
 
-	const dl_u8* currentSprite = playerData->currentSprite + 3; // start one line down
+	currentSprite = playerData->currentSprite + 3; // start one line down
 	cleanBackgroundRunner = &cleanBackground[location];
 	collisionTestBufferRunner = collisionTestBuffer;
 
-	for (dl_u8 loop = 0; loop < PLAYER_COLLISION_MASK_ROWS; loop++)
+	for (loop = 0; loop < PLAYER_COLLISION_MASK_ROWS; loop++)
 	{
 		if ((collisionTestBufferRunner[0] != (currentSprite[0] | cleanBackgroundRunner[0])) ||
 		    (collisionTestBufferRunner[1] != (currentSprite[1] | cleanBackgroundRunner[1])) ||
@@ -1030,8 +1053,9 @@ BOOL objectCollisionTest(PlayerData* playerData, dl_u8 x, dl_u8 y, dl_u8 width, 
 BOOL dropsManagerCollisionTest(DropData* dropData, PlayerData* playerData)
 {
 	const Drop* dropRunner = dropData->drops;
+	dl_u8 loop;
 
-	for (dl_u8 loop = 0; loop < dropData->activeDropsCount; loop++)
+	for (loop = 0; loop < dropData->activeDropsCount; loop++)
 	{
 		if ((dl_s8)dropRunner->wiggleTimer > 0) // see note about wiggle time. 
 											 // only test collision when it is positive in signed.
@@ -1056,6 +1080,18 @@ BOOL dropsManagerCollisionTest(DropData* dropData, PlayerData* playerData)
 void Player_PerformCollisions(struct GameData* gameDataStruct, 
 							  const Resources* resources)
 {
+	dl_u8 roomNumber;
+	dl_u8 loop;
+	Pickup* pickUp;
+#ifndef DISABLE_DOOR_DRAWING
+	dl_u8 doorLoop;
+	const DoorInfoData* doorInfoData;
+	const DoorInfo* doorInfoRunner;
+#endif
+	BallData* ballData;
+	BirdData* birdData;
+	dl_u8 doorIndex;
+
 	GameData* gameData = (GameData*) gameDataStruct;
 	PlayerData* playerData = gameData->currentPlayerData;
 
@@ -1063,11 +1099,11 @@ void Player_PerformCollisions(struct GameData* gameDataStruct,
 		return;
 
 	// collide with pickups
-	dl_u8 roomNumber = playerData->currentRoom->roomNumber;
+	roomNumber = playerData->currentRoom->roomNumber;
 
-	for (dl_u8 loop = 0; loop < NUM_PICKUPS_PER_ROOM; loop++)
+	for (loop = 0; loop < NUM_PICKUPS_PER_ROOM; loop++)
 	{
-		Pickup* pickUp = &playerData->gamePickups[roomNumber][loop];
+		pickUp = &playerData->gamePickups[roomNumber][loop];
 
 		// is pickup active? Pickup state contain state for
 		// both players.
@@ -1096,16 +1132,16 @@ void Player_PerformCollisions(struct GameData* gameDataStruct,
 					// activate a door
 					// draw a door if it's in the same room
 
-					dl_u8 doorIndex = pickUp->doorUnlockIndex;
+					doorIndex = pickUp->doorUnlockIndex;
 
 					playerData->doorStateData[doorIndex] |= playerData->playerMask;
 
 #ifndef DISABLE_DOOR_DRAWING
 					// check if we need to activate a door in the room
-					const DoorInfoData* doorInfoData = &resources->roomResources[roomNumber].doorInfoData;
-					const DoorInfo* doorInfoRunner = doorInfoData->doorInfos;
+					doorInfoData = &resources->roomResources[roomNumber].doorInfoData;
+					doorInfoRunner = doorInfoData->doorInfos;
 
-					for (dl_u8 loop = 0; loop < doorInfoData->drawInfosCount; loop++)
+					for (doorLoop = 0; doorLoop < doorInfoData->drawInfosCount; doorLoop++)
 					{
 						if (doorInfoRunner->globalDoorIndex == doorIndex) // the key actives a door in this room
 						{
@@ -1166,7 +1202,7 @@ void Player_PerformCollisions(struct GameData* gameDataStruct,
 	}
 
 	// collide with ball
-	BallData* ballData = &gameData->ballData;
+	ballData = &gameData->ballData;
 
 	if (objectCollisionTest(playerData, 
 							GET_HIGH_BYTE(ballData->x),
@@ -1181,7 +1217,7 @@ void Player_PerformCollisions(struct GameData* gameDataStruct,
 	}
 
 	// collide with bird
-	BirdData* birdData = &gameData->birdData;
+	birdData = &gameData->birdData;
 
 	if (objectCollisionTest(playerData, 
 							GET_HIGH_BYTE(birdData->x),

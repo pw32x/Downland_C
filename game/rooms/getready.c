@@ -9,6 +9,8 @@
 
 void get_ready_room_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resources)
 {
+	const dl_u8* getReadyString;
+
 	dl_u8* framebuffer = gameData->cleanBackground;
 
 	// init background and text
@@ -17,7 +19,7 @@ void get_ready_room_draw(dl_u8 roomNumber, GameData* gameData, const Resources* 
 				   framebuffer);
 
 	// get ready text
-	const dl_u8* getReadyString = gameData->currentPlayerData->playerNumber == PLAYER_ONE ? resources->text_getReadyPlayerOne : resources->text_getReadyPlayerTwo;
+	getReadyString = gameData->currentPlayerData->playerNumber == PLAYER_ONE ? resources->text_getReadyPlayerOne : resources->text_getReadyPlayerTwo;
 
 	drawText(getReadyString, resources->characterFont, framebuffer, 0x0b66);
 }
@@ -31,10 +33,13 @@ void get_ready_room_init(Room* room, GameData* gameData, const Resources* resour
 
 void get_ready_room_update(Room* room, GameData* gameData, const Resources* resources)
 {
+	int loop;
+	dl_u8 roomNumber;
+
 	// run the drops manager three times to simulate
 	// the lack of checking for vsync in the original 
 	// game, making drops fall more often and faster.
-	for (int loop = 0; loop < 3; loop++)
+	for (loop = 0; loop < 3; loop++)
 	{
 		DropsManager_Update(&gameData->dropData, 
 							gameData->framebuffer, 
@@ -47,7 +52,7 @@ void get_ready_room_update(Room* room, GameData* gameData, const Resources* reso
 	if (gameData->joystickState.jumpPressed)
 	{
 		// enter the new player's room
-		dl_u8 roomNumber = 0;
+		roomNumber = 0;
 		if (gameData->currentPlayerData->lastDoor != NULL)
 			roomNumber = gameData->currentPlayerData->lastDoor->nextRoomNumber;
 

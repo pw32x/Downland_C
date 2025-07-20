@@ -25,12 +25,15 @@ dl_u8 drop_CollisionMasks[4] =
 
 void DropsManager_Init(DropData* dropData, dl_u8 roomNumber, dl_u8 gameCompletionCount)
 {
+	int loop;
+	dl_u8 dropsToInitCount = 10; // always 10 drops after finishing a cycle
+
 	g_dropTickTockTimer = 0;
 
-	for (int loop = 0; loop < NUM_DROPS; loop++)
+	for (loop = 0; loop < NUM_DROPS; loop++)
 		dropData->drops[loop].wiggleTimer = 0;
 
-	dl_u8 dropsToInitCount = 10; // always 10 drops after finishing a cycle
+
 
 	if (!gameCompletionCount)
 	{
@@ -47,7 +50,7 @@ void DropsManager_Init(DropData* dropData, dl_u8 roomNumber, dl_u8 gameCompletio
 
 	dropData->activeDropsCount = dropsToInitCount;
 
-	for (int loop = 0; loop < dropsToInitCount; loop++)
+	for (loop = 0; loop < dropsToInitCount; loop++)
 		dropData->drops[loop].wiggleTimer = 1;
 }
 
@@ -63,8 +66,9 @@ void initDrop(Drop* drop,
 			  const dl_u8* dropSprites,
 			  dl_u8* cleanBackground)
 {
-	// init drop
-	drop->wiggleTimer = DROP_WIGGLE_START_TIME;
+	dl_u8 value;
+	dl_u8 pixelMask;
+	dl_u8 spriteIndex;
 
 	// randomly pick a drop spawn area
 	dl_u8 dropSpawnAreaIndex = dl_rand() % dropData->dropSpawnPositions->spawnAreasCount;
@@ -73,6 +77,11 @@ void initDrop(Drop* drop,
 	// randomly pick a position in the drop spawn area
 	dl_u8 dropSpawnPointX = dl_rand() % (dropSpawnArea->dropSpawnPointsCount + 1); // spawn points count is inclusive in the original
 	dropSpawnPointX *= 8; // spacing between drops. 8 pixels, not 8 bytes.
+
+
+	// init drop
+	drop->wiggleTimer = DROP_WIGGLE_START_TIME;
+
 
 	drop->x = dropSpawnPointX + dropSpawnArea->x;
 	drop->y = dropSpawnArea->y << 8;
@@ -86,8 +95,8 @@ void initDrop(Drop* drop,
 	// here, check if there's a collision with the background 6 pixels down and 
 	// 4 to the right. If so, then move the drop's x position to the left.
 	// See address 0xcfeb in the disassembly
-	dl_u8 value = cleanBackground[GET_FRAMEBUFFER_LOCATION(drop->x + 4, GET_HIGH_BYTE(drop->y) + 6)];
-	dl_u8 pixelMask = pixelMasks[drop->x & 3];
+	value = cleanBackground[GET_FRAMEBUFFER_LOCATION(drop->x + 4, GET_HIGH_BYTE(drop->y) + 6)];
+	pixelMask = pixelMasks[drop->x & 3];
 
 	// check for a rope. If there is one, then move the
 	// drop one pixel to the left, to leave clearance
@@ -97,7 +106,7 @@ void initDrop(Drop* drop,
 		drop->x--;
 	}
 
-	dl_u8 spriteIndex = drop->x & 3; // sprite depends on which column of four pixels it lands on
+	spriteIndex = drop->x & 3; // sprite depends on which column of four pixels it lands on
 
 	drop->spriteData = dropSprites + (DROP_SPRITE_FRAME_SIZE_IN_BYTES * spriteIndex);
 	drop->collisionMask = drop_CollisionMasks[spriteIndex];
@@ -111,6 +120,8 @@ void DropsManager_Update(DropData* dropData,
 						 dl_u8 gameCompletionCount,
 						 const dl_u8* dropSprites)
 {
+	int loop;
+	Drop* drop;
 	Drop* drops = dropData->drops;
 
 	if (g_dropTickTockTimer)
@@ -120,9 +131,9 @@ void DropsManager_Update(DropData* dropData,
 
 	// only process a max five drops per frame. 
 	// alternating which five.
-	for (int loop = 0; loop < 5; loop++) 
+	for (loop = 0; loop < 5; loop++) 
 	{
-		Drop* drop = drops;
+		drop = drops;
 		if (!drop->wiggleTimer) // we've hit an inactive drop, we've hit the end of
 			return;				// the active drops.
 

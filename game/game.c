@@ -48,11 +48,13 @@ void Game_Init(struct GameData* gameData, const Resources* resources)
 
 void Game_InitPlayers(struct GameData* gameData, const Resources* resources)
 {
+	dl_u8 loop;
+
 	gameData->currentPlayerData = &gameData->playerData[PLAYER_ONE];
 
 	gameData->otherPlayerData = gameData->numPlayers > 1 ? &gameData->playerData[PLAYER_TWO] : NULL;
 
-	for (dl_u8 loop = 0; loop < gameData->numPlayers; loop++)
+	for (loop = 0; loop < gameData->numPlayers; loop++)
 	{
 		Player_GameInit(&gameData->playerData[loop], resources);
 	}

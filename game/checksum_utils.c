@@ -18,7 +18,9 @@ BOOL checksumCheckBigEndian(const dl_u8* fileBuffer, dl_u32 fileBufferSize)
 	const dl_u32* fileBufferRunner = (const dl_u32*)fileBuffer;
 
 	dl_u32 loopCount = fileBufferSize / sizeof(value);
-	for (dl_u32 loop = 0; loop < loopCount; loop++)
+
+	dl_u32 loop;
+	for (loop = 0; loop < loopCount; loop++)
 	{
 		value = swap_endian_32(*fileBufferRunner);
 		accumulator += value;
@@ -36,7 +38,9 @@ BOOL checksumCheckLitteEndian(const dl_u8* fileBuffer, dl_u32 fileBufferSize)
 	const dl_u32* fileBufferRunner = (const dl_u32*)fileBuffer;
 
 	dl_u32 loopCount = fileBufferSize / sizeof(value);
-	for (dl_u32 loop = 0; loop < loopCount; loop++)
+
+	dl_u32 loop;
+	for (loop = 0; loop < loopCount; loop++)
 	{
 		value = *fileBufferRunner;
 		accumulator += value;

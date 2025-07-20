@@ -8,7 +8,6 @@
 #include "string_utils.h"
 #include "rooms\rooms.h"
 
-#define PLAYER_SPRITE_WIDTH			16
 #define PLAYER_BITSHIFTED_SPRITE_FRAME_SIZE (PLAYER_SPRITE_ROWS * 3) // rows * 3 bytes per row
 
 #define PLAYER_COLLISION_WIDTH		8

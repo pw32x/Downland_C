@@ -14,8 +14,13 @@ The project is based on the original Downland, version 1.1. This version was a l
 
 ## SUPPORTED PLATFORMS
 
-- Windows
-- Dreamcast (see platforms\dc\README.md)
+- Windows ("classic" and "new")
+- Sega Dreamcast
+- Sega Saturn
+- GameBoy Advance
+- Playdate
+- 3DO
+  
 
 ## RUNNING THE GAME
 

@@ -182,7 +182,11 @@ void chamber_update(Room* room, GameData* gameData, const Resources* resources)
 				resources, 
 				gameData->framebuffer);
 
-	updateTimers(playerData->currentRoom->roomNumber, playerData->roomTimers);
+	if (playerData->state != PLAYER_STATE_REGENERATION)
+	{
+		updateTimers(playerData->currentRoom->roomNumber, playerData->roomTimers);
+	}
+
 	currentTimer = playerData->roomTimers[playerData->currentRoom->roomNumber];
 
 #ifndef DISABLE_ENEMIES

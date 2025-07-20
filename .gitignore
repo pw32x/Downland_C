@@ -419,5 +419,6 @@ platforms/playdate/Source/downland.rom
 platforms/playdate/Source/pdex.dll
 platforms/playdate/Source/pdex.elf
 /platforms/playdate/Downland.pdx
+/platforms/3do/out
 platforms/3do/cd_contents/LaunchMe
 platforms/3do/cd_contents/downland.rom

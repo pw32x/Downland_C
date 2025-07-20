@@ -1,0 +1,75 @@
+ifdef $(GENDEV)
+ROOTDIR = $(GENDEV)
+else
+ROOTDIR = /opt/toolchains/sega
+endif
+
+LDSCRIPTSDIR = $(ROOTDIR)/ldscripts
+
+LIBPATH = -L$(ROOTDIR)/m68k-elf/lib -L$(ROOTDIR)/m68k-elf/lib/gcc/m68k-elf/4.6.2 -L$(ROOTDIR)/m68k-elf/m68k-elf/lib
+INCPATH = -I$. -Iliblzss -I$(ROOTDIR)/m68k-elf/include -I$(ROOTDIR)/m68k-elf/m68k-elf/include 
+
+#specific compiler flags for main.c
+HWCCFLAGS = -m68000 -Wall -O1 -c -fomit-frame-pointer -fno-lto
+CCFLAGS = -m68000 -Wall -Os -c -fomit-frame-pointer -flto
+ASFLAGS = -m68000 --register-prefix-optional
+LINKFLAGS = -T $(LDSCRIPTSDIR)/mars-md.ld -Wl,-Map=$(OUTPUT_DIR)/md_output.map -nostdlib -flto
+
+PREFIX = $(ROOTDIR)/m68k-elf/bin/m68k-elf-
+CC = $(PREFIX)gcc
+AS = $(PREFIX)as
+LD = $(PREFIX)ld
+OBJC = $(PREFIX)objcopy
+
+DD = dd
+RM = rm -f
+
+TARGET_MD = m68k
+LIBS = $(LIBPATH) -lc -lgcc -lnosys
+
+SOURCE_DIR = source/md
+
+SS    = $(wildcard $(SOURCE_DIR)/*.s)
+CS    = $(wildcard $(SOURCE_DIR)/*.c)
+CS    += $(wildcard $(SOURCE_DIR)/liblzss/*.c)
+CS    += $(wildcard $(SOURCE_DIR)/data/*.c)
+
+OUTPUT_DIR = out/md
+SOURCE_OUTPUT_DIR = $(OUTPUT_DIR)/$(SOURCE_DIR)
+
+FOLDER_TO_CREATE = $(SOURCE_OUTPUT_DIR)/liblzss $(SOURCE_OUTPUT_DIR)/data
+
+#make .s files go first in the obj list so that crt0 gets linked first in the rom
+OBJ = $(SS:.s=.o) 
+OBJ += $(CS:.c=.o)
+OBJS= $(addprefix $(OUTPUT_DIR)/, $(OBJ))
+
+.PHONY: directories
+
+
+all: directories $(OUTPUT_DIR)/$(TARGET_MD).bin
+
+directories: $(FOLDER_TO_CREATE)
+
+$(FOLDER_TO_CREATE):
+	mkdir -p $(FOLDER_TO_CREATE)
+
+$(OUTPUT_DIR)/$(TARGET_MD).bin: $(OUTPUT_DIR)/$(TARGET_MD).elf
+	$(OBJC) -O binary $< $(OUTPUT_DIR)/$(TARGET_MD).bin
+
+$(OUTPUT_DIR)/$(TARGET_MD).elf: $(OBJS)
+	$(CC) $(LINKFLAGS) $(OBJS) $(LIBS) -o $(OUTPUT_DIR)/$(TARGET_MD).elf
+
+#main.c has specific compiler flags
+$(SOURCE_OUTPUT_DIR)/main.o: $(SOURCE_DIR)/main.c
+	$(CC) $(HWCCFLAGS) $(INCPATH) $< -o $@
+
+$(SOURCE_OUTPUT_DIR)/%.o: $(SOURCE_DIR)/%.c
+	$(CC) $(CCFLAGS) $(INCPATH) $< -o $@
+
+$(SOURCE_OUTPUT_DIR)/%.o: $(SOURCE_DIR)/%.s
+	$(AS) $(ASFLAGS) $(INCPATH) $< -o $@
+
+clean:
+	$(RM) $(SOURCE_OUTPUT_DIR)/liblzss/*.o
+	$(RM) $(SOURCE_OUTPUT_DIR)/*.o $(OUTPUT_DIR)/*.bin $(OUTPUT_DIR)/*.elf $(OUTPUT_DIR)/md_output.map

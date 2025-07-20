@@ -1,0 +1,168 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files\32x">
+      <UniqueIdentifier>{adc4633d-1a4e-4678-abc1-4d6d7d0c23a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Genesis">
+      <UniqueIdentifier>{76c544a9-3cb3-40b9-8cd2-126ac059037e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="build">
+      <UniqueIdentifier>{806e2cfd-9bb0-4b54-a6fa-aa50d392db5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\common">
+      <UniqueIdentifier>{5f7177e1-76e4-49b0-96b5-f146a4558353}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Genesis\data">
+      <UniqueIdentifier>{20080e7f-02bd-40d8-ad11-e694301f5110}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="clean.bat">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="build.bat">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\build\Makefile_MD">
+      <Filter>build</Filter>
+    </None>
+    <None Include="rebuild.bat">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\build\Makefile_32X">
+      <Filter>build</Filter>
+    </None>
+    <None Include="..\source\md\vgm_player.s">
+      <Filter>Source Files\Genesis</Filter>
+    </None>
+    <None Include="..\source\md\kos.s">
+      <Filter>Source Files\Genesis</Filter>
+    </None>
+    <None Include="..\source\md\cd.s">
+      <Filter>Source Files\Genesis</Filter>
+    </None>
+    <None Include="..\source\32x\_crt0.s">
+      <Filter>Source Files\32x</Filter>
+    </None>
+    <None Include="..\source\md\_crt0.s">
+      <Filter>Source Files\Genesis</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\source\md\main.c">
+      <Filter>Source Files\Genesis</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\32x\marshw.c">
+      <Filter>Source Files\32x</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\32x\secondary.c">
+      <Filter>Source Files\32x</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\32x\main.c">
+      <Filter>Source Files\32x</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\md\megasd.c">
+      <Filter>Source Files\Genesis</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\md\vgm.c">
+      <Filter>Source Files\Genesis</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\md\xvprintf.c">
+      <Filter>Source Files\Genesis</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\md\everdrive.c">
+      <Filter>Source Files\Genesis</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\md\cd_init.c">
+      <Filter>Source Files\Genesis</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\md\data\genesis_tilemap.c">
+      <Filter>Source Files\Genesis\data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\md\data\genesis_tileset.c">
+      <Filter>Source Files\Genesis\data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\md\data\genesis_palette.c">
+      <Filter>Source Files\Genesis\data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\md\data\32x_tileset.c">
+      <Filter>Source Files\Genesis\data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\md\data\32x_palette.c">
+      <Filter>Source Files\Genesis\data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\md\data\32x_tilemap.c">
+      <Filter>Source Files\Genesis\data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\md\vdp.c">
+      <Filter>Source Files\Genesis</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\md\data\font.c">
+      <Filter>Source Files\Genesis\data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\md\data\sphere32x32_4bpp.c">
+      <Filter>Source Files\Genesis\data</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\md\data\sphere32x32_4bpp_palette.c">
+      <Filter>Source Files\Genesis\data</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\source\32x\32x.h">
+      <Filter>Source Files\32x</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\32x\mars.h">
+      <Filter>Source Files\32x</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\32x\marshw.h">
+      <Filter>Source Files\32x</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\32x\attr.h">
+      <Filter>Source Files\32x</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\common\comm_ids.h">
+      <Filter>Source Files\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\md\megasd.h">
+      <Filter>Source Files\Genesis</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\md\cd_init.h">
+      <Filter>Source Files\Genesis</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\md\data\genesis_palette.h">
+      <Filter>Source Files\Genesis\data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\md\data\genesis_tilemap.h">
+      <Filter>Source Files\Genesis\data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\md\data\genesis_tileset.h">
+      <Filter>Source Files\Genesis\data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\md\data\32x_tileset.h">
+      <Filter>Source Files\Genesis\data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\md\data\32x_palette.h">
+      <Filter>Source Files\Genesis\data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\md\data\32x_tilemap.h">
+      <Filter>Source Files\Genesis\data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\md\vdp.h">
+      <Filter>Source Files\Genesis</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\md\data\font.h">
+      <Filter>Source Files\Genesis\data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\md\data\sphere32x32_4bpp.h">
+      <Filter>Source Files\Genesis\data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\md\data\sphere32x32_4bpp_palette.h">
+      <Filter>Source Files\Genesis\data</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

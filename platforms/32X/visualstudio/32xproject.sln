@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.33130.400
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "32xproject", "32xproject.vcxproj", "{0E15B26A-E6D1-4F40-90EC-9478B09E8F81}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Sega 32X = Debug|Sega 32X
+		Release|Sega 32X = Release|Sega 32X
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0E15B26A-E6D1-4F40-90EC-9478B09E8F81}.Debug|Sega 32X.ActiveCfg = Debug|Win32
+		{0E15B26A-E6D1-4F40-90EC-9478B09E8F81}.Debug|Sega 32X.Build.0 = Debug|Win32
+		{0E15B26A-E6D1-4F40-90EC-9478B09E8F81}.Release|Sega 32X.ActiveCfg = Release|Win32
+		{0E15B26A-E6D1-4F40-90EC-9478B09E8F81}.Release|Sega 32X.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9A42B82C-2D7F-4D79-A6C0-0EABB5C0A4AC}
+	EndGlobalSection
+EndGlobal

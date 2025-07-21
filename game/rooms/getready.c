@@ -2,10 +2,10 @@
 
 #include <string.h>
 
-#include "..\game_types.h"
-#include "..\draw_utils.h"
-#include "..\drops_manager.h"
-#include "..\dl_sound.h"
+#include "../game_types.h"
+#include "../draw_utils.h"
+#include "../drops_manager.h"
+#include "../dl_sound.h"
 
 void get_ready_room_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resources)
 {

@@ -1,13 +1,13 @@
 #include "chambers.h"
 #include "room_types.h"
 
-#include "..\game_types.h"
-#include "..\draw_utils.h"
-#include "..\drops_manager.h"
-#include "..\ball.h"
-#include "..\bird.h"
-#include "..\player.h"
-#include "..\door_utils.h"
+#include "../game_types.h"
+#include "../draw_utils.h"
+#include "../drops_manager.h"
+#include "../ball.h"
+#include "../bird.h"
+#include "../player.h"
+#include "../door_utils.h"
 
 void drawPickups(Pickup* pickups, 
 				 dl_u8 playerMask,

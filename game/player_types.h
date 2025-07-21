@@ -6,7 +6,7 @@
 #include "joystick_types.h"
 #include "door_types.h"
 #include "string_utils.h"
-#include "rooms\rooms.h"
+#include "rooms/rooms.h"
 
 #define PLAYER_BITSHIFTED_SPRITE_FRAME_SIZE (PLAYER_SPRITE_ROWS * 3) // rows * 3 bytes per row
 

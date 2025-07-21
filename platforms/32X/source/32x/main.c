@@ -3,6 +3,13 @@
 #include "mars.h"
 #include "downland_rom.h"
 
+// game headers
+#include "game_types.h"
+#include "resource_types.h"
+#include "checksum_utils.h"
+#include "resource_loader_buffer.h"
+
+
 void setup_gray_palette()
 {
 	unsigned short* cram = (unsigned short *)&MARS_CRAM;

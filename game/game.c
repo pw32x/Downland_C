@@ -1,7 +1,7 @@
 #include "game.h"
 
 #include "draw_utils.h"
-#include "rooms\rooms.h"
+#include "rooms/rooms.h"
 #include "alloc.h"
 
 Game_ChangedRoomCallbackType Game_ChangedRoomCallback = NULL;

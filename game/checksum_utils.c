@@ -1,6 +1,6 @@
 #include "checksum_utils.h"
 
-#include "..\game\base_defines.h"
+#include "../game/base_defines.h"
 
 static dl_u32 swap_endian_32(dl_u32 val) 
 {

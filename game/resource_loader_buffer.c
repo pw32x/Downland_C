@@ -1,7 +1,7 @@
 #include "resource_loader_buffer.h"
 
-#include "..\game\base_defines.h"
-#include "..\game\alloc.h"
+#include "../game/base_defines.h"
+#include "../game/alloc.h"
 
 #include <stdio.h>
 

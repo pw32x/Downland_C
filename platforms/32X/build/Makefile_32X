@@ -10,7 +10,8 @@ TOOLSBIN = $(MARSDEV)/bin
 LDSCRIPTSDIR = $(ROOTDIR)/ldscripts
 
 LIBPATH = -L$(ROOTDIR)/sh-elf/lib -L$(ROOTDIR)/sh-elf/lib/gcc/sh-elf/4.6.2 -L$(ROOTDIR)/sh-elf/sh-elf/lib
-INCPATH = -I. -I$(ROOTDIR)/sh-elf/include -I$(ROOTDIR)/sh-elf/sh-elf/include -I$(BASE_OUTPUT_DIR)
+INCPATH = -I. -I$(ROOTDIR)/sh-elf/include -I$(ROOTDIR)/sh-elf/sh-elf/include -I$(BASE_OUTPUT_DIR) \
+         -I../../game -I../../game/rooms
 
 CCFLAGS = -c -std=c11 -g -m2 -mb
 CCFLAGS += -Wall -Wextra -pedantic -Wno-unused-parameter -Wimplicit-fallthrough=0 -Wno-missing-field-initializers -Wnonnull
@@ -54,10 +55,20 @@ OUTPUT_DIR_MD = $(BASE_OUTPUT_DIR)/md
 SS_SOURCE = $(wildcard $(SOURCE_DIR)/*.s)
 CS = $(wildcard $(SOURCE_DIR)/*.c)
 
+# External game sources
+GAME_CS = $(wildcard ../../game/*.c)
+ROOMS_CS = $(wildcard ../../game/rooms/*.c)
+
+GAME_OUTPUT_DIR = $(OUTPUT_DIR)/game
+ROOMS_OUTPUT_DIR = $(OUTPUT_DIR)/game/rooms
+
+GAME_OBJS = $(patsubst ../../game/%.c, $(GAME_OUTPUT_DIR)/%.o, $(GAME_CS))
+ROOMS_OBJS = $(patsubst ../../game/rooms/%.c, $(ROOMS_OUTPUT_DIR)/%.o, $(ROOMS_CS))
+
 OBJ_SOURCE = $(SS_SOURCE:.s=.o) $(CS:.c=.o)
 DOWNLAND_O = $(BASE_OUTPUT_DIR)/downland.o
 
-OBJS = $(addprefix $(OUTPUT_DIR)/, $(OBJ_SOURCE)) $(DOWNLAND_O)
+OBJS = $(addprefix $(OUTPUT_DIR)/, $(OBJ_SOURCE)) $(DOWNLAND_O) $(GAME_OBJS) $(ROOMS_OBJS)
 
 # ROM input
 ROM_INPUT = gamedata/downland.rom
@@ -70,10 +81,16 @@ debug: always_build_md directories $(DOWNLAND_O) $(BASE_OUTPUT_DIR)/$(TARGET).32
 
 all: release
 
-directories: $(SOURCE_OUTPUT_DIR)
+directories: $(SOURCE_OUTPUT_DIR) $(GAME_OUTPUT_DIR) $(ROOMS_OUTPUT_DIR)
 
 $(SOURCE_OUTPUT_DIR):
-	mkdir -p $(SOURCE_OUTPUT_DIR)
+	mkdir -p $@
+
+$(GAME_OUTPUT_DIR):
+	mkdir -p $@
+
+$(ROOMS_OUTPUT_DIR):
+	mkdir -p $@
 
 $(OUTPUT_DIR_MD)/m68k.bin: 
 	make -f $(BUILD_DIR)/Makefile_MD
@@ -100,6 +117,12 @@ $(SOURCE_OUTPUT_DIR)/%.o: $(SOURCE_DIR)/%.c
 $(SOURCE_OUTPUT_DIR)/%.o: $(SOURCE_DIR)/%.s
 	$(AS) $(ASFLAGS) $(INCPATH) $< -o $@
 
+$(GAME_OUTPUT_DIR)/%.o: ../../game/%.c | $(GAME_OUTPUT_DIR)
+	$(CC) $(CCFLAGS) $(INCPATH) $< -o $@
+
+$(ROOMS_OUTPUT_DIR)/%.o: ../../game/rooms/%.c | $(ROOMS_OUTPUT_DIR)
+	$(CC) $(CCFLAGS) $(INCPATH) $< -o $@
+
 # Assemble generated .s files from out/
 $(BASE_OUTPUT_DIR)/%.o: $(BASE_OUTPUT_DIR)/%.s
 	$(AS) $(ASFLAGS) $(INCPATH) $< -o $@
@@ -110,6 +133,6 @@ $(DOWNLAND_O): $(ROM_INPUT)
 
 clean:
 	make clean -f $(BUILD_DIR)/Makefile_MD
-	$(RM) $(SOURCE_OUTPUT_DIR)/*.o $(OUTPUT_DIR_MD)/m68k.bin $(BASE_OUTPUT_DIR)/$(TARGET).32x \
+	$(RM) $(SOURCE_OUTPUT_DIR)/*.o $(GAME_OUTPUT_DIR)/*.o $(ROOMS_OUTPUT_DIR)/*.o $(OUTPUT_DIR_MD)/m68k.bin $(BASE_OUTPUT_DIR)/$(TARGET).32x \
 	$(OUTPUT_DIR)/$(TARGET).elf $(OUTPUT_DIR)/32x_output.map $(OUTPUT_DIR)/temp.bin $(OUTPUT_DIR)/temp2.bin \
 	$(DOWNLAND_O)

@@ -1,8 +1,8 @@
 #ifndef ROOM_TYPES_INCLUDE_H
 #define ROOM_TYPES_INCLUDE_H
 
-#include "..\base_defines.h"
-#include "..\resource_types.h"
+#include "../base_defines.h"
+#include "../resource_types.h"
 
 struct GameData;
 

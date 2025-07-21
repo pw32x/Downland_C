@@ -5,7 +5,7 @@
 #include "base_defines.h"
 #include "joystick_types.h"
 #include "drops_types.h"
-#include "rooms\rooms.h"
+#include "rooms/rooms.h"
 #include "resource_types.h"
 #include "pickup_types.h"
 #include "string_utils.h"

@@ -1,7 +1,7 @@
 #ifndef CHAMBERS_INCLUDE_H
 #define CHAMBERS_INCLUDE_H
 
-#include "..\base_defines.h"
+#include "../base_defines.h"
 
 #define PLAYERLIVES_ICON_X	0x14
 #define PLAYERLIVES_ICON_Y	0x2

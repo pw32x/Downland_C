@@ -7,7 +7,7 @@
 #include "joystick_types.h"
 #include "door_types.h"
 #include "string_utils.h"
-#include "rooms\rooms.h"
+#include "rooms/rooms.h"
 #include "game.h"
 
 // all the states are mutually exclusive

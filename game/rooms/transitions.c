@@ -2,10 +2,10 @@
 
 #include <string.h>
 
-#include "..\game_types.h"
-#include "..\draw_utils.h"
-#include "..\drops_manager.h"
-#include "..\dl_sound.h"
+#include "../game_types.h"
+#include "../draw_utils.h"
+#include "../drops_manager.h"
+#include "../dl_sound.h"
 
 #define INITIAL_TRANSITION_DELAY 30
 

@@ -3,12 +3,35 @@
 #include "mars.h"
 #include "downland_rom.h"
 
+// std headers
+#include <stdio.h>
+#include <string.h>
+
 // game headers
 #include "game_types.h"
 #include "resource_types.h"
 #include "checksum_utils.h"
 #include "resource_loader_buffer.h"
 
+GameData gameData;
+Resources resources;
+
+static dl_u8 memory[18288];
+static dl_u8* memoryEnd = NULL;
+
+void* dl_alloc(dl_u32 size)
+{
+	if (memoryEnd == NULL)
+	{
+		memoryEnd = memory;
+	}
+
+	dl_u8* memory = memoryEnd;
+
+	memoryEnd += size;
+
+	return (void*)memory;
+}
 
 void setup_gray_palette()
 {
@@ -60,6 +83,28 @@ void draw_square(int x, int y, int size)
 
 int main(void)
 {
+	int result = 0;
+
+	int romSize = binary_gamedata_downland_rom_end - binary_gamedata_downland_rom_start;
+
+	if (romSize != DOWNLAND_ROM_SIZE)
+	{
+		result = -3;
+	}
+	else if (!checksumCheckBigEndian(binary_gamedata_downland_rom_start, 
+								  romSize))
+	{
+		result = -1;
+	}
+	else if (!ResourceLoaderBuffer_Init(binary_gamedata_downland_rom_start, 
+								   romSize, 
+								   &resources))
+	{
+		result = -2;
+	}
+
+	memset(&gameData, 0, sizeof(GameData));
+
 	/* clear screen */
 	Mars_Init();
 
@@ -74,12 +119,6 @@ int main(void)
 
 	setup_gray_palette();
 
-
-	const unsigned char* downlandRom = _binary_downland_rom_start;
-	const unsigned char* downlandRomEnd = _binary_downland_rom_end;
-	const unsigned int  downlandRomSize = _binary_downland_rom_size;
-
-
 	int x = 40;
 	int y = 50;
 	int directionx = 1;
@@ -91,7 +130,20 @@ int main(void)
 	int screen_limity = SCREEN_HEIGHT - directiony - square_size;
 
 	Mars_SetMDCrsr(2, 20);
-	Mars_MDPutString("Hello world from 32x Side");
+
+	if (!result)
+		Mars_MDPutString("Hello world from 32x Side");
+	else if (result == -1)
+		Mars_MDPutString("Checksum failed");
+	else if (result == -2)
+		Mars_MDPutString("Load resource failed");
+	else
+	{
+		char buffer[100];
+		sprintf(buffer, "%d", romSize);
+		Mars_MDPutString("size mismatch");
+		Mars_MDPutString(buffer);
+	}
 
 	while (1)
 	{

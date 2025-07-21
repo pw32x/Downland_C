@@ -226,7 +226,7 @@ int main(void)
 
         chk_hotplug();
 
-        update_scene();
+        //update_scene();
         
 
         vdp_wait_vsync();

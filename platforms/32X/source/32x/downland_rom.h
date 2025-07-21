@@ -5,8 +5,8 @@
 // which the Makefile will create a downland.o file in the /out
 // folder.
 
-extern const unsigned char _binary_downland_rom_start[];
-extern const unsigned char _binary_downland_rom_end[];
-extern const unsigned int  _binary_downland_rom_size;
+extern const unsigned char binary_gamedata_downland_rom_start[];
+extern const unsigned char binary_gamedata_downland_rom_end[];
+extern const unsigned int  binary_gamedata_downland_rom_size;
 
 #endif // DOWNLAND_ROM_INCLUDE_H

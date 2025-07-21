@@ -52,6 +52,15 @@
     <None Include="..\source\md\_crt0.s">
       <Filter>Source Files\Genesis</Filter>
     </None>
+    <None Include="..\build\clean.bat">
+      <Filter>build</Filter>
+    </None>
+    <None Include="..\build\rebuild.bat">
+      <Filter>build</Filter>
+    </None>
+    <None Include="..\build\build.bat">
+      <Filter>build</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\source\md\main.c">
@@ -163,6 +172,9 @@
     </ClInclude>
     <ClInclude Include="..\source\md\data\sphere32x32_4bpp_palette.h">
       <Filter>Source Files\Genesis\data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\32x\downland_rom.h">
+      <Filter>Source Files\32x</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

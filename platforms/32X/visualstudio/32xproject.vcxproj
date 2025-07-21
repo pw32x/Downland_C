@@ -54,8 +54,11 @@
   <ItemDefinitionGroup>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="..\build\build.bat" />
+    <None Include="..\build\clean.bat" />
     <None Include="..\build\Makefile_32X" />
     <None Include="..\build\Makefile_MD" />
+    <None Include="..\build\rebuild.bat" />
     <None Include="..\source\32x\_crt0.s" />
     <None Include="..\source\md\cd.s" />
     <None Include="..\source\md\kos.s" />
@@ -89,6 +92,7 @@
   <ItemGroup>
     <ClInclude Include="..\source\32x\32x.h" />
     <ClInclude Include="..\source\32x\attr.h" />
+    <ClInclude Include="..\source\32x\downland_rom.h" />
     <ClInclude Include="..\source\32x\mars.h" />
     <ClInclude Include="..\source\32x\marshw.h" />
     <ClInclude Include="..\source\common\comm_ids.h" />

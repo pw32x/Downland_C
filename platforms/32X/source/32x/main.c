@@ -1,7 +1,7 @@
 /* marsonly.c */
 
 #include "mars.h"
-
+#include "downland_rom.h"
 
 void setup_gray_palette()
 {
@@ -66,6 +66,11 @@ int main(void)
 	}
 
 	setup_gray_palette();
+
+
+	const unsigned char* downlandRom = _binary_downland_rom_start;
+	const unsigned char* downlandRomEnd = _binary_downland_rom_end;
+	const unsigned int  downlandRomSize = _binary_downland_rom_size;
 
 
 	int x = 40;

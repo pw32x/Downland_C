@@ -1,15 +1,16 @@
 ifdef $(GENDEV)
 ROOTDIR = $(GENDEV)
 else
- #default location of Chilly Willy's 32X toolkit
 ROOTDIR = /opt/toolchains/sega
 endif
 
-#ldscripts define how the .o files get placed in the rom and in ram. There's one for the MD and one for the 32X.
+MARSDEV  = $(WINHOME)/mars
+TOOLSBIN = $(MARSDEV)/bin
+
 LDSCRIPTSDIR = $(ROOTDIR)/ldscripts
 
 LIBPATH = -L$(ROOTDIR)/sh-elf/lib -L$(ROOTDIR)/sh-elf/lib/gcc/sh-elf/4.6.2 -L$(ROOTDIR)/sh-elf/sh-elf/lib
-INCPATH = -I. -I$(ROOTDIR)/sh-elf/include -I$(ROOTDIR)/sh-elf/sh-elf/include
+INCPATH = -I. -I$(ROOTDIR)/sh-elf/include -I$(ROOTDIR)/sh-elf/sh-elf/include -I$(BASE_OUTPUT_DIR)
 
 CCFLAGS = -c -std=c11 -g -m2 -mb
 CCFLAGS += -Wall -Wextra -pedantic -Wno-unused-parameter -Wimplicit-fallthrough=0 -Wno-missing-field-initializers -Wnonnull
@@ -17,7 +18,6 @@ CCFLAGS += -D__32X__ -DMARS
 LDFLAGS = -T $(LDSCRIPTSDIR)/mars.ld -Wl,-Map=$(OUTPUT_DIR)/32x_output.map -nostdlib -Wl,--gc-sections --specs=nosys.specs
 ASFLAGS = --big
 
-#we want marshw.c to be built with its own specific flags
 MARSHWCFLAGS := $(CCFLAGS)
 MARSHWCFLAGS += -fno-lto
 
@@ -34,39 +34,39 @@ CC = $(PREFIX)gcc
 AS = $(PREFIX)as
 LD = $(PREFIX)ld
 OBJC = $(PREFIX)objcopy
+NM = $(PREFIX)nm
 
 DD = dd
 RM = rm -f
 
-#pass the TARGET name as a parameter to set a new rom name. "make TARGET=my_new_name"
 TARGET ?= project
 LIBS = $(LIBPATH) -lc -lgcc -lgcc-Os-4-200 -lnosys
 
 BUILD_DIR = build
-
 SOURCE_DIR = source/32x
 
-SS    = $(wildcard $(SOURCE_DIR)/*.s)
-CS    = $(wildcard $(SOURCE_DIR)/*.c)
-
-#main folder where the generated files will go
 BASE_OUTPUT_DIR = out
 OUTPUT_DIR = $(BASE_OUTPUT_DIR)/32x
 SOURCE_OUTPUT_DIR = $(OUTPUT_DIR)/$(SOURCE_DIR)
-#folder for MD generated files
 OUTPUT_DIR_MD = $(BASE_OUTPUT_DIR)/md
 
-#make .s files go first in the obj list so that crt0 gets linked first in the rom
-OBJ = $(SS:.s=.o) 
-OBJ += $(CS:.c=.o)
-#prepend the output folder to all the .o files that will be generated
-OBJS= $(addprefix $(OUTPUT_DIR)/, $(OBJ)) 
+# Sources
+SS_SOURCE = $(wildcard $(SOURCE_DIR)/*.s)
+CS = $(wildcard $(SOURCE_DIR)/*.c)
+
+OBJ_SOURCE = $(SS_SOURCE:.s=.o) $(CS:.c=.o)
+DOWNLAND_O = $(BASE_OUTPUT_DIR)/downland.o
+
+OBJS = $(addprefix $(OUTPUT_DIR)/, $(OBJ_SOURCE)) $(DOWNLAND_O)
+
+# ROM input
+ROM_INPUT = gamedata/downland.rom
 
 .PHONY: directories
 
-release: always_build_md directories $(BASE_OUTPUT_DIR)/$(TARGET).32x
+release: always_build_md directories $(DOWNLAND_O) $(BASE_OUTPUT_DIR)/$(TARGET).32x
 
-debug: always_build_md directories $(BASE_OUTPUT_DIR)/$(TARGET).32x
+debug: always_build_md directories $(DOWNLAND_O) $(BASE_OUTPUT_DIR)/$(TARGET).32x
 
 all: release
 
@@ -75,11 +75,9 @@ directories: $(SOURCE_OUTPUT_DIR)
 $(SOURCE_OUTPUT_DIR):
 	mkdir -p $(SOURCE_OUTPUT_DIR)
 
-#build the 68000 code here with its own makefile
 $(OUTPUT_DIR_MD)/m68k.bin: 
 	make -f $(BUILD_DIR)/Makefile_MD
 
-#always try to build the md code because it may have changed and we can't tell
 always_build_md:
 	make -f $(BUILD_DIR)/Makefile_MD
 
@@ -89,12 +87,10 @@ $(BASE_OUTPUT_DIR)/$(TARGET).32x: $(OUTPUT_DIR)/$(TARGET).elf
 	$(DD) if=$(OUTPUT_DIR)/temp.bin of=$@ bs=512K conv=sync
 
 $(OUTPUT_DIR)/$(TARGET).elf: $(OBJS)
-	$(CC) $(LDFLAGS) $(OBJS) $(LIBS) -o $(OUTPUT_DIR)/$(TARGET).elf
+	$(CC) $(LDFLAGS) $(OBJS) $(LIBS) -o $@
 
-#crt0.s has a special rule because it includes m68k.bin with an .incbin directive
 $(SOURCE_OUTPUT_DIR)/_crt0.o: $(SOURCE_DIR)/_crt0.s $(OUTPUT_DIR_MD)/m68k.bin
 
-#marshw.c has specific compiler flags 
 $(SOURCE_OUTPUT_DIR)/marshw.o: $(SOURCE_DIR)/marshw.c
 	$(CC) $(MARSHWCFLAGS) $(INCPATH) $< -o $@
 
@@ -104,6 +100,16 @@ $(SOURCE_OUTPUT_DIR)/%.o: $(SOURCE_DIR)/%.c
 $(SOURCE_OUTPUT_DIR)/%.o: $(SOURCE_DIR)/%.s
 	$(AS) $(ASFLAGS) $(INCPATH) $< -o $@
 
+# Assemble generated .s files from out/
+$(BASE_OUTPUT_DIR)/%.o: $(BASE_OUTPUT_DIR)/%.s
+	$(AS) $(ASFLAGS) $(INCPATH) $< -o $@
+
+# Convert downland.rom to object file
+$(DOWNLAND_O): $(ROM_INPUT)
+	$(OBJC) -I binary -O elf32-sh -B sh $< $@
+
 clean:
 	make clean -f $(BUILD_DIR)/Makefile_MD
-	$(RM) $(SOURCE_OUTPUT_DIR)/*.o $(OUTPUT_DIR_MD)/m68k.bin $(BASE_OUTPUT_DIR)/$(TARGET).32x $(OUTPUT_DIR)/$(TARGET).elf $(OUTPUT_DIR)/32x_output.map $(OUTPUT_DIR)/temp.bin $(OUTPUT_DIR)/temp2.bin
+	$(RM) $(SOURCE_OUTPUT_DIR)/*.o $(OUTPUT_DIR_MD)/m68k.bin $(BASE_OUTPUT_DIR)/$(TARGET).32x \
+	$(OUTPUT_DIR)/$(TARGET).elf $(OUTPUT_DIR)/32x_output.map $(OUTPUT_DIR)/temp.bin $(OUTPUT_DIR)/temp2.bin \
+	$(DOWNLAND_O)

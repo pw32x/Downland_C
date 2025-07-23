@@ -67,6 +67,9 @@
     <None Include="..\build\build.bat">
       <Filter>build</Filter>
     </None>
+    <None Include="..\source\32x\function.s">
+      <Filter>Source Files\32x</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\source\md\main.c">
@@ -179,6 +182,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\game\rooms\chambers.c">
       <Filter>Source Files\game\rooms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\32x\game_runner.c">
+      <Filter>Source Files\32x</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\32x\image_utils.c">
+      <Filter>Source Files\32x</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -319,6 +328,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\game\rooms\rooms.h">
       <Filter>Source Files\game\rooms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\32x\game_runner.h">
+      <Filter>Source Files\32x</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\32x\image_utils.h">
+      <Filter>Source Files\32x</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

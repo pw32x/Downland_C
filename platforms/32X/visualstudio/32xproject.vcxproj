@@ -59,6 +59,7 @@
     <None Include="..\build\Makefile_32X" />
     <None Include="..\build\Makefile_MD" />
     <None Include="..\build\rebuild.bat" />
+    <None Include="..\source\32x\function.s" />
     <None Include="..\source\32x\_crt0.s" />
     <None Include="..\source\md\cd.s" />
     <None Include="..\source\md\kos.s" />
@@ -87,6 +88,8 @@
     <ClCompile Include="..\..\..\game\rooms\titlescreen.c" />
     <ClCompile Include="..\..\..\game\rooms\transitions.c" />
     <ClCompile Include="..\..\..\game\string_utils.c" />
+    <ClCompile Include="..\source\32x\game_runner.c" />
+    <ClCompile Include="..\source\32x\image_utils.c" />
     <ClCompile Include="..\source\32x\marshw.c" />
     <ClCompile Include="..\source\32x\secondary.c" />
     <ClCompile Include="..\source\32x\main.c" />
@@ -139,6 +142,8 @@
     <ClInclude Include="..\source\32x\32x.h" />
     <ClInclude Include="..\source\32x\attr.h" />
     <ClInclude Include="..\source\32x\downland_rom.h" />
+    <ClInclude Include="..\source\32x\game_runner.h" />
+    <ClInclude Include="..\source\32x\image_utils.h" />
     <ClInclude Include="..\source\32x\mars.h" />
     <ClInclude Include="..\source\32x\marshw.h" />
     <ClInclude Include="..\source\common\comm_ids.h" />

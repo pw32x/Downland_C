@@ -206,10 +206,10 @@ int main(void)
     megasd_ok = InitMegaSD();
 
     init_main();
-    init_graphics();
-    init_scene();
+    //init_graphics();
+    //init_scene();
 
-    print_text("Hello World from MD side", 0, 2);
+    //print_text("Hello World from MD side", 0, 2);
 
     while (1)
     {
@@ -230,7 +230,7 @@ int main(void)
         
 
         vdp_wait_vsync();
-        vdp_upload_hardware_sprites();
+        //vdp_upload_hardware_sprites();
     }
 
     return 0;

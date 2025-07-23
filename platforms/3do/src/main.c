@@ -198,6 +198,8 @@ int main(int argc, char *argv[])
 
         SoundManager_Update();
 
+        clear(clearColor);
+
         GameRunner_Draw(&gameData, &resources);
         
         display_and_swap();

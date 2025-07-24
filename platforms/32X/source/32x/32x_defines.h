@@ -1,0 +1,7 @@
+#ifndef _32X_DEFINES_INCLUDE_H
+#define _32X_DEFINES_INCLUDE_H
+
+#define SCREEN_WIDTH 320
+#define SCREEN_HEIGHT 224
+
+#endif

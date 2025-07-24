@@ -335,5 +335,8 @@
     <ClInclude Include="..\source\32x\image_utils.h">
       <Filter>Source Files\32x</Filter>
     </ClInclude>
+    <ClInclude Include="..\source\32x\32x_defines.h">
+      <Filter>Source Files\32x</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

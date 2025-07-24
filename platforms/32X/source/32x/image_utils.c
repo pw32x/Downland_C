@@ -240,10 +240,11 @@ void convert1bppImageTo8bppCrtEffectImageWithNewWidth(const dl_u8* originalImage
     }
 }
 */
-void convert1bppFramebufferTo8bppCrtEffectFramebuffer(const dl_u8* originalImage,
-                                                      dl_u8* destinationImage,
-                                                      dl_u16 width,
-                                                      dl_u16 height)
+void convert1bppFramebufferTo8bppCrtEffect(const dl_u8* originalImage,
+                                           dl_u8* destinationImage,
+                                           dl_u16 width,
+                                           dl_u16 height,
+                                           dl_u16 destinationWidth)
 {
     const dl_u8 bytesPerRow = width / 8;
 
@@ -260,7 +261,7 @@ void convert1bppFramebufferTo8bppCrtEffectFramebuffer(const dl_u8* originalImage
 
     for (int y = 0; y < height; ++y)
     {
-        int yOffset = y * 320;
+        int yOffset = y * destinationWidth;
 
         // Decode + CRT effect in one pass
         // Process per byte of input (8 bits = 4 pairs)

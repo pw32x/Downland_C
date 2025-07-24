@@ -140,6 +140,7 @@
     <ClInclude Include="..\..\..\game\rooms\room_types.h" />
     <ClInclude Include="..\..\..\game\string_utils.h" />
     <ClInclude Include="..\source\32x\32x.h" />
+    <ClInclude Include="..\source\32x\32x_defines.h" />
     <ClInclude Include="..\source\32x\attr.h" />
     <ClInclude Include="..\source\32x\downland_rom.h" />
     <ClInclude Include="..\source\32x\game_runner.h" />

@@ -5,8 +5,10 @@
 
 // std headers
 #include <string.h>
+#include <stdlib.h>
 
 // project headers		
+#include "32x_defines.h"
 #include "image_utils.h"
 
 // game headers
@@ -17,8 +19,8 @@
 typedef struct
 {
 	dl_u8* spriteData;
-	dl_u8 width;
-	dl_u8 height;
+	dl_u8 frameWidth;
+	dl_u8 frameHeight;
 	dl_u16 sizePerFrame;
 } GameSprite;
 
@@ -39,6 +41,8 @@ GameSprite playerIconSpriteRegen;
 
 const GameSprite* g_pickUpSprites[3];
 
+dl_u8* cleanBackground;
+
 typedef void (*DrawRoomFunction)(struct GameData* gameData, const Resources* resources);
 DrawRoomFunction m_drawRoomFunctions[NUM_ROOMS_AND_ALL];
 
@@ -55,46 +59,37 @@ void drawGetReadyScreen(struct GameData* gameData, const Resources* resources);
 
 //m_characterFont(resources->characterFont, 8, 7, 39),
 
-dl_u16 buildSpriteResource(GameSprite* gameSprite,
-						   const dl_u8* originalSprite, 
-						   dl_u8 width, 
-						   dl_u8 height, 
-						   dl_u8 spriteCount)
+void buildSpriteResource(GameSprite* gameSprite,
+						 const dl_u8* originalSprite, 
+						 dl_u8 frameWidth, 
+						 dl_u8 frameHeight, 
+						 dl_u8 spriteCount)
 {
-	/*
-	dl_u8 convertedSprite[384];
-	memset(convertedSprite, 0, sizeof(convertedSprite));
+	dl_u16 spriteDataSize = frameWidth * frameHeight * spriteCount;
+	dl_u8* spriteData = (dl_u8*)malloc(spriteDataSize);
+	memset(spriteData, 0, sizeof(spriteDataSize));
 
-	gameSprite->spriteAttributes = spriteAttributes;
-	gameSprite->tileIndex = tileIndex;
+	gameSprite->spriteData = spriteData;
+	gameSprite->frameWidth = frameWidth;
+	gameSprite->frameHeight = frameHeight;
+	gameSprite->sizePerFrame = frameWidth * frameHeight;
 
-	const dl_u8* spriteRunner = sprite;
+	dl_u8* spriteDataRunner = spriteData;
+	const dl_u8* originalSpriteRunner = originalSprite;
 
-	gameSprite->tilesPerFrame = ((width + 7) / 8) * ((height + 7) / 8);
-
+	dl_u16 sizePerOriginalSpriteFrame = (frameWidth / 8) * frameHeight;
 
 	for (int loop = 0; loop < spriteCount; loop++)
     {
+		convert1bppFramebufferTo8bppCrtEffect(originalSpriteRunner,
+											  spriteDataRunner,
+											  frameWidth,
+											  frameHeight,
+											  frameWidth);
 
-		convert1bppImageTo8bppCrtEffectImage(spriteRunner,
-											 convertedSprite,
-											 width,
-											 height,
-											 CrtColor_Blue);
-
-		tileIndex += convertToTiles(convertedSprite, 
-									width, 
-									height, 
-									CHAR_BASE_BLOCK(4),
-									tileIndex * 64);
-
-		spriteRunner += (width / 8) * height;
+		spriteDataRunner += gameSprite->sizePerFrame;
+		originalSpriteRunner += sizePerOriginalSpriteFrame;
 	}
-
-	return tileIndex;
-	*/
-
-	return 0;
 }
 
 dl_u16 buildTextResource(GameSprite* gameSprite,
@@ -311,6 +306,8 @@ void buildSplatSpriteResource(const Resources* resources)
 
 void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 {
+	cleanBackground = (dl_u8*)malloc(FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT);
+
 	dl_u32 cursorSpriteRaw = 0xffffffff;
 
 	// load tile resources
@@ -331,8 +328,8 @@ void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 
 	// create the regen sprite for player icon
 	playerIconSpriteRegen.spriteData = NULL;
-	playerIconSpriteRegen.width = PLAYER_SPRITE_WIDTH;
-	playerIconSpriteRegen.height = PLAYER_SPRITE_ROWS;
+	playerIconSpriteRegen.frameWidth = PLAYER_SPRITE_WIDTH;
+	playerIconSpriteRegen.frameHeight = PLAYER_SPRITE_ROWS;
 	playerIconSpriteRegen.sizePerFrame = PLAYER_SPRITE_WIDTH * PLAYER_SPRITE_ROWS;
 
 	g_pickUpSprites[0] = &diamondSprite;
@@ -412,8 +409,27 @@ void GameRunner_Draw(struct GameData* gameData, const Resources* resources)
 }
 
 // draw sprite, affected by scrolling
-void drawSprite(dl_u16 x, dl_u16 y, dl_u8 frame, const GameSprite* gameSprite)
+void drawSprite(dl_u16 x, dl_u16 y, dl_u8 frameIndex, const GameSprite* gameSprite)
 {
+	const dl_u8* spriteData = gameSprite->spriteData + (gameSprite->sizePerFrame * frameIndex);
+
+	volatile unsigned char* frameBuffer = (unsigned char*)(&MARS_FRAMEBUFFER + 0x100);
+
+	for (int loopy = 0; loopy < gameSprite->frameHeight; loopy++)
+	{
+		dl_u16 offsetY = (y + loopy) * SCREEN_WIDTH;
+
+		for (int loopx = 0; loopx < gameSprite->frameWidth; loopx++)
+		{
+			dl_u8 pixel = *spriteData;
+
+			if (pixel)
+				frameBuffer[(x + loopx) + offsetY] = pixel;
+
+			spriteData++;
+		}
+	}
+
 	/*
 	x -= g_scrollX;
 	y -= g_scrollY;
@@ -605,18 +621,27 @@ void drawTitleScreen(struct GameData* gameData, const Resources* resources)
 void drawCleanBackground(const GameData* gameData, 
 						 const Resources* resources)
 {
+	convert1bppFramebufferTo8bppCrtEffect(gameData->cleanBackground, 
+										  cleanBackground,
+										  FRAMEBUFFER_WIDTH,
+										  FRAMEBUFFER_HEIGHT,
+										  FRAMEBUFFER_WIDTH);
+
+
 	volatile unsigned char* _32XFramebuffer = (unsigned char*)(&MARS_FRAMEBUFFER + 0x100);
-	convert1bppFramebufferTo8bppCrtEffectFramebuffer(gameData->cleanBackground, 
-													 _32XFramebuffer,
-													 FRAMEBUFFER_WIDTH,
-													 FRAMEBUFFER_HEIGHT);
+	convert1bppFramebufferTo8bppCrtEffect(gameData->cleanBackground, 
+										  _32XFramebuffer,
+										  FRAMEBUFFER_WIDTH,
+										  FRAMEBUFFER_HEIGHT,
+										  SCREEN_WIDTH);
 
 	Mars_FlipFrameBuffers(1);
 
-	convert1bppFramebufferTo8bppCrtEffectFramebuffer(gameData->cleanBackground, 
-													 _32XFramebuffer,
-													 FRAMEBUFFER_WIDTH,
-													 FRAMEBUFFER_HEIGHT);
+	convert1bppFramebufferTo8bppCrtEffect(gameData->cleanBackground, 
+										  _32XFramebuffer,
+										  FRAMEBUFFER_WIDTH,
+										  FRAMEBUFFER_HEIGHT,
+										  SCREEN_WIDTH);
 
 	Mars_FlipFrameBuffers(1);
 }

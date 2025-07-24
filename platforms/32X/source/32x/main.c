@@ -70,9 +70,6 @@ void clear_framebuffer()
 	} while (++p < p_end);
 }
 
-#define SCREEN_WIDTH 320
-#define SCREEN_HEIGHT 224
-
 int main(void)
 {
 	int result = 0;

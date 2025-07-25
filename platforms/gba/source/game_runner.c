@@ -909,9 +909,9 @@ void drawTitleScreen(struct GameData* gameData, const Resources* resources)
 
 	convertScoreToString(gameData->highScore, gameData->string_highScore);
 
-	drawUIText(gameData->playerData[PLAYER_ONE].scoreString, 136, 118, &characterFont);
-	drawUIText(gameData->playerData[PLAYER_TWO].scoreString, 136, 129, &characterFont);
-	drawUIText(gameData->string_highScore, 136, 140, &characterFont);
+	drawUIText(gameData->string_highScore, 136, 118, &characterFont);
+	drawUIText(gameData->playerData[PLAYER_ONE].scoreString, 136, 129, &characterFont);
+	drawUIText(gameData->playerData[PLAYER_TWO].scoreString, 136, 140, &characterFont);
 }
 
 void clearBackground()

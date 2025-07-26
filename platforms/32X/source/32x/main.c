@@ -71,9 +71,9 @@ void clear_framebuffer()
 }
 
 
-void updateControls(JoystickState* joystickState)
+void updateControls(int controllerIndex, JoystickState* joystickState)
 {
-	dl_u16 buttonState = Mars_ReadController(0);
+	dl_u16 buttonState = Mars_ReadController(controllerIndex);
 
     // Check D-Pad
     dl_u8 leftDown = (buttonState & SEGA_CTRL_LEFT) != 0;
@@ -152,9 +152,16 @@ int main(void)
 
     GameRunner_Init(&gameData, &resources);
 
+	int controllerIndex = 0;
+
 	while (1)
 	{
-		updateControls(&gameData.joystickState);
+        if (gameData.currentPlayerData != NULL)
+        {
+            controllerIndex = gameData.currentPlayerData->playerNumber;
+        }
+
+		updateControls(controllerIndex, &gameData.joystickState);
 
 		if (gameData.joystickState.startPressed)
 		{

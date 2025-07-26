@@ -70,6 +70,49 @@ void clear_framebuffer()
 	} while (++p < p_end);
 }
 
+
+void updateControls(JoystickState* joystickState)
+{
+	dl_u16 buttonState = Mars_ReadController(0);
+
+    // Check D-Pad
+    dl_u8 leftDown = (buttonState & SEGA_CTRL_LEFT) != 0;
+    dl_u8 rightDown = (buttonState & SEGA_CTRL_RIGHT) != 0;
+    dl_u8 upDown = (buttonState & SEGA_CTRL_UP) != 0;
+    dl_u8 downDown = (buttonState & SEGA_CTRL_DOWN) != 0;
+    dl_u8 jumpDown = (buttonState & SEGA_CTRL_A) || (buttonState & SEGA_CTRL_C);
+    dl_u8 startDown = (buttonState & SEGA_CTRL_START) != 0;
+
+    joystickState->leftPressed = (!joystickState->leftDown) & leftDown;
+    joystickState->rightPressed = (!joystickState->rightDown) & rightDown;
+    joystickState->upPressed = (!joystickState->upDown) & upDown;
+    joystickState->downPressed =  (!joystickState->downDown) & downDown;
+    joystickState->jumpPressed =  (!joystickState->jumpDown) & jumpDown;
+    joystickState->startPressed = (!joystickState->startDown) & startDown;
+
+    joystickState->leftReleased = joystickState->leftDown & (!leftDown);
+    joystickState->rightReleased = joystickState->rightDown & (!rightDown);
+    joystickState->upReleased = joystickState->upDown & (!upDown);
+    joystickState->downReleased =  joystickState->downDown & (!downDown);
+    joystickState->jumpReleased =  joystickState->jumpDown & (!jumpDown);
+    joystickState->startReleased = joystickState->startPressed & (!startDown);
+
+    joystickState->leftDown = leftDown;
+    joystickState->rightDown = rightDown;
+    joystickState->upDown = upDown;
+    joystickState->downDown = downDown;
+    joystickState->jumpDown = jumpDown;
+    joystickState->startDown = startDown;
+
+#ifdef DEV_MODE
+    bool debugStateDown = (buttonState & SEGA_CTRL_B);
+
+    joystickState->debugStatePressed = !joystickState->debugStateDown & debugStateDown;
+    joystickState->debugStateReleased = joystickState->debugStatePressed & !debugStateDown;
+    joystickState->debugStateDown = debugStateDown;
+#endif
+}
+
 int main(void)
 {
 	int result = 0;
@@ -96,6 +139,7 @@ int main(void)
 
 	Mars_Init();
 	Mars_CommSlaveClearCache();
+	Mars_DetectInputDevices();
 
 	/* use letter-boxed 240p mode */
 	if (Mars_IsPAL())
@@ -110,6 +154,7 @@ int main(void)
 
 	while (1)
 	{
+		updateControls(&gameData.joystickState);
 		GameRunner_Update(&gameData, &resources);
         GameRunner_Draw(&gameData, &resources);
 

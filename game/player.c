@@ -1204,7 +1204,8 @@ void Player_PerformCollisions(struct GameData* gameDataStruct,
 	// collide with ball
 	ballData = &gameData->ballData;
 
-	if (objectCollisionTest(playerData, 
+	if (ballData->state == BALL_ACTIVE &&
+		objectCollisionTest(playerData, 
 							GET_HIGH_BYTE(ballData->x),
 							GET_HIGH_BYTE(ballData->y),
 							BALL_COLLISION_WIDTH,

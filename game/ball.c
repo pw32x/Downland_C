@@ -3,10 +3,7 @@
 #include "debug_utils.h"
 #include "physics_utils.h"
 
-#define BALL_INACTIVE			0
-#define BALL_RESETTING_MAYBE	1
-#define BALL_ACTIVE				2
-#define BALL_DYING_MAYBE		0xff
+
 
 #define BALL_START_X 0x65 // 101
 #define BALL_START_Y 0x74 // 116

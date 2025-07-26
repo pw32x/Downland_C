@@ -41,7 +41,70 @@ GameSprite playerIconSpriteRegen;
 
 const GameSprite* g_pickUpSprites[3];
 
-dl_u8* cleanBackground;
+dl_u8* g_cleanBackground;
+
+void eraseSprite(dl_u16 x, dl_u16 y, dl_u8 width, dl_u8 height);
+
+typedef struct
+{
+	dl_u16 x;
+	dl_u16 y;
+	const GameSprite* gameSprite;
+} EraseEntry;
+
+#define NUM_OBJECTS 48
+EraseEntry g_eraseList0[NUM_OBJECTS];
+EraseEntry g_eraseList1[NUM_OBJECTS];
+
+dl_u8 g_eraseList0Count;
+dl_u8 g_eraseList1Count;
+
+EraseEntry* g_currentEraseList;
+dl_u8* g_currentEraseListCount;
+
+void initEraseList()
+{
+	g_eraseList0Count = 0;
+	g_eraseList1Count = 0;
+
+	g_currentEraseList = g_eraseList0;
+	g_currentEraseListCount = &g_eraseList0Count;
+}
+
+void addToEraseList(dl_u16 x, dl_u16 y, const GameSprite* gameSprite)
+{
+	EraseEntry* currentEntry = &g_currentEraseList[(*g_currentEraseListCount)];
+	currentEntry->x = x;
+	currentEntry->y = y;
+	currentEntry->gameSprite = gameSprite;
+	(*g_currentEraseListCount)++;
+}
+
+void processEraseList()
+{
+	if (g_currentEraseList == g_eraseList0)
+	{
+		g_currentEraseList = g_eraseList1;
+		g_currentEraseListCount = &g_eraseList1Count;
+	}
+	else
+	{
+		g_currentEraseList = g_eraseList0;
+		g_currentEraseListCount = &g_eraseList0Count;
+	}	
+
+	EraseEntry* eraseListRunner = g_currentEraseList;
+	for (dl_u8 loop = 0; loop < (*g_currentEraseListCount); loop++)
+	{
+		eraseSprite(eraseListRunner->x, 
+					eraseListRunner->y,
+					eraseListRunner->gameSprite->frameWidth,
+					eraseListRunner->gameSprite->frameHeight);
+		eraseListRunner++;
+	}
+
+	(*g_currentEraseListCount) = 0;
+}
 
 typedef void (*DrawRoomFunction)(struct GameData* gameData, const Resources* resources);
 DrawRoomFunction m_drawRoomFunctions[NUM_ROOMS_AND_ALL];
@@ -85,7 +148,8 @@ void buildSpriteResource(GameSprite* gameSprite,
 											  spriteDataRunner,
 											  frameWidth,
 											  frameHeight,
-											  frameWidth);
+											  frameWidth,
+											  0);
 
 		spriteDataRunner += gameSprite->sizePerFrame;
 		originalSpriteRunner += sizePerOriginalSpriteFrame;
@@ -306,7 +370,7 @@ void buildSplatSpriteResource(const Resources* resources)
 
 void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 {
-	cleanBackground = (dl_u8*)malloc(FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT);
+	g_cleanBackground = (dl_u8*)malloc(FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT);
 
 	dl_u32 cursorSpriteRaw = 0xffffffff;
 
@@ -353,6 +417,8 @@ void GameRunner_Init(struct GameData* gameData, const Resources* resources)
     m_drawRoomFunctions[GET_READY_ROOM_INDEX] = drawGetReadyScreen;
 
 	// Game_ChangedRoomCallback = GameRunner_ChangedRoomCallback;
+
+	initEraseList();
 
 	Game_Init(gameData, resources);
 }
@@ -402,8 +468,7 @@ void drawUIText(const dl_u8* text, dl_u16 x, dl_u16 y, GameSprite* font);
 
 void GameRunner_Draw(struct GameData* gameData, const Resources* resources)
 {
-	// switch to other set of sprites to erase
-	// erase sprites for this frame
+	processEraseList();
 
 	m_drawRoomFunctions[gameData->currentRoom->roomNumber](gameData, resources);
 }
@@ -430,17 +495,29 @@ void drawSprite(dl_u16 x, dl_u16 y, dl_u8 frameIndex, const GameSprite* gameSpri
 		}
 	}
 
-	/*
-	x -= g_scrollX;
-	y -= g_scrollY;
-	dl_u16 tileIndex = gameSprite->tileIndex + (frame * gameSprite->tilesPerFrame);
+	addToEraseList(x, y, gameSprite);
+}
 
-	OAM[g_oamIndex].attr0 = gameSprite->spriteAttributes->attr0 | (y & 0xff);
-	OAM[g_oamIndex].attr1 = gameSprite->spriteAttributes->attr1 | (x & 0x1ff);
-	OAM[g_oamIndex].attr2 = gameSprite->spriteAttributes->attr2 | (tileIndex << 1);
 
-	g_oamIndex++;
-	*/
+// draw sprite, affected by scrolling
+void eraseSprite(dl_u16 x, 
+				 dl_u16 y, 
+				 dl_u8 width,
+				 dl_u8 height)
+{
+	volatile unsigned char* frameBuffer = (unsigned char*)(&MARS_FRAMEBUFFER + 0x100);
+	const dl_u8* cleanBackgroundRunner = g_cleanBackground;
+
+	for (int loopy = 0; loopy < height; loopy++)
+	{
+		dl_u16 frameBufferOffsetY = (y + loopy) * SCREEN_WIDTH;
+		dl_u16 cleanBackgroundOffsetY = (y + loopy) * FRAMEBUFFER_WIDTH;
+
+		for (int loopx = 0; loopx < width; loopx++)
+		{
+			frameBuffer[(x + loopx) + frameBufferOffsetY] = cleanBackgroundRunner[(x + loopx) + cleanBackgroundOffsetY];
+		}
+	}
 }
 
 void drawDrops(const GameData* gameData)
@@ -622,10 +699,11 @@ void drawCleanBackground(const GameData* gameData,
 						 const Resources* resources)
 {
 	convert1bppFramebufferTo8bppCrtEffect(gameData->cleanBackground, 
-										  cleanBackground,
+										  g_cleanBackground,
 										  FRAMEBUFFER_WIDTH,
 										  FRAMEBUFFER_HEIGHT,
-										  FRAMEBUFFER_WIDTH);
+										  FRAMEBUFFER_WIDTH,
+										  4);
 
 
 	volatile unsigned char* _32XFramebuffer = (unsigned char*)(&MARS_FRAMEBUFFER + 0x100);
@@ -633,7 +711,8 @@ void drawCleanBackground(const GameData* gameData,
 										  _32XFramebuffer,
 										  FRAMEBUFFER_WIDTH,
 										  FRAMEBUFFER_HEIGHT,
-										  SCREEN_WIDTH);
+										  SCREEN_WIDTH,
+										  0);
 
 	Mars_FlipFrameBuffers(1);
 
@@ -641,9 +720,12 @@ void drawCleanBackground(const GameData* gameData,
 										  _32XFramebuffer,
 										  FRAMEBUFFER_WIDTH,
 										  FRAMEBUFFER_HEIGHT,
-										  SCREEN_WIDTH);
+										  SCREEN_WIDTH,
+										  0);
 
 	Mars_FlipFrameBuffers(1);
+
+	initEraseList();
 }
 
 void drawTransition(struct GameData* gameData, const Resources* resources)

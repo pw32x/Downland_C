@@ -244,11 +244,12 @@ void convert1bppFramebufferTo8bppCrtEffect(const dl_u8* originalImage,
                                            dl_u8* destinationImage,
                                            dl_u16 width,
                                            dl_u16 height,
-                                           dl_u16 destinationWidth)
+                                           dl_u16 destinationWidth,
+                                           dl_u8 blackIndex)
 {
     const dl_u8 bytesPerRow = width / 8;
 
-    const dl_u8 BLACK  = 0x04;
+    const dl_u8 BLACK  = blackIndex;
     const dl_u8 BLUE   = 0x01;
     const dl_u8 ORANGE = 0x02;
     const dl_u8 WHITE  = 0x03;

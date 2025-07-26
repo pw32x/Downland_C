@@ -8,6 +8,7 @@
 
 #define BIRD_INACTIVE			0
 #define BIRD_ACTIVE				1
+#define BIRD_SHUTDOWN			2
 
 typedef struct
 {

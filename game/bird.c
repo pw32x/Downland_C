@@ -43,12 +43,17 @@ void Bird_Update(BirdData* birdData, dl_u16 currentRoomTimer, dl_u8* framebuffer
 	dl_u8 newPixelX;
 	dl_u8 newPixelY;
 
-	eraseSprite_24PixelsWide(birdData->currentSprite,
-							 GET_HIGH_BYTE(birdData->x),
-							 GET_HIGH_BYTE(birdData->y),
-							 BIRD_SPRITE_ROWS,
-							 framebuffer, 
-							 cleanBackground);
+	if (birdData->state == BIRD_SHUTDOWN)
+	{
+		eraseSprite_24PixelsWide(birdData->currentSprite,
+								 GET_HIGH_BYTE(birdData->x),
+								 GET_HIGH_BYTE(birdData->y),
+								 BIRD_SPRITE_ROWS,
+								 framebuffer, 
+								 cleanBackground);
+
+		birdData->state = BIRD_INACTIVE;
+	}
 
 	if (currentRoomTimer > 0)
 		return;
@@ -58,8 +63,13 @@ void Bird_Update(BirdData* birdData, dl_u16 currentRoomTimer, dl_u8* framebuffer
 		initBirdPhysics(birdData);
 		return;
 	}
-	
 
+	eraseSprite_24PixelsWide(birdData->currentSprite,
+								GET_HIGH_BYTE(birdData->x),
+								GET_HIGH_BYTE(birdData->y),
+								BIRD_SPRITE_ROWS,
+								framebuffer, 
+								cleanBackground);
 
 	birdData->animationCounter++;
 	birdData->animationFrame = (birdData->animationCounter >> 3) & 0x1;

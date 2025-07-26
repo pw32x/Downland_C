@@ -1219,7 +1219,8 @@ void Player_PerformCollisions(struct GameData* gameDataStruct,
 	// collide with bird
 	birdData = &gameData->birdData;
 
-	if (objectCollisionTest(playerData, 
+	if (birdData->state == BIRD_ACTIVE &&
+		objectCollisionTest(playerData, 
 							GET_HIGH_BYTE(birdData->x),
 							GET_HIGH_BYTE(birdData->y),
 							BIRD_COLLISION_WIDTH,

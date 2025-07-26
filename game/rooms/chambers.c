@@ -244,7 +244,7 @@ void chamber_update(Room* room, GameData* gameData, const Resources* resources)
 			{
 				if (gameData->birdData.state == BIRD_ACTIVE)
 				{
-					gameData->birdData.state = BIRD_INACTIVE;
+					gameData->birdData.state = BIRD_SHUTDOWN;
 				}
 
 				if (!currentTimer)

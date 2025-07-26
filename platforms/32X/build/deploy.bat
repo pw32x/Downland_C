@@ -1,0 +1,1 @@
+mega-usb.exe ..\out\project.32x

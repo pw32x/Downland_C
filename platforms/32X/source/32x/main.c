@@ -155,7 +155,18 @@ int main(void)
 	while (1)
 	{
 		updateControls(&gameData.joystickState);
-		GameRunner_Update(&gameData, &resources);
+
+		if (gameData.joystickState.startPressed)
+		{
+			gameData.paused = !gameData.paused;
+
+		}
+
+		if (!gameData.paused)
+		{
+			GameRunner_Update(&gameData, &resources);
+		}
+
         GameRunner_Draw(&gameData, &resources);
 
 		Mars_FlipFrameBuffers(1);

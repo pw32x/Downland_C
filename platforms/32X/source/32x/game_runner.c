@@ -427,6 +427,9 @@ void drawSprite(dl_u16 x,
 				const GameSprite* gameSprite, 
 				dl_u8 appendToEraseList)
 {
+	x += SCREEN_OFFSET_X;
+	y += SCREEN_OFFSET_Y;
+
 	const dl_u8* spriteData = gameSprite->spriteData + (gameSprite->sizePerFrame * frameIndex);
 
 	volatile unsigned char* frameBuffer = (unsigned char*)(&MARS_FRAMEBUFFER + 0x100);
@@ -451,7 +454,6 @@ void drawSprite(dl_u16 x,
 }
 
 
-// draw sprite, affected by scrolling
 void eraseSprite(dl_u16 x, 
 				 dl_u16 y, 
 				 dl_u8 width,
@@ -463,11 +465,11 @@ void eraseSprite(dl_u16 x,
 	for (int loopy = 0; loopy < height; loopy++)
 	{
 		dl_u16 frameBufferOffsetY = (y + loopy) * SCREEN_WIDTH;
-		dl_u16 cleanBackgroundOffsetY = (y + loopy) * FRAMEBUFFER_WIDTH;
+		dl_u16 cleanBackgroundOffsetY = (y + loopy - SCREEN_OFFSET_Y) * FRAMEBUFFER_WIDTH;
 
 		for (int loopx = 0; loopx < width; loopx++)
 		{
-			frameBuffer[(x + loopx) + frameBufferOffsetY] = cleanBackgroundRunner[(x + loopx) + cleanBackgroundOffsetY];
+			frameBuffer[(x + loopx) + frameBufferOffsetY] = cleanBackgroundRunner[(x + loopx - SCREEN_OFFSET_X) + cleanBackgroundOffsetY];
 		}
 	}
 }
@@ -674,9 +676,11 @@ void drawCleanBackground(const GameData* gameData,
 										  4);
 
 
+	dl_u32 offset = SCREEN_OFFSET_X + (SCREEN_OFFSET_Y * SCREEN_WIDTH);
+
 	volatile unsigned char* _32XFramebuffer = (unsigned char*)(&MARS_FRAMEBUFFER + 0x100);
 	convert1bppFramebufferTo8bppCrtEffect(gameData->cleanBackground, 
-										  _32XFramebuffer,
+										  _32XFramebuffer + offset,
 										  FRAMEBUFFER_WIDTH,
 										  FRAMEBUFFER_HEIGHT,
 										  SCREEN_WIDTH,
@@ -685,7 +689,7 @@ void drawCleanBackground(const GameData* gameData,
 	Mars_FlipFrameBuffers(1);
 
 	convert1bppFramebufferTo8bppCrtEffect(gameData->cleanBackground, 
-										  _32XFramebuffer,
+										  _32XFramebuffer + offset,
 										  FRAMEBUFFER_WIDTH,
 										  FRAMEBUFFER_HEIGHT,
 										  SCREEN_WIDTH,

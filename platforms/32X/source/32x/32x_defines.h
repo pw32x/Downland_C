@@ -4,4 +4,7 @@
 #define SCREEN_WIDTH 320
 #define SCREEN_HEIGHT 224
 
+#define SCREEN_OFFSET_X ((SCREEN_WIDTH - 256) / 2)
+#define SCREEN_OFFSET_Y 8 // ((SCREEN_HEIGHT - 192) / 2)
+
 #endif

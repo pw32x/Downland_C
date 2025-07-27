@@ -156,67 +156,49 @@ void buildSpriteResource(GameSprite* gameSprite,
 	}
 }
 
-dl_u16 buildTextResource(GameSprite* gameSprite,
-						 const dl_u8* originalSprite, 
-						 dl_u8 width, 
-						 dl_u8 height, 
-						 dl_u8 spriteCount)
+void buildTextResource(GameSprite* gameSprite,
+					   const dl_u8* originalSprite, 
+					   dl_u8 frameWidth, 
+					   dl_u8 frameHeight, 
+					   dl_u8 spriteCount)
 {
-	/*
-	dl_u8 convertedSprite[64];
-	memset(convertedSprite, 0, sizeof(convertedSprite));
+	dl_u16 spriteDataSize = frameWidth * frameHeight * spriteCount;
+	dl_u8* spriteData = (dl_u8*)malloc(spriteDataSize);
+	memset(spriteData, 0, sizeof(spriteDataSize));
 
-	gameSprite->spriteAttributes = spriteAttributes;
-	gameSprite->tileIndex = tileIndex;
+	gameSprite->spriteData = spriteData;
+	gameSprite->frameWidth = frameWidth;
+	gameSprite->frameHeight = frameHeight;
+	gameSprite->sizePerFrame = frameWidth * frameHeight;
 
-	const dl_u8* spriteRunner = sprite;
+	dl_u8* spriteDataRunner = spriteData;
+	const dl_u8* originalSpriteRunner = originalSprite;
 
-	gameSprite->tilesPerFrame = ((width + 7) / 8) * ((height + 7) / 8);
-
+	dl_u16 sizePerOriginalSpriteFrame = (frameWidth / 8) * frameHeight;
 
 	for (int loop = 0; loop < spriteCount; loop++)
     {
+		convert1bppFramebufferTo8bppCrtEffect(originalSpriteRunner,
+											  spriteDataRunner,
+											  frameWidth,
+											  frameHeight,
+											  frameWidth,
+											  4);
 
-		convert1bppImageTo8bppCrtEffectImage(spriteRunner,
-											 convertedSprite,
-											 width,
-											 height,
-											 CrtColor_Blue);
-
-		// convert the 0 pixel indexes to non-transparently black at index 4
-		// convert the white pixels to blue
-		for (int loop2 = 0; loop2 < 64; loop2++)
+		dl_u16 frameSize = frameWidth * frameHeight;
+		for (int loop2 = 0; loop2 < frameSize; loop2++)
 		{
-			if (convertedSprite[loop2] == 0)
-				convertedSprite[loop2] = 4;
-			if (convertedSprite[loop2] == 3)
-				convertedSprite[loop2] = 1;
+			if (spriteDataRunner[loop2] == 0)
+				spriteDataRunner[loop2] = 4;
+			if (spriteDataRunner[loop2] == 3)
+				spriteDataRunner[loop2] = 1;
 		}
 
-		if (addDots)
-		{
-			// add a dotted line at the bottom
-			for (int loop2 = 56; loop2 < 64; loop2 += 2)
-			{
-				convertedSprite[loop2] = 4;
-				convertedSprite[loop2 + 1] = 1;
-			}
-		}
-
-		tileIndex += convertToTiles(convertedSprite, 
-									width, 
-									height, 
-									CHAR_BASE_BLOCK(4),
-									tileIndex * 64);
-
-		spriteRunner += (width / 8) * height;
+		spriteDataRunner += gameSprite->sizePerFrame;
+		originalSpriteRunner += sizePerOriginalSpriteFrame;
 	}
-
-	return tileIndex;
-	*/
-
-	return 0;
 }
+
 
 dl_u16 buildPlayerIconResource(GameSprite* gameSprite,
 							   const dl_u8* originalSprite, 
@@ -464,8 +446,6 @@ void GameRunner_Update(struct GameData* gameData, const Resources* resources)
 	Game_Update(gameData, resources);
 }
 
-void drawUIText(const dl_u8* text, dl_u16 x, dl_u16 y, GameSprite* font);
-
 void GameRunner_Draw(struct GameData* gameData, const Resources* resources)
 {
 	processEraseList();
@@ -474,7 +454,11 @@ void GameRunner_Draw(struct GameData* gameData, const Resources* resources)
 }
 
 // draw sprite, affected by scrolling
-void drawSprite(dl_u16 x, dl_u16 y, dl_u8 frameIndex, const GameSprite* gameSprite)
+void drawSprite(dl_u16 x, 
+				dl_u16 y, 
+				dl_u8 frameIndex, 
+				const GameSprite* gameSprite, 
+				dl_u8 appendToEraseList)
 {
 	const dl_u8* spriteData = gameSprite->spriteData + (gameSprite->sizePerFrame * frameIndex);
 
@@ -495,7 +479,8 @@ void drawSprite(dl_u16 x, dl_u16 y, dl_u8 frameIndex, const GameSprite* gameSpri
 		}
 	}
 
-	addToEraseList(x, y, gameSprite);
+	if (appendToEraseList)
+		addToEraseList(x, y, gameSprite);
 }
 
 
@@ -533,20 +518,23 @@ void drawDrops(const GameData* gameData)
 			drawSprite((dropsRunner->x << 1), 
 					   (dropsRunner->y >> 8), 
 					   0,
-					   &dropsSprite);
+					   &dropsSprite,
+					   TRUE);
         }
 
         dropsRunner++;
     }
 }
 
-void drawUIText(const dl_u8* text, dl_u16 x, dl_u16 y, GameSprite* font)
+void drawUIText(const dl_u8* text, dl_u16 xyLocation)
 {
+    dl_u16 x = ((xyLocation % 32) * 8);
+    dl_u16 y = (xyLocation / 32);
+
     // for each character
     while (*text != 0xff)
     {
-		drawSprite(x, y, *text, font);
-
+        drawSprite(x, y, *text, &characterFont, FALSE);
         text++;
         x += 8;
     }
@@ -562,7 +550,8 @@ void drawUIPlayerLives(const PlayerData* playerData)
         drawSprite(x, 
 				   y, 
 				   playerData->currentSpriteNumber,
-				   &playerIconSprite);
+				   &playerIconSprite,
+				   FALSE);
 
 		x += 24;//PLAYERLIVES_ICON_SPACING;
     }
@@ -572,7 +561,8 @@ void drawUIPlayerLives(const PlayerData* playerData)
         drawSprite(x, 
                    y, 
 				   0,
-				   &playerIconSpriteRegen);		
+				   &playerIconSpriteRegen,
+				   FALSE);		
     }
 }
 
@@ -594,7 +584,8 @@ void drawChamber(struct GameData* gameData, const Resources* resources)
 		drawSprite((ballData->x >> 8) << 1,
 				   ballData->y >> 8,
 				   (dl_s8)ballData->fallStateCounter < 0,
-				   &ballSprite);
+				   &ballSprite,
+				   TRUE);
     }
 
     // draw bird
@@ -605,7 +596,8 @@ void drawChamber(struct GameData* gameData, const Resources* resources)
 		drawSprite((birdData->x >> 8) << 1,
 				   birdData->y >> 8,
 				   birdData->animationFrame,
-				   &birdSprite);
+				   &birdSprite,
+				   TRUE);
     }
 
 	// draw player
@@ -615,7 +607,8 @@ void drawChamber(struct GameData* gameData, const Resources* resources)
         drawSprite(playerX,
                    playerY + 7,
                    playerData->splatFrameNumber,
-				   &splatSprite);
+				   &splatSprite,
+				   TRUE);
         break;
     case PLAYER_STATE_REGENERATION: 
 
@@ -627,13 +620,15 @@ void drawChamber(struct GameData* gameData, const Resources* resources)
         drawSprite(playerX,
                    playerY,
                    0,
-				   &regenSprite);
+				   &regenSprite,
+				   TRUE);
         break;
     default: 
         drawSprite(playerX,
                    playerY,
                    playerData->currentSpriteNumber,
-				   &playerSprite);
+				   &playerSprite,
+				   TRUE);
     }
 
 	// draw pickups
@@ -645,7 +640,8 @@ void drawChamber(struct GameData* gameData, const Resources* resources)
 			drawSprite(pickups->x << 1,
 					   pickups->y,
 					   0,
-					   g_pickUpSprites[pickups->type]);
+					   g_pickUpSprites[pickups->type],
+					   TRUE);
         }
 
         pickups++;
@@ -671,15 +667,19 @@ void drawChamber(struct GameData* gameData, const Resources* resources)
 			drawSprite(xPosition << 1,
 					   doorInfoRunner->y,
 					   0,
-					   &doorSprite);
+					   &doorSprite,
+					   TRUE);
 		}
 
 		doorInfoRunner++;
 	}
 
     // draw text
-	drawUIText(gameData->string_timer, 24 * 8, 0, &characterFont);
-	drawUIText(playerData->scoreString, 8, 0, &characterFont); 
+	drawUIText(gameData->string_timer, TIMER_DRAW_LOCATION);
+	drawUIText(resources->text_pl1, PLAYERLIVES_TEXT_DRAW_LOCATION);
+	drawUIText(resources->text_chamber, CHAMBER_TEXT_DRAW_LOCATION);
+	drawUIText(gameData->string_roomNumber, CHAMBER_NUMBER_TEXT_DRAW_LOCATION);
+	drawUIText(playerData->scoreString, SCORE_DRAW_LOCATION);  
 
 	drawUIPlayerLives(playerData);
 }
@@ -692,7 +692,8 @@ void drawTitleScreen(struct GameData* gameData, const Resources* resources)
 	drawSprite(gameData->numPlayers == 1 ? 32 : 128,
 			   123,
 			   0,
-			   &cursorSprite);
+			   &cursorSprite,
+			   TRUE);
 }
 
 void drawCleanBackground(const GameData* gameData, 

@@ -390,14 +390,18 @@ void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 	buildSpriteResource(&doorSprite, resources->sprite_door, DOOR_SPRITE_WIDTH, DOOR_SPRITE_ROWS, 1);
 	buildEmptySpriteResource(&regenSprite, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, 1);
 	buildTextResource(&characterFont, resources->characterFont, 8, 7, 39);
-	buildPlayerIconResource(&playerIconSprite, resources->sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYERICON_NUM_SPRITE_ROWS, PLAYER_SPRITE_COUNT);
+
+	playerIconSprite.spriteData = playerSprite.spriteData;
+	playerIconSprite.frameWidth = playerSprite.frameWidth;
+	playerIconSprite.frameHeight = PLAYERICON_NUM_SPRITE_ROWS;
+	playerIconSprite.sizePerFrame = playerSprite.sizePerFrame;
 
 	buildSplatSpriteResource(resources);
 
 	// create the regen sprite for player icon
-	playerIconSpriteRegen.spriteData = NULL;
-	playerIconSpriteRegen.frameWidth = PLAYER_SPRITE_WIDTH;
-	playerIconSpriteRegen.frameHeight = PLAYER_SPRITE_ROWS;
+	playerIconSpriteRegen.spriteData = regenSprite.spriteData;
+	playerIconSpriteRegen.frameWidth = regenSprite.frameWidth;
+	playerIconSpriteRegen.frameHeight = PLAYERICON_NUM_SPRITE_ROWS;
 	playerIconSpriteRegen.sizePerFrame = PLAYER_SPRITE_WIDTH * PLAYER_SPRITE_ROWS;
 
 	g_pickUpSprites[0] = &diamondSprite;
@@ -564,27 +568,27 @@ void drawUIText(const dl_u8* text, dl_u16 xyLocation)
 
 void drawUIPlayerLives(const PlayerData* playerData)
 {
-	dl_u8 x = 80;//PLAYERLIVES_ICON_X;
-	dl_u8 y = 0;//PLAYERLIVES_ICON_Y;
+	dl_u8 x = PLAYERLIVES_ICON_X;
+	dl_u8 y = PLAYERLIVES_ICON_Y;
 
     for (dl_u8 loop = 0; loop < playerData->lives; loop++)
 	{
-        drawSprite(x, 
+        drawSprite(x << 1, 
 				   y, 
 				   playerData->currentSpriteNumber,
 				   &playerIconSprite,
-				   FALSE);
+				   TRUE);
 
-		x += 24;//PLAYERLIVES_ICON_SPACING;
+		x += PLAYERLIVES_ICON_SPACING;
     }
 
 	if (playerData->state == PLAYER_STATE_REGENERATION)
 	{
-        drawSprite(x, 
+        drawSprite(x << 1, 
                    y, 
 				   0,
 				   &playerIconSpriteRegen,
-				   FALSE);		
+				   TRUE);		
     }
 }
 

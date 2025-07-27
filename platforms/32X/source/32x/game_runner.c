@@ -202,11 +202,45 @@ void buildTextResource(GameSprite* gameSprite,
 
 dl_u16 buildPlayerIconResource(GameSprite* gameSprite,
 							   const dl_u8* originalSprite, 
-							   dl_u8 width, 
-							   dl_u8 height, 
+							   dl_u8 frameWidth, 
+							   dl_u8 frameHeight, 
 							   dl_u8 clipHeight,
 							   dl_u8 spriteCount)
 {
+	dl_u16 spriteDataSize = frameWidth * frameHeight * spriteCount;
+	dl_u8* spriteData = (dl_u8*)malloc(spriteDataSize);
+	memset(spriteData, 0, sizeof(spriteDataSize));
+
+	gameSprite->spriteData = spriteData;
+	gameSprite->frameWidth = frameWidth;
+	gameSprite->frameHeight = clipHeight;
+	gameSprite->sizePerFrame = frameWidth * frameHeight;
+
+	dl_u8* spriteDataRunner = spriteData;
+	const dl_u8* originalSpriteRunner = originalSprite;
+
+	dl_u16 sizePerOriginalSpriteFrame = (frameWidth / 8) * frameHeight;
+
+	for (int loop = 0; loop < spriteCount; loop++)
+    {
+		convert1bppFramebufferTo8bppCrtEffect(originalSpriteRunner,
+											  spriteDataRunner,
+											  frameWidth,
+											  frameHeight,
+											  frameWidth,
+											  4);
+
+		dl_u16 frameSize = frameWidth * frameHeight;
+		for (int loop2 = 0; loop2 < frameSize; loop2++)
+		{
+			if (spriteDataRunner[loop2] == 0)
+				spriteDataRunner[loop2] = 4;
+		}
+
+		spriteDataRunner += gameSprite->sizePerFrame;
+		originalSpriteRunner += sizePerOriginalSpriteFrame;
+	}
+
 	/*
 	// use the player sprite but only the top part
 
@@ -259,29 +293,22 @@ dl_u16 buildPlayerIconResource(GameSprite* gameSprite,
 	return 0;
 }
 
-dl_u16 buildEmptySpriteResource(GameSprite* gameSprite,
-								dl_u8 width, 
-								dl_u8 height, 
-								dl_u8 spriteCount)
+void buildEmptySpriteResource(GameSprite* gameSprite,
+							  dl_u8 frameWidth, 
+							  dl_u8 frameHeight, 
+							  dl_u8 spriteCount)
 {
-	/*
-	gameSprite->spriteAttributes = spriteAttributes;
-	gameSprite->tileIndex = tileIndex;
-	gameSprite->tilesPerFrame = ((width + 7) / 8) * ((height + 7) / 8);
+	gameSprite->frameWidth = frameWidth;
+	gameSprite->frameHeight = frameHeight;
+	gameSprite->sizePerFrame = frameWidth * frameHeight;
 
-	tileIndex += gameSprite->tilesPerFrame;
-
-	return tileIndex;
-	*/
-
-	return 0;
+	dl_u16 spriteDataSize = frameWidth * frameHeight * spriteCount;
+	gameSprite->spriteData = (dl_u8*)malloc(spriteDataSize);
 }
 
 void updateRegenSprite(const Resources* resources, dl_u8 currentPlayerSpriteNumber)
 {
-	/*
 	const dl_u16 bufferSize = (PLAYER_SPRITE_WIDTH / 8) * PLAYER_SPRITE_ROWS;
-	dl_u8 convertedSprite[384];
 	dl_u8 regenBuffer[bufferSize];
     memset(regenBuffer, 0, bufferSize);
 
@@ -292,18 +319,13 @@ void updateRegenSprite(const Resources* resources, dl_u8 currentPlayerSpriteNumb
 													PLAYER_SPRITE_ROWS,
 													regenBuffer);
 
-	convert1bppImageTo8bppCrtEffectImage(regenBuffer,
-										 convertedSprite,
-										 PLAYER_SPRITE_WIDTH,
-										 PLAYER_SPRITE_ROWS,
-										 CrtColor_Blue);
+	convert1bppFramebufferTo8bppCrtEffect(regenBuffer,
+										  regenSprite.spriteData,
+										  PLAYER_SPRITE_WIDTH,
+										  PLAYER_SPRITE_ROWS,
+										  PLAYER_SPRITE_WIDTH,
+										  0);
 
-	convertToTiles(convertedSprite, 
-				   PLAYER_SPRITE_WIDTH, 
-				   PLAYER_SPRITE_ROWS, 
-				   CHAR_BASE_BLOCK(4),
-				   regenSprite.tileIndex * 64);
-*/
 }
 
 

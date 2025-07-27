@@ -200,12 +200,12 @@ void buildTextResource(GameSprite* gameSprite,
 }
 
 
-dl_u16 buildPlayerIconResource(GameSprite* gameSprite,
-							   const dl_u8* originalSprite, 
-							   dl_u8 frameWidth, 
-							   dl_u8 frameHeight, 
-							   dl_u8 clipHeight,
-							   dl_u8 spriteCount)
+void buildPlayerIconResource(GameSprite* gameSprite,
+							 const dl_u8* originalSprite, 
+							 dl_u8 frameWidth, 
+							 dl_u8 frameHeight, 
+							 dl_u8 clipHeight,
+							 dl_u8 spriteCount)
 {
 	dl_u16 spriteDataSize = frameWidth * frameHeight * spriteCount;
 	dl_u8* spriteData = (dl_u8*)malloc(spriteDataSize);
@@ -240,57 +240,6 @@ dl_u16 buildPlayerIconResource(GameSprite* gameSprite,
 		spriteDataRunner += gameSprite->sizePerFrame;
 		originalSpriteRunner += sizePerOriginalSpriteFrame;
 	}
-
-	/*
-	// use the player sprite but only the top part
-
-	dl_u8 convertedSprite[256];
-	memset(convertedSprite, 0, sizeof(convertedSprite));
-
-	gameSprite->spriteAttributes = spriteAttributes;
-	gameSprite->tileIndex = tileIndex;
-
-	const dl_u8* spriteRunner = sprite;
-
-	gameSprite->tilesPerFrame = ((width + 7) / 8) * ((clipHeight + 7) / 8);
-
-
-	for (int loop = 0; loop < spriteCount; loop++)
-    {
-
-		convert1bppImageTo8bppCrtEffectImage(spriteRunner,
-											 convertedSprite,
-											 width,
-											 height,
-											 CrtColor_Blue);
-
-		// convert the 0 pixel indexes to non-transparently black at index 4
-		for (int loop2 = 0; loop2 < 256; loop2++)
-		{
-			if (convertedSprite[loop2] == 0)
-				convertedSprite[loop2] = 4;
-		}
-
-		// add a dotted line at the bottom
-		for (int loop2 = 112; loop2 < 128; loop2 += 2)
-		{
-			convertedSprite[loop2] = 4;
-			convertedSprite[loop2 + 1] = 1;
-		}
-
-		tileIndex += convertToTiles(convertedSprite, 
-									width, 
-									clipHeight, 
-									CHAR_BASE_BLOCK(4),
-									tileIndex * 64);
-
-		spriteRunner += (width / 8) * height;
-	}
-
-	return tileIndex;
-	*/
-
-	return 0;
 }
 
 void buildEmptySpriteResource(GameSprite* gameSprite,
@@ -331,45 +280,37 @@ void updateRegenSprite(const Resources* resources, dl_u8 currentPlayerSpriteNumb
 
 void GameRunner_ChangedRoomCallback(const struct GameData* gameData, dl_u8 roomNumber, dl_s8 transitionType);
 
+#define SPLAT_FRAME_COUNT 2
+
 void buildSplatSpriteResource(const Resources* resources)
 {
-	/*
-	dl_u16 newWidth = 32;
-	dl_u8 convertedSprite[512];
-	memset(convertedSprite, 0, sizeof(convertedSprite));
+	splatSprite.frameWidth = PLAYER_SPLAT_SPRITE_WIDTH;
+	splatSprite.frameHeight = PLAYER_SPLAT_SPRITE_ROWS;
+	splatSprite.sizePerFrame = PLAYER_SPLAT_SPRITE_WIDTH * PLAYER_SPLAT_SPRITE_ROWS;
 
-	splatSprite.spriteAttributes = &g_32x16SpriteAttributes;
-	splatSprite.tileIndex = tileIndex;
-	splatSprite.tilesPerFrame = 4 * 2;
+	dl_u16 spriteDataSize = splatSprite.sizePerFrame * SPLAT_FRAME_COUNT;
+	splatSprite.spriteData = (dl_u8*)malloc(spriteDataSize);
 
-	convert1bppImageTo8bppCrtEffectImageWithNewWidth(resources->sprite_playerSplat,
-													 convertedSprite,
-													 PLAYER_SPLAT_SPRITE_WIDTH,
-													 PLAYER_SPLAT_SPRITE_ROWS,
-													 newWidth,
-													 CrtColor_Blue);
+	dl_u8* spriteDataRunner = splatSprite.spriteData;
 
-	tileIndex += convertToTiles(convertedSprite, 
-								newWidth, 
-								PLAYER_SPLAT_SPRITE_ROWS, 
-								CHAR_BASE_BLOCK(4),
-								tileIndex * 64);
-
-	convertToTiles(convertedSprite, 
-				   newWidth, 
-				   PLAYER_SPLAT_SPRITE_ROWS, 
-				   CHAR_BASE_BLOCK(4),
-				   tileIndex * 64);
-
-	// erase the first five rows of the second set of splat tiles
-	dl_u16* vramAddress = (CHAR_BASE_BLOCK(4) + (tileIndex * 64));
-	for (int loop = 0; loop < 5 * 4; loop++)
+	for (dl_u8 loop = 0; loop < SPLAT_FRAME_COUNT; loop++)
 	{
-		vramAddress[loop] = 0;
-		vramAddress[loop + 32] = 0;
-		vramAddress[loop + 64] = 0;
+		convert1bppFramebufferTo8bppCrtEffect(resources->sprite_playerSplat,
+											  spriteDataRunner,
+											  splatSprite.frameWidth,
+											  splatSprite.frameHeight,
+											  splatSprite.frameWidth,
+											  0);
+
+		spriteDataRunner += splatSprite.sizePerFrame;
 	}
-	*/
+
+	spriteDataRunner = splatSprite.spriteData + splatSprite.sizePerFrame;
+
+	for (dl_u8 loop = 0; loop < 5 * splatSprite.frameWidth; loop++)
+	{
+		spriteDataRunner[loop] = 0;
+	}
 }
 
 void GameRunner_Init(struct GameData* gameData, const Resources* resources)

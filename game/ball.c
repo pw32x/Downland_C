@@ -38,7 +38,7 @@ dl_u16 ballWideCollisionMasks[4] =
 
 void initBallPhysics(BallData* ballData)
 {
-	ballData->state = BALL_RESETTING_MAYBE;
+	ballData->state = BALL_ACTIVE;
 	ballData->x = SET_HIGH_BYTE(BALL_START_X);
 	ballData->y = SET_HIGH_BYTE(BALL_START_Y);
 	ballData->speedx = 0xffa8;

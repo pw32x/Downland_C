@@ -5,8 +5,7 @@
 #include "resource_types.h"
 
 #define BALL_INACTIVE			0
-#define BALL_RESETTING_MAYBE	1
-#define BALL_ACTIVE				2
+#define BALL_ACTIVE				1
 #define BALL_DYING_MAYBE		0xff
 
 typedef struct

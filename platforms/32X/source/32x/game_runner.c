@@ -279,6 +279,7 @@ void updateRegenSprite(const Resources* resources, dl_u8 currentPlayerSpriteNumb
 
 
 void GameRunner_ChangedRoomCallback(const struct GameData* gameData, dl_u8 roomNumber, dl_s8 transitionType);
+void GameRunner_TransitionDone(const struct GameData* gameData, dl_u8 roomNumber, dl_s8 transitionType);
 
 #define SPLAT_FRAME_COUNT 2
 
@@ -362,10 +363,12 @@ void GameRunner_Init(struct GameData* gameData, const Resources* resources)
     m_drawRoomFunctions[9] = drawChamber;
     m_drawRoomFunctions[TITLESCREEN_ROOM_INDEX] = drawTitleScreen;
     m_drawRoomFunctions[TRANSITION_ROOM_INDEX] = drawTransition;
-    m_drawRoomFunctions[WIPE_TRANSITION_ROOM_INDEX] = drawTransition;//drawWipeTransition;
+    m_drawRoomFunctions[WIPE_TRANSITION_ROOM_INDEX] = drawWipeTransition;
     m_drawRoomFunctions[GET_READY_ROOM_INDEX] = drawGetReadyScreen;
 
 	// Game_ChangedRoomCallback = GameRunner_ChangedRoomCallback;
+	Game_TransitionDone = GameRunner_TransitionDone;
+
 
 	initEraseList();
 
@@ -407,6 +410,8 @@ void GameRunner_ChangedRoomCallback(const struct GameData* gameData,
 	SetMode(mode);
 	*/
 }
+
+
 
 void GameRunner_Update(struct GameData* gameData, const Resources* resources)
 {
@@ -709,13 +714,94 @@ void drawTransition(struct GameData* gameData, const Resources* resources)
     }
 }
 
+dl_u8 g_oldTransitionCurrentLine;
+
+void drawTransitionLines(GameData* gameData)
+{
+	for (int lineLoop = g_oldTransitionCurrentLine; lineLoop < gameData->transitionCurrentLine; lineLoop++)
+	{
+		dl_u32 framebufferOffset = (SCREEN_OFFSET_X + ((SCREEN_OFFSET_Y + lineLoop) * SCREEN_WIDTH)) >> 1;
+		dl_u32 cleanBackgroundOffset = (lineLoop * FRAMEBUFFER_WIDTH) >> 1;
+
+		const dl_u16* cleanBackground16 = (const dl_u16*)g_cleanBackground + cleanBackgroundOffset;
+
+		volatile dl_u16* _32XFramebuffer = (dl_u16*)(&MARS_FRAMEBUFFER + 0x100);
+		_32XFramebuffer += framebufferOffset;
+
+		for (dl_u32 loop = 0; loop < 6; loop++)
+		{
+			for (dl_u16 innerLoop = 0; innerLoop < 128; innerLoop++)
+			{
+				_32XFramebuffer[innerLoop] = cleanBackground16[innerLoop];
+			}
+
+			_32XFramebuffer += (32 * 160);
+			cleanBackground16 += (32 * 128);
+		}
+	}
+
+	if (gameData->transitionCurrentLine == 32)
+		return;
+
+	dl_u32 framebufferOffset = (SCREEN_OFFSET_X + ((SCREEN_OFFSET_Y + gameData->transitionCurrentLine) * SCREEN_WIDTH)) >> 1;
+	volatile dl_u16* _32XFramebuffer = (dl_u16*)(&MARS_FRAMEBUFFER + 0x100);
+	_32XFramebuffer += framebufferOffset;
+
+	for (dl_u32 loop = 0; loop < 6; loop++)
+	{
+		for (dl_u16 innerLoop = 0; innerLoop < 128; innerLoop++)
+		{
+			_32XFramebuffer[innerLoop] = 0x0101;
+		}
+
+		_32XFramebuffer += (32 * 160);
+	}
+}
+
 void drawWipeTransition(struct GameData* gameData, const Resources* resources)
 {
 	if (gameData->transitionInitialDelay == 29)
     {
-        drawCleanBackground(gameData, 
-							resources);
-    }
+		g_oldTransitionCurrentLine = 0;
+
+		convert1bppFramebufferTo8bppCrtEffect(gameData->cleanBackground, 
+											  g_cleanBackground,
+											  FRAMEBUFFER_WIDTH,
+											  FRAMEBUFFER_HEIGHT,
+											  FRAMEBUFFER_WIDTH,
+											  4);
+	}
+
+	if (gameData->transitionInitialDelay)
+		return;
+
+	drawTransitionLines(gameData);
+	Mars_FlipFrameBuffers(1);
+	drawTransitionLines(gameData);
+	
+	// wait counter
+	dl_u32 counter = 400;
+	while (counter) 
+	{
+		counter--;
+		Mars_FlipFrameBuffers(1);
+	}
+
+
+	g_oldTransitionCurrentLine = gameData->transitionCurrentLine;
+}
+
+void GameRunner_TransitionDone(const struct GameData* gameData, 
+							   dl_u8 roomNumber, 
+							   dl_s8 transitionType)
+{
+	if (transitionType == WIPE_TRANSITION_ROOM_INDEX)
+	{
+		drawTransitionLines(gameData);
+		Mars_FlipFrameBuffers(1);
+		drawTransitionLines(gameData);
+		Mars_FlipFrameBuffers(1);
+	}
 }
 
 void drawGetReadyScreen(struct GameData* gameData, const Resources* resources)

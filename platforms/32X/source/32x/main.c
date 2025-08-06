@@ -8,12 +8,15 @@
 // project headers
 #include "game_runner.h"
 #include "downland_rom.h"
+#include "sound_manager.h"
+#include "files.h"
 
 // game headers
 #include "game_types.h"
 #include "resource_types.h"
 #include "checksum_utils.h"
 #include "resource_loader_buffer.h"
+#include "dl_sound.h"
 
 GameData gameData;
 Resources resources;
@@ -35,13 +38,34 @@ void* dl_alloc(dl_u32 size)
 	return (void*)memory;
 }
 
+
+SoundHandle soundHandles[SOUND_NUM_SOUNDS];
+
 void Sound_Play(dl_u8 soundIndex, dl_u8 loop)
 {
+    const SoundFile* soundFile = &soundFiles[soundIndex];
+
+	if (loop && SoundManager_isSoundEffectPlaying(soundHandles[soundIndex]))
+		return;
+
+    soundHandles[soundIndex] = SoundManager_playSoundEffect(soundFile->filePtr, 
+                                                            soundFile->fileSize, 
+                                                            soundFile->sampleRate, 
+                                                            loop, 
+                                                            64, 
+                                                            128); 
 }
 
 void Sound_Stop(dl_u8 soundIndex)
 {
+	SoundManager_stopSoundEffect(soundHandles[soundIndex]);
+	soundHandles[soundIndex] = INVALID_SOUND_HANDLE;
+}
 
+void Sound_StopAll()
+{
+	for (int loop = 0; loop < SOUND_NUM_SOUNDS; loop++)
+		Sound_Stop(loop);
 }
 
 #define RGB5(r,g,b)	((r)|((g)<<5)|((b)<<10))
@@ -152,6 +176,9 @@ int main(void)
 
     GameRunner_Init(&gameData, &resources);
 
+	memset(soundHandles, INVALID_SOUND_HANDLE, sizeof(soundHandles));
+	SoundManager_waitUntilInitialized();
+
 	int controllerIndex = 0;
 
 	while (1)
@@ -178,6 +205,8 @@ int main(void)
 
 		Mars_FlipFrameBuffers(1);
 	}
+
+	SoundManager_shutdown();
 
 	return 0;
 }

@@ -59,7 +59,11 @@
     <None Include="..\build\Makefile_32X" />
     <None Include="..\build\Makefile_MD" />
     <None Include="..\build\rebuild.bat" />
+    <None Include="..\source\32x\edc_table.i" />
+    <None Include="..\source\32x\files.s" />
     <None Include="..\source\32x\function.s" />
+    <None Include="..\source\32x\mixer.s" />
+    <None Include="..\source\32x\sound_manager_dma.s" />
     <None Include="..\source\32x\_crt0.s" />
     <None Include="..\source\md\cd.s" />
     <None Include="..\source\md\kos.s" />
@@ -93,6 +97,7 @@
     <ClCompile Include="..\source\32x\marshw.c" />
     <ClCompile Include="..\source\32x\secondary.c" />
     <ClCompile Include="..\source\32x\main.c" />
+    <ClCompile Include="..\source\32x\sound_manager.c" />
     <ClCompile Include="..\source\md\cd_init.c" />
     <ClCompile Include="..\source\md\data\32x_palette.c" />
     <ClCompile Include="..\source\md\data\32x_tilemap.c" />
@@ -143,10 +148,13 @@
     <ClInclude Include="..\source\32x\32x_defines.h" />
     <ClInclude Include="..\source\32x\attr.h" />
     <ClInclude Include="..\source\32x\downland_rom.h" />
+    <ClInclude Include="..\source\32x\files.h" />
     <ClInclude Include="..\source\32x\game_runner.h" />
     <ClInclude Include="..\source\32x\image_utils.h" />
     <ClInclude Include="..\source\32x\mars.h" />
     <ClInclude Include="..\source\32x\marshw.h" />
+    <ClInclude Include="..\source\32x\mixer.h" />
+    <ClInclude Include="..\source\32x\sound_manager.h" />
     <ClInclude Include="..\source\common\comm_ids.h" />
     <ClInclude Include="..\source\md\cd_init.h" />
     <ClInclude Include="..\source\md\data\32x_palette.h" />

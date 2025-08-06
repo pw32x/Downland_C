@@ -26,6 +26,9 @@
     <Filter Include="Source Files\game\rooms">
       <UniqueIdentifier>{943c5aef-f762-4f0d-96b7-5c99faa06d83}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\32x\sound">
+      <UniqueIdentifier>{07c36415-fc06-4142-aa6b-839e35528b2e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="clean.bat">
@@ -69,6 +72,18 @@
     </None>
     <None Include="..\source\32x\function.s">
       <Filter>Source Files\32x</Filter>
+    </None>
+    <None Include="..\source\32x\files.s">
+      <Filter>Source Files\32x\sound</Filter>
+    </None>
+    <None Include="..\source\32x\mixer.s">
+      <Filter>Source Files\32x\sound</Filter>
+    </None>
+    <None Include="..\source\32x\sound_manager_dma.s">
+      <Filter>Source Files\32x\sound</Filter>
+    </None>
+    <None Include="..\source\32x\edc_table.i">
+      <Filter>Source Files\32x\sound</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -188,6 +203,9 @@
     </ClCompile>
     <ClCompile Include="..\source\32x\image_utils.c">
       <Filter>Source Files\32x</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\32x\sound_manager.c">
+      <Filter>Source Files\32x\sound</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -337,6 +355,15 @@
     </ClInclude>
     <ClInclude Include="..\source\32x\32x_defines.h">
       <Filter>Source Files\32x</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\32x\mixer.h">
+      <Filter>Source Files\32x\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\32x\sound_manager.h">
+      <Filter>Source Files\32x\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\32x\files.h">
+      <Filter>Source Files\32x\sound</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -170,7 +170,7 @@ extern "C" {
 extern int SetSH2SR(int level);
 extern void fast_memcpy(void* dst, const void* src, int len);
 extern void CacheControl(int mode);
-
+extern void CacheClearLine(void* ptr);
 #ifdef __cplusplus
 }
 #endif

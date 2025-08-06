@@ -27,7 +27,7 @@
 
 #include "32x.h"
 #include "mars.h"
-
+#include "sound_manager.h"
 
 // !!! if this is changed, it must be changed in asm too!
 typedef void (*setbankpage_t)(int bank, int page);
@@ -50,6 +50,7 @@ void Mars_Secondary(void)
 	// init thread-local storage
 	__asm volatile("mov %0, r0\n\tldc r0,gbr" : : "rm"(&mars_tls_sec) : "r0", "gbr");
 
+	/*
 	// init DMA
 	SH2_DMA_SAR0 = 0;
 	SH2_DMA_DAR0 = 0;
@@ -67,6 +68,9 @@ void Mars_Secondary(void)
 	SH2_INT_IPRA = (SH2_INT_IPRA & 0xF0FF) | 0x0400; // set DMA INT to priority 4
 
 	SetSH2SR(1); 		// allow ints
+	*/
+
+	SoundManager_init();
 
 	while (1)
 	{
@@ -85,7 +89,7 @@ void Mars_Secondary(void)
 			break;
 		}
 
-		MARS_SYS_COMM4 = 0;
+		MARS_SYS_COMM4 = MARS_SECCMD_NONE;
 	}
 }
 

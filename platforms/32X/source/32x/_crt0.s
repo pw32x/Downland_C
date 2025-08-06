@@ -320,6 +320,7 @@ sec_vbr:
         .long   sec_irq         /* H Blank interupt (Level 10 & 11 */
         .long   sec_irq         /* V Blank interupt (Level 12 & 13) */
         .long   sec_irq         /* Reset Button (Level 14 & 15) */
+        .long   soundmanager_dma_handler_vector      /* DMA1 TE INT */
 
 !-----------------------------------------------------------------------
 ! The Primary SH2 starts here
@@ -1244,6 +1245,23 @@ _fast_memcpy:
         rts
         nop
 
+! Cache clear line function
+! On entry: r4 = ptr - should be 16 byte aligned
+
+        .align  4
+        .global _CacheClearLine
+_CacheClearLine:
+        mov.l   _cache_flush,r0
+        or      r0,r4
+        mov     #0,r0
+        mov.l   r0,@r4
+        rts
+        nop
+
+        .align  2
+
+_cache_flush:
+        .long   0x40000000
 
 ! void CacheControl(int mode);
 ! Cache control function

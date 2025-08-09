@@ -106,14 +106,14 @@ void processEraseList()
 	(*g_currentEraseListCount) = 0;
 }
 
-typedef void (*DrawRoomFunction)(struct GameData* gameData, const Resources* resources);
+typedef void (*DrawRoomFunction)(GameData* gameData, const Resources* resources);
 DrawRoomFunction m_drawRoomFunctions[NUM_ROOMS_AND_ALL];
 
-void drawChamber(struct GameData* gameData, const Resources* resources);
-void drawTitleScreen(struct GameData* gameData, const Resources* resources);
-void drawTransition(struct GameData* gameData, const Resources* resources);
-void drawWipeTransition(struct GameData* gameData, const Resources* resources);
-void drawGetReadyScreen(struct GameData* gameData, const Resources* resources);
+void drawChamber(GameData* gameData, const Resources* resources);
+void drawTitleScreen(GameData* gameData, const Resources* resources);
+void drawTransition(GameData* gameData, const Resources* resources);
+void drawWipeTransition(GameData* gameData, const Resources* resources);
+void drawGetReadyScreen(GameData* gameData, const Resources* resources);
 
 // character font
 // player icons
@@ -278,8 +278,8 @@ void updateRegenSprite(const Resources* resources, dl_u8 currentPlayerSpriteNumb
 }
 
 
-void GameRunner_ChangedRoomCallback(const struct GameData* gameData, dl_u8 roomNumber, dl_s8 transitionType);
-void GameRunner_TransitionDone(const struct GameData* gameData, dl_u8 roomNumber, dl_s8 transitionType);
+void GameRunner_ChangedRoomCallback(const GameData* gameData, dl_u8 roomNumber, dl_s8 transitionType);
+void GameRunner_TransitionDone(const GameData* gameData, dl_u8 roomNumber, dl_s8 transitionType);
 
 #define SPLAT_FRAME_COUNT 2
 
@@ -314,7 +314,7 @@ void buildSplatSpriteResource(const Resources* resources)
 	}
 }
 
-void GameRunner_Init(struct GameData* gameData, const Resources* resources)
+void GameRunner_Init(GameData* gameData, const Resources* resources)
 {
 	g_cleanBackground = (dl_u8*)malloc(FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT);
 
@@ -375,7 +375,7 @@ void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 	Game_Init(gameData, resources);
 }
 
-void GameRunner_ChangedRoomCallback(const struct GameData* gameData, 
+void GameRunner_ChangedRoomCallback(const GameData* gameData, 
 									dl_u8 roomNumber, 
 									dl_s8 transitionType)
 {
@@ -413,12 +413,12 @@ void GameRunner_ChangedRoomCallback(const struct GameData* gameData,
 
 
 
-void GameRunner_Update(struct GameData* gameData, const Resources* resources)
+void GameRunner_Update(GameData* gameData, const Resources* resources)
 {
 	Game_Update(gameData, resources);
 }
 
-void GameRunner_Draw(struct GameData* gameData, const Resources* resources)
+void GameRunner_Draw(GameData* gameData, const Resources* resources)
 {
 	processEraseList();
 
@@ -540,7 +540,7 @@ void drawUIPlayerLives(const PlayerData* playerData)
     }
 }
 
-void drawChamber(struct GameData* gameData, const Resources* resources)
+void drawChamber(GameData* gameData, const Resources* resources)
 {
 	PlayerData* playerData = gameData->currentPlayerData;
 	dl_u16 playerX = (playerData->x >> 8) << 1;
@@ -659,7 +659,7 @@ void drawChamber(struct GameData* gameData, const Resources* resources)
 }
 
 
-void drawTitleScreen(struct GameData* gameData, const Resources* resources)
+void drawTitleScreen(GameData* gameData, const Resources* resources)
 {
 	drawDrops(gameData);
 
@@ -705,7 +705,7 @@ void drawCleanBackground(const GameData* gameData,
 	initEraseList();
 }
 
-void drawTransition(struct GameData* gameData, const Resources* resources)
+void drawTransition(GameData* gameData, const Resources* resources)
 {
 	if (gameData->transitionInitialDelay == 29)
     {
@@ -716,7 +716,7 @@ void drawTransition(struct GameData* gameData, const Resources* resources)
 
 dl_u8 g_oldTransitionCurrentLine;
 
-void drawTransitionLines(GameData* gameData)
+void drawTransitionLines(const GameData* gameData)
 {
 	for (int lineLoop = g_oldTransitionCurrentLine; lineLoop < gameData->transitionCurrentLine; lineLoop++)
 	{
@@ -758,7 +758,7 @@ void drawTransitionLines(GameData* gameData)
 	}
 }
 
-void drawWipeTransition(struct GameData* gameData, const Resources* resources)
+void drawWipeTransition(GameData* gameData, const Resources* resources)
 {
 	if (gameData->transitionInitialDelay == 29)
     {
@@ -791,7 +791,7 @@ void drawWipeTransition(struct GameData* gameData, const Resources* resources)
 	g_oldTransitionCurrentLine = gameData->transitionCurrentLine;
 }
 
-void GameRunner_TransitionDone(const struct GameData* gameData, 
+void GameRunner_TransitionDone(const GameData* gameData, 
 							   dl_u8 roomNumber, 
 							   dl_s8 transitionType)
 {
@@ -804,7 +804,7 @@ void GameRunner_TransitionDone(const struct GameData* gameData,
 	}
 }
 
-void drawGetReadyScreen(struct GameData* gameData, const Resources* resources)
+void drawGetReadyScreen(GameData* gameData, const Resources* resources)
 {
 	drawDrops(gameData);
 }

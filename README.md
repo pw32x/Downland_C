@@ -17,6 +17,7 @@ The project is based on the original Downland, version 1.1. This version was a l
 - Windows ("classic" and "new")
 - Sega Dreamcast
 - Sega Saturn
+- Sega 32X
 - GameBoy Advance
 - Playdate
 - 3DO

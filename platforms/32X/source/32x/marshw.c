@@ -557,7 +557,8 @@ int Mars_ROMSize(void)
 void Mars_DetectInputDevices(void)
 {
 	unsigned i;
-	volatile uint16_t *addr = (volatile uint16_t *)&MARS_SYS_COMM12;
+	//volatile uint16_t *addr = (volatile uint16_t *)&MARS_SYS_COMM12;
+	volatile uint16_t *addr = (volatile uint16_t *)&MARS_SYS_COMM8;
 
 	mars_mouseport = -1;
 	for (i = 0; i < MARS_MAX_CONTROLLERS; i++)

@@ -1,237 +1,130 @@
+/*
+ * SEGA CD Mode 1 Support
+ * by Chilly Willy
+ */
+
 #include <stdint.h>
 #include <string.h>
 
-#include "../common/comm_ids.h"
-#include "megasd.h"
-#include "cd_init.h"
-#include "vdp.h"
+extern uint32_t vblank_vector;
+extern uint16_t gen_lvl2;
+extern uint16_t cd_ok;
 
-#include "data/genesis_palette.h"
-#include "data/genesis_tileset.h"
-#include "data/genesis_tilemap.h"
-#include "data/32x_palette.h"
-#include "data/32x_tileset.h"
-#include "data/32x_tilemap.h"
-#include "data/sphere32x32_4bpp.h"
-#include "data/sphere32x32_4bpp_palette.h"
-#include "data/font.h"
+extern uint32_t Sub_Start;
+extern uint32_t Sub_End;
 
-extern void init_main();
-extern void bump_fm();
-extern void enable_ints();
-extern void disable_ints();
-extern void chk_hotplug();
-extern void update_fm();
+extern void Kos_Decomp(uint8_t *src, uint8_t *dst);
 
-// Communication channels                                               32X SIDE
-static volatile uint16_t* const MD_SYS_COMM0 = (uint16_t*) 0xA15120; // 0x20004020
-static volatile uint16_t* const MD_SYS_COMM2 = (uint16_t*) 0xA15122; // 0x20004022
+extern void write_byte(unsigned int dst, unsigned char val);
+extern void write_word(unsigned int dst, unsigned short val);
+extern void write_long(unsigned int dst, unsigned int val);
+extern unsigned char read_byte(unsigned int src);
+extern unsigned short read_word(unsigned int src);
+extern unsigned int read_long(unsigned int src);
 
-void print_text(const char* str, int x, int y)
+extern void do_main(void);
+
+uint16_t InitCD(void)
 {
-    while (*str)
-        put_tile_xy(*str++, x++, y);
-}
-
-uint16_t crsr_y;
-uint16_t crsr_x;
-
-void process_commands()
-{
-    if (!*MD_SYS_COMM0)
-        return;
-
-    uint16_t command = *MD_SYS_COMM0 & 0xff00;
-    uint16_t command_value = *MD_SYS_COMM0 & 0x00ff;
+    char *bios;
 
     /*
-    if (command)
+     * Check for CD BIOS
+     * When a cart is inserted in the MD, the CD hardware is mapped to
+     * 0x400000 instead of 0x000000. So the BIOS ROM is at 0x400000, the
+     * Program RAM bank is at 0x420000, and the Word RAM is at 0x600000.
+     */
+    bios = (char *)0x415800;
+    if (memcmp(bios + 0x6D, "SEGA", 4))
     {
-        char buf[100];
-        sprintf(buf, "%04X", command);
-        print_text(buf, messageX, messageY);
-        messageY++;
-
-        if (messageY == 28)
+        bios = (char *)0x416000;
+        if (memcmp(bios + 0x6D, "SEGA", 4))
         {
-            messageY = 0;
-            messageX += 5;
-        }
-
-        if (messageX > 40)
-        {
-            while (1) {};
-        }
-    }
-    */
-
-
-
-    if (command == SH2MD_COMMAND_SET_CURSOR)
-    {
-        uint16_t data = *MD_SYS_COMM2;
-    
-        crsr_y = (data & 0x1F);
-        crsr_x = (data >> 6);
-    }
-    else if (command == SH2MD_COMMAND_PUT_CHAR)
-    {
-        uint16_t character = command_value;       // Extract the character
-    
-        put_tile_xy(character, crsr_x, crsr_y);
-    
-        crsr_x += 1;                             // Increment x cursor coordinate
-    }
-}
-
-int sphere32x32_4bpp_tile_start;
-
-void init_graphics()
-{
-    vpd_load_palette(genesis_palette, 1);
-    int genesis_tileset_start = vdp_load_tileset(genesis_tileset, sizeof(genesis_tileset), sizeof(font));
-    vdp_draw_tileset(genesis_tilemap, 0, 0, 40, 28, genesis_tileset_start, 1, PLANE_A_ADDR);
-
-    vpd_load_palette(_32x_palette, 2);
-    int _32x_tileset_start = vdp_load_tileset(_32x_tileset, sizeof(_32x_tileset), genesis_tileset_start + sizeof(genesis_tileset));
-    vdp_draw_tileset(_32x_tilemap, 0, 0, 40, 28, _32x_tileset_start, 2, PLANE_B_ADDR);
-
-    vpd_load_palette(sphere32x32_4bpp_palette, 3);
-    int sphere32x32_4bpp_start = vdp_load_tileset((uint8_t*)sphere32x32_4bpp, sizeof(sphere32x32_4bpp), _32x_tileset_start + sizeof(_32x_tileset));
-    sphere32x32_4bpp_tile_start = sphere32x32_4bpp_start / 32;
-}
-
-int planeAScrollX = 0;
-int planeAScrollY = 0;
-int planeBScrollX = 0;
-int planeBScrollY = 0;
-
-int planeAScrollXDirection = 1;
-int planeAScrollYDirection = 1;
-int planeBScrollXDirection = -1;
-int planeBScrollYDirection = -1;
-
-
-#define SPRITE_WIDTH 32
-#define SPRITE_HEIGHT 32
-
-typedef struct
-{
-    int16_t x;
-    int16_t y;
-    int16_t direction_x;
-    int16_t direction_y;
-} sprite;
-
-sprite sprites[HARDWARE_SPRITE_LIMIT];
-
-int16_t random_values[40] = 
-{
-    3, -1,
-    -2, 3,
-    1, 1,
-    -2, -1,
-    1, -2,
-    -2, -3,
-    1, -2,
-    2, 2,
-    3, 2,
-    -3, -2,
-    -1, -2,
-    -2, 2,
-    3, -3,
-    2, 1,
-    -2, -3,
-    -1, -1,
-    -1, 2,
-    -1, 3,
-    1, 3,
-    -3, -2
-};
-
-void init_scene()
-{
-    sprite* current_sprite = sprites;
-
-    for (int loopy = 0; loopy < 8; loopy++)
-    {
-        for (int loopx = 0; loopx < 10; loopx++)
-        {
-            current_sprite->x = (loopx * 32);
-            current_sprite->y = (loopy * 24);
-            
-            current_sprite->direction_x = random_values[(loopy + loopx) % 40] ;
-            current_sprite->direction_y = random_values[(loopy + loopx + 1) % 40];
-
-            current_sprite++;
+            // check for WonderMega/X'Eye
+            if (memcmp(bios + 0x6D, "WONDER", 6))
+            {
+                bios = (char *)0x41AD00; // might also be 0x40D500
+                // check for LaserActive
+                if (memcmp(bios + 0x6D, "SEGA", 4))
+                    return 0; // no CD
+            }
         }
     }
-}
 
-void update_scene()
-{
-    planeBScrollX += planeBScrollXDirection;
-    if (planeBScrollX > 100 || planeBScrollX < 0)
-        planeBScrollXDirection = -planeBScrollXDirection;
+    /*
+     * Reset the Gate Array - this specific sequence of writes is recognized by
+     * the gate array as a reset sequence, clearing the entire internal state -
+     * this is needed for the LaserActive
+     */
+    write_word(0xA12002, 0xFF00);
+    write_byte(0xA12001, 0x03);
+    write_byte(0xA12001, 0x02);
+    write_byte(0xA12001, 0x00);
 
-    planeAScrollY += planeAScrollYDirection;
-    if (planeAScrollY > 100 || planeAScrollY < 0)
-        planeAScrollYDirection = -planeAScrollYDirection;
+    /*
+     * Reset the Sub-CPU, request the bus
+     */
+    write_byte(0xA12001, 0x02);
+    while (!(read_byte(0xA12001) & 2)) write_byte(0xA12001, 0x02); // wait on bus acknowledge
 
-        vdp_set_vertical_scroll(PLANE_A_ADDR, planeAScrollY);
-        vdp_set_horizontal_scroll(PLANE_B_ADDR, planeBScrollX);
- 
-    for (int loop = 0; loop < HARDWARE_SPRITE_LIMIT; loop++)
+    /*
+     * Decompress Sub-CPU BIOS to Program RAM at 0x00000
+     */
+    write_word(0xA12002, 0x0002); // no write-protection, bank 0, 2M mode, Word RAM assigned to Sub-CPU
+    memset((char *)0x420000, 0, 0x20000); // clear program ram first bank - needed for the LaserActive
+    Kos_Decomp((uint8_t *)bios, (uint8_t *)0x420000);
+
+    /*
+     * Copy Sub-CPU program to Program RAM at 0x06000
+     */
+    memcpy((char *)0x426000, (char *)&Sub_Start, (int)&Sub_End - (int)&Sub_Start);
+
+    write_byte(0xA1200E, 0x00); // clear main comm port
+    write_byte(0xA12002, 0x2A); // write-protect up to 0x05400
+    write_byte(0xA12001, 0x01); // clear bus request, deassert reset - allow CD Sub-CPU to run
+    while (!(read_byte(0xA12001) & 1)) write_byte(0xA12001, 0x01); // wait on Sub-CPU running
+
+    /*
+     * Set the vertical blank handler to generate Sub-CPU level 2 ints.
+     * The Sub-CPU BIOS needs these in order to run.
+     */
+    gen_lvl2 = 1; // generate Level 2 IRQ to Sub-CPU
+
+    /*
+     * Wait for Sub-CPU program to set sub comm port indicating it is running -
+     * note that unless there's something wrong with the hardware, a timeout isn't
+     * needed... just loop until the Sub-CPU program responds, but 2000000 is about
+     * ten times what the LaserActive needs, and the LA is the slowest unit to
+     * initialize
+     */
+    while (read_byte(0xA1200F) != 'I')
     {
-        sprite* current_sprite = sprites + loop;
-
-        current_sprite->x += current_sprite->direction_x;
-        current_sprite->y += current_sprite->direction_y;
-
-        if (current_sprite->x < 0 || current_sprite->x + SPRITE_WIDTH > SCREEN_WIDTH)
-            current_sprite->direction_x = -current_sprite->direction_x;
-
-        if (current_sprite->y < 0 || current_sprite->y + SPRITE_HEIGHT > SCREEN_HEIGHT)
-            current_sprite->direction_y = -current_sprite->direction_y;
-
-        vdp_push_hardware_sprite(current_sprite->x, current_sprite->y, SPRITE_SIZE(4, 4), sphere32x32_4bpp_tile_start | (3 << 13));
+        static int timeout = 0;
+        timeout++;
+        if (timeout > 2000000)
+        {
+            gen_lvl2 = 0;
+            return 0; // no CD
+        }
     }
 
+    /*
+     * Wait for Sub-CPU to indicate it is ready to receive commands
+     */
+    while (read_byte(0xA1200F) != 0x00) ;
 
+    return 1; // CD ready to go!
 }
 
 int main(void)
 {
-    cd_ok = InitCD();
-    megasd_ok = InitMegaSD();
+    cd_ok = 0; //InitCD();
 
-    init_main();
-    //init_graphics();
-    //init_scene();
-
-    //print_text("Hello World from MD side", 0, 2);
-
-    while (1)
-    {
-        // disabling and enabling ints screws up the MD_SYS_COMM0 messages in process_commands
-        // for some reason. it doesn't occur in assembly.
-        //disable_ints();
-        //bump_fm();
-        //enable_ints();
-
-        //update_fm();
-
-        process_commands();
-        *MD_SYS_COMM0 = 0;
-
-        chk_hotplug();
-
-        //update_scene();
-        
-
-        vdp_wait_vsync();
-        //vdp_upload_hardware_sprites();
-    }
+    /*
+     * Main loop in ram - you need to have it in ram to avoid bus contention
+     * for the rom with the SH2s.
+     */
+    do_main(); // never returns
 
     return 0;
 }

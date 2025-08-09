@@ -193,7 +193,7 @@
 ! entered.
 !-----------------------------------------------------------------------
 
-        .incbin "out/md/m68k.bin"       /* all 68000 code & data, compiled to 0x880800/0xFF0000 */
+        .incbin "out/source/md/m68k.bin"       /* all 68000 code & data, compiled to 0x880800/0xFF0000 */
 
         .data
 

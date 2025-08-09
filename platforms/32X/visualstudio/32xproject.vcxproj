@@ -66,12 +66,8 @@
     <None Include="..\source\32x\sound_manager_dma.s" />
     <None Include="..\source\32x\_crt0.s" />
     <None Include="..\source\md\cd.s" />
+    <None Include="..\source\md\crt0.s" />
     <None Include="..\source\md\kos.s" />
-    <None Include="..\source\md\vgm_player.s" />
-    <None Include="..\source\md\_crt0.s" />
-    <None Include="build.bat" />
-    <None Include="clean.bat" />
-    <None Include="rebuild.bat" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\game\ball.c" />
@@ -98,22 +94,7 @@
     <ClCompile Include="..\source\32x\secondary.c" />
     <ClCompile Include="..\source\32x\main.c" />
     <ClCompile Include="..\source\32x\sound_manager.c" />
-    <ClCompile Include="..\source\md\cd_init.c" />
-    <ClCompile Include="..\source\md\data\32x_palette.c" />
-    <ClCompile Include="..\source\md\data\32x_tilemap.c" />
-    <ClCompile Include="..\source\md\data\32x_tileset.c" />
-    <ClCompile Include="..\source\md\data\font.c" />
-    <ClCompile Include="..\source\md\data\genesis_palette.c" />
-    <ClCompile Include="..\source\md\data\genesis_tilemap.c" />
-    <ClCompile Include="..\source\md\data\genesis_tileset.c" />
-    <ClCompile Include="..\source\md\data\sphere32x32_4bpp.c" />
-    <ClCompile Include="..\source\md\data\sphere32x32_4bpp_palette.c" />
-    <ClCompile Include="..\source\md\everdrive.c" />
     <ClCompile Include="..\source\md\main.c" />
-    <ClCompile Include="..\source\md\megasd.c" />
-    <ClCompile Include="..\source\md\vdp.c" />
-    <ClCompile Include="..\source\md\vgm.c" />
-    <ClCompile Include="..\source\md\xvprintf.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\game\alloc.h" />
@@ -156,18 +137,6 @@
     <ClInclude Include="..\source\32x\mixer.h" />
     <ClInclude Include="..\source\32x\sound_manager.h" />
     <ClInclude Include="..\source\common\comm_ids.h" />
-    <ClInclude Include="..\source\md\cd_init.h" />
-    <ClInclude Include="..\source\md\data\32x_palette.h" />
-    <ClInclude Include="..\source\md\data\32x_tilemap.h" />
-    <ClInclude Include="..\source\md\data\32x_tileset.h" />
-    <ClInclude Include="..\source\md\data\font.h" />
-    <ClInclude Include="..\source\md\data\genesis_palette.h" />
-    <ClInclude Include="..\source\md\data\genesis_tilemap.h" />
-    <ClInclude Include="..\source\md\data\genesis_tileset.h" />
-    <ClInclude Include="..\source\md\data\sphere32x32_4bpp.h" />
-    <ClInclude Include="..\source\md\data\sphere32x32_4bpp_palette.h" />
-    <ClInclude Include="..\source\md\megasd.h" />
-    <ClInclude Include="..\source\md\vdp.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

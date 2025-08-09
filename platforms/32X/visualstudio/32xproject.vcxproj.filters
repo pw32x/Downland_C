@@ -17,9 +17,6 @@
     <Filter Include="Source Files\common">
       <UniqueIdentifier>{5f7177e1-76e4-49b0-96b5-f146a4558353}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Genesis\data">
-      <UniqueIdentifier>{20080e7f-02bd-40d8-ad11-e694301f5110}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\game">
       <UniqueIdentifier>{d20e21b5-09d6-467a-99a5-1f7fb96128dc}</UniqueIdentifier>
     </Filter>
@@ -31,35 +28,14 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="clean.bat">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="build.bat">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="..\build\Makefile_MD">
       <Filter>build</Filter>
-    </None>
-    <None Include="rebuild.bat">
-      <Filter>Source Files</Filter>
     </None>
     <None Include="..\build\Makefile_32X">
       <Filter>build</Filter>
     </None>
-    <None Include="..\source\md\vgm_player.s">
-      <Filter>Source Files\Genesis</Filter>
-    </None>
-    <None Include="..\source\md\kos.s">
-      <Filter>Source Files\Genesis</Filter>
-    </None>
-    <None Include="..\source\md\cd.s">
-      <Filter>Source Files\Genesis</Filter>
-    </None>
     <None Include="..\source\32x\_crt0.s">
       <Filter>Source Files\32x</Filter>
-    </None>
-    <None Include="..\source\md\_crt0.s">
-      <Filter>Source Files\Genesis</Filter>
     </None>
     <None Include="..\build\clean.bat">
       <Filter>build</Filter>
@@ -85,11 +61,17 @@
     <None Include="..\source\32x\edc_table.i">
       <Filter>Source Files\32x\sound</Filter>
     </None>
+    <None Include="..\source\md\cd.s">
+      <Filter>Source Files\Genesis</Filter>
+    </None>
+    <None Include="..\source\md\crt0.s">
+      <Filter>Source Files\Genesis</Filter>
+    </None>
+    <None Include="..\source\md\kos.s">
+      <Filter>Source Files\Genesis</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\source\md\main.c">
-      <Filter>Source Files\Genesis</Filter>
-    </ClCompile>
     <ClCompile Include="..\source\32x\marshw.c">
       <Filter>Source Files\32x</Filter>
     </ClCompile>
@@ -98,51 +80,6 @@
     </ClCompile>
     <ClCompile Include="..\source\32x\main.c">
       <Filter>Source Files\32x</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\md\megasd.c">
-      <Filter>Source Files\Genesis</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\md\vgm.c">
-      <Filter>Source Files\Genesis</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\md\xvprintf.c">
-      <Filter>Source Files\Genesis</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\md\everdrive.c">
-      <Filter>Source Files\Genesis</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\md\cd_init.c">
-      <Filter>Source Files\Genesis</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\md\data\genesis_tilemap.c">
-      <Filter>Source Files\Genesis\data</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\md\data\genesis_tileset.c">
-      <Filter>Source Files\Genesis\data</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\md\data\genesis_palette.c">
-      <Filter>Source Files\Genesis\data</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\md\data\32x_tileset.c">
-      <Filter>Source Files\Genesis\data</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\md\data\32x_palette.c">
-      <Filter>Source Files\Genesis\data</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\md\data\32x_tilemap.c">
-      <Filter>Source Files\Genesis\data</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\md\vdp.c">
-      <Filter>Source Files\Genesis</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\md\data\font.c">
-      <Filter>Source Files\Genesis\data</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\md\data\sphere32x32_4bpp.c">
-      <Filter>Source Files\Genesis\data</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\md\data\sphere32x32_4bpp_palette.c">
-      <Filter>Source Files\Genesis\data</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\game\ball.c">
       <Filter>Source Files\game</Filter>
@@ -207,6 +144,9 @@
     <ClCompile Include="..\source\32x\sound_manager.c">
       <Filter>Source Files\32x\sound</Filter>
     </ClCompile>
+    <ClCompile Include="..\source\md\main.c">
+      <Filter>Source Files\Genesis</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\source\32x\32x.h">
@@ -223,42 +163,6 @@
     </ClInclude>
     <ClInclude Include="..\source\common\comm_ids.h">
       <Filter>Source Files\common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\md\megasd.h">
-      <Filter>Source Files\Genesis</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\md\cd_init.h">
-      <Filter>Source Files\Genesis</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\md\data\genesis_palette.h">
-      <Filter>Source Files\Genesis\data</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\md\data\genesis_tilemap.h">
-      <Filter>Source Files\Genesis\data</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\md\data\genesis_tileset.h">
-      <Filter>Source Files\Genesis\data</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\md\data\32x_tileset.h">
-      <Filter>Source Files\Genesis\data</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\md\data\32x_palette.h">
-      <Filter>Source Files\Genesis\data</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\md\data\32x_tilemap.h">
-      <Filter>Source Files\Genesis\data</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\md\vdp.h">
-      <Filter>Source Files\Genesis</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\md\data\font.h">
-      <Filter>Source Files\Genesis\data</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\md\data\sphere32x32_4bpp.h">
-      <Filter>Source Files\Genesis\data</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\md\data\sphere32x32_4bpp_palette.h">
-      <Filter>Source Files\Genesis\data</Filter>
     </ClInclude>
     <ClInclude Include="..\source\32x\downland_rom.h">
       <Filter>Source Files\32x</Filter>

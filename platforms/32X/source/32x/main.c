@@ -3,6 +3,7 @@
 
 // std headers
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 // project headers
@@ -95,9 +96,11 @@ void clear_framebuffer()
 }
 
 
-void updateControls(int controllerIndex, JoystickState* joystickState)
+dl_u16 updateControls(int controllerIndex, JoystickState* joystickState)
 {
-	dl_u16 buttonState = Mars_ReadController(controllerIndex);
+	//dl_u16 buttonState = Mars_ReadController(controllerIndex); // this doesn't work. Don't know why.
+
+	dl_u16 buttonState = controllerIndex ? MARS_SYS_COMM10 : MARS_SYS_COMM8; // get the port directly
 
     // Check D-Pad
     dl_u8 leftDown = (buttonState & SEGA_CTRL_LEFT) != 0;
@@ -135,6 +138,8 @@ void updateControls(int controllerIndex, JoystickState* joystickState)
     joystickState->debugStateReleased = joystickState->debugStatePressed & !debugStateDown;
     joystickState->debugStateDown = debugStateDown;
 #endif
+	
+	return buttonState;
 }
 
 int main(void)
@@ -181,6 +186,8 @@ int main(void)
 
 	int controllerIndex = 0;
 
+	dl_u16 buttonState = 0;
+
 	while (1)
 	{
         if (gameData.currentPlayerData != NULL)
@@ -188,7 +195,7 @@ int main(void)
             controllerIndex = gameData.currentPlayerData->playerNumber;
         }
 
-		updateControls(controllerIndex, &gameData.joystickState);
+		buttonState = updateControls(controllerIndex, &gameData.joystickState);
 
 		if (gameData.joystickState.startPressed)
 		{
@@ -202,6 +209,16 @@ int main(void)
 		}
 
         GameRunner_Draw(&gameData, &resources);
+
+		// draw the joystick state on screen
+		/*
+		volatile unsigned char* frameBuffer = (unsigned char*)(&MARS_FRAMEBUFFER + 0x100);
+		for (int loop = 0; loop < 16; loop++)
+		{
+			frameBuffer[(loop * 4) + 32] = buttonState & 1 ? 1 : 2;
+			buttonState >>= 1;
+		}
+		*/
 
 		Mars_FlipFrameBuffers(1);
 	}

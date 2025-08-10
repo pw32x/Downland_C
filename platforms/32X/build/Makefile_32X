@@ -40,7 +40,7 @@ NM = $(PREFIX)nm
 DD = dd
 RM = rm -f
 
-TARGET ?= project
+TARGET ?= Downland
 LIBS = $(LIBPATH) -lc -lgcc -lgcc-Os-4-200 -lnosys
 
 BUILD_DIR = build

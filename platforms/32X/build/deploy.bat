@@ -1,1 +1,1 @@
-mega-usb.exe ..\out\project.32x
+mega-usb.exe ..\out\Downland.32x

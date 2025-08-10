@@ -40,7 +40,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <NMakeOutput>..\out\project.32x</NMakeOutput>
+    <NMakeOutput>..\out\Downland.32x</NMakeOutput>
     <NMakePreprocessorDefinitions>MARS;_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
     <NMakeBuildCommandLine>build.bat</NMakeBuildCommandLine>
     <NMakeReBuildCommandLine>rebuild.bat</NMakeReBuildCommandLine>

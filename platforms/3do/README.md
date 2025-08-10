@@ -65,6 +65,10 @@ The pickups are:
 
 The scoring system also has a random-based component. The three treasures are randomly chosen at game . When they're picked up, the player gets the base points, plus the game adds a random amount from 0 to 127. 
 
+## THANKS
+
+Thanks to Archive3DO and Retro Comparisons for testing on hardware!
+
 ## CONTACT
 
 Send questions, comments, & bugs about Downland_C to pw32x at jump@puffweet.com

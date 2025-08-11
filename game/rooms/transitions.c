@@ -1,11 +1,10 @@
 #include "room_types.h"
 
-#include <string.h>
-
 #include "../game_types.h"
 #include "../draw_utils.h"
 #include "../drops_manager.h"
 #include "../dl_sound.h"
+#include "../dl_platform.h"
 
 #define INITIAL_TRANSITION_DELAY 30
 
@@ -20,7 +19,7 @@ void transition_init(Room* targetRoom, GameData* gameData, const Resources* reso
 
 	// setup screen transition
 	gameData->transitionInitialDelay = INITIAL_TRANSITION_DELAY;
-	memset(gameData->framebuffer, 0, FRAMEBUFFER_SIZE_IN_BYTES);
+	dl_memset(gameData->framebuffer, 0, FRAMEBUFFER_SIZE_IN_BYTES);
 }
 
 void transition_update(Room* room, GameData* gameData, const Resources* resources)
@@ -34,7 +33,7 @@ void transition_update(Room* room, GameData* gameData, const Resources* resource
 
 	// dump the cleanBackground to the framebuffer and go 
 	// to the next room.
-	memcpy(gameData->framebuffer, gameData->cleanBackground, FRAMEBUFFER_SIZE_IN_BYTES);
+	dl_memcpy(gameData->framebuffer, gameData->cleanBackground, FRAMEBUFFER_SIZE_IN_BYTES);
 
 	Game_EnterRoom(gameData, gameData->transitionRoomNumber, resources);
 }

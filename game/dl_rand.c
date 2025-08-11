@@ -1,5 +1,4 @@
 #include "dl_rand.h"
-#include <stdlib.h>
 #include "alloc.h"
 
 dl_u32 rng_state = 1;

@@ -37,6 +37,8 @@ SRC_C += $(wildcard $(SRC_DIR)/*/*.c)
 SRC_C += $(wildcard $(SRC_DIR)/*/*/*.c)
 SRC_C += $(wildcard $(SRC_DIR)/*/*/*/*.c)
 SRC_C += $(wildcard $(SRC_DIR)/*/*/*/*/*.c)
+SRC_C += $(wildcard ../../game/*.c)
+SRC_C += $(wildcard ../../game/rooms/*.c)
 SRC_C := $(filter-out $(SRC_DIR)/rom_header.c,$(SRC_C))
 SRC_S = $(wildcard *.s)
 SRC_S += $(wildcard $(SRC_DIR)/*.s)
@@ -85,9 +87,13 @@ DEPS += $(SRC_S:.s=.d)
 DEPS += $(SRC_C:.c=.d)
 DEPS := $(addprefix $(DEP_DIR)/, $(DEPS))
 
-INCS := -I. -I$(INC_DIR) -I$(RES_DIR) -I$(OUT_DIR) -isystem$(INC_LIB) -isystem$(OUT_DIR_LIB)
-DEFAULT_FLAGS := $(EXTRA_FLAGS) -DSGDK_GCC -m68000 -fdiagnostics-color=always -Wall -Wextra -Wno-shift-negative-value -Wno-main -Wno-unused-parameter -fno-builtin -ffunction-sections -fdata-sections -fms-extensions -B$(BIN)
-Z80_FLAGS := -i. -i$(SRC_DIR) -i$(INC_DIR) -i$(RES_DIR) -i$(OUT_DIR) -i$(SRC_LIB) -i$(INC_LIB) -i$(INC_LIB)/snd -i$(OUT_DIR_LIB)
+INCS := -I. -I$(INC_DIR) -I$(RES_DIR) -I$(OUT_DIR) \
+        -I../../game -I../../game/rooms \
+        -isystem$(INC_LIB) -isystem$(OUT_DIR_LIB)
+
+DEFAULT_FLAGS := $(EXTRA_FLAGS) -DSGDK_GCC -m68000 -Wall -Wextra -Wno-shift-negative-value -Wno-main -Wno-unused-parameter -fno-builtin -ffunction-sections -fdata-sections -fms-extensions -B$(BIN)
+Z80_FLAGS := -i. -i$(SRC_DIR) -i$(INC_DIR) -i$(RES_DIR) -i$(OUT_DIR) -i$(SRC_LIB) -i$(INC_LIB) -i$(INC_LIB)/snd -i$(OUT_DIR_LIB) \
+             -i../../game -i../../game/rooms
 
 ifeq ($(BUILD_TYPE),debug)
 	# debug

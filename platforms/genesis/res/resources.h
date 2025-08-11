@@ -5,6 +5,7 @@
 
 extern const u8 xpcm_shoot[3072];
 extern const u8 xpcm_explosion[9728];
+extern const u8 downland_rom[8192];
 extern const SpriteDefinition player_sprite;
 extern const SpriteDefinition enemy_sprite;
 extern const SpriteDefinition projectile_sprite;

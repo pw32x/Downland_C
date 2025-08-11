@@ -1,11 +1,10 @@
 #include "room_types.h"
 
-#include <string.h>
-
 #include "../game_types.h"
 #include "../draw_utils.h"
 #include "../drops_manager.h"
 #include "../dl_sound.h"
+#include "../dl_platform.h"
 
 void get_ready_room_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resources)
 {
@@ -56,7 +55,7 @@ void get_ready_room_update(Room* room, GameData* gameData, const Resources* reso
 		if (gameData->currentPlayerData->lastDoor != NULL)
 			roomNumber = gameData->currentPlayerData->lastDoor->nextRoomNumber;
 
-		memset(gameData->framebuffer, 0, FRAMEBUFFER_SIZE_IN_BYTES);		
+		dl_memset(gameData->framebuffer, 0, FRAMEBUFFER_SIZE_IN_BYTES);		
 		Game_WipeTransitionToRoom(gameData, roomNumber, resources);
 	}
 }

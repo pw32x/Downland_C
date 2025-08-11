@@ -6,3 +6,4 @@ SPRITE explosion_sprite "boom.png" 4 4 NONE 4
 WAV xpcm_shoot "shoot.wav" XGM
 WAV xpcm_explosion "explosion.wav" XGM
 
+BIN downland_rom "downland.rom"

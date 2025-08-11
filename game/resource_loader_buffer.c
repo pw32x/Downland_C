@@ -3,7 +3,6 @@
 #include "../game/base_defines.h"
 #include "../game/alloc.h"
 
-#include <stdio.h>
 
 
 static const dl_u8* getBytes(const dl_u8* fileBuffer, dl_u16 start)

@@ -1,7 +1,5 @@
 #include "player.h"
 
-#include <string.h>
-
 #include "base_defines.h"
 #include "draw_utils.h"
 #include "physics_utils.h"
@@ -11,7 +9,7 @@
 #include "door_utils.h"
 #include "dl_sound.h"
 #include "dl_rand.h"
-
+#include "dl_platform.h"
 
 
 #define PLAYER_START_LIVES 3
@@ -212,7 +210,7 @@ void initDoors(dl_u8* doorStateData, const dl_u8* offsetsToDoorsAlreadyActivated
 {
 	dl_u8 alreadyOpenedState = 0x3; // set the two bits for each player
 
-	memset(doorStateData, 0, DOOR_TOTAL_COUNT);
+	dl_memset(doorStateData, 0, DOOR_TOTAL_COUNT);
 
 	while (*offsetsToDoorsAlreadyActivated != 0xff)
 	{

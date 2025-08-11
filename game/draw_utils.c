@@ -2,7 +2,7 @@
 
 #include "base_defines.h"
 #include "dl_rand.h"
-#include <string.h>
+#include "dl_platform.h"
 
 void setPixel(dl_u8* framebuffer, dl_s16 x, dl_s16 y, dl_u8 value) 
 {
@@ -804,7 +804,7 @@ void drawBackground(const BackgroundDrawData* backgroundDrawData,
 	g_framebuffer = framebuffer;
 
 	// clear frame buffer
-	memset(g_framebuffer, 0, FRAMEBUFFER_SIZE_IN_BYTES);
+	dl_memset(g_framebuffer, 0, FRAMEBUFFER_SIZE_IN_BYTES);
 
 	// init plotter position
 	g_plotterCurrentY = 15;

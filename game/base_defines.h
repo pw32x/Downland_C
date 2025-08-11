@@ -1,15 +1,15 @@
 #ifndef BASE_DEFINES_INCLUDE_H
 #define BASE_DEFINES_INCLUDE_H
 
-#define DEV_MODE
+//#define DEV_MODE
 //#define SHOW_DEBUG_TEXT
 #define START_AT_TITLESCREEN
 //#define DISABLE_ENEMIES
 
 #if defined(DL_PLATFORM_3DO)
-#define PACKED __packed
+#define DL_PACKED __packed
 #else
-#define PACKED
+#define DL_PACKED
 #endif
 
 #if !defined(TARGET_PLAYDATE) && !defined(TARGET_SIMULATOR)

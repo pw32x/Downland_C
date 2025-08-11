@@ -1,11 +1,10 @@
 #include "room_types.h"
 
-#include <string.h>
-
 #include "../game_types.h"
 #include "../draw_utils.h"
 #include "../drops_manager.h"
 #include "../dl_sound.h"
+#include "../dl_platform.h"
 
 #define TITLESCREEN_HIGHSCORE_LOCATION			0x12cc
 #define TITLESCREEN_PLAYERONE_SCORE_LOCATION	0x1412
@@ -113,7 +112,7 @@ void titleScreen_update(Room* room, GameData* gameData, const Resources* resourc
 	{
 		Game_InitPlayers(gameData, resources);
 
-		memset(gameData->framebuffer, 0, FRAMEBUFFER_SIZE_IN_BYTES);		
+		dl_memset(gameData->framebuffer, 0, FRAMEBUFFER_SIZE_IN_BYTES);		
 		Game_WipeTransitionToRoom(gameData, 0, resources);
 	}
 }

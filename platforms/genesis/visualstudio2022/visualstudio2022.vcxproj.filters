@@ -13,6 +13,18 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="build">
+      <UniqueIdentifier>{c067bb2a-fe0e-4096-b2a6-f3b206af78c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="game">
+      <UniqueIdentifier>{2517a848-18f7-44f5-8784-7405c0d21f39}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="game\rooms">
+      <UniqueIdentifier>{fb9a5c72-a0e6-4eda-9296-b2941625ba42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SGDK">
+      <UniqueIdentifier>{a2ec9644-c109-49ef-bfc8-88fe6814712e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\rom_header.c">
@@ -21,5 +33,276 @@
     <ClCompile Include="..\src\main.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\game\ball.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game\bird.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game\checksum_utils.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game\debug_utils.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game\dl_rand.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game\door_utils.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game\draw_utils.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game\drops_manager.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game\game.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game\physics_utils.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game\player.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game\resource_loader_buffer.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game\string_utils.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game\rooms\titlescreen.c">
+      <Filter>game\rooms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game\rooms\transitions.c">
+      <Filter>game\rooms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game\rooms\chambers.c">
+      <Filter>game\rooms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game\rooms\getready.c">
+      <Filter>game\rooms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game\rooms\rooms.c">
+      <Filter>game\rooms</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\build\makefile.gen">
+      <Filter>build</Filter>
+    </None>
+    <None Include="..\build\rebuild.bat">
+      <Filter>build</Filter>
+    </None>
+    <None Include="..\build\build.bat">
+      <Filter>build</Filter>
+    </None>
+    <None Include="..\build\clean.bat">
+      <Filter>build</Filter>
+    </None>
+    <None Include="..\build\deploy.bat">
+      <Filter>build</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\game\alloc.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\background_types.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\ball.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\base_defines.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\base_types.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\bird.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\checksum_utils.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\debug_utils.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\dl_rand.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\dl_sound.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\door_types.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\door_utils.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\draw_utils.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\drops_manager.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\drops_types.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\game.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\game_types.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\joystick_types.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\physics_utils.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\pickup_types.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\player.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\player_types.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\resource_loader_buffer.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\resource_types.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\string_utils.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\rooms\chambers.h">
+      <Filter>game\rooms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\rooms\room_types.h">
+      <Filter>game\rooms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\rooms\rooms.h">
+      <Filter>game\rooms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\sys.h">
+      <Filter>SGDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\tab_cnv.h">
+      <Filter>SGDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\task.h">
+      <Filter>SGDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\task_cst.h">
+      <Filter>SGDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\timer.h">
+      <Filter>SGDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\tools.h">
+      <Filter>SGDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\types.h">
+      <Filter>SGDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\vdp.h">
+      <Filter>SGDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\vdp_bg.h">
+      <Filter>SGDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\vdp_pal.h">
+      <Filter>SGDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\vdp_spr.h">
+      <Filter>SGDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\vdp_tile.h">
+      <Filter>SGDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\vram.h">
+      <Filter>SGDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\ym2612.h">
+      <Filter>SGDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\z80_ctrl.h">
+      <Filter>SGDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\asm.h">
+      <Filter>SGDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\bmp.h">
+      <Filter>SGDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\config.h">
+      <Filter>SGDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\dma.h">
+      <Filter>SGDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\font.h">
+      <Filter>SGDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\genesis.h">
+      <Filter>SGDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\joy.h">
+      <Filter>SGDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\kdebug.h">
+      <Filter>SGDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\map.h">
+      <Filter>SGDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\mapper.h">
+      <Filter>SGDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\maths.h">
+      <Filter>SGDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\maths3D.h">
+      <Filter>SGDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\memory.h">
+      <Filter>SGDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\memory_base.h">
+      <Filter>SGDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\object.h">
+      <Filter>SGDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\pal.h">
+      <Filter>SGDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\pool.h">
+      <Filter>SGDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\psg.h">
+      <Filter>SGDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\sprite_eng.h">
+      <Filter>SGDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\sprite_eng_legacy.h">
+      <Filter>SGDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\sram.h">
+      <Filter>SGDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\string.h">
+      <Filter>SGDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\dl_platform.h">
+      <Filter>game</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

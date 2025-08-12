@@ -87,6 +87,15 @@ DEPS += $(SRC_S:.s=.d)
 DEPS += $(SRC_C:.c=.d)
 DEPS := $(addprefix $(DEP_DIR)/, $(DEPS))
 
+# === ADDED: normalize any ../../game paths so objects/deps live under OUT_DIR (no '..') ===
+# (keeps everything inside out/$(BUILD_TYPE))
+OBJS := $(patsubst $(OUT_DIR)/../../game/%, $(OUT_DIR)/game/%, $(OBJS))
+OBJS := $(patsubst $(OUT_DIR)/../../game/rooms/%, $(OUT_DIR)/game/rooms/%, $(OBJS))
+LSTS := $(patsubst $(OUT_DIR)/../../game/%, $(OUT_DIR)/game/%, $(LSTS))
+DEPS := $(patsubst $(DEP_DIR)/../../game/%, $(DEP_DIR)/game/%, $(DEPS))
+DEPS := $(patsubst $(DEP_DIR)/../../game/rooms/%, $(DEP_DIR)/game/rooms/%, $(DEPS))
+# === end added normalization ===
+
 INCS := -I. -I$(INC_DIR) -I$(RES_DIR) -I$(OUT_DIR) \
         -I../../game -I../../game/rooms \
         -isystem$(INC_LIB) -isystem$(OUT_DIR_LIB)
@@ -215,6 +224,16 @@ $(OUT_DIR)/%.o: %.c $(DEP_DIR)/%.d
 	@$(MKDIR) -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
+# === ADDED: rules for game and game/rooms sources so .o files land under $(OUT_DIR)/game/... ===
+$(OUT_DIR)/game/%.o: ../../game/%.c $(DEP_DIR)/game/%.d
+	@$(MKDIR) -p $(dir $@)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(OUT_DIR)/game/rooms/%.o: ../../game/rooms/%.c $(DEP_DIR)/game/rooms/%.d
+	@$(MKDIR) -p $(dir $@)
+	$(CC) $(CFLAGS) -c $< -o $@
+# === end added rules ===
+
 $(OUT_DIR)/%.o: %.s $(DEP_DIR)/%.d
 	@$(MKDIR) -p $(dir $@)
 	$(CC) $(AFLAGS) -c $< -o $@
@@ -246,11 +265,20 @@ $(OUT_DIR)/%.lst: %.c $(DEP_DIR)/%.d
 	@$(MKDIR) -p $(dir $@)
 	$(CC) $(CFLAGS) -S -c $< -o $@
 
-
 # deps files (we want resource to be generated first)
 $(DEP_DIR)/%.d: %.c $(RES_O)
 	@$(MKDIR) -p $(dir $@)
 	$(CC) $(CFLAGS) $< -E -MG -MM -MP -MT $(OUT_DIR)/$*.o -MF $(DEP_DIR)/$*.d
+
+# === ADDED: deps rules for ../../game and ../../game/rooms sources so .d files land under $(DEP_DIR)/game/... ===
+$(DEP_DIR)/game/%.d: ../../game/%.c $(RES_O)
+	@$(MKDIR) -p $(dir $@)
+	$(CC) $(CFLAGS) $< -E -MG -MM -MP -MT $(OUT_DIR)/game/$*.o -MF $(DEP_DIR)/game/$*.d
+
+$(DEP_DIR)/game/rooms/%.d: ../../game/rooms/%.c $(RES_O)
+	@$(MKDIR) -p $(dir $@)
+	$(CC) $(CFLAGS) $< -E -MG -MM -MP -MT $(OUT_DIR)/game/rooms/$*.o -MF $(DEP_DIR)/game/rooms/$*.d
+# === end added deps rules ===
 
 $(DEP_DIR)/%.d: %.s
 	@$(MKDIR) -p $(dir $@)

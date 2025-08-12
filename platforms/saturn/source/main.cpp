@@ -37,6 +37,16 @@ void* dl_alloc(dl_u32 size)
     return (void*)new dl_u8[size];
 }
 
+void dl_memset(void* source, dl_u8 value, dl_u16 count)
+{
+    memset(source, value, count);
+}
+
+void dl_memcpy(void* destination, const void* source, dl_u16 count)
+{
+    memcpy(destination, source, count);
+}
+
 void Sound_Play(dl_u8 soundIndex, dl_u8 loop)
 {
 #ifdef ENABLE_SOUND 

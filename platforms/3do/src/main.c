@@ -15,6 +15,8 @@
 #include "game_runner.h"
 #include "sound_manager.h"
 
+#include <string.h>
+
 GameData gameData;
 Resources resources;
 
@@ -29,6 +31,16 @@ void* dl_alloc(dl_u32 size)
 	g_memoryEnd += size;
 
 	return (void*)newMemoryAlloc;
+}
+
+void dl_memset(void* source, dl_u8 value, dl_u16 count)
+{
+    memset(source, value, count);
+}
+
+void dl_memcpy(void* destination, const void* source, dl_u16 count)
+{
+    memcpy(destination, source, count);
 }
 
 void Sound_Play(dl_u8 soundIndex, dl_u8 loop)

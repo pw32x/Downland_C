@@ -4,6 +4,9 @@
 // sgdk headers
 #include <memory.h>
 
+// project headers
+#include "game_runner.h"
+
 // game headers
 #include "game_types.h"
 #include "resource_types.h"
@@ -54,6 +57,50 @@ void Sound_StopAll()
 {
 }
 
+
+void updateControls(JoystickState* joystickState)
+{
+	//scanKeys();
+	// dl_u16 keys = keysHeld();
+
+    // Check D-Pad
+    bool leftDown = 0;// keys & KEY_LEFT;
+    bool rightDown = 0;// keys & KEY_RIGHT;
+    bool upDown = 0;// keys & KEY_UP;
+    bool downDown = 0;// keys & KEY_DOWN;
+    bool jumpDown = 0;// keys & KEY_A;
+    bool startDown = 0;// keys & KEY_START;
+
+    joystickState->leftPressed = (!joystickState->leftDown) & leftDown;
+    joystickState->rightPressed = (!joystickState->rightDown) & rightDown;
+    joystickState->upPressed = (!joystickState->upDown) & upDown;
+    joystickState->downPressed =  (!joystickState->downDown) & downDown;
+    joystickState->jumpPressed =  (!joystickState->jumpDown) & jumpDown;
+    joystickState->startPressed = (!joystickState->startDown) & startDown;
+
+    joystickState->leftReleased = joystickState->leftDown & (!leftDown);
+    joystickState->rightReleased = joystickState->rightDown & (!rightDown);
+    joystickState->upReleased = joystickState->upDown & (!upDown);
+    joystickState->downReleased =  joystickState->downDown & (!downDown);
+    joystickState->jumpReleased =  joystickState->jumpDown & (!jumpDown);
+    joystickState->startReleased = joystickState->startPressed & (!startDown);
+
+    joystickState->leftDown = leftDown;
+    joystickState->rightDown = rightDown;
+    joystickState->upDown = upDown;
+    joystickState->downDown = downDown;
+    joystickState->jumpDown = jumpDown;
+    joystickState->startDown = startDown;
+
+#ifdef DEV_MODE
+    bool debugStateDown = keys & KEY_B;
+
+    joystickState->debugStatePressed = !joystickState->debugStateDown & debugStateDown;
+    joystickState->debugStateReleased = joystickState->debugStatePressed & !debugStateDown;
+    joystickState->debugStateDown = debugStateDown;
+#endif
+}
+
 // Entry Point
 int main(bool hardReset)
 {
@@ -101,9 +148,28 @@ int main(bool hardReset)
 	default: VDP_drawText("Load resources successful", 12, 15); break;
 	}
 
+	memset(&gameData, 0, sizeof(GameData));
+
+	GameRunner_Init(&gameData, &resources);
+
     while (TRUE)
     {
+		updateControls(&gameData.joystickState);
 
+		if (gameData.joystickState.startPressed)
+		{
+			gameData.paused = !gameData.paused;
+
+			if (gameData.paused)
+				Sound_StopAll();
+		}
+
+		if (!gameData.paused)
+		{
+			GameRunner_Update(&gameData, &resources);
+		}
+
+		GameRunner_Draw(&gameData, &resources);
 
         SPR_update();
         SYS_doVBlankProcess();

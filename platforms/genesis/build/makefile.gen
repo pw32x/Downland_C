@@ -23,7 +23,7 @@ ifeq ($(findstring clean,$(MAKECMDGOALS)),clean)
 	CLEAN := TRUE
 endif
 
-SRC_DIR := src
+SRC_DIR := source
 RES_DIR := res
 INC_DIR := inc
 OUT_DIR := out/$(BUILD_TYPE)

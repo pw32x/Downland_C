@@ -10,6 +10,7 @@
 #include <stdexcept>
 #include <string>
 #include <format>
+#include <array>
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
@@ -307,6 +308,148 @@ uint32_t palette[16] =
     0xFF000000
 };
 
+#define TILE_WIDTH 8
+#define TILE_HEIGHT 8
+#define TILE_SIZE (TILE_WIDTH * TILE_HEIGHT)
+
+using Tile = std::array<dl_u8, TILE_SIZE>;
+using TileSet = std::vector<Tile>;
+
+#define TILE_MAP_WIDTH (FRAMEBUFFER_WIDTH / 8)
+#define TILE_MAP_HEIGHT (FRAMEBUFFER_HEIGHT / 8)
+#define TILE_MAP_SIZE (TILE_MAP_WIDTH * TILE_MAP_HEIGHT)
+
+using TileMap = std::vector<dl_u16>;
+
+void extractTile(const dl_u8* background, dl_u8 startX, dl_u8 startY, Tile& tile)
+{
+    for (dl_u16 loopy = 0; loopy < TILE_HEIGHT; loopy++)
+    {
+        for (dl_u16 loopx = 0; loopx < TILE_WIDTH; loopx++)
+        {
+            tile[loopx + (loopy * TILE_WIDTH)] = background[(loopx + startX) + ((loopy + startY) * FRAMEBUFFER_WIDTH)];
+        }
+    }
+}
+
+dl_u16 appendTileToTileSet(const Tile& tile, TileSet& tileSet)
+{
+    // if the tile already exists, just return the existing index
+    dl_u16 tileSetIndex = 0;
+    for (auto& tileSetTile : tileSet)
+    {
+        if (tileSetTile == tile)
+        {
+            break;
+        }
+
+        tileSetIndex++;
+    }
+
+    if (tileSetIndex == tileSet.size())
+    {
+        tileSet.push_back(tile);
+    }
+
+    return tileSetIndex;
+}
+
+void buildTileMap(const dl_u8* background, TileMap& tileMap, TileSet& tileSet)
+{
+    for (int tileMapY = 0; tileMapY < TILE_MAP_HEIGHT; tileMapY++)
+    {
+        for (int tileMapX = 0; tileMapX < TILE_MAP_WIDTH; tileMapX++)
+        {
+            dl_u8 startX = tileMapX * TILE_WIDTH;
+            dl_u8 startY = tileMapY * TILE_HEIGHT;
+
+            Tile tile;
+            extractTile(background, startX, startY, tile);
+
+            dl_u16 tileIndex = appendTileToTileSet(tile, tileSet);
+
+            tileMap.push_back(tileIndex);
+        }
+    }
+}
+
+void saveTileSetToPng(const TileSet& tileSet)
+{
+    dl_u8* tileSetBitmap = new dl_u8[tileSet.size() * TILE_SIZE];
+
+    dl_u16 counter = 0;
+    for (auto& tile : tileSet)
+    {
+        memcpy(tileSetBitmap + (counter * TILE_SIZE), tileSet[counter].data(), TILE_SIZE);
+        counter++;
+    }
+
+    save8bppToPng(tileSetBitmap, 
+                  TILE_WIDTH, 
+                  TILE_HEIGHT * static_cast<dl_u16>(tileSet.size()), 
+                  palette,  
+                  "tileset.png");
+
+    delete [] tileSetBitmap;
+}
+
+std::string roomNames[] = 
+{
+"chamber0",
+"chamber1",
+"chamber2",
+"chamber3",
+"chamber4",
+"chamber5",
+"chamber6",
+"chamber7",
+"chamber8",
+"chamber9",
+"titleScreen"
+};
+
+void saveTileMapSource(const std::vector<TileMap>& tileMaps)
+{
+    std::ostringstream oss;
+
+    dl_u8 counter = 0;
+    for (auto& tileMap : tileMaps)
+    {
+        oss << "dl_u8 " << roomNames[counter] << " = \n";
+        oss << "{\n";
+        oss << "}\n";
+        oss << "\n";
+
+        counter++;
+    }
+
+    oss << "\n";
+    oss << "extern dl_u8* roomTileMaps[" << NUM_ROOMS_PLUS_TITLESCREN << "] = \n";
+    oss << "{\n";
+    for (int loop = 0; loop < NUM_ROOMS_PLUS_TITLESCREN; loop++)
+        oss << "    " << roomNames[loop] << ",\n";
+    oss << "}\n";
+
+
+    std::ofstream outFile("tileMaps.c");
+    outFile << oss.str();
+}
+
+void saveTileMapHeader()
+{
+    std::ostringstream oss;
+
+    oss << "#ifndef TILEMAPS_HEADER_INCLUDE_H\n";
+    oss << "#define TILEMAPS_HEADER_INCLUDE_H\n";
+    oss << "\n";
+    oss << "extern dl_u8* roomTileMaps[" << NUM_ROOMS_PLUS_TITLESCREN << "];\n";
+    oss << "\n";
+    oss << "#endif\n";
+
+    std::ofstream outFile("tileMaps.h");
+    outFile << oss.str();
+}
+
 int main()
 {
     Resources resources;
@@ -319,22 +462,42 @@ int main()
 
     ResourceLoaderBuffer_Init(downland_rom.data(), DOWNLAND_ROM_SIZE, &resources);
 
-    dl_u8 framebuffer[FRAMEBUFFER_PITCH * FRAMEBUFFER_HEIGHT];
-    dl_u8 framebuffer8bpp[FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT];
+    dl_u8 background[FRAMEBUFFER_PITCH * FRAMEBUFFER_HEIGHT];
+    dl_u8 background8bpp[FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT];
+
+
+
+    std::vector<Tile> tileSet;
+    std::vector<TileMap> tileMaps;
+
 
     for (int loop = 0; loop < NUM_ROOMS_PLUS_TITLESCREN; loop++)
     {
         drawBackground(&resources.roomResources[loop].backgroundDrawData, 
 				       &resources,
-				       framebuffer);
+				       background);
 
-        convert1bppImageTo8bppCrtEffectImage(framebuffer,
-                                             framebuffer8bpp,
+        convert1bppImageTo8bppCrtEffectImage(background,
+                                             background8bpp,
                                              FRAMEBUFFER_WIDTH,
                                              FRAMEBUFFER_HEIGHT,
                                              CrtColor_Blue);
 
-        save8bppToPng(framebuffer8bpp, FRAMEBUFFER_WIDTH, FRAMEBUFFER_HEIGHT, palette,  std::format("room{}.png", loop));
+        TileMap tileMap;
+        buildTileMap(background8bpp, tileMap, tileSet);
+
+        tileMaps.push_back(tileMap);
+
+
+        //save8bppToPng(framebuffer8bpp, FRAMEBUFFER_WIDTH, FRAMEBUFFER_HEIGHT, palette,  std::format("room{}.png", loop));
     }
+
+    // save tileset to png
+    saveTileSetToPng(tileSet);
+    saveTileMapSource(tileMaps);
+    saveTileMapHeader();
+
+    // save tilemaps to .c
+    // save tilemap .h
 
 }

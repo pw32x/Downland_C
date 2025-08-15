@@ -11,9 +11,12 @@
 #include <string>
 #include <format>
 #include <array>
+#include <string_view>
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
+
+std::string g_resPath = "res\\";
 
 extern "C"
 {
@@ -388,9 +391,19 @@ void saveTileSetToPng(const TileSet& tileSet)
                   TILE_WIDTH, 
                   TILE_HEIGHT * static_cast<dl_u16>(tileSet.size()), 
                   palette,  
-                  "tileset.png");
+                  g_resPath + "tileset.png");
 
     delete [] tileSetBitmap;
+}
+
+void saveResFile()
+{
+    std::ostringstream oss;
+
+    oss << "TILESET tileSet \"tileset.png\"\n";
+
+    std::ofstream outFile(g_resPath + "tileset.res");
+    outFile << oss.str();
 }
 
 std::string roomNames[] = 
@@ -415,8 +428,23 @@ void saveTileMapSource(const std::vector<TileMap>& tileMaps)
     dl_u8 counter = 0;
     for (auto& tileMap : tileMaps)
     {
-        oss << "dl_u8 " << roomNames[counter] << " = \n";
+        oss << "dl_u8 " << roomNames[counter] << "TileMap = \n";
         oss << "{\n";
+
+        for (int loopy = 0; loopy < TILE_MAP_HEIGHT; loopy++)
+        {
+            oss << "    ";
+
+            for (int loopx = 0; loopx < TILE_MAP_WIDTH; loopx++)
+            {
+                dl_u16 tileIndex = tileMap[loopx + (loopy * TILE_MAP_WIDTH)];
+
+                oss << tileIndex << ", ";
+            }
+
+            oss << "\n";
+        }
+
         oss << "}\n";
         oss << "\n";
 
@@ -427,11 +455,11 @@ void saveTileMapSource(const std::vector<TileMap>& tileMaps)
     oss << "extern dl_u8* roomTileMaps[" << NUM_ROOMS_PLUS_TITLESCREN << "] = \n";
     oss << "{\n";
     for (int loop = 0; loop < NUM_ROOMS_PLUS_TITLESCREN; loop++)
-        oss << "    " << roomNames[loop] << ",\n";
+        oss << "    " << roomNames[loop] << "TileMap,\n";
     oss << "}\n";
 
 
-    std::ofstream outFile("tileMaps.c");
+    std::ofstream outFile(g_resPath + "tileMaps.c");
     outFile << oss.str();
 }
 
@@ -446,19 +474,19 @@ void saveTileMapHeader()
     oss << "\n";
     oss << "#endif\n";
 
-    std::ofstream outFile("tileMaps.h");
+    std::ofstream outFile(g_resPath + "tileMaps.h");
     outFile << oss.str();
 }
 
 int main()
 {
     Resources resources;
-    std::cout << "Hello World!\n";
-
+    //std::cout << "Hello World!\n";
+    //
     std::filesystem::path cwd = std::filesystem::current_path();
     std::cout << "Current working directory: " << cwd << "\n";
 
-    auto downland_rom = load_binary_file("..\\..\\res\\downland.rom");
+    auto downland_rom = load_binary_file(g_resPath + "downland.rom");
 
     ResourceLoaderBuffer_Init(downland_rom.data(), DOWNLAND_ROM_SIZE, &resources);
 
@@ -496,6 +524,7 @@ int main()
     saveTileSetToPng(tileSet);
     saveTileMapSource(tileMaps);
     saveTileMapHeader();
+    saveResFile();
 
     // save tilemaps to .c
     // save tilemap .h

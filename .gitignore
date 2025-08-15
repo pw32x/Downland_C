@@ -433,3 +433,7 @@ platforms/gba/test_share/Downland.gba
 /platforms/32X.Works
 /platforms/genesis/out
 platforms/genesis/res/downland.rom
+platforms/genesis/res/tileMaps.c
+platforms/genesis/res/tileMaps.h
+platforms/genesis/res/tileset.png
+platforms/genesis/res/tileset.res

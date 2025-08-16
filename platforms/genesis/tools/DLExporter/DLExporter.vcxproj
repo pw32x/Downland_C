@@ -136,6 +136,7 @@ copy $(OutDir)$(TargetName)$(TargetExt) $(SolutionDir)..\bin\$(TargetName)$(Targ
     <ClCompile Include="..\..\..\..\game\draw_utils.c" />
     <ClCompile Include="..\..\..\..\game\resource_loader_buffer.c" />
     <ClCompile Include="DLExporter.cpp" />
+    <ClCompile Include="lodepng.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\game\base_defines.h" />
@@ -145,7 +146,7 @@ copy $(OutDir)$(TargetName)$(TargetExt) $(SolutionDir)..\bin\$(TargetName)$(Targ
     <ClInclude Include="..\..\..\..\game\draw_utils.h" />
     <ClInclude Include="..\..\..\..\game\resource_loader_buffer.h" />
     <ClInclude Include="..\..\..\..\game\resource_types.h" />
-    <ClInclude Include="stb_image_write.h" />
+    <ClInclude Include="lodepng.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

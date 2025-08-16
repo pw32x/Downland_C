@@ -1,7 +1,3 @@
-// DLExporter.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-#define _CRT_SECURE_NO_WARNINGS
-
 #include <iostream>
 #include <fstream>
 #include <filesystem>
@@ -13,8 +9,7 @@
 #include <array>
 #include <string_view>
 
-#define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "stb_image_write.h"
+#include "lodepng.h"
 
 std::string g_resPath = "res\\";
 
@@ -42,7 +37,6 @@ void dl_memcpy(void* destination, const void* source, dl_u16 count)
 }
    
 }
-
 
 std::vector<dl_u8> load_binary_file(const std::string& path)
 {
@@ -149,168 +143,6 @@ void convert1bppImageTo8bppCrtEffectImage(const dl_u8* originalImage,
     }
 }
 
-
-dl_u16 findDuplicateTile(const dl_u8 tile[32], 
-                         const dl_u16* vramTileAddr, 
-                         dl_u16 maxTiles)
-{
-    const dl_u16* tile16 = (const dl_u16*)tile;
-
-    dl_u16 loop = 0;
-
-    for (loop = 0; loop < maxTiles; loop++)
-    {
-        dl_u16 differences = 0;
-
-        for (dl_u8 counter = 0; counter < 16; counter++)
-        {
-            differences += tile16[counter] ^ vramTileAddr[counter];
-            if (differences)
-                break;
-        }
-
-        if (!differences)
-        {
-            return loop;
-        }
-
-        vramTileAddr += 16;
-    }
-
-    return 0xffff;
-}
-
-dl_u16 convertBackgroundToVRAM16(const dl_u8* originalImage,
-                                 dl_u16* vramTileAddr,
-                                 dl_u16* vramTileMapAddr,
-                                 dl_u16 startTileOffset,
-                                 dl_u16 width,
-                                 dl_u16 height,
-                                 enum CrtColor crtColor) 
-{
-    const dl_u8 bytesPerRow = width / 8;
-
-    // Color definitions
-    const dl_u8 BLACK  = 0x00; // 00 black
-    const dl_u8 BLUE   = crtColor == CrtColor_Blue ? 0x1 : 0x2; // 01 blue
-    const dl_u8 ORANGE = crtColor == CrtColor_Blue ? 0x2 : 0x1; // 10 orange
-    const dl_u8 WHITE  = 0x3; // 11 white
-
-    dl_u16 tileWidth = width / 8;
-    dl_u16 tileHeight = height / 8;
-
-    dl_u8 tile[32];
-
-    dl_u16 tilesCreated = 0;
-
-    for (dl_u16 tileY = 0; tileY < tileHeight; tileY++) 
-    {
-        for (dl_u16 tileX = 0; tileX < tileWidth; tileX++)
-        {
-            dl_u16 startX = tileX;
-            dl_u16 startY = tileY * 8;
-
-            dl_u16 sumColor = 0;
-
-            for (dl_u8 y = 0; y < 8; y++) 
-            {
-                // every pair of bits generates a color for the two corresponding
-                // pixels of the destination texture, so:
-                // source bits:        00 01 10 11
-                // final pixel colors: black, black, blue, blue, orange, orange, white, white.
-                for (dl_u8 x = 0; x < 8; x += 2) 
-                {
-                    int byteIndex = ((startY + y) * bytesPerRow) + startX;
-                    int bitOffset = 7 - (x % 8);
-                    
-                    // Read two adjacent bits
-                    dl_u8 bit1 = (originalImage[byteIndex] >> bitOffset) & 1;
-                    dl_u8 bit2 = (originalImage[byteIndex] >> (bitOffset - 1)) & 1;
-
-                    // Determine color
-                    dl_u8 color = BLACK;
-                    if (bit1 == 0 && bit2 == 1) color = BLUE;
-                    else if (bit1 == 1 && bit2 == 0) color = ORANGE;
-                    else if (bit1 == 1 && bit2 == 1) color = WHITE;
-
-                    sumColor += color;
-
-                    // Set color
-                    dl_u16 byteLocation = (x + (y * 8)) >> 1;
-                    tile[byteLocation] = color | (color << 4);
-                }
-            }
-
-            dl_u16 tileIndex = 0;
-
-            // if the tile isn't empty, then check for duplicates
-            // if there is then use that
-            if (sumColor)
-            {
-                dl_u16 duplicateTileIndex = findDuplicateTile(tile, 
-                                                              vramTileAddr, 
-                                                              startTileOffset + tilesCreated);
-
-                if (duplicateTileIndex == 0xffff)
-                {
-                    tileIndex = tilesCreated + startTileOffset;
-                    //CpuFastSet(tile, vramTileAddr + (tileIndex * 16), COPY32 | 8);
-                    throw std::exception("not implemented yet");
-                    tilesCreated++;
-                }
-                else
-                {
-                    tileIndex = duplicateTileIndex;
-                }
-            }
-
-            vramTileMapAddr[tileX + (tileY * 32)] = tileIndex;            
-        }
-    }
-
-    return startTileOffset + tilesCreated;
-}
-
-bool save8bppToPng(const uint8_t* buffer8bpp,
-                   int width, int height,
-                   const uint32_t* paletteRGBA, // 16 entries, 0xAARRGGBB
-                   const std::string& filename)
-{
-    std::vector<uint8_t> rgba(width * height * 4);
-
-    for (int i = 0; i < width * height; ++i)
-    {
-        uint32_t color = paletteRGBA[buffer8bpp[i]];
-        rgba[i * 4 + 0] = (color >> 16) & 0xFF; // R
-        rgba[i * 4 + 1] = (color >> 8)  & 0xFF; // G
-        rgba[i * 4 + 2] = (color >> 0)  & 0xFF; // B
-        rgba[i * 4 + 3] = (color >> 24) & 0xFF; // A
-    }
-
-    return stbi_write_png(filename.c_str(), width, height, 4, rgba.data(), width * 4) != 0;
-}
-
-// downland colors
-uint32_t palette[16] =
-{
-    0xFF000000, // black
-    0xFF0000FF, // blue
-    0xFFFFA500, // orange
-    0xFFFFFFFF, // white
-    0xFF000000, 
-    0xFF000000, 
-    0xFF000000, 
-    0xFF000000,
-    0xFF000000, 
-    0xFF000000, 
-    0xFF000000, 
-    0xFF000000,
-    0xFF000000, 
-    0xFF000000, 
-    0xFF000000, 
-    0xFF000000
-};
-
 #define TILE_WIDTH 8
 #define TILE_HEIGHT 8
 #define TILE_SIZE (TILE_WIDTH * TILE_HEIGHT)
@@ -376,6 +208,53 @@ void buildTileMap(const dl_u8* background, TileMap& tileMap, TileSet& tileSet)
     }
 }
 
+void save_png_8bpp(const dl_u8* background,
+                   unsigned width, 
+                   unsigned height,
+                   const std::string& filename)
+{
+    LodePNGState state;
+    lodepng_state_init(&state);
+
+    state.encoder.auto_convert = 0;
+
+    // Set to indexed color
+    state.info_raw.colortype = LCT_PALETTE;
+    state.info_raw.bitdepth = 8;
+    state.info_png.color.colortype = LCT_PALETTE;
+    state.info_png.color.bitdepth = 8;
+
+    lodepng_palette_add(&state.info_png.color,   0,   0,   0, 255); // index 0: black
+    lodepng_palette_add(&state.info_png.color,   0,   0, 255, 255); // index 1: blue
+    lodepng_palette_add(&state.info_png.color, 255, 165,   0, 255); // index 2: orange
+    lodepng_palette_add(&state.info_png.color, 255, 255, 255, 255); // index 3: white
+
+    lodepng_palette_add(&state.info_raw,   0,   0,   0, 255); // index 0: black
+    lodepng_palette_add(&state.info_raw,   0,   0, 255, 255); // index 1: blue
+    lodepng_palette_add(&state.info_raw, 255, 165,   0, 255); // index 2: orange
+    lodepng_palette_add(&state.info_raw, 255, 255, 255, 255); // index 3: white
+
+    // Encode
+    dl_u8* png;
+    size_t pngSize;
+    unsigned error = lodepng_encode(&png, &pngSize, background, width, height, &state);
+
+    if(error)
+    {
+        throw std::exception("lodepng_encode failed.");
+    }
+
+    // Save to file
+    error = lodepng_save_file(png, pngSize, filename.c_str());
+
+    if (error) 
+    {
+        throw std::exception("lodepng_save_file failed.");
+    }
+
+    lodepng_state_cleanup(&state);
+}
+
 void saveTileSetToPng(const TileSet& tileSet)
 {
     dl_u8* tileSetBitmap = new dl_u8[tileSet.size() * TILE_SIZE];
@@ -387,11 +266,11 @@ void saveTileSetToPng(const TileSet& tileSet)
         counter++;
     }
 
-    save8bppToPng(tileSetBitmap, 
-                  TILE_WIDTH, 
-                  TILE_HEIGHT * static_cast<dl_u16>(tileSet.size()), 
-                  palette,  
+    save_png_8bpp(tileSetBitmap, 
+                  TILE_WIDTH,
+                  TILE_HEIGHT * static_cast<dl_u16>(tileSet.size()),
                   g_resPath + "tileset.png");
+
 
     delete [] tileSetBitmap;
 }
@@ -481,10 +360,8 @@ void saveTileMapHeader()
 int main()
 {
     Resources resources;
-    //std::cout << "Hello World!\n";
-    //
-    std::filesystem::path cwd = std::filesystem::current_path();
-    std::cout << "Current working directory: " << cwd << "\n";
+
+    std::cout << "**** DLExporter START\n";
 
     auto downland_rom = load_binary_file(g_resPath + "downland.rom");
 
@@ -492,8 +369,6 @@ int main()
 
     dl_u8 background[FRAMEBUFFER_PITCH * FRAMEBUFFER_HEIGHT];
     dl_u8 background8bpp[FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT];
-
-
 
     std::vector<Tile> tileSet;
     std::vector<TileMap> tileMaps;
@@ -515,9 +390,6 @@ int main()
         buildTileMap(background8bpp, tileMap, tileSet);
 
         tileMaps.push_back(tileMap);
-
-
-        //save8bppToPng(framebuffer8bpp, FRAMEBUFFER_WIDTH, FRAMEBUFFER_HEIGHT, palette,  std::format("room{}.png", loop));
     }
 
     // save tileset to png
@@ -528,5 +400,5 @@ int main()
 
     // save tilemaps to .c
     // save tilemap .h
-
+    std::cout << "**** DLExporter END\n";
 }

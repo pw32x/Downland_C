@@ -437,3 +437,4 @@ platforms/genesis/res/tileMaps.c
 platforms/genesis/res/tileMaps.h
 platforms/genesis/res/tileset.png
 platforms/genesis/res/tileset.res
+platforms/genesis/res/tileset.h

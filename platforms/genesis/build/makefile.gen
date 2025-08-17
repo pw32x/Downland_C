@@ -69,6 +69,8 @@ RES_RES += $(wildcard $(RES_DIR)/*/*/*/*.res)
 RES_RES += $(wildcard $(RES_DIR)/*/*/*/*/*.res)
 RES_RES := $(RES_RES)
 
+SRC_C += $(wildcard $(RES_DIR)/*.c)
+
 RES_O = $(RES_RES:.res=.o)
 RES_O := $(addprefix $(OUT_DIR)/, $(RES_O))
 

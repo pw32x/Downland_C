@@ -23,6 +23,9 @@ typedef struct
 #define NUM_BIT_SHIFTS 4
 #define BITSHIFTED_SIZE(spriteCount, rowCount) (spriteCount * rowCount * DESTINATION_BYTES_PER_ROW * NUM_BIT_SHIFTS)
 
+#define CHARACTER_FONT_COUNT    39
+#define CHARACTER_FONT_WIDTH    8
+#define CHARACTER_FONT_HEIGHT   7
 
 typedef struct
 {

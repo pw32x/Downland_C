@@ -1,3 +1,4 @@
+#include "titlescreen.h"
 #include "room_types.h"
 
 #include "../game_types.h"
@@ -5,10 +6,6 @@
 #include "../drops_manager.h"
 #include "../dl_sound.h"
 #include "../dl_platform.h"
-
-#define TITLESCREEN_HIGHSCORE_LOCATION			0x12cc
-#define TITLESCREEN_PLAYERONE_SCORE_LOCATION	0x1412
-#define TITLESCREEN_PLAYERTWO_SCORE_LOCATION	0x1552
 
 void titleScreen_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resources)
 {

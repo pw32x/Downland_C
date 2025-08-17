@@ -535,8 +535,8 @@ void GameRunner_Init(struct GameData* gameData, const Resources* resources)
 	tileIndex = buildSpriteResource(&moneyBagSprite, &g_16x16SpriteAttributes, resources->sprite_moneyBag, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, tileIndex);
 	tileIndex = buildSpriteResource(&doorSprite, &g_16x16SpriteAttributes, resources->sprite_door, DOOR_SPRITE_WIDTH, DOOR_SPRITE_ROWS, 1, tileIndex);
 	tileIndex = buildEmptySpriteResource(&regenSprite, &g_16x16SpriteAttributes, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, 1, tileIndex);
-	tileIndex = buildTextResource(&hudCharacterFont, &g_hudTextSpriteAttributes, resources->characterFont, 8, 7, 39, tileIndex, TRUE);
-	tileIndex = buildTextResource(&characterFont, &g_textSpriteAttributes, resources->characterFont, 8, 7, 39, tileIndex, FALSE);
+	tileIndex = buildTextResource(&hudCharacterFont, &g_hudTextSpriteAttributes, resources->characterFont, 8, 7, CHARACTER_FONT_COUNT, tileIndex, TRUE);
+	tileIndex = buildTextResource(&characterFont, &g_textSpriteAttributes, resources->characterFont, 8, 7, CHARACTER_FONT_COUNT, tileIndex, FALSE);
 	tileIndex = buildPlayerIconResource(&playerIconSprite, &g_playerIconSpriteAttributes, resources->sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYERICON_NUM_SPRITE_ROWS, PLAYER_SPRITE_COUNT, tileIndex);
 
 

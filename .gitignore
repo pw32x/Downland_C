@@ -438,3 +438,13 @@ platforms/genesis/res/tileMaps.h
 platforms/genesis/res/tileset.png
 platforms/genesis/res/tileset.res
 platforms/genesis/res/tileset.h
+platforms/genesis/res/backgroundTileset.png
+platforms/genesis/res/ballTileset.png
+platforms/genesis/res/birdTileset.png
+platforms/genesis/res/characterFontTileset.png
+platforms/genesis/res/diamondTileset.png
+platforms/genesis/res/doorTileset.png
+platforms/genesis/res/dropTileset.png
+platforms/genesis/res/keyTileset.png
+platforms/genesis/res/moneyBagTileset.png
+platforms/genesis/res/playerTileset.png

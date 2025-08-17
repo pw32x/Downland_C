@@ -20,6 +20,7 @@ extern "C"
 #include "resource_types.h"
 #include "resource_loader_buffer.h"
 #include "draw_utils.h"
+#include "drops_manager.h"
 
 void* dl_alloc(dl_u32 size)
 {
@@ -171,18 +172,21 @@ dl_u16 appendTileToTileSet(const Tile& tile, TileSet& tileSet)
 {
     // if the tile already exists, just return the existing index
     dl_u16 tileSetIndex = 0;
+    bool found = false;
     for (auto& tileSetTile : tileSet)
     {
         if (tileSetTile == tile)
         {
+            found = true;
             break;
         }
 
         tileSetIndex++;
     }
 
-    if (tileSetIndex == tileSet.size())
+    if (!found)
     {
+        tileSetIndex = static_cast<dl_u16>(tileSet.size());
         tileSet.push_back(tile);
     }
 
@@ -255,6 +259,8 @@ void save_png_8bpp(const dl_u8* background,
     lodepng_state_cleanup(&state);
 }
 
+std::vector<std::string> g_tilesetNames;
+
 void saveTileSetToPng(const TileSet& tileSet)
 {
     dl_u8* tileSetBitmap = new dl_u8[tileSet.size() * TILE_SIZE];
@@ -269,17 +275,24 @@ void saveTileSetToPng(const TileSet& tileSet)
     save_png_8bpp(tileSetBitmap, 
                   TILE_WIDTH,
                   TILE_HEIGHT * static_cast<dl_u16>(tileSet.size()),
-                  g_resPath + "tileset.png");
+                  g_resPath + "backgroundTileset.png");
 
 
     delete [] tileSetBitmap;
+
+    g_tilesetNames.push_back("backgroundTileset");
 }
+
+
 
 void saveResFile()
 {
     std::ostringstream oss;
 
-    oss << "TILESET tileSet \"tileset.png\"\n";
+    for (auto& name : g_tilesetNames)
+    {
+        oss << "TILESET " << name << " \"" << name << ".png\" BEST NONE\n";
+    }
 
     std::ofstream outFile(g_resPath + "tileset.res");
     outFile << oss.str();
@@ -304,10 +317,13 @@ void saveTileMapSource(const std::vector<TileMap>& tileMaps)
 {
     std::ostringstream oss;
 
+    oss << "#include \"base_types.h\"\n";
+    oss << "\n";
+
     dl_u8 counter = 0;
     for (auto& tileMap : tileMaps)
     {
-        oss << "dl_u8 " << roomNames[counter] << "TileMap = \n";
+        oss << "dl_u16 " << roomNames[counter] << "TileMap[] = \n";
         oss << "{\n";
 
         for (int loopy = 0; loopy < TILE_MAP_HEIGHT; loopy++)
@@ -324,18 +340,18 @@ void saveTileMapSource(const std::vector<TileMap>& tileMaps)
             oss << "\n";
         }
 
-        oss << "}\n";
+        oss << "};\n";
         oss << "\n";
 
         counter++;
     }
 
     oss << "\n";
-    oss << "extern dl_u8* roomTileMaps[" << NUM_ROOMS_PLUS_TITLESCREN << "] = \n";
+    oss << "dl_u16* roomTileMaps[" << NUM_ROOMS_PLUS_TITLESCREN << "] = \n";
     oss << "{\n";
     for (int loop = 0; loop < NUM_ROOMS_PLUS_TITLESCREN; loop++)
         oss << "    " << roomNames[loop] << "TileMap,\n";
-    oss << "}\n";
+    oss << "};\n";
 
 
     std::ofstream outFile(g_resPath + "tileMaps.c");
@@ -349,12 +365,89 @@ void saveTileMapHeader()
     oss << "#ifndef TILEMAPS_HEADER_INCLUDE_H\n";
     oss << "#define TILEMAPS_HEADER_INCLUDE_H\n";
     oss << "\n";
-    oss << "extern dl_u8* roomTileMaps[" << NUM_ROOMS_PLUS_TITLESCREN << "];\n";
+    oss << "extern dl_u16* roomTileMaps[" << NUM_ROOMS_PLUS_TITLESCREN << "];\n";
     oss << "\n";
     oss << "#endif\n";
 
     std::ofstream outFile(g_resPath + "tileMaps.h");
     outFile << oss.str();
+}
+
+void saveCharacterFont(const dl_u8* characterFont)
+{
+#define DESTINATION_FONT_HEIGHT 8
+
+    dl_u8* destinationFont = new dl_u8[CHARACTER_FONT_WIDTH * DESTINATION_FONT_HEIGHT * CHARACTER_FONT_COUNT];
+    memset(destinationFont, 0, CHARACTER_FONT_WIDTH * DESTINATION_FONT_HEIGHT * CHARACTER_FONT_COUNT);
+
+    dl_u8* destinationFontRunner = destinationFont;
+
+    for (int characterLoop = 0; characterLoop < CHARACTER_FONT_COUNT; characterLoop++)
+    {
+        for (int loopy = 0; loopy < CHARACTER_FONT_HEIGHT; loopy++)
+        {
+            dl_u8 characterRow = characterFont[loopy];
+
+            for (int loopx = 0; loopx < CHARACTER_FONT_WIDTH; loopx++)
+            {
+                dl_u8 value = characterRow & 1;
+                characterRow >>= 1; // next bit
+                destinationFontRunner[((CHARACTER_FONT_WIDTH - 1) - loopx) + (loopy * CHARACTER_FONT_WIDTH)] = value;
+            }
+        }
+
+
+        characterFont += CHARACTER_FONT_HEIGHT; // move to next character
+
+        destinationFontRunner += CHARACTER_FONT_WIDTH * DESTINATION_FONT_HEIGHT; // destination height
+    }
+
+    save_png_8bpp(destinationFont, 
+                  CHARACTER_FONT_WIDTH,
+                  DESTINATION_FONT_HEIGHT * CHARACTER_FONT_COUNT,
+                  g_resPath + "characterFontTileset.png");
+
+    delete [] destinationFont;
+
+    g_tilesetNames.push_back("characterFontTileset");
+}
+
+
+void saveSprite16(const dl_u8* sprite, dl_u8 width, dl_u8 height, dl_u8 numFrames, const std::string& name)
+{
+    dl_u8 spriteFrameSizeInBytes = (width / 8) * height;
+
+    dl_u8 destinationWidth = ((width + 7) / 8) * 8;
+    dl_u8 destinationHeight = ((height + 7) / 8) * 8;
+    dl_u16 destinationFrameSize = destinationWidth * destinationHeight;
+
+    dl_u16 bufferSize = destinationWidth * destinationHeight * numFrames;
+    dl_u8* sprite8bpp = new dl_u8[bufferSize];
+    memset(sprite8bpp, 0, bufferSize);
+    dl_u8* sprite8bppRunner = sprite8bpp;
+
+
+    for (int frameLoop = 0; frameLoop < numFrames; frameLoop++)
+    {
+        convert1bppImageTo8bppCrtEffectImage(sprite,
+                                             sprite8bppRunner,
+                                             width,
+                                             height,
+                                             CrtColor::CrtColor_Blue);
+
+        // move to next frame
+        sprite += spriteFrameSizeInBytes;
+        sprite8bppRunner += destinationFrameSize; 
+    }
+
+    save_png_8bpp(sprite8bpp, 
+                  destinationWidth,
+                  destinationHeight * numFrames,
+                  g_resPath + name + ".png");
+
+    g_tilesetNames.push_back(name);
+
+    delete [] sprite8bpp;
 }
 
 int main()
@@ -387,18 +480,28 @@ int main()
                                              CrtColor_Blue);
 
         TileMap tileMap;
+
         buildTileMap(background8bpp, tileMap, tileSet);
 
         tileMaps.push_back(tileMap);
     }
 
-    // save tileset to png
+    saveCharacterFont(resources.characterFont);
+    saveSprite16(resources.sprites_drops, DROP_SPRITE_WIDTH, DROP_SPRITE_ROWS, DROP_SPRITE_COUNT, "dropTileset");   
+	saveSprite16(resources.sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYER_SPRITE_COUNT, "playerTileset");
+	//(dl_u8*)&cursorSpriteRaw, 8, 1, 1, tileIndex);
+	saveSprite16(resources.sprites_bouncyBall, BALL_SPRITE_WIDTH, BALL_SPRITE_ROWS, BALL_SPRITE_COUNT, "ballTileset");
+	saveSprite16(resources.sprites_bird, BIRD_SPRITE_WIDTH, BIRD_SPRITE_ROWS, BIRD_SPRITE_COUNT, "birdTileset");
+	saveSprite16(resources.sprite_key, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, "keyTileset");
+	saveSprite16(resources.sprite_diamond, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, "diamondTileset");
+	saveSprite16(resources.sprite_moneyBag, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, "moneyBagTileset");
+	saveSprite16(resources.sprite_door, DOOR_SPRITE_WIDTH, DOOR_SPRITE_ROWS, 1, "doorTileset");
+	//buildEmptySpriteResource(&regenSprite, &g_16x16SpriteAttributes, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, 1, tileIndex);
+
     saveTileSetToPng(tileSet);
     saveTileMapSource(tileMaps);
     saveTileMapHeader();
     saveResFile();
 
-    // save tilemaps to .c
-    // save tilemap .h
     std::cout << "**** DLExporter END\n";
 }

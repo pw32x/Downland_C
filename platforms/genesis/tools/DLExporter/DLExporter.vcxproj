@@ -144,6 +144,8 @@ copy $(OutDir)$(TargetName)$(TargetExt) $(SolutionDir)..\bin\$(TargetName)$(Targ
     <ClInclude Include="..\..\..\..\game\dl_platform.h" />
     <ClInclude Include="..\..\..\..\game\dl_rand.h" />
     <ClInclude Include="..\..\..\..\game\draw_utils.h" />
+    <ClInclude Include="..\..\..\..\game\drops_manager.h" />
+    <ClInclude Include="..\..\..\..\game\drops_types.h" />
     <ClInclude Include="..\..\..\..\game\resource_loader_buffer.h" />
     <ClInclude Include="..\..\..\..\game\resource_types.h" />
     <ClInclude Include="lodepng.h" />

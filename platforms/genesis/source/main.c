@@ -7,6 +7,8 @@
 // project headers
 #include "game_runner.h"
 
+
+
 // game headers
 #include "game_types.h"
 #include "resource_types.h"
@@ -60,16 +62,15 @@ void Sound_StopAll()
 
 void updateControls(JoystickState* joystickState)
 {
-	//scanKeys();
-	// dl_u16 keys = keysHeld();
+	dl_u16 state = JOY_readJoypad(0);
 
     // Check D-Pad
-    bool leftDown = 0;// keys & KEY_LEFT;
-    bool rightDown = 0;// keys & KEY_RIGHT;
-    bool upDown = 0;// keys & KEY_UP;
-    bool downDown = 0;// keys & KEY_DOWN;
-    bool jumpDown = 0;// keys & KEY_A;
-    bool startDown = 0;// keys & KEY_START;
+    bool leftDown = (state & BUTTON_LEFT) != 0;
+    bool rightDown = (state & BUTTON_RIGHT) != 0;
+    bool upDown = (state & BUTTON_UP) != 0;
+    bool downDown = (state & BUTTON_DOWN) != 0;
+    bool jumpDown = (state & BUTTON_A) != 0;
+    bool startDown = (state & BUTTON_START) != 0;
 
     joystickState->leftPressed = (!joystickState->leftDown) & leftDown;
     joystickState->rightPressed = (!joystickState->rightDown) & rightDown;
@@ -93,13 +94,21 @@ void updateControls(JoystickState* joystickState)
     joystickState->startDown = startDown;
 
 #ifdef DEV_MODE
-    bool debugStateDown = keys & KEY_B;
+    bool debugStateDown = keys & BUTTON_B;
 
     joystickState->debugStatePressed = !joystickState->debugStateDown & debugStateDown;
     joystickState->debugStateReleased = joystickState->debugStatePressed & !debugStateDown;
     joystickState->debugStateDown = debugStateDown;
 #endif
 }
+
+dl_u16 palette[] = 
+{
+	RGB8_8_8_TO_VDPCOLOR(0,		0,   0),
+	RGB8_8_8_TO_VDPCOLOR(0,		0, 255),
+	RGB8_8_8_TO_VDPCOLOR(255, 165,   0),
+	RGB8_8_8_TO_VDPCOLOR(255, 255, 255)
+};
 
 // Entry Point
 int main(bool hardReset)
@@ -110,6 +119,7 @@ int main(bool hardReset)
 	}
 
 	int result = 0;
+	(void)result;
 	dl_u16 romSize = sizeof(downland_rom);
 
 	if (romSize != DOWNLAND_ROM_SIZE)
@@ -131,15 +141,16 @@ int main(bool hardReset)
     // Initialize systems
     XGM2_loadDriver(TRUE);
     JOY_init();
-    SPR_init();
 
     // Load sprite palettes and set the text palette
+	PAL_setColors(PAL0, palette, 4, DMA);
     PAL_setPalette(PAL1, player_sprite.palette->data, DMA);
     PAL_setPalette(PAL2, explosion_sprite.palette->data, DMA);
     PAL_setPalette(PAL3, enemy_sprite.palette->data, DMA);
     VDP_setTextPalette(PAL1);
 
 
+	/*
 	switch (result)
 	{
 	case -3: VDP_drawText("Rom not the correct size", 12, 12); break;
@@ -147,6 +158,7 @@ int main(bool hardReset)
 	case -1: VDP_drawText("Checksum failed", 12, 14); break;
 	default: VDP_drawText("Load resources successful", 12, 15); break;
 	}
+	*/
 
 	memset(&gameData, 0, sizeof(GameData));
 
@@ -171,8 +183,8 @@ int main(bool hardReset)
 
 		GameRunner_Draw(&gameData, &resources);
 
-        SPR_update();
         SYS_doVBlankProcess();
+
     }
 
     return 0;

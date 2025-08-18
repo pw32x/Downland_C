@@ -289,10 +289,16 @@ void saveResFile()
 {
     std::ostringstream oss;
 
-    for (auto& name : g_tilesetNames)
-    {
-        oss << "TILESET " << name << " \"" << name << ".png\" BEST NONE\n";
-    }
+    oss << "TILESET characterFontTileset \"characterFontTileset.png\" BEST NONE\n";
+    oss << "TILESET dropTileset \"dropTileset.png\" BEST NONE\n";
+    oss << "SPRITE playerTileset \"playerTileset.png\" 2 2 NONE 0\n";
+    oss << "TILESET ballTileset \"ballTileset.png\" BEST NONE\n";
+    oss << "TILESET birdTileset \"birdTileset.png\" BEST NONE\n";
+    oss << "SPRITE keyTileset \"keyTileset.png\" 2 2 NONE 0\n";
+    oss << "SPRITE diamondTileset \"diamondTileset.png\" 2 2 NONE 0\n";
+    oss << "SPRITE moneyBagTileset \"moneyBagTileset.png\" 2 2 NONE 0\n";
+    oss << "SPRITE doorTileset \"doorTileset.png\" 2 2 NONE 0\n";
+    oss << "TILESET backgroundTileset \"backgroundTileset.png\" BEST NONE\n";
 
     std::ofstream outFile(g_resPath + "tileset.res");
     outFile << oss.str();

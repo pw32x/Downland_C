@@ -259,8 +259,6 @@ void save_png_8bpp(const dl_u8* background,
     lodepng_state_cleanup(&state);
 }
 
-std::vector<std::string> g_tilesetNames;
-
 void saveTileSetToPng(const TileSet& tileSet)
 {
     dl_u8* tileSetBitmap = new dl_u8[tileSet.size() * TILE_SIZE];
@@ -279,8 +277,6 @@ void saveTileSetToPng(const TileSet& tileSet)
 
 
     delete [] tileSetBitmap;
-
-    g_tilesetNames.push_back("backgroundTileset");
 }
 
 
@@ -414,8 +410,6 @@ void saveCharacterFont(const dl_u8* characterFont)
                   g_resPath + "characterFontTileset.png");
 
     delete [] destinationFont;
-
-    g_tilesetNames.push_back("characterFontTileset");
 }
 
 
@@ -450,8 +444,6 @@ void saveSprite16(const dl_u8* sprite, dl_u8 width, dl_u8 height, dl_u8 numFrame
                   destinationWidth,
                   destinationHeight * numFrames,
                   g_resPath + name + ".png");
-
-    g_tilesetNames.push_back(name);
 
     delete [] sprite8bpp;
 }

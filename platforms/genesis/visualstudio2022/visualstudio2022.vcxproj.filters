@@ -5,10 +5,6 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
     <Filter Include="build">
       <UniqueIdentifier>{c067bb2a-fe0e-4096-b2a6-f3b206af78c1}</UniqueIdentifier>
     </Filter>
@@ -24,6 +20,10 @@
     <Filter Include="source">
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="generated">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -89,6 +89,9 @@
     </ClCompile>
     <ClCompile Include="..\source\game_runner.c">
       <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\res\tileMaps.c">
+      <Filter>generated</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -310,5 +313,22 @@
     <ClInclude Include="..\source\game_runner.h">
       <Filter>source</Filter>
     </ClInclude>
+    <ClInclude Include="..\res\tileset.h">
+      <Filter>generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\res\resources.h">
+      <Filter>generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\res\tileMaps.h">
+      <Filter>generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game\rooms\titlescreen.h">
+      <Filter>game\rooms</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="..\res\tileset.res">
+      <Filter>generated</Filter>
+    </Resource>
   </ItemGroup>
 </Project>

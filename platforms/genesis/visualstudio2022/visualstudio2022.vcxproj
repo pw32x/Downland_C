@@ -109,6 +109,7 @@
     <ClCompile Include="..\..\..\game\rooms\titlescreen.c" />
     <ClCompile Include="..\..\..\game\rooms\transitions.c" />
     <ClCompile Include="..\..\..\game\string_utils.c" />
+    <ClCompile Include="..\res\tileMaps.c" />
     <ClCompile Include="..\source\game_runner.c" />
     <ClCompile Include="..\source\main.c" />
     <ClCompile Include="..\source\rom_header.c" />
@@ -186,8 +187,15 @@
     <ClInclude Include="..\..\..\game\rooms\chambers.h" />
     <ClInclude Include="..\..\..\game\rooms\rooms.h" />
     <ClInclude Include="..\..\..\game\rooms\room_types.h" />
+    <ClInclude Include="..\..\..\game\rooms\titlescreen.h" />
     <ClInclude Include="..\..\..\game\string_utils.h" />
+    <ClInclude Include="..\res\resources.h" />
+    <ClInclude Include="..\res\tileMaps.h" />
+    <ClInclude Include="..\res\tileset.h" />
     <ClInclude Include="..\source\game_runner.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="..\res\tileset.res" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

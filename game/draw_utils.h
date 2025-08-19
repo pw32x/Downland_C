@@ -19,7 +19,7 @@ void drawSprite_24PixelsWide(const dl_u8* spriteData, dl_u8 x, dl_u8 y, dl_u8 nu
 void drawSprite_24PixelsWide_noblend(const dl_u8* spriteData, dl_u8 x, dl_u8 y, dl_u8 numLines, dl_u8* framebuffer);
 
 void drawSprite_24PixelsWide_static(const dl_u8* spriteData, dl_u8 x, dl_u8 y, dl_u8 numLines, dl_u8* framebuffer);
-void drawSprite_16PixelsWide_static_IntoSpriteBuffer(const dl_u8* spriteData, dl_u8 numLines, dl_u8* spriteBuffer);
+void drawSprite_16PixelsWide_static_IntoSpriteBuffer(const dl_u8* sourceSprite, dl_u8 numLines, dl_u8* destinationSprite);
 
 void eraseSprite_16PixelsWide(const dl_u8* spriteData, dl_u8 x, dl_u8 y, dl_u8 numLines, dl_u8* framebuffer, dl_u8* cleanBackground);
 void eraseSprite_16PixelsWide_simple(dl_u8 x, dl_u8 y, dl_u8 numLines, dl_u8* framebuffer, dl_u8* cleanBackground);

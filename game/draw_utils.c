@@ -826,18 +826,18 @@ void drawBackground(const BackgroundDrawData* backgroundDrawData,
 	}
 }
 
-void drawSprite_16PixelsWide_static_IntoSpriteBuffer(const dl_u8* spriteData, dl_u8 numLines,	dl_u8* spriteBuffer)
+void drawSprite_16PixelsWide_static_IntoSpriteBuffer(const dl_u8* sourceSprite, dl_u8 numLines,	dl_u8* destinationSprite)
 {
     while (numLines--)
     {
         // first byte
-        *spriteBuffer |= corruptByte(*spriteData);
-        spriteBuffer++;
-        spriteData++;
+        *destinationSprite |= corruptByte(*sourceSprite);
+        destinationSprite++;
+        sourceSprite++;
 
         // second byte
-        *spriteBuffer |= corruptByte(*spriteData);
-        spriteBuffer++;
-        spriteData++;
+        *destinationSprite |= corruptByte(*sourceSprite);
+        destinationSprite++;
+        sourceSprite++;
     }
 }

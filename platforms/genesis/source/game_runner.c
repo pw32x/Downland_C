@@ -586,7 +586,7 @@ void custom_titleScreen_draw(dl_u8 roomNumber, GameData* gameData, const Resourc
 	g_originalRoomDrawFunctions[roomNumber](roomNumber, gameData, resources);
 
 	// title screen text
-	drawTileText(resources->text_downland, 0x03c9); // 0x07c9 original coco mem location
+	drawTileText(resources->text_downland, 0x03c9 + 64); // 0x07c9 original coco mem location
 	drawTileText(resources->text_writtenBy, 0x050a); // 0x090A original coco mem location
 	drawTileText(resources->text_michaelAichlmayer, 0x647); // 0x0A47 original coco mem location
 	drawTileText(resources->text_copyright1983, 0x789); // 0x0B89 original coco mem location

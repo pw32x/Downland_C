@@ -294,6 +294,7 @@ void saveResFile()
     oss << "SPRITE diamondTileset \"diamondTileset.png\" 2 2 NONE 0\n";
     oss << "SPRITE moneyBagTileset \"moneyBagTileset.png\" 2 2 NONE 0\n";
     oss << "SPRITE doorTileset \"doorTileset.png\" 2 2 NONE 0\n";
+    oss << "SPRITE cursorTileset \"cursorTileset.png\" 1 1 NONE 0\n";
     oss << "TILESET backgroundTileset \"backgroundTileset.png\" BEST NONE\n";
 
     std::ofstream outFile(g_resPath + "tileset.res");
@@ -412,6 +413,18 @@ void saveCharacterFont(const dl_u8* characterFont)
     delete [] destinationFont;
 }
 
+void saveCursor()
+{
+    dl_u8 cursor8bpp[8 * 8];
+    memset(cursor8bpp, 0, 8*8);
+    memset(cursor8bpp, 3, 8);
+
+
+    save_png_8bpp(cursor8bpp, 
+                  8,
+                  8,
+                  g_resPath + "cursorTileset.png");
+}
 
 void saveSprite16(const dl_u8* sprite, dl_u8 width, dl_u8 height, dl_u8 numFrames, const std::string& name)
 {
@@ -496,6 +509,7 @@ int main()
 	saveSprite16(resources.sprite_door, DOOR_SPRITE_WIDTH, DOOR_SPRITE_ROWS, 1, "doorTileset");
 	//buildEmptySpriteResource(&regenSprite, &g_16x16SpriteAttributes, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, 1, tileIndex);
 
+    saveCursor();
     saveTileSetToPng(tileSet);
     saveTileMapSource(tileMaps);
     saveTileMapHeader();

@@ -671,7 +671,7 @@ void GameRunner_Init(GameData* gameData, const Resources* resources)
 	// load sprite tile resources
 	buildTileResource(&dropsSprite, &dropTileset, DROP_SPRITE_WIDTH, DROP_SPRITE_ROWS, DROP_SPRITE_COUNT, SPRITE_SIZE(1, 1));
 	buildSpriteResource(&playerSprite, &playerTileset, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYER_SPRITE_COUNT, SPRITE_SIZE(2, 2));
-	//buildTileResource(&cursorSprite, &g_8x8SpriteAttributes, (dl_u8*)&cursorSpriteRaw, 8, 1, 1, tileIndex);
+	buildSpriteResource(&cursorSprite, &cursorTileset, 8, 1, 1, SPRITE_SIZE(1,1));
 	buildTileResource(&ballSprite, &ballTileset, BALL_SPRITE_WIDTH, BALL_SPRITE_ROWS, BALL_SPRITE_COUNT, SPRITE_SIZE(2, 1));
 	buildTileResource(&birdSprite, &birdTileset, BIRD_SPRITE_WIDTH, BIRD_SPRITE_ROWS, BIRD_SPRITE_COUNT, SPRITE_SIZE(2, 1));
 	buildSpriteResource(&keySprite, &keyTileset, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, SPRITE_SIZE(2, 2));
@@ -1054,17 +1054,13 @@ void drawTitleScreen(struct GameData* gameData, const Resources* resources)
 {
 	drawDrops(gameData);
 
-	/*
-	g_scrollX = 7;
-	g_scrollY = 13;
-
-	drawDrops(gameData);
 
 	drawSprite(gameData->numPlayers == 1 ? 32 : 128,
-			   115,
+			   123,
 			   0,
 			   &cursorSprite);
 
+	/*
 	convertScoreToString(gameData->playerData[PLAYER_ONE].score, gameData->playerData[PLAYER_ONE].scoreString);
 	convertScoreToString(gameData->playerData[PLAYER_TWO].score, gameData->playerData[PLAYER_TWO].scoreString);
 

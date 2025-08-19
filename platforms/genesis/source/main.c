@@ -181,10 +181,10 @@ int main(bool hardReset)
 			GameRunner_Update(&gameData, &resources);
 		}
 
-		GameRunner_Draw(&gameData, &resources);
+
 
         SYS_doVBlankProcess();
-
+		GameRunner_Draw(&gameData, &resources);
     }
 
     return 0;

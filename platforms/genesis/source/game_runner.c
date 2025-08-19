@@ -29,6 +29,7 @@
 #include "draw_utils.h"
 #include "rooms\chambers.h"
 #include "rooms\titlescreen.h"
+#include "dl_rand.h"
 
 /*
 typedef struct
@@ -83,6 +84,9 @@ GameSprite playerIconSprite;
 GameSprite playerIconSpriteRegen;
 
 const GameSprite* g_pickUpSprites[3];
+
+#define REGEN_NUM_FRAMES 8 // regen frames per facing direction
+dl_u8 g_regenSpriteIndex;
 
 typedef void (*DrawRoomFunction)(struct GameData* gameData, const Resources* resources);
 DrawRoomFunction m_drawRoomFunctions[NUM_ROOMS_AND_ALL];
@@ -678,7 +682,7 @@ void GameRunner_Init(GameData* gameData, const Resources* resources)
 	buildSpriteResource(&diamondSprite, &diamondTileset, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, SPRITE_SIZE(2, 2));
 	buildSpriteResource(&moneyBagSprite, &moneyBagTileset, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, SPRITE_SIZE(2, 2));
 	buildSpriteResource(&doorSprite, &doorTileset, DOOR_SPRITE_WIDTH, DOOR_SPRITE_ROWS, 1, SPRITE_SIZE(2, 2));
-	//tileIndex = buildEmptySpriteResource(&regenSprite, &g_16x16SpriteAttributes, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, 1, tileIndex);	
+	buildSpriteResource(&regenSprite, &regenTileset, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, 10, SPRITE_SIZE(2,2));	
 
 	buildTileResource(&characterFontSprite, &characterFontTileset, 8, 8, CHARACTER_FONT_COUNT, SPRITE_SIZE(1, 1));
 
@@ -980,20 +984,22 @@ void drawChamber(struct GameData* gameData, const Resources* resources)
 	//			   &splatSprite);
 	//
     //    break;
-    //case PLAYER_STATE_REGENERATION: 
-	//
-    //    if (!gameData->paused)
-    //    {
-	//		updateRegenSprite(resources, playerData->currentSpriteNumber);
-    //    }
-	//
-    //    drawSprite(playerX,
-    //               playerY,
-    //               0,
-	//			   &regenSprite);
-	//
-    //    break;
-	//
+    case PLAYER_STATE_REGENERATION: 
+	
+        if (!gameData->paused)
+        {
+            g_regenSpriteIndex++;
+			if (g_regenSpriteIndex == REGEN_NUM_FRAMES - 1)
+				g_regenSpriteIndex = 0;
+        }
+
+        drawSprite(playerX,
+                   playerY,
+                   g_regenSpriteIndex + (playerData->facingDirection ? 0 : REGEN_NUM_FRAMES),
+				   &regenSprite);
+	
+        break;
+	
     default: 
         drawSprite(playerX,
                    playerY,

@@ -288,6 +288,7 @@ void saveResFile()
     oss << "TILESET characterFontTileset \"characterFontTileset.png\" BEST NONE\n";
     oss << "TILESET dropTileset \"dropTileset.png\" BEST NONE\n";
     oss << "SPRITE playerTileset \"playerTileset.png\" 2 2 NONE 0\n";
+    oss << "SPRITE regenTileset \"regenTileset.png\" 2 2 NONE 0\n";
     oss << "TILESET ballTileset \"ballTileset.png\" BEST NONE\n";
     oss << "TILESET birdTileset \"birdTileset.png\" BEST NONE\n";
     oss << "SPRITE keyTileset \"keyTileset.png\" 2 2 NONE 0\n";
@@ -419,11 +420,80 @@ void saveCursor()
     memset(cursor8bpp, 0, 8*8);
     memset(cursor8bpp, 3, 8);
 
-
     save_png_8bpp(cursor8bpp, 
                   8,
                   8,
                   g_resPath + "cursorTileset.png");
+}
+
+void saveRegenSprite(const dl_u8* playerSprite)
+{
+    const int numFrames = 8;
+    const int width = 16;
+    const int height = 16;
+
+    // drawSprite_16PixelsWide_static_IntoSpriteBuffer
+
+    dl_u8 spriteFrameSizeInBytes = (width / 8) * height;
+
+    dl_u8 destinationWidth = ((width + 7) / 8) * 8;
+    dl_u8 destinationHeight = ((height + 7) / 8) * 8;
+    dl_u16 destinationFrameSize = destinationWidth * destinationHeight;
+
+    dl_u16 bufferSize = destinationWidth * destinationHeight * (numFrames * 2);
+    dl_u8* sprite8bpp = new dl_u8[bufferSize];
+    memset(sprite8bpp, 0, bufferSize);
+    dl_u8* sprite8bppRunner = sprite8bpp;
+
+    dl_u16 regenBufferSize = (width / 8) * height;
+    dl_u8* regenBuffer = new dl_u8[regenBufferSize];
+
+    for (int frameLoop = 0; frameLoop < numFrames; frameLoop++)
+    {
+        memset(regenBuffer, 0, regenBufferSize);
+
+        drawSprite_16PixelsWide_static_IntoSpriteBuffer(playerSprite,
+                                                        height,
+                                                        regenBuffer);
+
+        convert1bppImageTo8bppCrtEffectImage(regenBuffer,
+                                             sprite8bppRunner,
+                                             width,
+                                             height,
+                                             CrtColor::CrtColor_Blue);
+
+        // move to next frame
+        sprite8bppRunner += destinationFrameSize; 
+    }
+
+    // left side standing
+    playerSprite += ((width / 8) * height) * 6; // PLAYER_SPRITE_LEFT_STAND
+
+    for (int frameLoop = 0; frameLoop < numFrames; frameLoop++)
+    {
+        memset(regenBuffer, 0, regenBufferSize);
+
+        drawSprite_16PixelsWide_static_IntoSpriteBuffer(playerSprite,
+                                                        height,
+                                                        regenBuffer);
+
+        convert1bppImageTo8bppCrtEffectImage(regenBuffer,
+                                             sprite8bppRunner,
+                                             width,
+                                             height,
+                                             CrtColor::CrtColor_Blue);
+
+        // move to next frame
+        sprite8bppRunner += destinationFrameSize; 
+    }
+
+    save_png_8bpp(sprite8bpp, 
+                  destinationWidth,
+                  destinationHeight * (numFrames * 2),
+                  g_resPath + "regenTileset.png");
+
+    delete [] sprite8bpp;
+    delete [] regenBuffer;
 }
 
 void saveSprite16(const dl_u8* sprite, dl_u8 width, dl_u8 height, dl_u8 numFrames, const std::string& name)
@@ -510,6 +580,7 @@ int main()
 	//buildEmptySpriteResource(&regenSprite, &g_16x16SpriteAttributes, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, 1, tileIndex);
 
     saveCursor();
+    saveRegenSprite(resources.sprites_player);
     saveTileSetToPng(tileSet);
     saveTileMapSource(tileMaps);
     saveTileMapHeader();

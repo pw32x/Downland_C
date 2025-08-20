@@ -683,7 +683,7 @@ void GameRunner_Init(GameData* gameData, const Resources* resources)
 	buildSpriteResource(&moneyBagSprite, &moneyBagTileset, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, SPRITE_SIZE(2, 2));
 	buildSpriteResource(&doorSprite, &doorTileset, DOOR_SPRITE_WIDTH, DOOR_SPRITE_ROWS, 1, SPRITE_SIZE(2, 2));
 	buildSpriteResource(&regenSprite, &regenTileset, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, 10, SPRITE_SIZE(2,2));	
-
+	buildSpriteResource(&splatSprite, &playerSplatTileset, 24, 16, 2, SPRITE_SIZE(3,2));	
 	buildTileResource(&characterFontSprite, &characterFontTileset, 8, 8, CHARACTER_FONT_COUNT, SPRITE_SIZE(1, 1));
 
 	//tileIndex = buildPlayerIconResource(&playerIconSprite, &g_playerIconSpriteAttributes, resources->sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYERICON_NUM_SPRITE_ROWS, PLAYER_SPRITE_COUNT, tileIndex);
@@ -977,13 +977,13 @@ void drawChamber(struct GameData* gameData, const Resources* resources)
 	// draw player
     switch (playerData->state)
     {
-    //case PLAYER_STATE_SPLAT: 
-    //    drawSprite(playerX,
-    //               playerY + 7,
-    //               playerData->splatFrameNumber,
-	//			   &splatSprite);
-	//
-    //    break;
+    case PLAYER_STATE_SPLAT: 
+        drawSprite(playerX,
+                   playerY + 7,
+                   playerData->splatFrameNumber,
+				   &splatSprite);
+	
+        break;
     case PLAYER_STATE_REGENERATION: 
 	
         if (!gameData->paused)

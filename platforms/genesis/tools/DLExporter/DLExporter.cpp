@@ -296,6 +296,7 @@ void saveResFile()
     oss << "SPRITE moneyBagTileset \"moneyBagTileset.png\" 2 2 NONE 0\n";
     oss << "SPRITE doorTileset \"doorTileset.png\" 2 2 NONE 0\n";
     oss << "SPRITE cursorTileset \"cursorTileset.png\" 1 1 NONE 0\n";
+    oss << "SPRITE playerSplatTileset \"playerSplatTileset.png\" 3 2 NONE 0 NONE NONE\n";
     oss << "TILESET backgroundTileset \"backgroundTileset.png\" BEST NONE\n";
 
     std::ofstream outFile(g_resPath + "tileset.res");
@@ -496,6 +497,46 @@ void saveRegenSprite(const dl_u8* playerSprite)
     delete [] regenBuffer;
 }
 
+void saveSplatSprite(const dl_u8* splatSprite)
+{
+    const int numFrames = 2; // original + modified
+    const int width = 24;
+    const int height = 9;
+
+    dl_u8 destinationWidth = ((width + 7) / 8) * 8;
+    dl_u8 destinationHeight = ((height + 7) / 8) * 8;
+    dl_u16 destinationFrameSize = destinationWidth * destinationHeight;
+
+    dl_u16 bufferSize = destinationWidth * destinationHeight * numFrames;
+    dl_u8* sprite8bpp = new dl_u8[bufferSize];
+    memset(sprite8bpp, 0, bufferSize);
+
+    convert1bppImageTo8bppCrtEffectImage(splatSprite,
+                                         sprite8bpp,
+                                         width,
+                                         height,
+                                         CrtColor::CrtColor_Blue);
+
+    dl_u8* secondFrame = sprite8bpp + destinationFrameSize;
+
+    // write it again but on the next frame
+    convert1bppImageTo8bppCrtEffectImage(splatSprite,
+                                         secondFrame,
+                                         width,
+                                         height,
+                                         CrtColor::CrtColor_Blue);
+
+    // clear the top five rows
+    memset(secondFrame, 0, 24 * 5);
+
+    save_png_8bpp(sprite8bpp, 
+                  destinationWidth,
+                  destinationHeight * numFrames,
+                  g_resPath + "playerSplatTileset.png");
+
+    delete [] sprite8bpp;
+}
+
 void saveSprite16(const dl_u8* sprite, dl_u8 width, dl_u8 height, dl_u8 numFrames, const std::string& name)
 {
     dl_u8 spriteFrameSizeInBytes = (width / 8) * height;
@@ -581,6 +622,7 @@ int main()
 
     saveCursor();
     saveRegenSprite(resources.sprites_player);
+    saveSplatSprite(resources.sprite_playerSplat);
     saveTileSetToPng(tileSet);
     saveTileMapSource(tileMaps);
     saveTileMapHeader();

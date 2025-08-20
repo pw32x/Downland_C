@@ -21,6 +21,7 @@ extern "C"
 #include "resource_loader_buffer.h"
 #include "draw_utils.h"
 #include "drops_manager.h"
+#include "rooms\chambers.h"
 
 void* dl_alloc(dl_u32 size)
 {
@@ -297,6 +298,7 @@ void saveResFile()
     oss << "SPRITE doorTileset \"doorTileset.png\" 2 2 NONE 0\n";
     oss << "SPRITE cursorTileset \"cursorTileset.png\" 1 1 NONE 0\n";
     oss << "SPRITE playerSplatTileset \"playerSplatTileset.png\" 3 2 NONE 0 NONE NONE\n";
+    oss << "SPRITE playerLivesTileset \"playerLivesTileset.png\" 2 1 NONE 0 NONE NONE\n";
     oss << "TILESET backgroundTileset \"backgroundTileset.png\" BEST NONE\n";
 
     std::ofstream outFile(g_resPath + "tileset.res");
@@ -537,7 +539,12 @@ void saveSplatSprite(const dl_u8* splatSprite)
     delete [] sprite8bpp;
 }
 
-void saveSprite16(const dl_u8* sprite, dl_u8 width, dl_u8 height, dl_u8 numFrames, const std::string& name)
+
+void saveSprite16(const dl_u8* sprite, 
+                  dl_u8 width, 
+                  dl_u8 height, 
+                  dl_u8 numFrames, 
+                  const std::string& name)
 {
     dl_u8 spriteFrameSizeInBytes = (width / 8) * height;
 
@@ -557,6 +564,47 @@ void saveSprite16(const dl_u8* sprite, dl_u8 width, dl_u8 height, dl_u8 numFrame
                                              sprite8bppRunner,
                                              width,
                                              height,
+                                             CrtColor::CrtColor_Blue);
+
+        // move to next frame
+        sprite += spriteFrameSizeInBytes;
+        sprite8bppRunner += destinationFrameSize; 
+    }
+
+    save_png_8bpp(sprite8bpp, 
+                  destinationWidth,
+                  destinationHeight * numFrames,
+                  g_resPath + name + ".png");
+
+    delete [] sprite8bpp;
+}
+
+
+void saveSprite16Clipped(const dl_u8* sprite, 
+                         dl_u8 width, 
+                         dl_u8 height, 
+                         dl_u8 clipHeight,
+                         dl_u8 numFrames, 
+                         const std::string& name)
+{
+    dl_u8 spriteFrameSizeInBytes = (width / 8) * height;
+
+    dl_u8 destinationWidth = ((width + 7) / 8) * 8;
+    dl_u8 destinationHeight = ((clipHeight + 7) / 8) * 8;
+    dl_u16 destinationFrameSize = destinationWidth * destinationHeight;
+
+    dl_u16 bufferSize = destinationWidth * destinationHeight * numFrames;
+    dl_u8* sprite8bpp = new dl_u8[bufferSize];
+    memset(sprite8bpp, 0, bufferSize);
+    dl_u8* sprite8bppRunner = sprite8bpp;
+
+
+    for (int frameLoop = 0; frameLoop < numFrames; frameLoop++)
+    {
+        convert1bppImageTo8bppCrtEffectImage(sprite,
+                                             sprite8bppRunner,
+                                             width,
+                                             clipHeight,
                                              CrtColor::CrtColor_Blue);
 
         // move to next frame
@@ -623,6 +671,7 @@ int main()
     saveCursor();
     saveRegenSprite(resources.sprites_player);
     saveSplatSprite(resources.sprite_playerSplat);
+    saveSprite16Clipped(resources.sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYERICON_NUM_SPRITE_ROWS, PLAYER_SPRITE_COUNT, "playerLivesTileset");
     saveTileSetToPng(tileSet);
     saveTileMapSource(tileMaps);
     saveTileMapHeader();

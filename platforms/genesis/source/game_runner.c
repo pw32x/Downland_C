@@ -686,6 +686,9 @@ void GameRunner_Init(GameData* gameData, const Resources* resources)
 	buildSpriteResource(&splatSprite, &playerSplatTileset, 24, 16, 2, SPRITE_SIZE(3,2));	
 	buildTileResource(&characterFontSprite, &characterFontTileset, 8, 8, CHARACTER_FONT_COUNT, SPRITE_SIZE(1, 1));
 
+	buildSpriteResource(&playerIconSprite, &playerLivesTileset, PLAYER_SPRITE_WIDTH, PLAYERICON_NUM_SPRITE_ROWS, PLAYER_SPRITE_COUNT, SPRITE_SIZE(2,1));	
+	
+
 	//tileIndex = buildPlayerIconResource(&playerIconSprite, &g_playerIconSpriteAttributes, resources->sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYERICON_NUM_SPRITE_ROWS, PLAYER_SPRITE_COUNT, tileIndex);
 
 	/*
@@ -860,28 +863,26 @@ void drawUIText(const dl_u8* text, dl_u16 x, dl_u16 y, GameSprite* font)
 
 void drawUIPlayerLives(const PlayerData* playerData)
 {
-	/*
-	dl_u8 x = 80;//PLAYERLIVES_ICON_X;
-	dl_u8 y = 0;//PLAYERLIVES_ICON_Y;
+	dl_u8 x = PLAYERLIVES_ICON_X;
+	dl_u8 y = PLAYERLIVES_ICON_Y;
 
     for (dl_u8 loop = 0; loop < playerData->lives; loop++)
 	{
-        drawSprite(x, 
+        drawSprite(x << 1, 
 				   y, 
 				   playerData->currentSpriteNumber,
 				   &playerIconSprite);
 
-		x += 24;//PLAYERLIVES_ICON_SPACING;
+		x += PLAYERLIVES_ICON_SPACING;
     }
 
 	if (playerData->state == PLAYER_STATE_REGENERATION)
 	{
-        drawSprite(x, 
-                   y, 
-				   0,
-				   &playerIconSpriteRegen);		
+//        drawSprite(x << 1, 
+//                   y, 
+//				   0,
+//				   &playerIconSpriteRegen);		
     }
-	*/
 }
 
 /*
@@ -1053,7 +1054,7 @@ void drawChamber(struct GameData* gameData, const Resources* resources)
 	//drawUIText(gameData->string_timer, 24 * 8, 0, &hudCharacterFont);
 	//drawUIText(playerData->scoreString, 8, 0, &hudCharacterFont); 
 	//
-	//drawUIPlayerLives(playerData);
+	drawUIPlayerLives(playerData);
 }
 
 void drawTitleScreen(struct GameData* gameData, const Resources* resources)

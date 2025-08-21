@@ -555,6 +555,21 @@ void custom_chamber_draw(dl_u8 roomNumber, GameData* gameData, const Resources* 
 
 	// init background and text
 	g_originalRoomDrawFunctions[roomNumber](roomNumber, gameData, resources);
+
+	// drawTileText(resources->text_playerTwo, 0x1546); // 0x1946 original coco mem location
+
+	drawTileText(resources->text_pl1, PLAYERLIVES_TEXT_DRAW_LOCATION);
+	drawTileText(resources->text_chamber, CHAMBER_TEXT_DRAW_LOCATION);
+	drawTileText(gameData->string_roomNumber, CHAMBER_NUMBER_TEXT_DRAW_LOCATION);
+
+	PlayerData* playerData = gameData->playerData;
+	convertScoreToString(playerData->score, playerData->scoreString);
+	drawTileText(playerData->scoreString, SCORE_DRAW_LOCATION);
+
+	dl_u16 currentTimer = playerData->roomTimers[playerData->currentRoom->roomNumber];
+	convertTimerToString(currentTimer,
+						 gameData->string_timer);
+	drawTileText(gameData->string_timer, TIMER_DRAW_LOCATION);
 }
 
 void custom_titleScreen_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resources)
@@ -865,7 +880,7 @@ void drawUIText(const dl_u8* text, dl_u16 x, dl_u16 y, GameSprite* font)
 void drawUIPlayerLives(const PlayerData* playerData)
 {
 	dl_u8 x = PLAYERLIVES_ICON_X;
-	dl_u8 y = PLAYERLIVES_ICON_Y;
+	dl_u8 y = 0;//PLAYERLIVES_ICON_Y;
 
     for (dl_u8 loop = 0; loop < playerData->lives; loop++)
 	{
@@ -1055,6 +1070,10 @@ void drawChamber(struct GameData* gameData, const Resources* resources)
 	//drawUIText(gameData->string_timer, 24 * 8, 0, &hudCharacterFont);
 	//drawUIText(playerData->scoreString, 8, 0, &hudCharacterFont); 
 	//
+
+	drawTileText(gameData->string_timer, TIMER_DRAW_LOCATION);
+	drawTileText(playerData->scoreString, SCORE_DRAW_LOCATION);
+
 	drawUIPlayerLives(playerData);
 }
 

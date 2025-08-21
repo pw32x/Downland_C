@@ -97,6 +97,9 @@ void drawTransition(struct GameData* gameData, const Resources* resources);
 void drawWipeTransition(struct GameData* gameData, const Resources* resources);
 void drawGetReadyScreen(struct GameData* gameData, const Resources* resources);
 
+#define X_OFFSET ((320 - FRAMEBUFFER_WIDTH) / 2)
+#define Y_OFFSET ((224 - FRAMEBUFFER_HEIGHT) / 2)
+
 // character font
 // player icons
 // sound
@@ -682,6 +685,9 @@ void GameRunner_Init(GameData* gameData, const Resources* resources)
 	dl_u32 cursorSpriteRaw = 0xffffffff;
 	*/
 
+	VDP_setVerticalScroll(BG_A, -Y_OFFSET);
+	VDP_setHorizontalScroll(BG_A, X_OFFSET);
+
 	// load background
 	VDP_loadTileSet(&backgroundTileset, 0, DMA);
 	g_vdpTileIndex = backgroundTileset.numTile;
@@ -841,7 +847,12 @@ void drawSprite(dl_u16 x, dl_u16 y, dl_u8 frame, const GameSprite* gameSprite)
 {
 	dl_u16 tileIndex = gameSprite->vdpTileIndex + (frame * gameSprite->tilesPerFrame);
 
-	VDP_setSpriteFull(g_numSpritesToDraw, x, y, gameSprite->vdpSize, tileIndex, g_numSpritesToDraw + 1);
+	VDP_setSpriteFull(g_numSpritesToDraw, 
+					  x + X_OFFSET, 
+					  y + Y_OFFSET, 
+					  gameSprite->vdpSize, 
+					  tileIndex, 
+					  g_numSpritesToDraw + 1);
 	g_numSpritesToDraw++;
 }
 

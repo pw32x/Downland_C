@@ -687,6 +687,7 @@ void GameRunner_Init(GameData* gameData, const Resources* resources)
 	buildTileResource(&characterFontSprite, &characterFontTileset, 8, 8, CHARACTER_FONT_COUNT, SPRITE_SIZE(1, 1));
 
 	buildSpriteResource(&playerIconSprite, &playerLivesTileset, PLAYER_SPRITE_WIDTH, PLAYERICON_NUM_SPRITE_ROWS, PLAYER_SPRITE_COUNT, SPRITE_SIZE(2,1));	
+	buildSpriteResource(&playerIconSpriteRegen, &playerLivesRegenTileset, PLAYER_SPRITE_WIDTH, PLAYERICON_NUM_SPRITE_ROWS, PLAYER_SPRITE_COUNT, SPRITE_SIZE(2,1));	
 	
 
 	//tileIndex = buildPlayerIconResource(&playerIconSprite, &g_playerIconSpriteAttributes, resources->sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYERICON_NUM_SPRITE_ROWS, PLAYER_SPRITE_COUNT, tileIndex);
@@ -878,10 +879,10 @@ void drawUIPlayerLives(const PlayerData* playerData)
 
 	if (playerData->state == PLAYER_STATE_REGENERATION)
 	{
-//        drawSprite(x << 1, 
-//                   y, 
-//				   0,
-//				   &playerIconSpriteRegen);		
+        drawSprite(x << 1, 
+                   y, 
+				   g_regenSpriteIndex,
+				   &playerIconSpriteRegen);
     }
 }
 

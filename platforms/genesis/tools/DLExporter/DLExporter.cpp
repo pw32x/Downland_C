@@ -299,6 +299,7 @@ void saveResFile()
     oss << "SPRITE cursorTileset \"cursorTileset.png\" 1 1 NONE 0\n";
     oss << "SPRITE playerSplatTileset \"playerSplatTileset.png\" 3 2 NONE 0 NONE NONE\n";
     oss << "SPRITE playerLivesTileset \"playerLivesTileset.png\" 2 1 NONE 0 NONE NONE\n";
+    oss << "SPRITE playerLivesRegenTileset \"playerLivesRegenTileset.png\" 2 1 NONE 0 NONE NONE\n";
     oss << "TILESET backgroundTileset \"backgroundTileset.png\" BEST NONE\n";
 
     std::ofstream outFile(g_resPath + "tileset.res");
@@ -429,7 +430,7 @@ void saveCursor()
                   g_resPath + "cursorTileset.png");
 }
 
-void saveRegenSprite(const dl_u8* playerSprite)
+dl_u8* saveRegenSprite(const dl_u8* playerSprite)
 {
     const int numFrames = 8;
     const int width = 16;
@@ -495,8 +496,40 @@ void saveRegenSprite(const dl_u8* playerSprite)
                   destinationHeight * (numFrames * 2),
                   g_resPath + "regenTileset.png");
 
-    delete [] sprite8bpp;
     delete [] regenBuffer;
+
+    return sprite8bpp;
+}
+
+void saveRegenLivesSprite(dl_u8* regenSprite)
+{
+    const int numFrames = 16;
+    const int regenWidth = 16;
+    const int regenHeight = 16;
+    const int iconImageHeight = 8;
+    const int iconHeight = 7;
+
+    const int regenSpriteFrameSize = regenWidth * regenHeight;
+    const int regenIconFrameSize = regenWidth * iconImageHeight;
+
+    dl_u8* regenIconBuffer = new dl_u8[regenIconFrameSize * numFrames];
+    memset(regenIconBuffer, 0, regenIconFrameSize * numFrames);
+    dl_u8* regenIconBufferRunner = regenIconBuffer;
+
+    for (int frameLoop = 0; frameLoop < numFrames; frameLoop++)
+    {
+        memcpy(regenIconBufferRunner, regenSprite, regenIconFrameSize);
+
+        regenSprite += regenSpriteFrameSize;
+        regenIconBufferRunner += regenIconFrameSize;
+    }
+
+    save_png_8bpp(regenIconBuffer, 
+                  regenWidth,
+                  iconImageHeight * numFrames,
+                  g_resPath + "playerLivesRegenTileset.png");
+
+    delete [] regenIconBuffer;
 }
 
 void saveSplatSprite(const dl_u8* splatSprite)
@@ -669,7 +702,11 @@ int main()
 	//buildEmptySpriteResource(&regenSprite, &g_16x16SpriteAttributes, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, 1, tileIndex);
 
     saveCursor();
-    saveRegenSprite(resources.sprites_player);
+    dl_u8* regenSprite = saveRegenSprite(resources.sprites_player);
+    saveRegenLivesSprite(regenSprite);
+
+    delete [] regenSprite;
+
     saveSplatSprite(resources.sprite_playerSplat);
     saveSprite16Clipped(resources.sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYERICON_NUM_SPRITE_ROWS, PLAYER_SPRITE_COUNT, "playerLivesTileset");
     saveTileSetToPng(tileSet);

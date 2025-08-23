@@ -545,7 +545,7 @@ void drawTileText(const dl_u8* text, dl_u16 xyLocation)
     while (*text != 0xff)
     {
 		//drawSprite(x, y, *text, font);
-		VDP_setTileMapXY(BG_A, characterFontSprite.vdpTileIndex + *text, tilex, tiley);
+		VDP_setTileMapXY(BG_B, characterFontSprite.vdpTileIndex + *text, tilex, tiley);
 
         text++;
         tilex++;
@@ -554,7 +554,7 @@ void drawTileText(const dl_u8* text, dl_u16 xyLocation)
 
 void custom_chamber_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resources)
 {
-	VDP_setTileMapDataRect(BG_A, roomTileMaps[roomNumber], 0, 0, TILE_MAP_WIDTH, TILE_MAP_HEIGHT, TILE_MAP_WIDTH, DMA);
+	VDP_setTileMapDataRect(BG_B, roomTileMaps[roomNumber], 0, 0, TILE_MAP_WIDTH, TILE_MAP_HEIGHT, TILE_MAP_WIDTH, DMA);
 
 	// init background and text
 	g_originalRoomDrawFunctions[roomNumber](roomNumber, gameData, resources);
@@ -577,7 +577,7 @@ void custom_chamber_draw(dl_u8 roomNumber, GameData* gameData, const Resources* 
 
 void custom_titleScreen_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resources)
 {
-	VDP_setTileMapDataRect(BG_A, roomTileMaps[roomNumber], 0, 0, TILE_MAP_WIDTH, TILE_MAP_HEIGHT, TILE_MAP_WIDTH, DMA);
+	VDP_setTileMapDataRect(BG_B, roomTileMaps[roomNumber], 0, 0, TILE_MAP_WIDTH, TILE_MAP_HEIGHT, TILE_MAP_WIDTH, DMA);
 
 	/*
 	drawCustomTitleScreenBackground(gameData, resources);
@@ -640,7 +640,7 @@ void custom_titleScreen_draw(dl_u8 roomNumber, GameData* gameData, const Resourc
 
 void custom_get_ready_room_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resources)
 {
-	VDP_setTileMapDataRect(BG_A, roomTileMaps[TITLESCREEN_ROOM_INDEX], 0, 0, TILE_MAP_WIDTH, TILE_MAP_HEIGHT, TILE_MAP_WIDTH, DMA);
+	VDP_setTileMapDataRect(BG_B, roomTileMaps[TITLESCREEN_ROOM_INDEX], 0, 0, TILE_MAP_WIDTH, TILE_MAP_HEIGHT, TILE_MAP_WIDTH, DMA);
 
 	// init background and text
 	g_originalRoomDrawFunctions[roomNumber](roomNumber, gameData, resources);
@@ -685,8 +685,10 @@ void GameRunner_Init(GameData* gameData, const Resources* resources)
 	dl_u32 cursorSpriteRaw = 0xffffffff;
 	*/
 
-	VDP_setVerticalScroll(BG_A, -Y_OFFSET);
-	VDP_setHorizontalScroll(BG_A, X_OFFSET);
+	VDP_setVerticalScroll(BG_B, -Y_OFFSET);
+	VDP_setHorizontalScroll(BG_B, X_OFFSET);
+	//VDP_setVerticalScroll(BG_A, -Y_OFFSET);
+	//VDP_setHorizontalScroll(BG_A, X_OFFSET);
 
 	// load background
 	VDP_loadTileSet(&backgroundTileset, 0, DMA);
@@ -783,6 +785,9 @@ void GameRunner_Init(GameData* gameData, const Resources* resources)
 	//setGameBackgroundTilemap(TITLESCREEN_ROOM_INDEX);
 
 	Game_Init(gameData, resources);
+
+
+	//VDP_fillTileMapRect(BG_A, 2, 0, 0, 10, 10);
 
 	//createBackgrounds(gameData, resources);
 

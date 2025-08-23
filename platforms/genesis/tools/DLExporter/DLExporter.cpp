@@ -301,6 +301,7 @@ void saveResFile()
     oss << "SPRITE playerLivesTileset \"playerLivesTileset.png\" 2 1 NONE 0 NONE NONE\n";
     oss << "SPRITE playerLivesRegenTileset \"playerLivesRegenTileset.png\" 2 1 NONE 0 NONE NONE\n";
     oss << "TILESET backgroundTileset \"backgroundTileset.png\" BEST NONE\n";
+    oss << "TILESET transitionTileset \"transitionTileset.png\" BEST NONE\n";
 
     std::ofstream outFile(g_resPath + "tileset.res");
     outFile << oss.str();
@@ -653,6 +654,54 @@ void saveSprite16Clipped(const dl_u8* sprite,
     delete [] sprite8bpp;
 }
 
+void saveTransitionTileset()
+{
+    const dl_u8 transparentColor = 0;
+    const dl_u8 lineColor = 1;
+    const dl_u8 opaqueColor = 2;
+
+    const dl_u8 numAnimatedFrames = 8;
+    const dl_u8 numTotalTiles = numAnimatedFrames + 1; // 8 animated frames and 1 black frame
+    const dl_u16 bufferSize = TILE_SIZE * numTotalTiles;
+
+    dl_u8 tilesetBuffer[bufferSize];
+    memset(tilesetBuffer, opaqueColor, bufferSize);
+
+    dl_u8* tilesetBufferRunner = tilesetBuffer;
+
+    // first tile is completely black
+    memset(tilesetBuffer, opaqueColor, TILE_SIZE);
+
+    tilesetBufferRunner += TILE_SIZE;
+
+    // next 8 tiles are animated with the transition line
+    for (int loop = 0; loop < numAnimatedFrames; loop++)
+    {
+        for (int row = 0; row < TILE_HEIGHT; row++)
+        {
+            if (row < loop)
+            {
+                memset(tilesetBufferRunner, transparentColor, TILE_WIDTH);
+            }
+            else if (row > loop)
+            {
+                memset(tilesetBufferRunner, opaqueColor, TILE_WIDTH);
+            }
+            else if (row == loop)
+            {
+                memset(tilesetBufferRunner, lineColor, TILE_WIDTH);
+            }
+            
+            tilesetBufferRunner += TILE_WIDTH; // next row
+        }
+    }
+
+    save_png_8bpp(tilesetBuffer, 
+                  TILE_WIDTH,
+                  TILE_HEIGHT * numTotalTiles,
+                  g_resPath + "transitionTileset.png");
+}
+
 int main()
 {
     Resources resources;
@@ -709,6 +758,7 @@ int main()
 
     saveSplatSprite(resources.sprite_playerSplat);
     saveSprite16Clipped(resources.sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYERICON_NUM_SPRITE_ROWS, PLAYER_SPRITE_COUNT, "playerLivesTileset");
+    saveTransitionTileset();
     saveTileSetToPng(tileSet);
     saveTileMapSource(tileMaps);
     saveTileMapHeader();

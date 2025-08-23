@@ -65,6 +65,8 @@ RoomDrawFunction g_originalRoomDrawFunctions[NUM_ROOMS_AND_ALL];
 dl_u16 g_numSpritesToDraw = 0;
 
 dl_u16 g_vdpTileIndex = 0;
+dl_u16 g_transitionTilesetVDPIndex = 0;
+
 void buildTileResource(GameSprite* sprite, 
 					   const TileSet* tileSet, 
 					   dl_u8 spriteWidth, 
@@ -199,13 +201,15 @@ void GameRunner_Init(GameData* gameData, const Resources* resources)
 {
 	VDP_setVerticalScroll(BG_B, -Y_OFFSET);
 	VDP_setHorizontalScroll(BG_B, X_OFFSET);
-	//VDP_setVerticalScroll(BG_A, -Y_OFFSET);
-	//VDP_setHorizontalScroll(BG_A, X_OFFSET);
+	VDP_setVerticalScroll(BG_A, -Y_OFFSET);
+	VDP_setHorizontalScroll(BG_A, X_OFFSET);
 
 	// load background
 	VDP_loadTileSet(&backgroundTileset, 0, DMA);
 	g_vdpTileIndex = backgroundTileset.numTile;
-
+	VDP_loadTileSet(&transitionTileset, g_vdpTileIndex, DMA);
+	g_transitionTilesetVDPIndex = g_vdpTileIndex;
+	g_vdpTileIndex += transitionTileset.numTile;
 
 	// load sprite tile resources
 	buildTileResource(&dropsSprite, &dropTileset, DROP_SPRITE_WIDTH, DROP_SPRITE_ROWS, DROP_SPRITE_COUNT, SPRITE_SIZE(1, 1));
@@ -283,8 +287,6 @@ void GameRunner_Init(GameData* gameData, const Resources* resources)
 	Game_Init(gameData, resources);
 
 
-	//VDP_fillTileMapRect(BG_A, 2, 0, 0, 10, 10);
-
 	//createBackgrounds(gameData, resources);
 
 }
@@ -330,6 +332,30 @@ void GameRunner_Update(GameData* gameData, const Resources* resources)
 
 //void drawUIText(const dl_u8* text, dl_u16 x, dl_u16 y, GameSprite* font);
 
+dl_u16 lineToTileIndex(dl_u16 line, dl_u16 range)
+{
+	if (line < range)
+	{
+		return TILE_ATTR_FULL(0, 1, 0, 0, g_transitionTilesetVDPIndex);
+	}
+	else if (line >= range && line < (range + 8))
+	{
+		return TILE_ATTR_FULL(0, 1, 0, 0, g_transitionTilesetVDPIndex + (line - range));
+	}
+	else if (line > (range + 7))
+	{
+		return 0;
+	}
+}
+
+void computeTransitionTileIndexes(dl_u16* rowIndexes, dl_u16 line)
+{
+	rowIndexes[0] = lineToTileIndex(line, 0);
+	rowIndexes[1] = lineToTileIndex(line, 8);
+	rowIndexes[2] = lineToTileIndex(line, 16);
+	rowIndexes[3] = lineToTileIndex(line, 24);
+}
+
 void GameRunner_Draw(GameData* gameData, const Resources* resources)
 {
 	g_numSpritesToDraw = 0;
@@ -339,6 +365,22 @@ void GameRunner_Draw(GameData* gameData, const Resources* resources)
 
 	VDP_setSpriteLink(g_numSpritesToDraw - 1, 0);
 	VDP_updateSprites(g_numSpritesToDraw, DMA);
+
+
+	static dl_u16 counter = 0;
+	counter++;
+	dl_u16 line = (counter >> 3) & 31;
+
+	dl_u16 rowIndexes[4];
+
+	computeTransitionTileIndexes(rowIndexes, line);
+
+	dl_u16 rows = 4;
+
+	for (int loop = 0; loop < 24; loop++)
+	{
+		VDP_fillTileMapRect(BG_A, rowIndexes[loop & 3], 0, loop, 32, 1);
+	}	
 }
 
 // draw sprite, affected by scrolling

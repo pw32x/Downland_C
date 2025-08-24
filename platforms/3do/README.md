@@ -19,7 +19,6 @@ Instructions:
 - Get the 3DO Devkit from GitHub.
 - Ensure that TDO_DEVKIT_PATH is set to the root of the 3DO devkit folder (ie c:\3do-devkit)
 - Run the build.bat in the build folder or use the provided Visual Studio solution.
-- To build the game to run on the Playdate device, run the create_build_***_arm_project.bat file for debug or release.
 - The built downland.iso will be in the out/iso folder.
 
 ## RUNNING THE GAME

@@ -47,16 +47,87 @@ void dl_memcpy(void* destination, const void* source, dl_u16 count)
     memcpy(destination, source, count);
 }
 
+const dl_u8* sounds[SOUND_NUM_SOUNDS]  =
+{
+	jumpSound,
+	landSound,
+	transitionSound,
+	splatSound,
+	pickupSound,
+	runSound,
+	climbUpSound,
+	climbDownSound,
+};
+
+const dl_u16 soundSizes[SOUND_NUM_SOUNDS]  =
+{
+	sizeof(jumpSound),
+	sizeof(landSound),
+	sizeof(transitionSound),
+	sizeof(splatSound),
+	sizeof(pickupSound),
+	sizeof(runSound),
+	sizeof(climbUpSound),
+	sizeof(climbDownSound),
+};
+
+const dl_u16 soundChannels[SOUND_NUM_SOUNDS]  =
+{
+	SOUND_PCM_CH1, // jump
+	SOUND_PCM_CH2, // land
+	SOUND_PCM_CH3, // transition
+	SOUND_PCM_CH3, // splat
+	SOUND_PCM_CH2, // pickup
+	SOUND_PCM_CH3, // run
+	SOUND_PCM_CH3, // climbUp
+	SOUND_PCM_CH3, // climbDown
+};
+
+const dl_u16 soundPriorities[SOUND_NUM_SOUNDS]  =
+{
+	15, // jump
+	0, // land
+	15, // transition
+	15, // splat
+	15, // pickup
+	15, // run
+	15, // climbUp
+	15, // climbDown
+};
+
+dl_u16 soundIsPlaying[SOUND_NUM_SOUNDS]  =
+{
+	0, // jump
+	0, // land
+	0, // transition
+	0, // splat
+	0, // pickup
+	0, // run
+	0, // climbUp
+	0, // climbDown
+};
+
+
 void Sound_Play(dl_u8 soundIndex, dl_u8 loop)
 {
+	if (loop && soundIsPlaying[soundIndex])
+		return;
+
+	soundIsPlaying[soundIndex] = 1;
+	XGM2_playPCMEx(sounds[soundIndex], soundSizes[soundIndex], soundChannels[soundIndex], soundPriorities[soundIndex], false, loop);
 }
 
 void Sound_Stop(dl_u8 soundIndex)
 {
+	XGM2_stopPCM(soundChannels[soundIndex]);
+	soundIsPlaying[soundIndex] = 0;
 }
 
 void Sound_StopAll()
 {
+	XGM2_stopPCM(SOUND_PCM_CH1);
+	XGM2_stopPCM(SOUND_PCM_CH2);
+	XGM2_stopPCM(SOUND_PCM_CH3);
 }
 
 

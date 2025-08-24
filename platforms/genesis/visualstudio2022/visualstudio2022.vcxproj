@@ -140,6 +140,15 @@
     <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\pal.h" />
     <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\pool.h" />
     <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\psg.h" />
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\snd\pcm\snd_dpcm2.h" />
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\snd\pcm\snd_pcm.h" />
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\snd\pcm\snd_pcm4.h" />
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\snd\pcm\tab_vol.h" />
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\snd\smp_null.h" />
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\snd\smp_null_dpcm.h" />
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\snd\sound.h" />
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\snd\xgm.h" />
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\snd\xgm2.h" />
     <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\sprite_eng.h" />
     <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\sprite_eng_legacy.h" />
     <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\sram.h" />

@@ -25,6 +25,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="SGDK\snd">
+      <UniqueIdentifier>{880ac51f-f98c-4b49-abfc-ef89d80d0f27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SGDK\snd\pcm">
+      <UniqueIdentifier>{e0c805b1-a875-4aee-984c-19bff44664ed}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\game\ball.c">
@@ -324,6 +330,33 @@
     </ClInclude>
     <ClInclude Include="..\..\..\game\rooms\titlescreen.h">
       <Filter>game\rooms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\snd\sound.h">
+      <Filter>SGDK\snd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\snd\xgm.h">
+      <Filter>SGDK\snd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\snd\xgm2.h">
+      <Filter>SGDK\snd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\snd\smp_null.h">
+      <Filter>SGDK\snd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\snd\smp_null_dpcm.h">
+      <Filter>SGDK\snd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\snd\pcm\tab_vol.h">
+      <Filter>SGDK\snd\pcm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\snd\pcm\snd_dpcm2.h">
+      <Filter>SGDK\snd\pcm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\snd\pcm\snd_pcm.h">
+      <Filter>SGDK\snd\pcm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\GenDev\SGDK\inc\snd\pcm\snd_pcm4.h">
+      <Filter>SGDK\snd\pcm</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

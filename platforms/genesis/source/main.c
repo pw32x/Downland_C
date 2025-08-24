@@ -216,9 +216,6 @@ int main(bool hardReset)
 
     // Load sprite palettes and set the text palette
 	PAL_setColors(PAL0, palette, 5, DMA);
-    PAL_setPalette(PAL1, player_sprite.palette->data, DMA);
-    PAL_setPalette(PAL2, explosion_sprite.palette->data, DMA);
-    PAL_setPalette(PAL3, enemy_sprite.palette->data, DMA);
     VDP_setTextPalette(PAL1);
 
 

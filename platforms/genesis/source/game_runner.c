@@ -13,8 +13,8 @@
 
 #include "drops_manager.h"
 #include "draw_utils.h"
-#include "rooms\chambers.h"
-#include "rooms\titlescreen.h"
+#include "rooms/chambers.h"
+#include "rooms/titlescreen.h"
 #include "dl_rand.h"
 
 typedef struct

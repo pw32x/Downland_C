@@ -21,7 +21,7 @@ extern "C"
 #include "resource_loader_buffer.h"
 #include "draw_utils.h"
 #include "drops_manager.h"
-#include "rooms\chambers.h"
+#include "rooms/chambers.h"
 
 void* dl_alloc(dl_u32 size)
 {

@@ -11,7 +11,11 @@
 
 #include "lodepng.h"
 
+#ifdef _WIN64
 std::string g_resPath = "res\\";
+#else
+std::string g_resPath = "res/";
+#endif
 
 extern "C"
 {

@@ -30,6 +30,9 @@
     <ClCompile Include="..\..\..\..\game\dl_rand.c">
       <Filter>Game</Filter>
     </ClCompile>
+    <ClCompile Include="lodepng.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\game\base_defines.h">
@@ -53,8 +56,14 @@
     <ClInclude Include="..\..\..\..\game\dl_platform.h">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="stb_image_write.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="..\..\..\..\game\drops_manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\game\drops_types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lodepng.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

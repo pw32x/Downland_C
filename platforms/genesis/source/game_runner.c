@@ -62,6 +62,9 @@ void drawGetReadyScreen(struct GameData* gameData, const Resources* resources);
 typedef void (*RoomDrawFunction)(dl_u8 roomNumber, struct GameData* gameData, const Resources* resources);
 RoomDrawFunction g_originalRoomDrawFunctions[NUM_ROOMS_AND_ALL];
 
+void updateTransition(dl_u16 line);
+void drawBlackTransitionScreen();
+
 dl_u16 g_numSpritesToDraw = 0;
 
 dl_u16 g_vdpTileIndex = 0;
@@ -129,6 +132,8 @@ void drawTileText(const dl_u8* text, dl_u16 xyLocation)
 
 void custom_chamber_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resources)
 {
+	drawBlackTransitionScreen();
+
 	VDP_setTileMapDataRect(BG_B, roomTileMaps[roomNumber], 0, 0, TILE_MAP_WIDTH, TILE_MAP_HEIGHT, TILE_MAP_WIDTH, DMA);
 
 	// init background and text
@@ -150,6 +155,8 @@ void custom_chamber_draw(dl_u8 roomNumber, GameData* gameData, const Resources* 
 
 void custom_titleScreen_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resources)
 {
+	drawBlackTransitionScreen();
+
 	VDP_setTileMapDataRect(BG_B, roomTileMaps[roomNumber], 0, 0, TILE_MAP_WIDTH, TILE_MAP_HEIGHT, TILE_MAP_WIDTH, DMA);
 
 	g_originalRoomDrawFunctions[roomNumber](roomNumber, gameData, resources);
@@ -187,6 +194,8 @@ void custom_titleScreen_draw(dl_u8 roomNumber, GameData* gameData, const Resourc
 
 void custom_get_ready_room_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resources)
 {
+	drawBlackTransitionScreen();
+
 	VDP_setTileMapDataRect(BG_B, roomTileMaps[TITLESCREEN_ROOM_INDEX], 0, 0, TILE_MAP_WIDTH, TILE_MAP_HEIGHT, TILE_MAP_WIDTH, DMA);
 
 	// init background and text
@@ -204,12 +213,16 @@ void GameRunner_Init(GameData* gameData, const Resources* resources)
 	VDP_setVerticalScroll(BG_A, -Y_OFFSET);
 	VDP_setHorizontalScroll(BG_A, X_OFFSET);
 
+
 	// load background
 	VDP_loadTileSet(&backgroundTileset, 0, DMA);
 	g_vdpTileIndex = backgroundTileset.numTile;
 	VDP_loadTileSet(&transitionTileset, g_vdpTileIndex, DMA);
 	g_transitionTilesetVDPIndex = g_vdpTileIndex;
 	g_vdpTileIndex += transitionTileset.numTile;
+
+
+	drawBlackTransitionScreen();
 
 	// load sprite tile resources
 	buildTileResource(&dropsSprite, &dropTileset, DROP_SPRITE_WIDTH, DROP_SPRITE_ROWS, DROP_SPRITE_COUNT, SPRITE_SIZE(1, 1));
@@ -280,7 +293,7 @@ void GameRunner_Init(GameData* gameData, const Resources* resources)
 	g_rooms[GET_READY_ROOM_INDEX]->draw = custom_get_ready_room_draw;
 
 
-	//Game_ChangedRoomCallback = GameRunner_ChangedRoomCallback;
+	Game_ChangedRoomCallback = GameRunner_ChangedRoomCallback;
 
 	//setGameBackgroundTilemap(TITLESCREEN_ROOM_INDEX);
 
@@ -293,36 +306,12 @@ void GameRunner_Init(GameData* gameData, const Resources* resources)
 
 void GameRunner_ChangedRoomCallback(const struct GameData* gameData, dl_u8 roomNumber, dl_s8 transitionType)
 {
-	/*
-	g_oldPlayerX = 0xffff;
-	g_oldPlayerY = 0xffff;
-
-	dl_u32 mode = MODE_1 | BG1_ON | BG2_ON | OBJ_ENABLE | OBJ_1D_MAP;
-
+	return;
 	if (roomNumber == WIPE_TRANSITION_ROOM_INDEX || 
 		roomNumber == TRANSITION_ROOM_INDEX)
 	{
-		g_transitionCounter = TRANSITION_BLACK_SCREEN;
+		drawBlackTransitionScreen();
 	}
-	else
-	{
-		g_transitionCounter = TRANSITION_OFF;
-	}
-
-	if (roomNumber != TITLESCREEN_ROOM_INDEX &&
-		roomNumber != GET_READY_ROOM_INDEX)
-	{
-		// turn on the UI hud
-		mode |= BG0_ON;
-	}
-	else
-	{
-		g_scrollX = 7;
-		g_scrollY = 13;
-	}
-
-	SetMode(mode);
-	*/
 }
 
 void GameRunner_Update(GameData* gameData, const Resources* resources)
@@ -336,16 +325,14 @@ dl_u16 lineToTileIndex(dl_u16 line, dl_u16 range)
 {
 	if (line < range)
 	{
-		return TILE_ATTR_FULL(0, 1, 0, 0, g_transitionTilesetVDPIndex);
+		return TILE_ATTR_FULL(0, 1, 0, 0, g_transitionTilesetVDPIndex); // opaque tile
 	}
 	else if (line >= range && line < (range + 8))
 	{
-		return TILE_ATTR_FULL(0, 1, 0, 0, g_transitionTilesetVDPIndex + (line - range));
+		return TILE_ATTR_FULL(0, 1, 0, 0, g_transitionTilesetVDPIndex + (line - range) + 1); // tile with line
 	}
-	else if (line > (range + 7))
-	{
-		return 0;
-	}
+
+	return 0; // transparent tile
 }
 
 void computeTransitionTileIndexes(dl_u16* rowIndexes, dl_u16 line)
@@ -354,6 +341,23 @@ void computeTransitionTileIndexes(dl_u16* rowIndexes, dl_u16 line)
 	rowIndexes[1] = lineToTileIndex(line, 8);
 	rowIndexes[2] = lineToTileIndex(line, 16);
 	rowIndexes[3] = lineToTileIndex(line, 24);
+}
+
+void updateTransition(dl_u16 line)
+{
+	dl_u16 rowIndexes[4];
+	computeTransitionTileIndexes(rowIndexes, line);
+
+	for (int loop = 0; loop < 24; loop++)
+	{
+		VDP_fillTileMapRect(BG_A, rowIndexes[loop & 3], 0, loop, 32, 1);
+	}	
+}
+
+void drawBlackTransitionScreen()
+{
+	VDP_fillTileMapRect(BG_A, TILE_ATTR_FULL(0, 1, 0, 0, g_transitionTilesetVDPIndex), 0, 0, 32, 24);
+
 }
 
 void GameRunner_Draw(GameData* gameData, const Resources* resources)
@@ -365,22 +369,6 @@ void GameRunner_Draw(GameData* gameData, const Resources* resources)
 
 	VDP_setSpriteLink(g_numSpritesToDraw - 1, 0);
 	VDP_updateSprites(g_numSpritesToDraw, DMA);
-
-
-	static dl_u16 counter = 0;
-	counter++;
-	dl_u16 line = (counter >> 3) & 31;
-
-	dl_u16 rowIndexes[4];
-
-	computeTransitionTileIndexes(rowIndexes, line);
-
-	dl_u16 rows = 4;
-
-	for (int loop = 0; loop < 24; loop++)
-	{
-		VDP_fillTileMapRect(BG_A, rowIndexes[loop & 3], 0, loop, 32, 1);
-	}	
 }
 
 // draw sprite, affected by scrolling
@@ -599,61 +587,29 @@ void drawCleanBackground(const GameData* gameData,
 
 void drawTransition(struct GameData* gameData, const Resources* resources)
 {
-	/*
 	if (gameData->transitionInitialDelay == 29)
     {
-        g_transitionCounter = TRANSITION_BLACK_SCREEN;
+		drawBlackTransitionScreen();
     }
     else if (!gameData->transitionInitialDelay)
     {
-		g_transitionCounter = TRANSITION_OFF;
-        drawCleanBackground(gameData, 
-							resources, 
-							gameData->cleanBackground, 
-							g_backgroundTileOffset);
+		updateTransition(32); // transparent
     }
-	*/
 }
 
 void drawWipeTransition(struct GameData* gameData, const Resources* resources)
 {
-	/*
 	if (gameData->transitionInitialDelay == 29)
     {
-        g_transitionCounter = TRANSITION_BLACK_SCREEN;
-
-		PlayerData* playerData = gameData->currentPlayerData;
-
-		dl_u16 playerX;
-		dl_u16 playerY;
-
-		if (playerData->lastDoor)
-		{
-			playerX = playerData->lastDoor->xLocationInNextRoom;
-			playerY = playerData->lastDoor->yLocationInNextRoom;
-		}
-		else
-		{
-			playerX = PLAYER_START_X;
-			playerY = PLAYER_START_Y;
-		}
-
-		updateScroll(playerX << 1, playerY);
-    }
-    else if (!gameData->transitionInitialDelay)
-    {
-		//g_transitionCounter = TRANSITION_OFF;
-        drawCleanBackground(gameData, 
-							resources, 
-							gameData->cleanBackground, 
-							g_backgroundTileOffset);
+		drawBlackTransitionScreen();
     }
 
 	if (!gameData->transitionCurrentLine)
-		g_transitionCounter = TRANSITION_BLACK_SCREEN;
-	else
-		g_transitionCounter = gameData->transitionCurrentLine;
-		*/
+		drawBlackTransitionScreen();
+	else if (gameData->transitionCurrentLine < 31)
+		updateTransition(gameData->transitionCurrentLine);
+	else 
+		updateTransition(32);
 }
 
 void drawGetReadyScreen(struct GameData* gameData, const Resources* resources)

@@ -658,7 +658,7 @@ void saveTransitionTileset()
 {
     const dl_u8 transparentColor = 0;
     const dl_u8 lineColor = 1;
-    const dl_u8 opaqueColor = 2;
+    const dl_u8 opaqueColor = 4;
 
     const dl_u8 numAnimatedFrames = 8;
     const dl_u8 numTotalTiles = numAnimatedFrames + 1; // 8 animated frames and 1 black frame

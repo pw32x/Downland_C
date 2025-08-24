@@ -107,7 +107,8 @@ dl_u16 palette[] =
 	RGB8_8_8_TO_VDPCOLOR(0,		0,   0),
 	RGB8_8_8_TO_VDPCOLOR(0,		0, 255),
 	RGB8_8_8_TO_VDPCOLOR(255, 165,   0),
-	RGB8_8_8_TO_VDPCOLOR(255, 255, 255)
+	RGB8_8_8_TO_VDPCOLOR(255, 255, 255),
+	RGB8_8_8_TO_VDPCOLOR(0,		0,   0),
 };
 
 // Entry Point
@@ -143,7 +144,7 @@ int main(bool hardReset)
     JOY_init();
 
     // Load sprite palettes and set the text palette
-	PAL_setColors(PAL0, palette, 4, DMA);
+	PAL_setColors(PAL0, palette, 5, DMA);
     PAL_setPalette(PAL1, player_sprite.palette->data, DMA);
     PAL_setPalette(PAL2, explosion_sprite.palette->data, DMA);
     PAL_setPalette(PAL3, enemy_sprite.palette->data, DMA);

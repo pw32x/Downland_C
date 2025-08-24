@@ -131,9 +131,9 @@ void Sound_StopAll()
 }
 
 
-void updateControls(JoystickState* joystickState)
+void updateControls(dl_u16 controllerIndex, JoystickState* joystickState)
 {
-	dl_u16 state = JOY_readJoypad(0);
+	dl_u16 state = JOY_readJoypad(controllerIndex);
 
     // Check D-Pad
     bool leftDown = (state & BUTTON_LEFT) != 0;
@@ -236,9 +236,16 @@ int main(bool hardReset)
 
 	GameRunner_Init(&gameData, &resources);
 
+	dl_u16 controllerIndex = 0;
+
     while (TRUE)
     {
-		updateControls(&gameData.joystickState);
+        if (gameData.currentPlayerData != NULL)
+        {
+            controllerIndex = gameData.currentPlayerData->playerNumber;
+        }
+
+		updateControls(controllerIndex, &gameData.joystickState);
 
 		if (gameData.joystickState.startPressed)
 		{

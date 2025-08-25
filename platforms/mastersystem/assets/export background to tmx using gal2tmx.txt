@@ -1,0 +1,5 @@
+gal2tmx.exe background.gal <destination folder>
+
+
+add -y flag to suppress the overwrite prompt
+

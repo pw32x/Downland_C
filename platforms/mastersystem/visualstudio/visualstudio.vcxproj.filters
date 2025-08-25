@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="SMSLib">
+      <UniqueIdentifier>{c9ef1464-5305-434c-8b8a-e75277b516a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\gamedata">
+      <UniqueIdentifier>{05528c9a-8ba6-4f21-99e1-6f4323763cb7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\source\main.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\ninja_girl.c">
+      <Filter>Source Files\gamedata</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\background_tileset.c">
+      <Filter>Source Files\gamedata</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\background.c">
+      <Filter>Source Files\gamedata</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\devkitSMS-master\SMSlib\src\SMSlib.h">
+      <Filter>SMSLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\animationtypes.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\ninja_girl.h">
+      <Filter>Source Files\gamedata</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\background.h">
+      <Filter>Source Files\gamedata</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\background_tileset.h">
+      <Filter>Source Files\gamedata</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\maptypes.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

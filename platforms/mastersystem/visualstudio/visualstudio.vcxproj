@@ -109,7 +109,7 @@
     <NMakePreprocessorDefinitions>_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <NMakeOutput>..\out\untitled_project.sms</NMakeOutput>
+    <NMakeOutput>..\out\Downland.sms</NMakeOutput>
     <NMakePreprocessorDefinitions>WIN32;NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
     <NMakeBuildCommandLine>..\build\build.bat</NMakeBuildCommandLine>
     <NMakeReBuildCommandLine>..\build\rebuild.bat</NMakeReBuildCommandLine>
@@ -134,6 +134,13 @@
     <ClInclude Include="..\source\background_tileset.h" />
     <ClInclude Include="..\source\maptypes.h" />
     <ClInclude Include="..\source\ninja_girl.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\build\build.bat" />
+    <None Include="..\build\clean.bat" />
+    <None Include="..\build\deploy.bat" />
+    <None Include="..\build\Makefile" />
+    <None Include="..\build\rebuild.bat" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

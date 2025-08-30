@@ -712,12 +712,11 @@ void saveTransitionTileset()
                   g_destinationPath + "transitionTileset.png");
 }
 
-void saveBitshiftedSprite(const dl_u8* bitShiftedSprite, dl_u8 spriteCount, dl_u8 rowCount, const char* name)
+void saveSprite(const dl_u8* sprite, dl_u8 spriteCount, dl_u8 rowCount, const char* name)
 {
-#define DESTINATION_BYTES_PER_ROW	3
-#define NUM_BIT_SHIFTS 4
+    const dl_u8 destinationBytesPerRow = 2; // 16 pixels
 
-	dl_u16 bufferSize = spriteCount * rowCount * DESTINATION_BYTES_PER_ROW * NUM_BIT_SHIFTS;
+    dl_u16 bufferSize = spriteCount * rowCount * destinationBytesPerRow;
 
     std::ostringstream oss;
 
@@ -728,9 +727,58 @@ void saveBitshiftedSprite(const dl_u8* bitShiftedSprite, dl_u8 spriteCount, dl_u
     oss << "{\n";
 
     dl_u8 rowCounter = 0;
-    dl_u8 spriteCounter = 0;
 
-    for (int loop = 0; loop < bufferSize; loop += DESTINATION_BYTES_PER_ROW)
+    for (int loop = 0; loop < bufferSize; loop += destinationBytesPerRow)
+    {
+        if (rowCounter % rowCount == 0)
+        {
+            if (rowCounter)
+                oss << "\n";
+
+            dl_u16 spriteIndex = (rowCounter / rowCount);
+            oss << "    // sprite " << (dl_u16)spriteIndex << "\n";
+        }
+
+        oss << "    " 
+            << "0x" << std::hex << std::uppercase << std::setw(2) << std::setfill('0')
+            << (dl_u16)sprite[0]
+            << ", " 
+            << "0x" << std::hex << std::uppercase << std::setw(2) << std::setfill('0')
+            << (dl_u16)sprite[1]
+            << ",\t // "
+            << std::bitset<8>(sprite[0]) << " "
+            << std::bitset<8>(sprite[1]) << " "
+            << "\n";
+
+        sprite += destinationBytesPerRow;
+        rowCounter++;
+    }
+
+    oss << "};\n";
+    oss << "\n";
+            
+    std::ofstream outFile(g_destinationPath + name + ".c");
+    outFile << oss.str();
+}
+
+void saveBitshiftedSprite(const dl_u8* bitShiftedSprite, dl_u8 spriteCount, dl_u8 rowCount, const char* name)
+{
+    dl_u8 destinationBytesPerRow = 3; // 24 pixels
+#define NUM_BIT_SHIFTS 4
+
+	dl_u16 bufferSize = spriteCount * rowCount * destinationBytesPerRow * NUM_BIT_SHIFTS;
+
+    std::ostringstream oss;
+
+    oss << "#include \"base_types.h\"\n";
+    oss << "\n";
+
+    oss << "dl_u8 " << name << "[] = \n";
+    oss << "{\n";
+
+    dl_u8 rowCounter = 0;
+
+    for (int loop = 0; loop < bufferSize; loop += destinationBytesPerRow)
     {
         if (rowCounter % rowCount == 0)
         {
@@ -757,7 +805,7 @@ void saveBitshiftedSprite(const dl_u8* bitShiftedSprite, dl_u8 spriteCount, dl_u
             << std::bitset<8>(bitShiftedSprite[2]) << " "
             << "\n";
 
-        bitShiftedSprite += 3;
+        bitShiftedSprite += destinationBytesPerRow;
         rowCounter++;
     }
 
@@ -827,6 +875,10 @@ int main()
     saveBitshiftedSprite(resources.bitShiftedSprites_playerSplat, PLAYER_SPLAT_SPRITE_COUNT, PLAYER_SPLAT_SPRITE_ROWS, "bitShiftedSprite_playerSplat");
     saveBitshiftedSprite(resources.bitShiftedSprites_door, DOOR_SPRITE_COUNT, DOOR_SPRITE_ROWS, "bitShiftedSprite_door");
     saveBitshiftedSprite(resources.bitShiftedSprites_player, PLAYER_SPRITE_COUNT, PLAYER_SPRITE_ROWS, "bitShiftedSprite_player");
+    saveSprite(resources.sprite_diamond, 1, PICKUPS_NUM_SPRITE_ROWS, "diamondSprite");
+    saveSprite(resources.sprite_moneyBag, 1, PICKUPS_NUM_SPRITE_ROWS, "moneyBagSprite");
+    saveSprite(resources.sprite_key, 1, PICKUPS_NUM_SPRITE_ROWS, "keySprite");
+    saveSprite(resources.sprites_drops, 4, DROP_SPRITE_ROWS, "dropSprite");
 
     
 

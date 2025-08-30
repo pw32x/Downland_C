@@ -4,6 +4,35 @@
 #include "background.h"
 #include "background_tileset.h"
 
+#include "base_types.h"
+
+void* dl_alloc(dl_u32 size)
+{
+	return NULL;
+}
+
+void dl_memset(void* source, dl_u8 value, dl_u16 count)
+{
+
+}
+
+void dl_memcpy(void* destination, const void* source, dl_u16 count)
+{
+}
+
+void Sound_Play(dl_u8 soundIndex, dl_u8 loop)
+{
+}
+
+void Sound_Stop(dl_u8 soundIndex)
+{
+}
+
+void Sound_StopAll(void)
+{
+}
+
+
 #define TRUE 1
 #define FALSE 0
 
@@ -93,7 +122,7 @@ void buildColumn(unsigned short tileColumn)
 	}
 }
 
-void Scroll_InitTilemap()
+void Scroll_InitTilemap(void)
 {
 	// fill the map from the second column to the last.
 	for (int loop = 1; loop < 32; loop++)
@@ -110,7 +139,7 @@ void Scroll_InitTilemap()
 	SMS_loadTileMapColumn(0, 0, Scroll_column, 24);
 }
 
-void Scroll_Update()
+void Scroll_Update(void)
 {
 	// here we move the vdp scrolling and logical map scrolling to the same speed
 	ScrollManager_horizontalScroll += Scroll_speed; // scrolling towards the right into the map

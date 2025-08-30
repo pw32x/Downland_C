@@ -14,6 +14,12 @@
     <Filter Include="build">
       <UniqueIdentifier>{b98ae0a7-68ac-4820-8058-322c408645d9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="game">
+      <UniqueIdentifier>{1873331b-47a3-4fe6-b40a-50b68907e5c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="game\rooms">
+      <UniqueIdentifier>{e425e5c3-783b-4949-bb20-294c751db6c0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\source\main.c">
@@ -27,6 +33,60 @@
     </ClCompile>
     <ClCompile Include="..\source\background.c">
       <Filter>Source Files\gamedata</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\game\ball.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\game\bird.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\game\checksum_utils.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\game\debug_utils.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\game\dl_rand.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\game\door_utils.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\game\draw_utils.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\game\drops_manager.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\game\game.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\game\physics_utils.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\game\player.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\game\resource_loader_buffer.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\game\string_utils.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\game\rooms\chambers.c">
+      <Filter>game\rooms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\game\rooms\getready.c">
+      <Filter>game\rooms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\game\rooms\rooms.c">
+      <Filter>game\rooms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\game\rooms\titlescreen.c">
+      <Filter>game\rooms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\game\rooms\transitions.c">
+      <Filter>game\rooms</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -47,6 +107,96 @@
     </ClInclude>
     <ClInclude Include="..\source\maptypes.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game\dl_alloc.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game\background_types.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game\ball.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game\base_defines.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game\base_types.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game\bird.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game\checksum_utils.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game\debug_utils.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game\dl_platform.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game\dl_rand.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game\dl_sound.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game\door_types.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game\door_utils.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game\draw_utils.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game\drops_manager.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game\drops_types.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game\game.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game\game_types.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game\joystick_types.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game\physics_utils.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game\pickup_types.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game\player.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game\player_types.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game\resource_loader_buffer.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game\resource_types.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game\string_utils.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game\rooms\chambers.h">
+      <Filter>game\rooms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game\rooms\room_types.h">
+      <Filter>game\rooms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game\rooms\rooms.h">
+      <Filter>game\rooms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game\rooms\titlescreen.h">
+      <Filter>game\rooms</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

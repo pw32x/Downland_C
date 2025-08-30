@@ -14,33 +14,46 @@ CRT0=$(DEVKITSMS_BASE)/crt0/crt0_sms.rel
 SMSLIB_LIB=$(SMSLIB_BASE)/SMSlib.lib          # Use distributed lib
 #SMSLIB_LIB=$(SMSLIB_BASE)/src/SMSlib.lib      # Use locally compiled lib
 
-CFLAGS=-mz80 -I$(SMSLIB_INCDIR) --peep-file $(PEEP_RULES)
+CFLAGS=-mz80 -I$(SMSLIB_INCDIR) -I$(SOURCE_DIR)/game -I$(SOURCE_DIR)/game/rooms --peep-file $(PEEP_RULES)
 LDFLAGS=-mz80 --no-std-crt0 --data-loc 0xC000
 
-FOLDER_TO_CREATE = $(SOURCE_OUTPUT_DIR)
-
 SOURCE_DIR = source
+GAME_DIR   = $(SOURCE_DIR)/game
+ROOMS_DIR  = $(SOURCE_DIR)/game/rooms
+
 OUTPUT_DIR = out
 
 SOURCE_OUTPUT_DIR = $(OUTPUT_DIR)/$(SOURCE_DIR)
+GAME_OUTPUT_DIR   = $(OUTPUT_DIR)/$(SOURCE_DIR)/game
+ROOMS_OUTPUT_DIR  = $(OUTPUT_DIR)/$(SOURCE_DIR)/game/rooms
 
-CS    = $(wildcard $(SOURCE_DIR)/*.c)
+# collect sources
+CS       = $(wildcard $(SOURCE_DIR)/*.c)
+GAME_CS  = $(wildcard $(GAME_DIR)/*.c)
+ROOMS_CS = $(wildcard $(ROOMS_DIR)/*.c)
 
-OBJ = $(CS:.c=.rel)
-OBJS= $(addprefix $(OUTPUT_DIR)/, $(OBJ))
+# map sources to objects
+SOURCE_OBJS = $(patsubst $(SOURCE_DIR)/%.c,$(SOURCE_OUTPUT_DIR)/%.rel,$(CS))
+GAME_OBJS   = $(patsubst $(GAME_DIR)/%.c,$(GAME_OUTPUT_DIR)/%.rel,$(GAME_CS))
+ROOMS_OBJS  = $(patsubst $(ROOMS_DIR)/%.c,$(ROOMS_OUTPUT_DIR)/%.rel,$(ROOMS_CS))
 
+OBJS = $(SOURCE_OBJS) $(GAME_OBJS) $(ROOMS_OBJS)
 
 all: directories $(OUTPUT_DIR)/$(PROGNAME).sms
 
-directories: $(FOLDER_TO_CREATE)
+directories:
+	mkdir -p $(SOURCE_OUTPUT_DIR)
+	mkdir -p $(GAME_OUTPUT_DIR)
+	mkdir -p $(ROOMS_OUTPUT_DIR)
 
-$(FOLDER_TO_CREATE):
-	mkdir -p $(FOLDER_TO_CREATE)
-
+# compile rules
 $(SOURCE_OUTPUT_DIR)/%.rel: $(SOURCE_DIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(SOURCE_OUTPUT_DIR)/%.rel: $(SOURCE_DIR)/%.c $(SOURCE_DIR)/%.h
+$(GAME_OUTPUT_DIR)/%.rel: $(GAME_DIR)/%.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(ROOMS_OUTPUT_DIR)/%.rel: $(ROOMS_DIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(OUTPUT_DIR)/$(PROGNAME).ihx: $(OBJS)
@@ -50,11 +63,18 @@ $(OUTPUT_DIR)/$(PROGNAME).sms: $(OUTPUT_DIR)/$(PROGNAME).ihx
 	$(IHX2SMS) $< $@
 
 clean:
-
 	rm -f $(SOURCE_OUTPUT_DIR)/*.rel 	
 	rm -f $(SOURCE_OUTPUT_DIR)/*.asm 
 	rm -f $(SOURCE_OUTPUT_DIR)/*.sym 
 	rm -f $(SOURCE_OUTPUT_DIR)/*.lst 
+	rm -f $(GAME_OUTPUT_DIR)/*.rel 	
+	rm -f $(GAME_OUTPUT_DIR)/*.asm 
+	rm -f $(GAME_OUTPUT_DIR)/*.sym 
+	rm -f $(GAME_OUTPUT_DIR)/*.lst 
+	rm -f $(ROOMS_OUTPUT_DIR)/*.rel 	
+	rm -f $(ROOMS_OUTPUT_DIR)/*.asm 
+	rm -f $(ROOMS_OUTPUT_DIR)/*.sym 
+	rm -f $(ROOMS_OUTPUT_DIR)/*.lst 
 	rm -f $(OUTPUT_DIR)/*.ihx 
 	rm -f $(OUTPUT_DIR)/*.noi 
 	rm -f $(OUTPUT_DIR)/*.lk 

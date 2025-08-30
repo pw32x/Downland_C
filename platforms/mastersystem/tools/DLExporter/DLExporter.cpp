@@ -8,6 +8,7 @@
 #include <format>
 #include <array>
 #include <string_view>
+#include <bitset>
 
 #include "lodepng.h"
 
@@ -336,7 +337,7 @@ void saveTileMapSource(const std::vector<TileMap>& tileMaps)
     dl_u8 counter = 0;
     for (auto& tileMap : tileMaps)
     {
-        oss << "dl_u16 " << roomNames[counter] << "TileMap[] = \n";
+        oss << "dl_u8 " << roomNames[counter] << "TileMap[] = \n";
         oss << "{\n";
 
         for (int loopy = 0; loopy < TILE_MAP_HEIGHT; loopy++)
@@ -346,6 +347,11 @@ void saveTileMapSource(const std::vector<TileMap>& tileMaps)
             for (int loopx = 0; loopx < TILE_MAP_WIDTH; loopx++)
             {
                 dl_u16 tileIndex = tileMap[loopx + (loopy * TILE_MAP_WIDTH)];
+
+                if (tileIndex > 255)
+                {
+                    throw std::runtime_error("tile index over 255");
+                }
 
                 oss << tileIndex << ", ";
             }
@@ -360,7 +366,7 @@ void saveTileMapSource(const std::vector<TileMap>& tileMaps)
     }
 
     oss << "\n";
-    oss << "dl_u16* roomTileMaps[" << NUM_ROOMS_PLUS_TITLESCREN << "] = \n";
+    oss << "dl_u8* roomTileMaps[" << NUM_ROOMS_PLUS_TITLESCREN << "] = \n";
     oss << "{\n";
     for (int loop = 0; loop < NUM_ROOMS_PLUS_TITLESCREN; loop++)
         oss << "    " << roomNames[loop] << "TileMap,\n";
@@ -378,7 +384,7 @@ void saveTileMapHeader()
     oss << "#ifndef TILEMAPS_HEADER_INCLUDE_H\n";
     oss << "#define TILEMAPS_HEADER_INCLUDE_H\n";
     oss << "\n";
-    oss << "extern dl_u16* roomTileMaps[" << NUM_ROOMS_PLUS_TITLESCREN << "];\n";
+    oss << "extern dl_u8* roomTileMaps[" << NUM_ROOMS_PLUS_TITLESCREN << "];\n";
     oss << "\n";
     oss << "#endif\n";
 
@@ -706,6 +712,62 @@ void saveTransitionTileset()
                   g_destinationPath + "transitionTileset.png");
 }
 
+void saveBitshiftedSprite(const dl_u8* bitShiftedSprite, dl_u8 spriteCount, dl_u8 rowCount, const char* name)
+{
+#define DESTINATION_BYTES_PER_ROW	3
+#define NUM_BIT_SHIFTS 4
+
+	dl_u16 bufferSize = spriteCount * rowCount * DESTINATION_BYTES_PER_ROW * NUM_BIT_SHIFTS;
+
+    std::ostringstream oss;
+
+    oss << "#include \"base_types.h\"\n";
+    oss << "\n";
+
+    oss << "dl_u8 " << name << "[] = \n";
+    oss << "{\n";
+
+    dl_u8 rowCounter = 0;
+    dl_u8 spriteCounter = 0;
+
+    for (int loop = 0; loop < bufferSize; loop += DESTINATION_BYTES_PER_ROW)
+    {
+        if (rowCounter % rowCount == 0)
+        {
+            if (rowCounter)
+                oss << "\n";
+
+            dl_u16 spriteIndex = (rowCounter / rowCount) >> 2;
+            dl_u16 bitShift = (rowCounter / rowCount) % 4;
+            oss << "    // sprite " << (dl_u16)spriteIndex << " (bit shift " << bitShift << ")\n";
+        }
+
+        oss << "    " 
+            << "0x" << std::hex << std::uppercase << std::setw(2) << std::setfill('0')
+            << (dl_u16)bitShiftedSprite[0]
+            << ", " 
+            << "0x" << std::hex << std::uppercase << std::setw(2) << std::setfill('0')
+            << (dl_u16)bitShiftedSprite[1]
+            << ", " 
+            << "0x" << std::hex << std::uppercase << std::setw(2) << std::setfill('0')
+            << (dl_u16)bitShiftedSprite[2]
+            << ",\t // "
+            << std::bitset<8>(bitShiftedSprite[0]) << " "
+            << std::bitset<8>(bitShiftedSprite[1]) << " "
+            << std::bitset<8>(bitShiftedSprite[2]) << " "
+            << "\n";
+
+        bitShiftedSprite += 3;
+        rowCounter++;
+    }
+
+    oss << "};\n";
+    oss << "\n";
+            
+    std::ofstream outFile(g_destinationPath + name + ".c");
+    outFile << oss.str();
+}
+
 int main()
 {
     Resources resources;
@@ -714,7 +776,16 @@ int main()
 
     if (!std::filesystem::exists(g_destinationPath)) 
     {
-        std::filesystem::create_directories(g_destinationPath); // creates parent dirs too
+        // create the generated folder
+        std::filesystem::create_directories(g_destinationPath); 
+    }
+    else
+    {
+        // clear everything in the folder
+        for (const auto& entry : std::filesystem::directory_iterator(g_destinationPath)) 
+        {
+            std::filesystem::remove_all(entry);
+        }
     }
 
     std::cout << "**** DLExporter Master System START\n";
@@ -749,31 +820,43 @@ int main()
         tileMaps.push_back(tileMap);
     }
 
+
+    saveBitshiftedSprite(resources.bitShiftedCollisionmasks_player, PLAYER_SPRITE_COUNT, PLAYER_COLLISION_MASK_ROWS, "bitShiftedSprite_playerCollisionMasks");
+    saveBitshiftedSprite(resources.bitShiftedSprites_bouncyBall, BALL_SPRITE_COUNT, BALL_SPRITE_ROWS, "bitShiftedSprite_ball");
+    saveBitshiftedSprite(resources.bitShiftedSprites_bird, BIRD_SPRITE_COUNT, BIRD_SPRITE_ROWS, "bitShiftedSprite_bird");
+    saveBitshiftedSprite(resources.bitShiftedSprites_playerSplat, PLAYER_SPLAT_SPRITE_COUNT, PLAYER_SPLAT_SPRITE_ROWS, "bitShiftedSprite_playerSplat");
+    saveBitshiftedSprite(resources.bitShiftedSprites_door, DOOR_SPRITE_COUNT, DOOR_SPRITE_ROWS, "bitShiftedSprite_door");
+    saveBitshiftedSprite(resources.bitShiftedSprites_player, PLAYER_SPRITE_COUNT, PLAYER_SPRITE_ROWS, "bitShiftedSprite_player");
+
+    
+
+    /*
     saveCharacterFont(resources.characterFont);
     saveSprite16(resources.sprites_drops, DROP_SPRITE_WIDTH, DROP_SPRITE_ROWS, DROP_SPRITE_COUNT, "dropTileset");   
 	saveSprite16(resources.sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYER_SPRITE_COUNT, "playerTileset");
-	//(dl_u8*)&cursorSpriteRaw, 8, 1, 1, tileIndex);
 	saveSprite16(resources.sprites_bouncyBall, BALL_SPRITE_WIDTH, BALL_SPRITE_ROWS, BALL_SPRITE_COUNT, "ballTileset");
 	saveSprite16(resources.sprites_bird, BIRD_SPRITE_WIDTH, BIRD_SPRITE_ROWS, BIRD_SPRITE_COUNT, "birdTileset");
 	saveSprite16(resources.sprite_key, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, "keyTileset");
 	saveSprite16(resources.sprite_diamond, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, "diamondTileset");
 	saveSprite16(resources.sprite_moneyBag, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, "moneyBagTileset");
 	saveSprite16(resources.sprite_door, DOOR_SPRITE_WIDTH, DOOR_SPRITE_ROWS, 1, "doorTileset");
-	//buildEmptySpriteResource(&regenSprite, &g_16x16SpriteAttributes, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, 1, tileIndex);
 
     saveCursor();
+
     dl_u8* regenSprite = saveRegenSprite(resources.sprites_player);
     saveRegenLivesSprite(regenSprite);
-
     delete [] regenSprite;
 
     saveSplatSprite(resources.sprite_playerSplat);
     saveSprite16Clipped(resources.sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYERICON_NUM_SPRITE_ROWS, PLAYER_SPRITE_COUNT, "playerLivesTileset");
     saveTransitionTileset();
     saveTileSetToPng(tileSet);
+    */
+
     saveTileMapSource(tileMaps);
     saveTileMapHeader();
-    saveResFile();
+
+    //saveResFile();
 
     std::cout << "**** DLExporter Master System END\n";
 }

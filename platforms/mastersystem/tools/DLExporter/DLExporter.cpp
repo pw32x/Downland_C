@@ -1085,6 +1085,117 @@ void saveBitshiftedSprite(const dl_u8* bitShiftedSprite, dl_u8 spriteCount, dl_u
     outFile << oss.str();
 }
 
+void WriteToFourBytes(char value, char shift, dl_u8 bytes[4])
+{
+    bytes[0] |= ((value & 0x01) >> 0) << shift;
+    bytes[1] |= ((value & 0x02) >> 1) << shift;
+    bytes[2] |= ((value & 0x04) >> 2) << shift;
+    bytes[3] |= ((value & 0x08) >> 3) << shift;
+}
+
+void ConvertToPlanar(int row, const dl_u8* tileData, dl_u8 bytes[4])
+{
+    dl_u8 rowData[8];
+
+    for (int loop = 0; loop < TILE_WIDTH; loop++)
+    {
+        dl_u8 value = tileData[loop + (row * TILE_WIDTH)];
+
+        rowData[loop] = value;
+    }
+
+    for (int loop = 0; loop < 8; loop++)
+    {
+        WriteToFourBytes(rowData[loop], 7 - loop, bytes);
+    }
+}
+
+std::string WriteByteAsHex(dl_u8 value)
+{
+    std::stringstream tempStringStream;
+
+    tempStringStream << "0x";
+    tempStringStream.width(2);
+    tempStringStream.fill('0');
+    tempStringStream << std::hex << (dl_u16)value;
+
+    return tempStringStream.str();
+}
+
+void OutputTilePlanar(std::ostringstream& oss, const Tile& tile)
+{
+    for (int row = 0; row < TILE_HEIGHT; row++)
+    {
+        dl_u8 bytes[4];
+        memset(bytes, 0, sizeof(bytes));
+        ConvertToPlanar(row, tile.data(), bytes);
+
+        oss << "    ";
+
+        for (int loop = 0; loop < 4; loop++)
+        {
+            oss << WriteByteAsHex(bytes[loop]) <<", ";
+        }
+
+        oss << "\n";
+    }
+}
+
+void saveTileSet(std::vector<Tile>& tileSet)
+{
+    std::ostringstream oss;
+
+    oss << "#include \"base_types.h\"\n";
+    oss << "\n";
+
+	std::string outputTileDataName = "tileSet";
+
+	int tileIndex = 0;
+	int totalTiles = 0;
+	oss << "unsigned char const " << outputTileDataName << "[" << tileSet.size() * 32 << "] = // " << tileSet.size() << "tiles x " << "32 bytes" << "\n";
+	oss << "{\n";
+
+	int tileCount = 0;
+
+	for (const auto& tile : tileSet)
+	{
+		oss << "    // tile: " << tileCount << "\n";
+		tileCount++;
+
+		OutputTilePlanar(oss, tile);
+        oss << "\n";
+	}
+
+	oss << "};\n\n";
+
+    std::ofstream outFile(g_destinationPath + "tileSet.c");
+    outFile << oss.str();
+}
+
+/*
+void WriteTileStore(const std::string& outputName, std::ofstream& sourceFile)
+{
+	std::string outputTileDataName = outputName + "TileData";
+
+	int tileIndex = 0;
+	int totalTiles = 0;
+	sourceFile << "unsigned char const " << outputTileDataName << "[" << GetStoreTileCount() * 32 << "] = // " << GetStoreTileCount() << "tiles x " << "32 bytes" << "\n";
+	sourceFile << "{\n";
+
+	int tileCount = 0;
+
+	for (const auto& tile : m_store)
+	{
+		sourceFile << "// tile: " << tileCount << "\n";
+		tileCount++;
+
+		WriteUtils::OutputTilePlanar(sourceFile, tile);
+	}
+
+	sourceFile << "};\n\n";
+}
+*/
+
 int main()
 {
     Resources resources;
@@ -1176,6 +1287,7 @@ int main()
     saveTileSetToPng(tileSet);
     */
 
+    saveTileSet(tileSet);
     saveTileMapSource(tileMaps);
     saveTileMapHeader();
 

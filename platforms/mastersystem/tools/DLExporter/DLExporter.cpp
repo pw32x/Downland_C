@@ -872,6 +872,127 @@ void saveSprite(const dl_u8* sprite, dl_u8 spriteCount, dl_u8 rowCount, const ch
     outFile << oss.str();
 }
 
+void saveGeneralData(const Resources& resources)
+{
+    std::ostringstream oss;
+
+    oss << "#include \"base_types.h\"\n";
+    oss << "\n";
+
+    // pickups
+    oss << "// pick ups\n";
+    oss << "extern const dl_u8 diamondSprite[20];\n";
+    oss << "extern const dl_u8 moneyBagSprite[20];\n";
+    oss << "extern const dl_u8 keySprite[20];\n";
+    oss << "\n";
+    oss << "const dl_u8* pickupSprites[3] = { diamondSprite, moneyBagSprite, keySprite };\n";
+    oss << "\n";
+
+
+    // pick up positions
+    oss << "// pick up positions (x: 0 - 127, y: 0 - 191)\n";
+    const PickupPosition* roomPickupPositions = resources.roomPickupPositions;
+    oss << "const PickupPosition roomPickupPositions[" << NUM_ROOMS * NUM_PICKUPS_PER_ROOM << "] = \n";
+    oss << "{\n";
+    for (int loop = 0; loop < NUM_ROOMS * NUM_PICKUPS_PER_ROOM; loop++)
+    {
+        oss << "    { ";
+        oss << (dl_u16)roomPickupPositions->x << ", ";
+        oss << (dl_u16)roomPickupPositions->y;
+        oss << " },\n";
+
+        roomPickupPositions++;
+    }
+    oss << "};\n";
+    oss << "\n";
+
+    // pick up door indexes
+    oss << "// pick up door indexes\n";
+    const dl_u8* keyPickUpDoorIndexes = resources.keyPickUpDoorIndexes;
+    oss << "const dl_u8* keyPickUpDoorIndexes[20] = { ";
+
+    for (int loop = 0; loop < 20; loop++)
+    {
+        oss << (dl_u16)*keyPickUpDoorIndexes << ", ";
+        keyPickUpDoorIndexes++;
+    }
+    oss << "};\n";
+    oss << "\n";
+
+    // pick up door indexes
+    oss << "// pick up door indexes (hard mode)\n";
+    keyPickUpDoorIndexes = resources.keyPickUpDoorIndexesHardMode;
+    oss << "const dl_u8* keyPickUpDoorIndexesHardMode[20] = { ";
+
+    for (int loop = 0; loop < 20; loop++)
+    {
+        oss << (dl_u16)*keyPickUpDoorIndexes << ", ";
+        keyPickUpDoorIndexes++;
+    }
+    oss << "};\n";
+    oss << "\n";
+
+    // offests to doors alread activated
+    oss << "// offests to doors alread activated\n";
+    const dl_u8* offsetsToDoorsAlreadyActivated = resources.offsetsToDoorsAlreadyActivated;
+    oss << "const dl_u8* offsetsToDoorsAlreadyActivated[16] = { ";
+
+    for (int loop = 0; loop < 16; loop++)
+    {
+        oss << (dl_u16)*offsetsToDoorsAlreadyActivated << ", ";
+        offsetsToDoorsAlreadyActivated++;
+    }
+    oss << "};\n";
+    oss << "\n";
+
+    // rooms with the bouncing ball
+    oss << "// rooms with the bouncing ball\n";
+    const dl_u8* roomsWithBouncingBall = resources.roomsWithBouncingBall;
+    oss << "const dl_u8* roomsWithBouncingBall[9] = { ";
+
+    for (int loop = 0; loop < 9; loop++)
+    {
+        oss << (dl_u16)*roomsWithBouncingBall << ", ";
+        roomsWithBouncingBall++;
+    }
+    oss << "};\n";
+    oss << "\n";
+
+    // door info data positions
+    oss << "// door info data positions\n";
+
+    for (int loop = 0; loop < NUM_ROOMS; loop++)
+    {
+        const DoorInfoData& doorInfoData = resources.roomResources[loop].doorInfoData;
+
+        oss << "const DoorInfoData doorInfoData" << loop << " = \n";
+        oss << "{\n";
+        oss << "    " << (dl_u16)doorInfoData.drawInfosCount << ",\n";
+        oss << "    { \n";
+
+        for (int innerLoop = 0; innerLoop < doorInfoData.drawInfosCount; innerLoop++)
+        {
+            const DoorInfo& doorInfo = doorInfoData.doorInfos[innerLoop];
+
+            oss << "        { ";
+            oss << (dl_u16)doorInfo.y << ", ";
+            oss << (dl_u16)doorInfo.x << ", ";
+            oss << (dl_u16)doorInfo.yLocationInNextRoom << ", ";
+            oss << (dl_u16)doorInfo.xLocationInNextRoom << ", ";
+            oss << (dl_u16)doorInfo.nextRoomNumber << ", ";
+            oss << (dl_u16)doorInfo.globalDoorIndex << " },\n";
+        }
+
+        oss << "    } \n";       
+        // const DoorInfo* doorInfos;
+        oss << "};\n";
+        oss << "\n";
+    }
+
+    std::ofstream outFile(g_destinationPath + "general.c");
+    outFile << oss.str();   
+}
+
 void saveDropSpawns(const Resources& resources)
 {
     //resources->roomResources[0].dropSpawnPositions);
@@ -1031,7 +1152,7 @@ int main()
     saveSprite(resources.sprites_drops, 4, DROP_SPRITE_ROWS, "dropSprite");
 
     saveDropSpawns(resources);
-
+    saveGeneralData(resources);
     /*
     saveCharacterFont(resources.characterFont);
     saveSprite16(resources.sprites_drops, DROP_SPRITE_WIDTH, DROP_SPRITE_ROWS, DROP_SPRITE_COUNT, "dropTileset");   

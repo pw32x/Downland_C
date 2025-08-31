@@ -712,6 +712,66 @@ void saveTransitionTileset()
                   g_destinationPath + "transitionTileset.png");
 }
 
+void saveString(const dl_u8* string, const char* name, std::ostringstream& oss)
+{
+    const dl_u8* stringRunner = string;
+    while (*stringRunner != 0xff)
+    {
+        stringRunner++;
+    }
+
+    int length = stringRunner - string + 1;
+
+
+    oss << "dl_u8 string_" << name << "[" << (dl_u16)length << "] = { ";
+    
+    while (1) 
+    {
+        oss  << "0x" << std::hex << std::uppercase << std::setw(2) << std::setfill('0') << (dl_u16)*string;
+
+        if (*string == 0xff)
+        {
+            break;
+        }
+
+        oss << ", ";
+
+        string++;
+    }
+
+    oss << " };\n";
+}
+
+void saveStrings(const Resources& resources)
+{
+    std::ostringstream oss;
+
+    oss << "#include \"base_types.h\"\n";
+    oss << "\n";
+
+    saveString(resources.text_downland, "downland", oss);
+    saveString(resources.text_writtenBy, "writtenBy", oss);
+    saveString(resources.text_michaelAichlmayer, "michaelAichlmayer", oss);
+    saveString(resources.text_copyright1983, "copyright1983", oss);
+    saveString(resources.text_spectralAssociates, "spectralAssociates", oss);
+    saveString(resources.text_licensedTo, "licensedTo", oss);
+    saveString(resources.text_tandyCorporation, "tandyCorporation", oss);
+    saveString(resources.text_allRightsReserved, "allRightsReserved", oss);
+    saveString(resources.text_onePlayer, "onePlayer", oss);
+    saveString(resources.text_twoPlayer, "twoPlayer", oss);
+    saveString(resources.text_highScore, "highScore", oss);
+    saveString(resources.text_playerOne, "playerOne", oss);
+    saveString(resources.text_playerTwo, "playerTwo", oss);
+    saveString(resources.text_pl1, "pl1", oss);
+    saveString(resources.text_pl2, "pl2", oss);
+    saveString(resources.text_getReadyPlayerOne, "getReadyPlayerOne", oss);
+    saveString(resources.text_getReadyPlayerTwo, "getReadyPlayerTwo", oss);
+    saveString(resources.text_chamber, "chamber", oss);
+            
+    std::ofstream outFile(g_destinationPath + "strings.c");
+    outFile << oss.str();
+}
+
 void saveSprite(const dl_u8* sprite, dl_u8 spriteCount, dl_u8 rowCount, const char* name)
 {
     const dl_u8 destinationBytesPerRow = 2; // 16 pixels
@@ -723,7 +783,7 @@ void saveSprite(const dl_u8* sprite, dl_u8 spriteCount, dl_u8 rowCount, const ch
     oss << "#include \"base_types.h\"\n";
     oss << "\n";
 
-    oss << "dl_u8 " << name << "[] = \n";
+    oss << "dl_u8 " << name << "[" << bufferSize << "] = \n";
     oss << "{\n";
 
     dl_u8 rowCounter = 0;
@@ -773,7 +833,7 @@ void saveBitshiftedSprite(const dl_u8* bitShiftedSprite, dl_u8 spriteCount, dl_u
     oss << "#include \"base_types.h\"\n";
     oss << "\n";
 
-    oss << "dl_u8 " << name << "[] = \n";
+    oss << "dl_u8 " << name << "[" << bufferSize << "] = \n";
     oss << "{\n";
 
     dl_u8 rowCounter = 0;
@@ -868,6 +928,7 @@ int main()
         tileMaps.push_back(tileMap);
     }
 
+    saveStrings(resources);
 
     saveBitshiftedSprite(resources.bitShiftedCollisionmasks_player, PLAYER_SPRITE_COUNT, PLAYER_COLLISION_MASK_ROWS, "bitShiftedSprite_playerCollisionMasks");
     saveBitshiftedSprite(resources.bitShiftedSprites_bouncyBall, BALL_SPRITE_COUNT, BALL_SPRITE_ROWS, "bitShiftedSprite_ball");

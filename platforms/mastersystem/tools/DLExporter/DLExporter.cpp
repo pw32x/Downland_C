@@ -337,7 +337,7 @@ void saveTileMapSource(const std::vector<TileMap>& tileMaps)
     dl_u8 counter = 0;
     for (auto& tileMap : tileMaps)
     {
-        oss << "dl_u8 " << roomNames[counter] << "TileMap[] = \n";
+        oss << "const dl_u8 " << roomNames[counter] << "TileMap[] = \n";
         oss << "{\n";
 
         for (int loopy = 0; loopy < TILE_MAP_HEIGHT; loopy++)
@@ -366,7 +366,7 @@ void saveTileMapSource(const std::vector<TileMap>& tileMaps)
     }
 
     oss << "\n";
-    oss << "dl_u8* roomTileMaps[" << NUM_ROOMS_PLUS_TITLESCREN << "] = \n";
+    oss << "const dl_u8* roomTileMaps[" << NUM_ROOMS_PLUS_TITLESCREN << "] = \n";
     oss << "{\n";
     for (int loop = 0; loop < NUM_ROOMS_PLUS_TITLESCREN; loop++)
         oss << "    " << roomNames[loop] << "TileMap,\n";
@@ -722,8 +722,7 @@ void saveString(const dl_u8* string, const char* name, std::ostringstream& oss)
 
     int length = stringRunner - string + 1;
 
-
-    oss << "dl_u8 string_" << name << "[" << (dl_u16)length << "] = { ";
+    oss << "const dl_u8 string_" << name << "[" << (dl_u16)length << "] = { ";
     
     while (1) 
     {
@@ -783,7 +782,7 @@ void saveSprite(const dl_u8* sprite, dl_u8 spriteCount, dl_u8 rowCount, const ch
     oss << "#include \"base_types.h\"\n";
     oss << "\n";
 
-    oss << "dl_u8 " << name << "[" << bufferSize << "] = \n";
+    oss << "const dl_u8 " << name << "[" << bufferSize << "] = \n";
     oss << "{\n";
 
     dl_u8 rowCounter = 0;
@@ -821,6 +820,43 @@ void saveSprite(const dl_u8* sprite, dl_u8 spriteCount, dl_u8 rowCount, const ch
     outFile << oss.str();
 }
 
+void saveDropSpawns(const Resources& resources)
+{
+    //resources->roomResources[0].dropSpawnPositions);
+
+    for (int loop = 0; loop < NUM_ROOMS_PLUS_TITLESCREN; loop++)
+    {
+        std::ostringstream oss;
+
+        std::string dropSpawnPositionsName = "dropSpawnPositions" + std::to_string(loop);
+
+        oss << "#include \"base_types.h\"\n";
+        oss << "\n";
+
+        const DropSpawnPositions& dropSpawnPositions = resources.roomResources[loop].dropSpawnPositions;
+
+        oss << "const DropSpawnPositions " << dropSpawnPositionsName << "\n";
+        oss << "{\n";
+        oss << "    " << (dl_u16)dropSpawnPositions.spawnAreasCount << ", \n";
+
+        oss << "    {\n";
+        for (int innerLoop = 0; innerLoop < dropSpawnPositions.spawnAreasCount; innerLoop++)
+        {
+            oss << "       { ";
+            oss << (dl_u16)dropSpawnPositions.dropSpawnAreas[innerLoop].dropSpawnPointsCount << ", ";
+            oss << (dl_u16)dropSpawnPositions.dropSpawnAreas[innerLoop].x << ", ";
+            oss << (dl_u16)dropSpawnPositions.dropSpawnAreas[innerLoop].y;
+            oss << " }, \n";
+        }
+        oss << "    }\n";
+        oss << "};\n";
+        oss << "\n";
+            
+        std::ofstream outFile(g_destinationPath + dropSpawnPositionsName + ".c");
+        outFile << oss.str();        
+    }
+}
+
 void saveBitshiftedSprite(const dl_u8* bitShiftedSprite, dl_u8 spriteCount, dl_u8 rowCount, const char* name)
 {
     dl_u8 destinationBytesPerRow = 3; // 24 pixels
@@ -833,7 +869,7 @@ void saveBitshiftedSprite(const dl_u8* bitShiftedSprite, dl_u8 spriteCount, dl_u
     oss << "#include \"base_types.h\"\n";
     oss << "\n";
 
-    oss << "dl_u8 " << name << "[" << bufferSize << "] = \n";
+    oss << "const dl_u8 " << name << "[" << bufferSize << "] = \n";
     oss << "{\n";
 
     dl_u8 rowCounter = 0;
@@ -941,7 +977,7 @@ int main()
     saveSprite(resources.sprite_key, 1, PICKUPS_NUM_SPRITE_ROWS, "keySprite");
     saveSprite(resources.sprites_drops, 4, DROP_SPRITE_ROWS, "dropSprite");
 
-    
+    saveDropSpawns(resources);
 
     /*
     saveCharacterFont(resources.characterFont);

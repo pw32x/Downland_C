@@ -712,6 +712,58 @@ void saveTransitionTileset()
                   g_destinationPath + "transitionTileset.png");
 }
 
+void saveCleanBackground(const dl_u8* cleanBackground, dl_u8 backgroundIndex)
+{
+    std::ostringstream oss;
+
+    std::string cleanBackgroundName = "cleanBackground" + std::to_string(backgroundIndex);
+
+    oss << "#include \"base_types.h\"\n";
+    oss << "\n";
+
+    dl_u16 backgroundSize = FRAMEBUFFER_PITCH * FRAMEBUFFER_HEIGHT;
+
+    const dl_u8* cleanBackgroundRunner = cleanBackground;
+
+    oss << "const dl_u8 " << cleanBackgroundName << "[" << backgroundSize << "] = \n";
+    oss << "{\n";
+
+    for (int loopy = 0; loopy < FRAMEBUFFER_HEIGHT; loopy++)
+    {
+        oss << "    ";
+
+        for (int loopx = 0; loopx < FRAMEBUFFER_PITCH; loopx++)
+        {
+            oss << (dl_u16)(*cleanBackgroundRunner) << ", ";
+            cleanBackgroundRunner++;
+        }
+
+        oss << "\n";
+    }
+
+    oss << "};\n";
+    oss << "\n";
+    oss << "\n";
+
+    oss << "// Map: \n";
+    cleanBackgroundRunner = cleanBackground;
+    for (int loopy = 0; loopy < FRAMEBUFFER_HEIGHT; loopy++)
+    {
+        oss << "// ";
+
+        for (int loopx = 0; loopx < FRAMEBUFFER_PITCH; loopx++)
+        {
+            oss << std::bitset<8>(*cleanBackgroundRunner);
+            cleanBackgroundRunner++;
+        }
+
+        oss << "\n";
+    }
+      
+    std::ofstream outFile(g_destinationPath + cleanBackgroundName + ".c");
+    outFile << oss.str();        
+}
+
 void saveString(const dl_u8* string, const char* name, std::ostringstream& oss)
 {
     const dl_u8* stringRunner = string;
@@ -944,12 +996,13 @@ int main()
     std::vector<Tile> tileSet;
     std::vector<TileMap> tileMaps;
 
-
     for (int loop = 0; loop < NUM_ROOMS_PLUS_TITLESCREN; loop++)
     {
         drawBackground(&resources.roomResources[loop].backgroundDrawData, 
 				       &resources,
 				       background);
+
+        saveCleanBackground(background, loop);
 
         convert1bppImageTo8bppCrtEffectImage(background,
                                              background8bpp,

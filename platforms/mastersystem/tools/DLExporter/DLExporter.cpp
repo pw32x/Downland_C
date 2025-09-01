@@ -516,10 +516,6 @@ void saveCharacterFont(const dl_u8* characterFont)
 
     saveSpritePlanar(destinationFont, fontSize, "characterFont");
 
-//    save_png_8bpp(destinationFont, 
-//                  CHARACTER_FONT_WIDTH,
-//                  DESTINATION_FONT_HEIGHT * CHARACTER_FONT_COUNT,
-//                  g_destinationPath + "characterFontTileset.png");
 
     delete [] destinationFont;
 }
@@ -710,10 +706,12 @@ void saveSprite16(const dl_u8* sprite,
         sprite8bppRunner += destinationFrameSize; 
     }
 
-    save_png_8bpp(sprite8bpp, 
-                  destinationWidth,
-                  destinationHeight * numFrames,
-                  g_destinationPath + name + ".png");
+//    save_png_8bpp(sprite8bpp, 
+//                  destinationWidth,
+//                  destinationHeight * numFrames,
+//                  g_destinationPath + name + ".png");
+
+    saveSpritePlanar(sprite8bpp, destinationFrameSize * numFrames, name.c_str());
 
     delete [] sprite8bpp;
 }
@@ -1283,16 +1281,17 @@ int main()
 
     saveCharacterFont(resources.characterFont);
 
-    /*
-    saveSprite16(resources.sprites_drops, DROP_SPRITE_WIDTH, DROP_SPRITE_ROWS, DROP_SPRITE_COUNT, "dropTileset");   
-	saveSprite16(resources.sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYER_SPRITE_COUNT, "playerTileset");
-	saveSprite16(resources.sprites_bouncyBall, BALL_SPRITE_WIDTH, BALL_SPRITE_ROWS, BALL_SPRITE_COUNT, "ballTileset");
-	saveSprite16(resources.sprites_bird, BIRD_SPRITE_WIDTH, BIRD_SPRITE_ROWS, BIRD_SPRITE_COUNT, "birdTileset");
-	saveSprite16(resources.sprite_key, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, "keyTileset");
-	saveSprite16(resources.sprite_diamond, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, "diamondTileset");
-	saveSprite16(resources.sprite_moneyBag, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, "moneyBagTileset");
-	saveSprite16(resources.sprite_door, DOOR_SPRITE_WIDTH, DOOR_SPRITE_ROWS, 1, "doorTileset");
+    saveSprite16(resources.sprites_drops, DROP_SPRITE_WIDTH, DROP_SPRITE_ROWS, DROP_SPRITE_COUNT, "drop4bpp");   
 
+	saveSprite16(resources.sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYER_SPRITE_COUNT, "player4bpp");
+	saveSprite16(resources.sprites_bouncyBall, BALL_SPRITE_WIDTH, BALL_SPRITE_ROWS, BALL_SPRITE_COUNT, "ball4bpp");
+	saveSprite16(resources.sprites_bird, BIRD_SPRITE_WIDTH, BIRD_SPRITE_ROWS, BIRD_SPRITE_COUNT, "bird4bpp");
+	saveSprite16(resources.sprite_key, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, "key4bpp");
+	saveSprite16(resources.sprite_diamond, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, "diamond4bpp");
+	saveSprite16(resources.sprite_moneyBag, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, "moneyBag4bpp");
+	saveSprite16(resources.sprite_door, DOOR_SPRITE_WIDTH, DOOR_SPRITE_ROWS, 1, "door4bpp");
+
+    /*
     saveCursor();
 
     dl_u8* regenSprite = saveRegenSprite(resources.sprites_player);
@@ -1300,7 +1299,7 @@ int main()
     delete [] regenSprite;
 
     saveSplatSprite(resources.sprite_playerSplat);
-    saveSprite16Clipped(resources.sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYERICON_NUM_SPRITE_ROWS, PLAYER_SPRITE_COUNT, "playerLivesTileset");
+    saveSprite16Clipped(resources.sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYERICON_NUM_SPRITE_ROWS, PLAYER_SPRITE_COUNT, "playerLives4bpp");
     saveTransitionTileset();
     saveTileSetToPng(tileSet);
     */

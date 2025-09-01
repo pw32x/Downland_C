@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include "SMSlib.h"
 #include "ninja_girl.h"
-#include "background.h"
-#include "background_tileset.h"
+//#include "background.h"
+//#include "background_tileset.h"
 
 #include "base_types.h"
 
@@ -35,6 +35,13 @@ void Sound_StopAll(void)
 
 #define TRUE 1
 #define FALSE 0
+
+dl_u8 downlandPalette[] = 
+{
+	0x00, 0x30, 0x0b, 0x3f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+};
+
+
 
 unsigned char globalPalette[16] = 
 {
@@ -88,6 +95,7 @@ void GameObject_Update(GameObject* gameObject)
 unsigned short ScrollManager_horizontalScroll = 0;
 unsigned char Scroll_vdpHorizontalScroll = 0;
 
+/*
 // hard-coded column when we need to show more of the map. Replace
 // this with an actual larger map.
 #define SCROLL_COLUMN_HEIGHT 24
@@ -122,8 +130,15 @@ void buildColumn(unsigned short tileColumn)
 	}
 }
 
+*/
+
+
+extern unsigned char const tileSet[6240];
+extern const dl_u16 chamber0TileMap[];
+
 void Scroll_InitTilemap(void)
 {
+	/*
 	// fill the map from the second column to the last.
 	for (int loop = 1; loop < 32; loop++)
 	{
@@ -136,9 +151,11 @@ void Scroll_InitTilemap(void)
 	// boundary when we scroll. At the start, we're already at the boundary.
 	// We won't see it anyway.
 	buildColumn(32);
-	SMS_loadTileMapColumn(0, 0, Scroll_column, 24);
-}
+	SMS_loadTileMapColumn(0, 0, Scroll_column, 24);*/
 
+	SMS_loadTileMap(0, 0, chamber0TileMap, 32 * 24 * 2);
+}
+/*
 void Scroll_Update(void)
 {
 	// here we move the vdp scrolling and logical map scrolling to the same speed
@@ -156,22 +173,24 @@ void Scroll_Update(void)
 		Scroll_updateMapColumn = TRUE;
 	}	
 }
+*/
+
 
 void main(void)
 {
 	/* Clear VRAM */
 	SMS_VRAMmemsetW(0, 0x0000, 16384);
 
-	SMS_loadBGPalette(globalPalette);
+	SMS_loadBGPalette(downlandPalette);
 	SMS_loadSpritePalette(globalPalette);
   
 	// load tiles from Animation
 	SMS_loadTiles(ninja_girl.tileData, 256, ninja_girl.totalTileCount * 32);
 
 	// load tiles for background
-	SMS_loadTiles(background_tileset.tiles, 0, background_tileset.numTiles * 32);
+	SMS_loadTiles(tileSet, 0, 6240);
   
-	Scroll_updateMapColumn = FALSE;
+	//Scroll_updateMapColumn = FALSE;
 
 	SMS_VDPturnOnFeature(VDPFEATURE_LEFTCOLBLANK);
 	Scroll_InitTilemap();
@@ -196,20 +215,22 @@ void main(void)
 	{ 
 		// Game Loop
 		SMS_initSprites();
-		GameObject_Update(&player);
-		Scroll_Update();
+		//GameObject_Update(&player);
+		//Scroll_Update();
 
 		// VBLANK
 
 		SMS_waitForVBlank ();
-		SMS_setBGScrollX(Scroll_vdpHorizontalScroll);
+		//SMS_setBGScrollX(Scroll_vdpHorizontalScroll);
 
+		/*
 		if (Scroll_updateMapColumn)
 		{
 			Scroll_updateMapColumn = FALSE;
 			unsigned char scrollMapColumn = Scroll_vdpHorizontalScroll >> 3;
 			SMS_loadTileMapColumn((32 - scrollMapColumn) & 31, 0, Scroll_column, 24);
 		}
+		*/
 
 		SMS_copySpritestoSAT();
 	}

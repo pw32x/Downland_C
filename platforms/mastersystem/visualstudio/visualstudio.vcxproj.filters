@@ -20,6 +20,9 @@
     <Filter Include="game\rooms">
       <UniqueIdentifier>{e425e5c3-783b-4949-bb20-294c751db6c0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\generated">
+      <UniqueIdentifier>{7bd6f1d1-ba38-482c-86e2-a3a602adcd5c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\source\main.c">
@@ -88,11 +91,14 @@
     <ClCompile Include="..\source\game\rooms\transitions.c">
       <Filter>game\rooms</Filter>
     </ClCompile>
+    <ClCompile Include="..\generated\tileSet.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\tileMaps.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\devkitSMS-master\SMSlib\src\SMSlib.h">
-      <Filter>SMSLib</Filter>
-    </ClInclude>
     <ClInclude Include="..\source\animationtypes.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -104,9 +110,6 @@
     </ClInclude>
     <ClInclude Include="..\source\background_tileset.h">
       <Filter>Source Files\gamedata</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\maptypes.h">
-      <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\source\game\dl_alloc.h">
       <Filter>game</Filter>
@@ -198,6 +201,12 @@
     <ClInclude Include="..\source\game\rooms\titlescreen.h">
       <Filter>game\rooms</Filter>
     </ClInclude>
+    <ClInclude Include="..\generated\tileMaps.h">
+      <Filter>Source Files\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\SMSDev\devkitSMS-master\SMSlib\src\SMSlib.h">
+      <Filter>SMSLib</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\build\Makefile">
@@ -213,6 +222,9 @@
       <Filter>build</Filter>
     </None>
     <None Include="..\build\deploy.bat">
+      <Filter>build</Filter>
+    </None>
+    <None Include="..\out\Downland.map">
       <Filter>build</Filter>
     </None>
   </ItemGroup>

@@ -366,7 +366,7 @@ void drawSprite(dl_u8* framebuffer,
 }
 */
 
-
+/*
 dl_u8* g_framebuffer;
 
 dl_u8 g_plotterCurrentY;
@@ -426,7 +426,7 @@ void DrawSegment_MovePlotterUpAndLeft()
 	g_plotterCurrentX--;
 	g_plotterHiresPos -= g_subpixelIncrement;
 }
-
+*/
 // depending on the x position, chose 
 // of these to get at the corresponding
 // two bits you want to activate.
@@ -455,7 +455,7 @@ enum
 	CRT_MASK_REVERSE,
 	CRT_MASK_FULL
 } CRT_MASKS;
-
+/*
 void DrawPixel()
 {
 	dl_u8 y = g_plotterCurrentX;
@@ -792,11 +792,12 @@ void (*drawPieceFunctions[])(const Resources* resources) = {
 	DrawPiece_19_BlankAreaGoingDownRight, 
 	DrawPiece_20_UnknownOrBuggy, 
 };
-
+*/
 void drawBackground(const BackgroundDrawData* backgroundDrawData, 
 					const Resources* resources,
 					dl_u8* framebuffer)
 {
+	/*
 	int counter;
 	int shapeLoop;
 	const BackgroundDrawCommand* backgroundDrawCommandRunner;
@@ -824,6 +825,7 @@ void drawBackground(const BackgroundDrawData* backgroundDrawData,
 
 		backgroundDrawCommandRunner++;
 	}
+	*/
 }
 
 void drawSprite_16PixelsWide_static_IntoSpriteBuffer(const dl_u8* sourceSprite, dl_u8 numLines,	dl_u8* destinationSprite)

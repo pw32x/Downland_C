@@ -30,6 +30,7 @@
     <VCProjectVersion>16.0</VCProjectVersion>
     <ProjectGuid>{AF575753-3018-438B-9CDC-FD1990ED19F7}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
+    <ProjectName>mastersystem</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -89,8 +90,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <NMakeOutput>..\out\untitled_project.sms</NMakeOutput>
     <NMakePreprocessorDefinitions>WIN32;_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
-    <NMakeBuildCommandLine>..\build\build_vs.bat</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>..\build\rebuild_vs.bat</NMakeReBuildCommandLine>
+    <NMakeBuildCommandLine>..\build\build.bat</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>..\build\rebuild.bat</NMakeReBuildCommandLine>
     <NMakeCleanCommandLine>..\build\clean_vs.bat</NMakeCleanCommandLine>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Deploy|Win32'">
@@ -122,6 +123,8 @@
   <ItemDefinitionGroup>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\generated\tileMaps.c" />
+    <ClCompile Include="..\generated\tileSet.c" />
     <ClCompile Include="..\source\background.c" />
     <ClCompile Include="..\source\background_tileset.c" />
     <ClCompile Include="..\source\game\ball.c" />
@@ -146,7 +149,8 @@
     <ClCompile Include="..\source\ninja_girl.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\devkitSMS-master\SMSlib\src\SMSlib.h" />
+    <ClInclude Include="..\..\..\..\..\..\SMSDev\devkitSMS-master\SMSlib\src\SMSlib.h" />
+    <ClInclude Include="..\generated\tileMaps.h" />
     <ClInclude Include="..\source\animationtypes.h" />
     <ClInclude Include="..\source\background.h" />
     <ClInclude Include="..\source\background_tileset.h" />
@@ -180,7 +184,6 @@
     <ClInclude Include="..\source\game\rooms\room_types.h" />
     <ClInclude Include="..\source\game\rooms\titlescreen.h" />
     <ClInclude Include="..\source\game\string_utils.h" />
-    <ClInclude Include="..\source\maptypes.h" />
     <ClInclude Include="..\source\ninja_girl.h" />
   </ItemGroup>
   <ItemGroup>
@@ -189,6 +192,7 @@
     <None Include="..\build\deploy.bat" />
     <None Include="..\build\Makefile" />
     <None Include="..\build\rebuild.bat" />
+    <None Include="..\out\Downland.map" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

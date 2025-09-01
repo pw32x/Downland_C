@@ -12,6 +12,8 @@
 
 #include "lodepng.h"
 
+
+
 #ifdef _WIN64
 std::string g_destinationPath = "generated\\";
 #else
@@ -43,6 +45,73 @@ void dl_memcpy(void* destination, const void* source, dl_u16 count)
     memcpy(destination, source, count);
 }
    
+}
+
+#define TILE_WIDTH 8
+#define TILE_HEIGHT 8
+#define TILE_SIZE (TILE_WIDTH * TILE_HEIGHT)
+
+using Tile = std::array<dl_u8, TILE_SIZE>;
+using TileSet = std::vector<Tile>;
+
+#define TILE_MAP_WIDTH (FRAMEBUFFER_WIDTH / 8)
+#define TILE_MAP_HEIGHT (FRAMEBUFFER_HEIGHT / 8)
+#define TILE_MAP_SIZE (TILE_MAP_WIDTH * TILE_MAP_HEIGHT)
+
+void WriteToFourBytes(char value, char shift, dl_u8 bytes[4])
+{
+    bytes[0] |= ((value & 0x01) >> 0) << shift;
+    bytes[1] |= ((value & 0x02) >> 1) << shift;
+    bytes[2] |= ((value & 0x04) >> 2) << shift;
+    bytes[3] |= ((value & 0x08) >> 3) << shift;
+}
+
+void ConvertToPlanar(int row, const dl_u8* tileData, dl_u8 bytes[4])
+{
+    dl_u8 rowData[8];
+
+    for (int loop = 0; loop < TILE_WIDTH; loop++)
+    {
+        dl_u8 value = tileData[loop + (row * TILE_WIDTH)];
+
+        rowData[loop] = value;
+    }
+
+    for (int loop = 0; loop < 8; loop++)
+    {
+        WriteToFourBytes(rowData[loop], 7 - loop, bytes);
+    }
+}
+
+std::string WriteByteAsHex(dl_u8 value)
+{
+    std::stringstream tempStringStream;
+
+    tempStringStream << "0x";
+    tempStringStream.width(2);
+    tempStringStream.fill('0');
+    tempStringStream << std::hex << (dl_u16)value;
+
+    return tempStringStream.str();
+}
+
+void OutputTilePlanar(std::ostringstream& oss, const dl_u8* tileData)
+{
+    for (int row = 0; row < TILE_HEIGHT; row++)
+    {
+        dl_u8 bytes[4];
+        memset(bytes, 0, sizeof(bytes));
+        ConvertToPlanar(row, tileData, bytes);
+
+        oss << "    ";
+
+        for (int loop = 0; loop < 4; loop++)
+        {
+            oss << WriteByteAsHex(bytes[loop]) <<", ";
+        }
+
+        oss << "\n";
+    }
 }
 
 std::vector<dl_u8> load_binary_file(const std::string& path)
@@ -150,16 +219,7 @@ void convert1bppImageTo8bppCrtEffectImage(const dl_u8* originalImage,
     }
 }
 
-#define TILE_WIDTH 8
-#define TILE_HEIGHT 8
-#define TILE_SIZE (TILE_WIDTH * TILE_HEIGHT)
 
-using Tile = std::array<dl_u8, TILE_SIZE>;
-using TileSet = std::vector<Tile>;
-
-#define TILE_MAP_WIDTH (FRAMEBUFFER_WIDTH / 8)
-#define TILE_MAP_HEIGHT (FRAMEBUFFER_HEIGHT / 8)
-#define TILE_MAP_SIZE (TILE_MAP_WIDTH * TILE_MAP_HEIGHT)
 
 using TileMap = std::vector<dl_u16>;
 
@@ -392,12 +452,46 @@ void saveTileMapHeader()
     outFile << oss.str();
 }
 
+void saveSpritePlanar(const dl_u8* spriteData, dl_u16 spriteDataSize, const char* name)
+{
+    std::ostringstream oss;
+
+    oss << "#include \"base_types.h\"\n";
+    oss << "\n";
+
+    dl_u16 numTiles = spriteDataSize / 64;
+
+	int tileIndex = 0;
+	int totalTiles = 0;
+	oss << "unsigned char const " << name << "[" << numTiles * 32 << "] = // " << numTiles << " tiles x " << "32 bytes" << "\n";
+	oss << "{\n";
+
+	int spriteCount = 0;
+
+	for (int loop = 0; loop < numTiles; loop++)
+	{
+		oss << "    // tile: " << spriteCount << "\n";
+		spriteCount++;
+
+		OutputTilePlanar(oss, spriteData);
+        oss << "\n";
+
+        spriteData += 64;
+	}
+
+	oss << "};\n\n";
+
+    std::ofstream outFile(g_destinationPath + name + ".c");
+    outFile << oss.str();
+}
+
 void saveCharacterFont(const dl_u8* characterFont)
 {
 #define DESTINATION_FONT_HEIGHT 8
 
-    dl_u8* destinationFont = new dl_u8[CHARACTER_FONT_WIDTH * DESTINATION_FONT_HEIGHT * CHARACTER_FONT_COUNT];
-    memset(destinationFont, 0, CHARACTER_FONT_WIDTH * DESTINATION_FONT_HEIGHT * CHARACTER_FONT_COUNT);
+    dl_u16 fontSize = CHARACTER_FONT_WIDTH * DESTINATION_FONT_HEIGHT * CHARACTER_FONT_COUNT;
+    dl_u8* destinationFont = new dl_u8[fontSize];
+    memset(destinationFont, 0, fontSize);
 
     dl_u8* destinationFontRunner = destinationFont;
 
@@ -415,16 +509,17 @@ void saveCharacterFont(const dl_u8* characterFont)
             }
         }
 
-
         characterFont += CHARACTER_FONT_HEIGHT; // move to next character
 
         destinationFontRunner += CHARACTER_FONT_WIDTH * DESTINATION_FONT_HEIGHT; // destination height
     }
 
-    save_png_8bpp(destinationFont, 
-                  CHARACTER_FONT_WIDTH,
-                  DESTINATION_FONT_HEIGHT * CHARACTER_FONT_COUNT,
-                  g_destinationPath + "characterFontTileset.png");
+    saveSpritePlanar(destinationFont, fontSize, "characterFont");
+
+//    save_png_8bpp(destinationFont, 
+//                  CHARACTER_FONT_WIDTH,
+//                  DESTINATION_FONT_HEIGHT * CHARACTER_FONT_COUNT,
+//                  g_destinationPath + "characterFontTileset.png");
 
     delete [] destinationFont;
 }
@@ -772,7 +867,7 @@ void saveString(const dl_u8* string, const char* name, std::ostringstream& oss)
         stringRunner++;
     }
 
-    int length = stringRunner - string + 1;
+    int length = (int)(stringRunner - string + 1);
 
     oss << "const dl_u8 string_" << name << "[" << (dl_u16)length << "] = { ";
     
@@ -1085,61 +1180,6 @@ void saveBitshiftedSprite(const dl_u8* bitShiftedSprite, dl_u8 spriteCount, dl_u
     outFile << oss.str();
 }
 
-void WriteToFourBytes(char value, char shift, dl_u8 bytes[4])
-{
-    bytes[0] |= ((value & 0x01) >> 0) << shift;
-    bytes[1] |= ((value & 0x02) >> 1) << shift;
-    bytes[2] |= ((value & 0x04) >> 2) << shift;
-    bytes[3] |= ((value & 0x08) >> 3) << shift;
-}
-
-void ConvertToPlanar(int row, const dl_u8* tileData, dl_u8 bytes[4])
-{
-    dl_u8 rowData[8];
-
-    for (int loop = 0; loop < TILE_WIDTH; loop++)
-    {
-        dl_u8 value = tileData[loop + (row * TILE_WIDTH)];
-
-        rowData[loop] = value;
-    }
-
-    for (int loop = 0; loop < 8; loop++)
-    {
-        WriteToFourBytes(rowData[loop], 7 - loop, bytes);
-    }
-}
-
-std::string WriteByteAsHex(dl_u8 value)
-{
-    std::stringstream tempStringStream;
-
-    tempStringStream << "0x";
-    tempStringStream.width(2);
-    tempStringStream.fill('0');
-    tempStringStream << std::hex << (dl_u16)value;
-
-    return tempStringStream.str();
-}
-
-void OutputTilePlanar(std::ostringstream& oss, const Tile& tile)
-{
-    for (int row = 0; row < TILE_HEIGHT; row++)
-    {
-        dl_u8 bytes[4];
-        memset(bytes, 0, sizeof(bytes));
-        ConvertToPlanar(row, tile.data(), bytes);
-
-        oss << "    ";
-
-        for (int loop = 0; loop < 4; loop++)
-        {
-            oss << WriteByteAsHex(bytes[loop]) <<", ";
-        }
-
-        oss << "\n";
-    }
-}
 
 void saveTileSet(std::vector<Tile>& tileSet)
 {
@@ -1152,7 +1192,7 @@ void saveTileSet(std::vector<Tile>& tileSet)
 
 	int tileIndex = 0;
 	int totalTiles = 0;
-	oss << "unsigned char const " << outputTileDataName << "[" << tileSet.size() * 32 << "] = // " << tileSet.size() << "tiles x " << "32 bytes" << "\n";
+	oss << "unsigned char const " << outputTileDataName << "[" << tileSet.size() * 32 << "] = // " << tileSet.size() << " tiles x " << "32 bytes" << "\n";
 	oss << "{\n";
 
 	int tileCount = 0;
@@ -1162,7 +1202,7 @@ void saveTileSet(std::vector<Tile>& tileSet)
 		oss << "    // tile: " << tileCount << "\n";
 		tileCount++;
 
-		OutputTilePlanar(oss, tile);
+		OutputTilePlanar(oss, tile.data());
         oss << "\n";
 	}
 
@@ -1171,30 +1211,6 @@ void saveTileSet(std::vector<Tile>& tileSet)
     std::ofstream outFile(g_destinationPath + "tileSet.c");
     outFile << oss.str();
 }
-
-/*
-void WriteTileStore(const std::string& outputName, std::ofstream& sourceFile)
-{
-	std::string outputTileDataName = outputName + "TileData";
-
-	int tileIndex = 0;
-	int totalTiles = 0;
-	sourceFile << "unsigned char const " << outputTileDataName << "[" << GetStoreTileCount() * 32 << "] = // " << GetStoreTileCount() << "tiles x " << "32 bytes" << "\n";
-	sourceFile << "{\n";
-
-	int tileCount = 0;
-
-	for (const auto& tile : m_store)
-	{
-		sourceFile << "// tile: " << tileCount << "\n";
-		tileCount++;
-
-		WriteUtils::OutputTilePlanar(sourceFile, tile);
-	}
-
-	sourceFile << "};\n\n";
-}
-*/
 
 int main()
 {
@@ -1264,8 +1280,10 @@ int main()
 
     saveDropSpawns(resources);
     saveGeneralData(resources);
-    /*
+
     saveCharacterFont(resources.characterFont);
+
+    /*
     saveSprite16(resources.sprites_drops, DROP_SPRITE_WIDTH, DROP_SPRITE_ROWS, DROP_SPRITE_COUNT, "dropTileset");   
 	saveSprite16(resources.sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYER_SPRITE_COUNT, "playerTileset");
 	saveSprite16(resources.sprites_bouncyBall, BALL_SPRITE_WIDTH, BALL_SPRITE_ROWS, BALL_SPRITE_COUNT, "ballTileset");

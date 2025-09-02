@@ -94,7 +94,7 @@ void updateTimers(dl_u8 roomNumber, dl_u16* roomTimers)
 	}
 }
 
-
+#ifndef CUSTOM_ROOM_DRAW
 void chamber_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resources)
 {
 #ifndef DISABLE_DOOR_DRAWING
@@ -128,6 +128,9 @@ void chamber_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resourc
 	}
 #endif
 }
+#else
+void chamber_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resources);
+#endif
 
 void chamber_init(Room* room, GameData* gameData, const Resources* resources)
 {

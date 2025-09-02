@@ -5,6 +5,11 @@
 //#include "background_tileset.h"
 
 #include "base_types.h"
+#include "game_types.h"
+
+#define VDP_ASSETS_BANK 2
+#define CHAMBER0_BANK 3
+#define CHAMBER1_BANK 4
 
 void* dl_alloc(dl_u32 size)
 {
@@ -133,8 +138,19 @@ void buildColumn(unsigned short tileColumn)
 */
 
 
-extern unsigned char const tileSet[6240];
-extern const dl_u16 chamber0TileMap[];
+extern unsigned char const tileSet4bpp[6240];
+extern unsigned char const characterFont4bpp[1248];
+extern const dl_u16 chamber0_tileMap[];
+extern const dl_u16 chamber1_tileMap[];
+
+extern unsigned char const ball4bpp[128]; // 4 tiles x 32 bytes
+extern unsigned char const bird4bpp[128]; // 4 tiles x 32 bytes
+extern unsigned char const diamond4bpp[128];  // 4 tiles x 32 bytes
+extern unsigned char const door4bpp[128]; // 4 tiles x 32 bytes
+extern unsigned char const drop4bpp[64]; // 2 tiles x 32 bytes
+extern unsigned char const key4bpp[128]; // 4 tiles x 32 bytes
+extern unsigned char const moneyBag4bpp[128]; // 4 tiles x 32 bytes
+extern unsigned char const player4bpp[1280]; // 40 tiles x 32 bytes
 
 void Scroll_InitTilemap(void)
 {
@@ -153,7 +169,8 @@ void Scroll_InitTilemap(void)
 	buildColumn(32);
 	SMS_loadTileMapColumn(0, 0, Scroll_column, 24);*/
 
-	SMS_loadTileMap(0, 0, chamber0TileMap, 32 * 24 * 2);
+	SMS_mapROMBank(CHAMBER0_BANK);
+	SMS_loadTileMap(0, 0, chamber0_tileMap, 32 * 24 * 2);
 }
 /*
 void Scroll_Update(void)
@@ -175,6 +192,21 @@ void Scroll_Update(void)
 }
 */
 
+void chamber_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resources)
+{
+}
+
+void get_ready_room_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resources)
+{
+}
+
+void titleScreen_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resources)
+{
+
+}
+
+GameData gameData;
+Resources resources;
 
 void main(void)
 {
@@ -182,20 +214,34 @@ void main(void)
 	SMS_VRAMmemsetW(0, 0x0000, 16384);
 
 	SMS_loadBGPalette(downlandPalette);
-	SMS_loadSpritePalette(globalPalette);
+	SMS_loadSpritePalette(downlandPalette);
   
 	// load tiles from Animation
-	SMS_loadTiles(ninja_girl.tileData, 256, ninja_girl.totalTileCount * 32);
+	//SMS_loadTiles(ninja_girl.tileData, 256, ninja_girl.totalTileCount * 32);
+
+
 
 	// load tiles for background
-	SMS_loadTiles(tileSet, 0, 6240);
+	SMS_mapROMBank(VDP_ASSETS_BANK);
+
+	SMS_loadTiles(ball4bpp, 256, 128); // 4 tiles x 32 bytes
+	SMS_loadTiles(bird4bpp, 256 + 4, 128); // 4 tiles x 32 bytes
+	SMS_loadTiles(diamond4bpp, 256 + 8, 128);  // 4 tiles x 32 bytes
+	SMS_loadTiles(door4bpp, 256 + 12, 128); // 4 tiles x 32 bytes
+	SMS_loadTiles(drop4bpp, 256 + 16, 64); // 2 tiles x 32 bytes
+	SMS_loadTiles(key4bpp, 256 + 18, 1280); // 4 tiles x 32 bytes
+	SMS_loadTiles(moneyBag4bpp, 256 + 22, 128); // 4 tiles x 32 bytes
+	SMS_loadTiles(player4bpp, 256 + 64, 1280); // 40 tiles x 32 bytes
+
+	SMS_loadTiles(tileSet4bpp, 0, 6240);
+	SMS_loadTiles(characterFont4bpp, 195, 1248);
   
 	//Scroll_updateMapColumn = FALSE;
 
-	SMS_VDPturnOnFeature(VDPFEATURE_LEFTCOLBLANK);
+	//SMS_VDPturnOnFeature(VDPFEATURE_LEFTCOLBLANK);
 	Scroll_InitTilemap();
 
-
+	/*
 	GameObject player;
 	player.x = 122;
 	player.y = 88;
@@ -204,7 +250,7 @@ void main(void)
 	player.currentAnimationFrame = ninja_girl.frames[player.currentAnimationFrameIndex];
 	player.animationTime = 0;
 	player.animationVdpTileIndex = 0;
-
+	*/
 
 	/* Turn on the display */
 	SMS_displayOn();

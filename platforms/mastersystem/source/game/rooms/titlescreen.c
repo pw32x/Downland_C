@@ -7,6 +7,7 @@
 #include "../dl_sound.h"
 #include "../dl_platform.h"
 
+#ifndef CUSTOM_ROOM_DRAW
 void titleScreen_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resources)
 {
 	dl_u8* framebuffer = gameData->cleanBackground;
@@ -57,6 +58,9 @@ void titleScreen_draw(dl_u8 roomNumber, GameData* gameData, const Resources* res
 			 framebuffer, 
 			 TITLESCREEN_HIGHSCORE_LOCATION);
 }
+#else
+void titleScreen_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resources);
+#endif
 
 void titleScreen_init(Room* room, GameData* gameData, const Resources* resources)
 {

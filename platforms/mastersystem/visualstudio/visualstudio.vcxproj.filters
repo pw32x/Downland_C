@@ -14,14 +14,20 @@
     <Filter Include="build">
       <UniqueIdentifier>{b98ae0a7-68ac-4820-8058-322c408645d9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="game">
-      <UniqueIdentifier>{1873331b-47a3-4fe6-b40a-50b68907e5c2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="game\rooms">
-      <UniqueIdentifier>{e425e5c3-783b-4949-bb20-294c751db6c0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\generated">
       <UniqueIdentifier>{7bd6f1d1-ba38-482c-86e2-a3a602adcd5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\game">
+      <UniqueIdentifier>{1873331b-47a3-4fe6-b40a-50b68907e5c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\game\rooms">
+      <UniqueIdentifier>{e425e5c3-783b-4949-bb20-294c751db6c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\generated\bank_vdp">
+      <UniqueIdentifier>{9db4e271-d493-47bb-8387-6929b6abed1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\generated\bank2_chamber0">
+      <UniqueIdentifier>{ec4f3279-14f7-411d-b95d-86abbb8713f9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -38,64 +44,97 @@
       <Filter>Source Files\gamedata</Filter>
     </ClCompile>
     <ClCompile Include="..\source\game\ball.c">
-      <Filter>game</Filter>
+      <Filter>Source Files\game</Filter>
     </ClCompile>
     <ClCompile Include="..\source\game\bird.c">
-      <Filter>game</Filter>
+      <Filter>Source Files\game</Filter>
     </ClCompile>
     <ClCompile Include="..\source\game\checksum_utils.c">
-      <Filter>game</Filter>
+      <Filter>Source Files\game</Filter>
     </ClCompile>
     <ClCompile Include="..\source\game\debug_utils.c">
-      <Filter>game</Filter>
+      <Filter>Source Files\game</Filter>
     </ClCompile>
     <ClCompile Include="..\source\game\dl_rand.c">
-      <Filter>game</Filter>
+      <Filter>Source Files\game</Filter>
     </ClCompile>
     <ClCompile Include="..\source\game\door_utils.c">
-      <Filter>game</Filter>
+      <Filter>Source Files\game</Filter>
     </ClCompile>
     <ClCompile Include="..\source\game\draw_utils.c">
-      <Filter>game</Filter>
+      <Filter>Source Files\game</Filter>
     </ClCompile>
     <ClCompile Include="..\source\game\drops_manager.c">
-      <Filter>game</Filter>
+      <Filter>Source Files\game</Filter>
     </ClCompile>
     <ClCompile Include="..\source\game\game.c">
-      <Filter>game</Filter>
+      <Filter>Source Files\game</Filter>
     </ClCompile>
     <ClCompile Include="..\source\game\physics_utils.c">
-      <Filter>game</Filter>
+      <Filter>Source Files\game</Filter>
     </ClCompile>
     <ClCompile Include="..\source\game\player.c">
-      <Filter>game</Filter>
+      <Filter>Source Files\game</Filter>
     </ClCompile>
     <ClCompile Include="..\source\game\resource_loader_buffer.c">
-      <Filter>game</Filter>
+      <Filter>Source Files\game</Filter>
     </ClCompile>
     <ClCompile Include="..\source\game\string_utils.c">
-      <Filter>game</Filter>
+      <Filter>Source Files\game</Filter>
     </ClCompile>
     <ClCompile Include="..\source\game\rooms\chambers.c">
-      <Filter>game\rooms</Filter>
+      <Filter>Source Files\game\rooms</Filter>
     </ClCompile>
     <ClCompile Include="..\source\game\rooms\getready.c">
-      <Filter>game\rooms</Filter>
+      <Filter>Source Files\game\rooms</Filter>
     </ClCompile>
     <ClCompile Include="..\source\game\rooms\rooms.c">
-      <Filter>game\rooms</Filter>
+      <Filter>Source Files\game\rooms</Filter>
     </ClCompile>
     <ClCompile Include="..\source\game\rooms\titlescreen.c">
-      <Filter>game\rooms</Filter>
+      <Filter>Source Files\game\rooms</Filter>
     </ClCompile>
     <ClCompile Include="..\source\game\rooms\transitions.c">
-      <Filter>game\rooms</Filter>
+      <Filter>Source Files\game\rooms</Filter>
     </ClCompile>
-    <ClCompile Include="..\generated\tileSet.c">
-      <Filter>Source Files\generated</Filter>
+    <ClCompile Include="..\generated\bank3_chamber0\chamber0_tileMap.c">
+      <Filter>Source Files\generated\bank2_chamber0</Filter>
     </ClCompile>
-    <ClCompile Include="..\generated\tileMaps.c">
-      <Filter>Source Files\generated</Filter>
+    <ClCompile Include="..\generated\bank3_chamber0\chamber0_cleanBackground.c">
+      <Filter>Source Files\generated\bank2_chamber0</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\bank3_chamber0\chamber0_dropSpawnPositions.c">
+      <Filter>Source Files\generated\bank2_chamber0</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\bank2_vdp\ball4bpp.c">
+      <Filter>Source Files\generated\bank_vdp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\bank2_vdp\bird4bpp.c">
+      <Filter>Source Files\generated\bank_vdp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\bank2_vdp\characterFont4bpp.c">
+      <Filter>Source Files\generated\bank_vdp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\bank2_vdp\diamond4bpp.c">
+      <Filter>Source Files\generated\bank_vdp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\bank2_vdp\door4bpp.c">
+      <Filter>Source Files\generated\bank_vdp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\bank2_vdp\drop4bpp.c">
+      <Filter>Source Files\generated\bank_vdp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\bank2_vdp\key4bpp.c">
+      <Filter>Source Files\generated\bank_vdp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\bank2_vdp\moneyBag4bpp.c">
+      <Filter>Source Files\generated\bank_vdp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\bank2_vdp\player4bpp.c">
+      <Filter>Source Files\generated\bank_vdp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\bank2_vdp\tileSet4bpp.c">
+      <Filter>Source Files\generated\bank_vdp</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -112,97 +151,94 @@
       <Filter>Source Files\gamedata</Filter>
     </ClInclude>
     <ClInclude Include="..\source\game\dl_alloc.h">
-      <Filter>game</Filter>
+      <Filter>Source Files\game</Filter>
     </ClInclude>
     <ClInclude Include="..\source\game\background_types.h">
-      <Filter>game</Filter>
+      <Filter>Source Files\game</Filter>
     </ClInclude>
     <ClInclude Include="..\source\game\ball.h">
-      <Filter>game</Filter>
+      <Filter>Source Files\game</Filter>
     </ClInclude>
     <ClInclude Include="..\source\game\base_defines.h">
-      <Filter>game</Filter>
+      <Filter>Source Files\game</Filter>
     </ClInclude>
     <ClInclude Include="..\source\game\base_types.h">
-      <Filter>game</Filter>
+      <Filter>Source Files\game</Filter>
     </ClInclude>
     <ClInclude Include="..\source\game\bird.h">
-      <Filter>game</Filter>
+      <Filter>Source Files\game</Filter>
     </ClInclude>
     <ClInclude Include="..\source\game\checksum_utils.h">
-      <Filter>game</Filter>
+      <Filter>Source Files\game</Filter>
     </ClInclude>
     <ClInclude Include="..\source\game\debug_utils.h">
-      <Filter>game</Filter>
+      <Filter>Source Files\game</Filter>
     </ClInclude>
     <ClInclude Include="..\source\game\dl_platform.h">
-      <Filter>game</Filter>
+      <Filter>Source Files\game</Filter>
     </ClInclude>
     <ClInclude Include="..\source\game\dl_rand.h">
-      <Filter>game</Filter>
+      <Filter>Source Files\game</Filter>
     </ClInclude>
     <ClInclude Include="..\source\game\dl_sound.h">
-      <Filter>game</Filter>
+      <Filter>Source Files\game</Filter>
     </ClInclude>
     <ClInclude Include="..\source\game\door_types.h">
-      <Filter>game</Filter>
+      <Filter>Source Files\game</Filter>
     </ClInclude>
     <ClInclude Include="..\source\game\door_utils.h">
-      <Filter>game</Filter>
+      <Filter>Source Files\game</Filter>
     </ClInclude>
     <ClInclude Include="..\source\game\draw_utils.h">
-      <Filter>game</Filter>
+      <Filter>Source Files\game</Filter>
     </ClInclude>
     <ClInclude Include="..\source\game\drops_manager.h">
-      <Filter>game</Filter>
+      <Filter>Source Files\game</Filter>
     </ClInclude>
     <ClInclude Include="..\source\game\drops_types.h">
-      <Filter>game</Filter>
+      <Filter>Source Files\game</Filter>
     </ClInclude>
     <ClInclude Include="..\source\game\game.h">
-      <Filter>game</Filter>
+      <Filter>Source Files\game</Filter>
     </ClInclude>
     <ClInclude Include="..\source\game\game_types.h">
-      <Filter>game</Filter>
+      <Filter>Source Files\game</Filter>
     </ClInclude>
     <ClInclude Include="..\source\game\joystick_types.h">
-      <Filter>game</Filter>
+      <Filter>Source Files\game</Filter>
     </ClInclude>
     <ClInclude Include="..\source\game\physics_utils.h">
-      <Filter>game</Filter>
+      <Filter>Source Files\game</Filter>
     </ClInclude>
     <ClInclude Include="..\source\game\pickup_types.h">
-      <Filter>game</Filter>
+      <Filter>Source Files\game</Filter>
     </ClInclude>
     <ClInclude Include="..\source\game\player.h">
-      <Filter>game</Filter>
+      <Filter>Source Files\game</Filter>
     </ClInclude>
     <ClInclude Include="..\source\game\player_types.h">
-      <Filter>game</Filter>
+      <Filter>Source Files\game</Filter>
     </ClInclude>
     <ClInclude Include="..\source\game\resource_loader_buffer.h">
-      <Filter>game</Filter>
+      <Filter>Source Files\game</Filter>
     </ClInclude>
     <ClInclude Include="..\source\game\resource_types.h">
-      <Filter>game</Filter>
+      <Filter>Source Files\game</Filter>
     </ClInclude>
     <ClInclude Include="..\source\game\string_utils.h">
-      <Filter>game</Filter>
+      <Filter>Source Files\game</Filter>
     </ClInclude>
     <ClInclude Include="..\source\game\rooms\chambers.h">
-      <Filter>game\rooms</Filter>
+      <Filter>Source Files\game\rooms</Filter>
     </ClInclude>
     <ClInclude Include="..\source\game\rooms\room_types.h">
-      <Filter>game\rooms</Filter>
+      <Filter>Source Files\game\rooms</Filter>
     </ClInclude>
     <ClInclude Include="..\source\game\rooms\rooms.h">
-      <Filter>game\rooms</Filter>
+      <Filter>Source Files\game\rooms</Filter>
     </ClInclude>
     <ClInclude Include="..\source\game\rooms\titlescreen.h">
-      <Filter>game\rooms</Filter>
-    </ClInclude>
-    <ClInclude Include="..\generated\tileMaps.h">
-      <Filter>Source Files\generated</Filter>
+      <Filter>Source Files\game\rooms</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\SMSDev\devkitSMS-master\SMSlib\src\SMSlib.h">
       <Filter>SMSLib</Filter>

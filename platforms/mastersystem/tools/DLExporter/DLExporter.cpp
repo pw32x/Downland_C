@@ -47,6 +47,54 @@ void dl_memcpy(void* destination, const void* source, dl_u16 count)
    
 }
 
+const char* bankFolderNames[] = 
+{
+    "bank2_vdp",
+    "bank3_chamber0",
+    "bank4_chamber1",
+    "bank5_chamber2",
+    "bank6_chamber3",
+    "bank7_chamber4",
+    "bank8_chamber5",
+    "bank9_chamber6",
+    "bank10_chamber7",
+    "bank11_chamber8",
+    "bank12_chamber9",
+    "bank13_titlescreen"
+};
+
+int bankFolderNameCount = sizeof(bankFolderNames) / sizeof(bankFolderNames[0]);
+
+#define BANK2_VDP           0
+#define BANK3_CHAMBER0      1
+#define BANK4_CHAMBER1      2
+#define BANK5_CHAMBER2      3
+#define BANK6_CHAMBER3      4
+#define BANK7_CHAMBER4      5
+#define BANK8_CHAMBER5      6
+#define BANK9_CHAMBER6      7
+#define BANK10_CHAMBER7     8
+#define BANK11_CHAMBER8     9
+#define BANK12_CHAMBER9     10
+#define BANK13_CHAMBER10    11  
+#define BANK14_TITLESCREEN  12
+
+dl_u8 roomToBank[] = 
+{
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+};
+
 #define TILE_WIDTH 8
 #define TILE_HEIGHT 8
 #define TILE_SIZE (TILE_WIDTH * TILE_HEIGHT)
@@ -389,15 +437,15 @@ std::string roomNames[] =
 
 void saveTileMapSource(const std::vector<TileMap>& tileMaps)
 {
-    std::ostringstream oss;
-
-    oss << "#include \"base_types.h\"\n";
-    oss << "\n";
-
     dl_u8 counter = 0;
     for (auto& tileMap : tileMaps)
     {
-        oss << "const dl_u8 " << roomNames[counter] << "TileMap[] = \n";
+        std::ostringstream oss;
+
+        oss << "#include \"base_types.h\"\n";
+        oss << "\n";
+
+        oss << "const dl_u16 " << roomNames[counter] << "_tileMap[32 * 24] = \n";
         oss << "{\n";
 
         for (int loopy = 0; loopy < TILE_MAP_HEIGHT; loopy++)
@@ -422,19 +470,27 @@ void saveTileMapSource(const std::vector<TileMap>& tileMaps)
         oss << "};\n";
         oss << "\n";
 
+        std::string bankFolder = g_destinationPath;
+        bankFolder += bankFolderNames[roomToBank[counter]];
+        bankFolder += "\\";
+
+        std::ofstream outFile(bankFolder + roomNames[counter] + "_tileMap.c");
+        outFile << oss.str();
+
         counter++;
     }
 
+    /*
     oss << "\n";
     oss << "const dl_u8* roomTileMaps[" << NUM_ROOMS_PLUS_TITLESCREN << "] = \n";
     oss << "{\n";
     for (int loop = 0; loop < NUM_ROOMS_PLUS_TITLESCREN; loop++)
         oss << "    " << roomNames[loop] << "TileMap,\n";
     oss << "};\n";
+    */
 
 
-    std::ofstream outFile(g_destinationPath + "tileMaps.c");
-    outFile << oss.str();
+
 }
 
 void saveTileMapHeader()
@@ -452,14 +508,14 @@ void saveTileMapHeader()
     outFile << oss.str();
 }
 
-void saveSpritePlanar(const dl_u8* spriteData, dl_u16 spriteDataSize, const char* name)
+void saveSpritePlanar(const dl_u8* spriteData, dl_u8 tileWidth, dl_u8 tileHeight, const char* name)
 {
     std::ostringstream oss;
 
     oss << "#include \"base_types.h\"\n";
     oss << "\n";
 
-    dl_u16 numTiles = spriteDataSize / 64;
+    dl_u16 numTiles = tileWidth * tileHeight;
 
 	int tileIndex = 0;
 	int totalTiles = 0;
@@ -468,20 +524,36 @@ void saveSpritePlanar(const dl_u8* spriteData, dl_u16 spriteDataSize, const char
 
 	int spriteCount = 0;
 
-	for (int loop = 0; loop < numTiles; loop++)
-	{
-		oss << "    // tile: " << spriteCount << "\n";
-		spriteCount++;
+    for (int tileY = 0; tileY < tileHeight; tileY++)
+    {
+        for (int tileX = 0; tileX < tileWidth; tileX++)
+        {
+		    oss << "    // tile: " << spriteCount << "\n";
+		    spriteCount++;
 
-		OutputTilePlanar(oss, spriteData);
-        oss << "\n";
+            dl_u8 tileData[TILE_WIDTH * TILE_HEIGHT];
 
-        spriteData += 64;
-	}
+            for (int loopy = 0; loopy < TILE_HEIGHT; loopy++)
+            {
+                for (int loopx = 0; loopx < TILE_WIDTH; loopx++)
+                {
+                    tileData[loopx + (loopy * TILE_WIDTH)] = spriteData[((tileX * TILE_WIDTH) + loopx) + (((tileY * TILE_HEIGHT) + loopy) * (tileWidth * TILE_WIDTH))];
+                }
+            }
+
+            OutputTilePlanar(oss, tileData);
+
+            oss << "\n";
+        }
+    }
 
 	oss << "};\n\n";
 
-    std::ofstream outFile(g_destinationPath + name + ".c");
+    std::string bankFolder = g_destinationPath;
+    bankFolder += bankFolderNames[BANK2_VDP];
+    bankFolder += "\\";
+
+    std::ofstream outFile(bankFolder + name + ".c");
     outFile << oss.str();
 }
 
@@ -489,9 +561,9 @@ void saveCharacterFont(const dl_u8* characterFont)
 {
 #define DESTINATION_FONT_HEIGHT 8
 
-    dl_u16 fontSize = CHARACTER_FONT_WIDTH * DESTINATION_FONT_HEIGHT * CHARACTER_FONT_COUNT;
-    dl_u8* destinationFont = new dl_u8[fontSize];
-    memset(destinationFont, 0, fontSize);
+    dl_u16 fontBufferSize = CHARACTER_FONT_WIDTH * DESTINATION_FONT_HEIGHT * CHARACTER_FONT_COUNT;
+    dl_u8* destinationFont = new dl_u8[fontBufferSize];
+    memset(destinationFont, 0, fontBufferSize);
 
     dl_u8* destinationFontRunner = destinationFont;
 
@@ -514,7 +586,7 @@ void saveCharacterFont(const dl_u8* characterFont)
         destinationFontRunner += CHARACTER_FONT_WIDTH * DESTINATION_FONT_HEIGHT; // destination height
     }
 
-    saveSpritePlanar(destinationFont, fontSize, "characterFont");
+    saveSpritePlanar(destinationFont, 1, CHARACTER_FONT_COUNT, "characterFont4bpp");
 
 
     delete [] destinationFont;
@@ -675,7 +747,7 @@ void saveSplatSprite(const dl_u8* splatSprite)
 }
 
 
-void saveSprite16(const dl_u8* sprite, 
+void saveSprite4bpp(const dl_u8* sprite, 
                   dl_u8 width, 
                   dl_u8 height, 
                   dl_u8 numFrames, 
@@ -711,13 +783,13 @@ void saveSprite16(const dl_u8* sprite,
 //                  destinationHeight * numFrames,
 //                  g_destinationPath + name + ".png");
 
-    saveSpritePlanar(sprite8bpp, destinationFrameSize * numFrames, name.c_str());
+    saveSpritePlanar(sprite8bpp, destinationWidth / 8, (destinationHeight / 8) * numFrames, name.c_str());
 
     delete [] sprite8bpp;
 }
 
 
-void saveSprite16Clipped(const dl_u8* sprite, 
+void saveSprite4bppClipped(const dl_u8* sprite, 
                          dl_u8 width, 
                          dl_u8 height, 
                          dl_u8 clipHeight,
@@ -809,7 +881,8 @@ void saveCleanBackground(const dl_u8* cleanBackground, dl_u8 backgroundIndex)
 {
     std::ostringstream oss;
 
-    std::string cleanBackgroundName = "cleanBackground" + std::to_string(backgroundIndex);
+    std::string cleanBackgroundName = roomNames[backgroundIndex];
+    cleanBackgroundName += "_cleanBackground";
 
     oss << "#include \"base_types.h\"\n";
     oss << "\n";
@@ -853,7 +926,11 @@ void saveCleanBackground(const dl_u8* cleanBackground, dl_u8 backgroundIndex)
         oss << "\n";
     }
       
-    std::ofstream outFile(g_destinationPath + cleanBackgroundName + ".c");
+    std::string bankFolder = g_destinationPath;
+    bankFolder += bankFolderNames[roomToBank[backgroundIndex]];
+    bankFolder += "\\";
+
+    std::ofstream outFile(bankFolder + cleanBackgroundName + ".c");
     outFile << oss.str();        
 }
 
@@ -867,7 +944,7 @@ void saveString(const dl_u8* string, const char* name, std::ostringstream& oss)
 
     int length = (int)(stringRunner - string + 1);
 
-    oss << "const dl_u8 string_" << name << "[" << (dl_u16)length << "] = { ";
+    oss << "const dl_u8 string_" << name << "[" << std::dec << (dl_u16)length << "] = { ";
     
     while (1) 
     {
@@ -960,7 +1037,7 @@ void saveSprite(const dl_u8* sprite, dl_u8 spriteCount, dl_u8 rowCount, const ch
 
     oss << "};\n";
     oss << "\n";
-            
+
     std::ofstream outFile(g_destinationPath + name + ".c");
     outFile << oss.str();
 }
@@ -970,6 +1047,8 @@ void saveGeneralData(const Resources& resources)
     std::ostringstream oss;
 
     oss << "#include \"base_types.h\"\n";
+    oss << "#include \"pickup_types.h\"\n";
+    oss << "#include \"door_types.h\"\n";
     oss << "\n";
 
     // pickups
@@ -1058,16 +1137,13 @@ void saveGeneralData(const Resources& resources)
     {
         const DoorInfoData& doorInfoData = resources.roomResources[loop].doorInfoData;
 
-        oss << "const DoorInfoData doorInfoData" << loop << " = \n";
-        oss << "{\n";
-        oss << "    " << (dl_u16)doorInfoData.drawInfosCount << ",\n";
-        oss << "    { \n";
-
+        oss << "const DoorInfo doorInfo" << (dl_u16)loop << "_array[" << (dl_u16)doorInfoData.drawInfosCount << "] = \n";
+        oss << "{ \n";
         for (int innerLoop = 0; innerLoop < doorInfoData.drawInfosCount; innerLoop++)
         {
             const DoorInfo& doorInfo = doorInfoData.doorInfos[innerLoop];
 
-            oss << "        { ";
+            oss << "    { ";
             oss << (dl_u16)doorInfo.y << ", ";
             oss << (dl_u16)doorInfo.x << ", ";
             oss << (dl_u16)doorInfo.yLocationInNextRoom << ", ";
@@ -1075,10 +1151,16 @@ void saveGeneralData(const Resources& resources)
             oss << (dl_u16)doorInfo.nextRoomNumber << ", ";
             oss << (dl_u16)doorInfo.globalDoorIndex << " },\n";
         }
-
-        oss << "    } \n";       
-        // const DoorInfo* doorInfos;
         oss << "};\n";
+        oss << "\n";
+
+
+        oss << "const DoorInfoData doorInfoData" << loop << " = \n";
+        oss << "{\n";
+        oss << "    " << (dl_u16)doorInfoData.drawInfosCount << ",\n";
+        oss << "    doorInfo" << (dl_u16)loop << "_array,\n";
+        oss << "};\n";
+        oss << "\n";
         oss << "\n";
     }
 
@@ -1094,31 +1176,40 @@ void saveDropSpawns(const Resources& resources)
     {
         std::ostringstream oss;
 
-        std::string dropSpawnPositionsName = "dropSpawnPositions" + std::to_string(loop);
+        std::string dropSpawnPositionsName = roomNames[loop];
+        dropSpawnPositionsName += "_dropSpawnPositions";
 
         oss << "#include \"base_types.h\"\n";
+        oss << "#include \"drops_types.h\"\n";
         oss << "\n";
 
         const DropSpawnPositions& dropSpawnPositions = resources.roomResources[loop].dropSpawnPositions;
 
-        oss << "const DropSpawnPositions " << dropSpawnPositionsName << "\n";
+        oss << "const DropSpawnArea " << dropSpawnPositionsName << "_array[" << (dl_u16)dropSpawnPositions.spawnAreasCount << "] = \n";  
         oss << "{\n";
-        oss << "    " << (dl_u16)dropSpawnPositions.spawnAreasCount << ", \n";
-
-        oss << "    {\n";
         for (int innerLoop = 0; innerLoop < dropSpawnPositions.spawnAreasCount; innerLoop++)
         {
-            oss << "       { ";
+            oss << "    { ";
             oss << (dl_u16)dropSpawnPositions.dropSpawnAreas[innerLoop].dropSpawnPointsCount << ", ";
             oss << (dl_u16)dropSpawnPositions.dropSpawnAreas[innerLoop].x << ", ";
             oss << (dl_u16)dropSpawnPositions.dropSpawnAreas[innerLoop].y;
             oss << " }, \n";
         }
-        oss << "    }\n";
         oss << "};\n";
+
         oss << "\n";
-            
-        std::ofstream outFile(g_destinationPath + dropSpawnPositionsName + ".c");
+
+        oss << "const DropSpawnPositions " << dropSpawnPositionsName << " = \n";
+        oss << "{\n";
+        oss << "    " << (dl_u16)dropSpawnPositions.spawnAreasCount << ", \n";
+        oss << "    " << dropSpawnPositionsName << "_array, \n"; 
+        oss << "};\n";
+
+        std::string bankFolder = g_destinationPath;
+        bankFolder += bankFolderNames[roomToBank[loop]];
+        bankFolder += "\\";
+
+        std::ofstream outFile(bankFolder + dropSpawnPositionsName + ".c");
         outFile << oss.str();        
     }
 }
@@ -1186,7 +1277,7 @@ void saveTileSet(std::vector<Tile>& tileSet)
     oss << "#include \"base_types.h\"\n";
     oss << "\n";
 
-	std::string outputTileDataName = "tileSet";
+	std::string outputTileDataName = "tileSet4bpp";
 
 	int tileIndex = 0;
 	int totalTiles = 0;
@@ -1206,8 +1297,29 @@ void saveTileSet(std::vector<Tile>& tileSet)
 
 	oss << "};\n\n";
 
-    std::ofstream outFile(g_destinationPath + "tileSet.c");
+    std::string bankFolder = g_destinationPath;
+    bankFolder += bankFolderNames[BANK2_VDP];
+    bankFolder += "\\";
+
+    std::ofstream outFile(bankFolder + outputTileDataName + ".c");
     outFile << oss.str();
+}
+
+void createFolder(std::string& folder)
+{
+    if (!std::filesystem::exists(folder)) 
+    {
+        // create the generated folder
+        std::filesystem::create_directories(folder); 
+    }
+    else
+    {
+        // clear everything in the folder
+        for (const auto& entry : std::filesystem::directory_iterator(folder)) 
+        {
+            std::filesystem::remove_all(entry);
+        }
+    }
 }
 
 int main()
@@ -1216,18 +1328,13 @@ int main()
 
     //std::filesystem::path cwd = std::filesystem::current_path();
 
-    if (!std::filesystem::exists(g_destinationPath)) 
+    createFolder(g_destinationPath); 
+
+    for (int loop = 0; loop < bankFolderNameCount; loop++)
     {
-        // create the generated folder
-        std::filesystem::create_directories(g_destinationPath); 
-    }
-    else
-    {
-        // clear everything in the folder
-        for (const auto& entry : std::filesystem::directory_iterator(g_destinationPath)) 
-        {
-            std::filesystem::remove_all(entry);
-        }
+        std::string path = g_destinationPath;
+        path += bankFolderNames[loop];
+        createFolder(path); 
     }
 
     std::cout << "**** DLExporter Master System START\n";
@@ -1281,15 +1388,15 @@ int main()
 
     saveCharacterFont(resources.characterFont);
 
-    saveSprite16(resources.sprites_drops, DROP_SPRITE_WIDTH, DROP_SPRITE_ROWS, DROP_SPRITE_COUNT, "drop4bpp");   
+    saveSprite4bpp(resources.sprites_drops, DROP_SPRITE_WIDTH, DROP_SPRITE_ROWS, DROP_SPRITE_COUNT, "drop4bpp");   
 
-	saveSprite16(resources.sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYER_SPRITE_COUNT, "player4bpp");
-	saveSprite16(resources.sprites_bouncyBall, BALL_SPRITE_WIDTH, BALL_SPRITE_ROWS, BALL_SPRITE_COUNT, "ball4bpp");
-	saveSprite16(resources.sprites_bird, BIRD_SPRITE_WIDTH, BIRD_SPRITE_ROWS, BIRD_SPRITE_COUNT, "bird4bpp");
-	saveSprite16(resources.sprite_key, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, "key4bpp");
-	saveSprite16(resources.sprite_diamond, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, "diamond4bpp");
-	saveSprite16(resources.sprite_moneyBag, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, "moneyBag4bpp");
-	saveSprite16(resources.sprite_door, DOOR_SPRITE_WIDTH, DOOR_SPRITE_ROWS, 1, "door4bpp");
+	saveSprite4bpp(resources.sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYER_SPRITE_COUNT, "player4bpp");
+	saveSprite4bpp(resources.sprites_bouncyBall, BALL_SPRITE_WIDTH, BALL_SPRITE_ROWS, BALL_SPRITE_COUNT, "ball4bpp");
+	saveSprite4bpp(resources.sprites_bird, BIRD_SPRITE_WIDTH, BIRD_SPRITE_ROWS, BIRD_SPRITE_COUNT, "bird4bpp");
+	saveSprite4bpp(resources.sprite_key, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, "key4bpp");
+	saveSprite4bpp(resources.sprite_diamond, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, "diamond4bpp");
+	saveSprite4bpp(resources.sprite_moneyBag, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, "moneyBag4bpp");
+	saveSprite4bpp(resources.sprite_door, DOOR_SPRITE_WIDTH, DOOR_SPRITE_ROWS, 1, "door4bpp");
 
     /*
     saveCursor();
@@ -1299,13 +1406,17 @@ int main()
     delete [] regenSprite;
 
     saveSplatSprite(resources.sprite_playerSplat);
-    saveSprite16Clipped(resources.sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYERICON_NUM_SPRITE_ROWS, PLAYER_SPRITE_COUNT, "playerLives4bpp");
+    saveSprite4bppClipped(resources.sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYERICON_NUM_SPRITE_ROWS, PLAYER_SPRITE_COUNT, "playerLives4bpp");
     saveTransitionTileset();
     saveTileSetToPng(tileSet);
     */
 
     saveTileSet(tileSet);
+
     saveTileMapSource(tileMaps);
+
+
+
     saveTileMapHeader();
 
     //saveResFile();

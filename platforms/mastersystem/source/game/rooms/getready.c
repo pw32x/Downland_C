@@ -6,6 +6,7 @@
 #include "../dl_sound.h"
 #include "../dl_platform.h"
 
+#ifndef CUSTOM_ROOM_DRAW
 void get_ready_room_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resources)
 {
 	const dl_u8* getReadyString;
@@ -22,6 +23,9 @@ void get_ready_room_draw(dl_u8 roomNumber, GameData* gameData, const Resources* 
 
 	drawText(getReadyString, resources->characterFont, framebuffer, 0x0b66);
 }
+#else
+void get_ready_room_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resources);
+#endif
 
 void get_ready_room_init(Room* room, GameData* gameData, const Resources* resources)
 {

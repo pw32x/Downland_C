@@ -316,13 +316,13 @@ dl_u8 ResourceLoaderBuffer_Init(const dl_u8* fileBuffer,
 	loadDoorInfoDataPositions(fileBuffer, 0xd33c, &resources->roomResources[8].doorInfoData);
 	loadDoorInfoDataPositions(fileBuffer, 0xd34b, &resources->roomResources[9].doorInfoData);
 
-	resources->roomPickupPositions = (PickupPosition*)getBytes(fileBuffer, 0xd1ea);
+	resources->roomPickupPositions = (PickupPosition*)getBytes(fileBuffer, 0xd1ea); // 50 items
 
 	resources->keyPickUpDoorIndexes = getBytes(fileBuffer, 0xd1c2);  // 20 items
 	resources->keyPickUpDoorIndexesHardMode = getBytes(fileBuffer, 0xd1d6);  // 20 items
 	resources->offsetsToDoorsAlreadyActivated = getBytes(fileBuffer, 0xceea);  // 16 items
 
-	resources->roomsWithBouncingBall = getBytes(fileBuffer, 0xceac);
+	resources->roomsWithBouncingBall = getBytes(fileBuffer, 0xceac); // 9 items
 
 	return TRUE;
 }

@@ -1088,7 +1088,7 @@ void saveGeneralData(const Resources& resources)
     // pick up door indexes
     oss << "// pick up door indexes\n";
     const dl_u8* keyPickUpDoorIndexes = resources.keyPickUpDoorIndexes;
-    oss << "const dl_u8* keyPickUpDoorIndexes[20] = { ";
+    oss << "const dl_u8 keyPickUpDoorIndexes[20] = { ";
 
     for (int loop = 0; loop < 20; loop++)
     {
@@ -1101,7 +1101,7 @@ void saveGeneralData(const Resources& resources)
     // pick up door indexes
     oss << "// pick up door indexes (hard mode)\n";
     keyPickUpDoorIndexes = resources.keyPickUpDoorIndexesHardMode;
-    oss << "const dl_u8* keyPickUpDoorIndexesHardMode[20] = { ";
+    oss << "const dl_u8 keyPickUpDoorIndexesHardMode[20] = { ";
 
     for (int loop = 0; loop < 20; loop++)
     {
@@ -1114,7 +1114,7 @@ void saveGeneralData(const Resources& resources)
     // offests to doors alread activated
     oss << "// offests to doors alread activated\n";
     const dl_u8* offsetsToDoorsAlreadyActivated = resources.offsetsToDoorsAlreadyActivated;
-    oss << "const dl_u8* offsetsToDoorsAlreadyActivated[16] = { ";
+    oss << "const dl_u8 offsetsToDoorsAlreadyActivated[16] = { ";
 
     for (int loop = 0; loop < 16; loop++)
     {
@@ -1127,7 +1127,7 @@ void saveGeneralData(const Resources& resources)
     // rooms with the bouncing ball
     oss << "// rooms with the bouncing ball\n";
     const dl_u8* roomsWithBouncingBall = resources.roomsWithBouncingBall;
-    oss << "const dl_u8* roomsWithBouncingBall[9] = { ";
+    oss << "const dl_u8 roomsWithBouncingBall[9] = { ";
 
     for (int loop = 0; loop < 9; loop++)
     {
@@ -1320,12 +1320,130 @@ void saveResources()
     oss << "#include \"resource_types.h\"\n";
     oss << "\n";
 
+
+    oss << "extern const dl_u8 characterFont[273];\n";
+    oss << "\n";
+    oss << "extern const dl_u8 string_downland[14];\n";
+    oss << "extern const dl_u8 string_writtenBy[12];\n";
+    oss << "extern const dl_u8 string_michaelAichlmayer[18];\n";
+    oss << "extern const dl_u8 string_copyright1983[15];\n";
+    oss << "extern const dl_u8 string_spectralAssociates[20];\n";
+    oss << "extern const dl_u8 string_licensedTo[13];\n";
+    oss << "extern const dl_u8 string_tandyCorporation[18] ;\n";
+    oss << "extern const dl_u8 string_allRightsReserved[20];\n";
+    oss << "extern const dl_u8 string_onePlayer[11];\n";
+    oss << "extern const dl_u8 string_twoPlayer[11];\n";
+    oss << "extern const dl_u8 string_highScore[11];\n";
+    oss << "extern const dl_u8 string_playerOne[11];\n";
+    oss << "extern const dl_u8 string_playerTwo[11];\n";
+    oss << "extern const dl_u8 string_pl1[4];\n";
+    oss << "extern const dl_u8 string_pl2[4];\n";
+    oss << "extern const dl_u8 string_getReadyPlayerOne[21];\n";
+    oss << "extern const dl_u8 string_getReadyPlayerTwo[21];\n";
+    oss << "extern const dl_u8 string_chamber[8];\n";
+    oss << "\n";
+    oss << "extern const dl_u8 bitShiftedSprite_player[1920];\n";
+    oss << "extern const dl_u8 bitShiftedSprite_ball[192];\n";
+    oss << "extern const dl_u8 bitShiftedSprite_bird[144];\n";
+    oss << "extern const dl_u8 bitShiftedSprite_door[192];\n";
+    oss << "extern const dl_u8 bitShiftedSprite_playerCollisionMasks[600];\n";
+    oss << "extern const dl_u8 bitShiftedSprite_playerSplat[108];\n";
+    oss << "\n";
+    oss << "extern const dl_u8 diamondSprite[20];\n";
+    oss << "extern const dl_u8 moneyBagSprite[20];\n";
+    oss << "extern const dl_u8 keySprite[20];\n";
+    oss << "\n";
+    oss << "extern const dl_u8 dropSprite[48];\n";
+    oss << "\n";
+    oss << "extern const PickupPosition roomPickupPositions[50];\n";
+    oss << "extern const dl_u8 keyPickUpDoorIndexes[20];\n";
+    oss << "extern const dl_u8 keyPickUpDoorIndexesHardMode[20];\n";
+    oss << "extern const dl_u8 offsetsToDoorsAlreadyActivated[16];\n";
+    oss << "extern const dl_u8 roomsWithBouncingBall[9];\n";
+    oss << "\n";
+    oss << "\n";
+
 	std::string outputTileDataName = "tileSet4bpp";
 
 	int tileIndex = 0;
 	int totalTiles = 0;
 	oss << "const Resources resources = \n";
 	oss << "{\n";
+    oss << "    characterFont,\n";
+    oss << "\n";
+
+    oss << "    // strings\n";
+    oss << "    string_downland,\n";
+    oss << "    string_writtenBy,\n";
+    oss << "    string_michaelAichlmayer,\n";
+    oss << "    string_copyright1983,\n";
+    oss << "    string_spectralAssociates,\n";
+    oss << "    string_licensedTo,\n";
+    oss << "    string_tandyCorporation,\n";
+    oss << "    string_allRightsReserved,\n";
+    oss << "    string_onePlayer,\n";
+    oss << "    string_twoPlayer,\n";
+    oss << "    string_highScore,\n";
+    oss << "    string_playerOne,\n";
+    oss << "    string_playerTwo,\n";
+    oss << "    string_pl1,\n";
+    oss << "    string_pl2,\n";
+    oss << "    string_getReadyPlayerOne,\n";
+    oss << "    string_getReadyPlayerTwo,\n";
+    oss << "    string_chamber,\n";
+    oss << "\n";
+
+    oss << "    // sprites\n";
+    oss << "    NULL, // sprites_player\n";
+    oss << "    NULL, // collisionmasks_player,\n";
+    oss << "    NULL, // sprites_bouncyBall,\n";
+    oss << "    NULL, // sprites_bird,\n";
+    oss << "    moneyBagSprite,\n";
+    oss << "    diamondSprite,\n";
+    oss << "    keySprite,\n";
+    oss << "    NULL, // sprite_playerSplat,\n";
+    oss << "    NULL, // sprite_door,\n";
+    oss << "    dropSprite,\n";
+    oss << "\n";
+
+    oss << "    // bit shifted sprites\n";
+    oss << "    bitShiftedSprite_player,\n";
+    oss << "    bitShiftedSprite_playerCollisionMasks,\n";
+    oss << "    bitShiftedSprite_ball,\n";
+    oss << "    bitShiftedSprite_bird,\n";
+    oss << "    bitShiftedSprite_playerSplat,\n";
+    oss << "    bitShiftedSprite_door,\n";
+    oss << "\n";
+
+    oss << "    { diamondSprite, moneyBagSprite, keySprite },\n";
+    oss << "\n";
+
+    // RoomResources roomResources[NUM_ROOMS_PLUS_TITLESCREN];
+    oss << "    // room resources \n";
+    oss << "    {\n";
+    oss << "        {0, 0},\n";
+    oss << "        {0, 0},\n";
+    oss << "        {0, 0},\n";
+    oss << "        {0, 0},\n";
+    oss << "        {0, 0},\n";
+    oss << "        {0, 0},\n";
+    oss << "        {0, 0},\n";
+    oss << "        {0, 0},\n";
+    oss << "        {0, 0},\n";
+    oss << "        {0, 0},\n";
+    oss << "        {0, 0},\n";
+    oss << "    },\n";
+    oss << "\n";
+
+    oss << "    roomPickupPositions,\n";
+    oss << "    keyPickUpDoorIndexes,           // 20 items\n";
+    oss << "    keyPickUpDoorIndexesHardMode,   // 20 items\n";
+    oss << "    offsetsToDoorsAlreadyActivated, // 16 items\n";
+    oss << "    roomsWithBouncingBall,          // 10 items\n";
+
+    oss << "\n";
+    oss << "\n";
+    oss << "\n";
 
 	oss << "};\n\n";
 

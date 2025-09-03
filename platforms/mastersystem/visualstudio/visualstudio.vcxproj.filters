@@ -8,9 +8,6 @@
     <Filter Include="SMSLib">
       <UniqueIdentifier>{c9ef1464-5305-434c-8b8a-e75277b516a7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\gamedata">
-      <UniqueIdentifier>{05528c9a-8ba6-4f21-99e1-6f4323763cb7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="build">
       <UniqueIdentifier>{b98ae0a7-68ac-4820-8058-322c408645d9}</UniqueIdentifier>
     </Filter>
@@ -33,15 +30,6 @@
   <ItemGroup>
     <ClCompile Include="..\source\main.c">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\ninja_girl.c">
-      <Filter>Source Files\gamedata</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\background_tileset.c">
-      <Filter>Source Files\gamedata</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\background.c">
-      <Filter>Source Files\gamedata</Filter>
     </ClCompile>
     <ClCompile Include="..\source\game\ball.c">
       <Filter>Source Files\game</Filter>
@@ -136,20 +124,47 @@
     <ClCompile Include="..\generated\bank2_vdp\tileSet4bpp.c">
       <Filter>Source Files\generated\bank_vdp</Filter>
     </ClCompile>
+    <ClCompile Include="..\generated\keySprite.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\moneyBagSprite.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\strings.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\bitShiftedSprite_ball.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\bitShiftedSprite_bird.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\bitShiftedSprite_door.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\bitShiftedSprite_player.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\bitShiftedSprite_playerCollisionMasks.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\bitShiftedSprite_playerSplat.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\characterFont.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\diamondSprite.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\dropSprite.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\general.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\source\animationtypes.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\ninja_girl.h">
-      <Filter>Source Files\gamedata</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\background.h">
-      <Filter>Source Files\gamedata</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\background_tileset.h">
-      <Filter>Source Files\gamedata</Filter>
-    </ClInclude>
     <ClInclude Include="..\source\game\dl_alloc.h">
       <Filter>Source Files\game</Filter>
     </ClInclude>
@@ -242,6 +257,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\SMSDev\devkitSMS-master\SMSlib\src\SMSlib.h">
       <Filter>SMSLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generated\tileMaps.h">
+      <Filter>Source Files\generated</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

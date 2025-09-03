@@ -1,8 +1,5 @@
 #include <stdio.h>
 #include "SMSlib.h"
-#include "ninja_girl.h"
-//#include "background.h"
-//#include "background_tileset.h"
 
 #include "base_types.h"
 #include "game_types.h"
@@ -46,98 +43,6 @@ dl_u8 downlandPalette[] =
 	0x00, 0x30, 0x0b, 0x3f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
-
-
-unsigned char globalPalette[16] = 
-{
- 0x00 , 0x01 , 0x10 , 0x15 , 0x06 , 0x04 , 0x17 , 0x15 , 0x39 , 0x0B , 0x2A , 0x09 , 0x2B , 0x3D , 0x1F , 0x3F
-};
-
-void Animation_DrawFrame(const AnimationFrame* frame, short x, short y)
-{
-	char loop = frame->numSprites;
-	const AnimationSprite* currentSprite = frame->sprites;
-
-	while (loop--)
-	{
-		SMS_addSprite(x + currentSprite->xOffset, y + currentSprite->yOffset, currentSprite->tileIndex);
-		currentSprite++;
-	}
-
-}
-typedef struct
-{
-	short x;
-	short y;
-	const Animation* animation;
-	unsigned char animationVdpTileIndex;
-	const AnimationFrame* currentAnimationFrame;
-	unsigned char currentAnimationFrameIndex;
-	unsigned char animationTime;
-} GameObject;
-
-void GameObject_Update(GameObject* gameObject)
-{
-	gameObject->x++;
-	gameObject->x %= 255;
-
-	if (gameObject->animationTime == gameObject->currentAnimationFrame->frameTime)
-	{
-		gameObject->currentAnimationFrameIndex++;
-
-		if (gameObject->currentAnimationFrameIndex == gameObject->animation->numFrames)
-			gameObject->currentAnimationFrameIndex = 0;
-
-		gameObject->currentAnimationFrame = gameObject->animation->frames[gameObject->currentAnimationFrameIndex];
-		gameObject->animationTime = 0;
-	}
-
-	Animation_DrawFrame(gameObject->currentAnimationFrame, gameObject->x, gameObject->y);
-
-	gameObject->animationTime++;
-}
-
-unsigned short ScrollManager_horizontalScroll = 0;
-unsigned char Scroll_vdpHorizontalScroll = 0;
-
-/*
-// hard-coded column when we need to show more of the map. Replace
-// this with an actual larger map.
-#define SCROLL_COLUMN_HEIGHT 24
-unsigned short Scroll_column[SCROLL_COLUMN_HEIGHT];
-
-unsigned char Scroll_updateMapColumn = FALSE;
-unsigned char Scroll_speed = 1;
-
-void buildColumn(unsigned short tileColumn)
-{
-	// from the tile column, get the metatile from the level map
-	unsigned short metatileColumn = (tileColumn >> 1) % background_map.mapWidth;
-
-	// figure out which column of the metatile to get. Metatiles contain two tile columns.
-	unsigned char metatileOffset = tileColumn & 1;
-
-	unsigned short* columnRunner = Scroll_column;
-
-	// for the height of a map column, fill the Scroll_column
-	for (unsigned char loop = 0; loop < background_map.mapHeight; loop++)
-	{
-		// get the index into the metatile loop-up table
-		unsigned short metatile_index = (background_map.metatileMap[metatileColumn + (loop * background_map.mapWidth)] * 4) + metatileOffset;
-
-		// set the first tile
-		*columnRunner = background_tileset.metatile_lut[metatile_index];
-		columnRunner++;
-
-		// set the second tile
-		*columnRunner = background_tileset.metatile_lut[metatile_index + 2];
-		columnRunner++;
-	}
-}
-
-*/
-
-
 extern unsigned char const tileSet4bpp[6240];
 extern unsigned char const characterFont4bpp[1248];
 extern const dl_u16 chamber0_tileMap[];
@@ -154,43 +59,9 @@ extern unsigned char const player4bpp[1280]; // 40 tiles x 32 bytes
 
 void Scroll_InitTilemap(void)
 {
-	/*
-	// fill the map from the second column to the last.
-	for (int loop = 1; loop < 32; loop++)
-	{
-		buildColumn(loop);
-		SMS_loadTileMapColumn(loop, 0, Scroll_column, 24);
-	}
-
-	// prep the next column to be visible where the first column is.
-	// we do this because columns are only updated when we hit an 8 pixel
-	// boundary when we scroll. At the start, we're already at the boundary.
-	// We won't see it anyway.
-	buildColumn(32);
-	SMS_loadTileMapColumn(0, 0, Scroll_column, 24);*/
-
 	SMS_mapROMBank(CHAMBER0_BANK);
 	SMS_loadTileMap(0, 0, chamber0_tileMap, 32 * 24 * 2);
 }
-/*
-void Scroll_Update(void)
-{
-	// here we move the vdp scrolling and logical map scrolling to the same speed
-	ScrollManager_horizontalScroll += Scroll_speed; // scrolling towards the right into the map
-	Scroll_vdpHorizontalScroll -= Scroll_speed; // vdp scrolls backwards in comparison
-
-	ScrollManager_horizontalScroll %= (background_map.mapWidth * 16); // clamp the scrolling to the pixel width of the map.
-
-	if (ScrollManager_horizontalScroll % 8 == 0) // when we hit a 8 pixel boundary, prep a new column to display
-	{
-		// figure out the column to update
-		unsigned short tileColumn = (ScrollManager_horizontalScroll >> 3) + 32; 
-		buildColumn(tileColumn);
-
-		Scroll_updateMapColumn = TRUE;
-	}	
-}
-*/
 
 void chamber_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resources)
 {
@@ -216,14 +87,8 @@ void main(void)
 	SMS_loadBGPalette(downlandPalette);
 	SMS_loadSpritePalette(downlandPalette);
   
-	// load tiles from Animation
-	//SMS_loadTiles(ninja_girl.tileData, 256, ninja_girl.totalTileCount * 32);
-
-
-
 	// load tiles for background
 	SMS_mapROMBank(VDP_ASSETS_BANK);
-
 	SMS_loadTiles(ball4bpp, 256, 128); // 4 tiles x 32 bytes
 	SMS_loadTiles(bird4bpp, 256 + 4, 128); // 4 tiles x 32 bytes
 	SMS_loadTiles(diamond4bpp, 256 + 8, 128);  // 4 tiles x 32 bytes
@@ -236,47 +101,19 @@ void main(void)
 	SMS_loadTiles(tileSet4bpp, 0, 6240);
 	SMS_loadTiles(characterFont4bpp, 195, 1248);
   
-	//Scroll_updateMapColumn = FALSE;
-
-	//SMS_VDPturnOnFeature(VDPFEATURE_LEFTCOLBLANK);
 	Scroll_InitTilemap();
-
-	/*
-	GameObject player;
-	player.x = 122;
-	player.y = 88;
-	player.animation = &ninja_girl;
-	player.currentAnimationFrameIndex = 0;
-	player.currentAnimationFrame = ninja_girl.frames[player.currentAnimationFrameIndex];
-	player.animationTime = 0;
-	player.animationVdpTileIndex = 0;
-	*/
 
 	/* Turn on the display */
 	SMS_displayOn();
 	SMS_waitForVBlank ();
 
-	// infinite loop
 	for(;;) 
 	{ 
 		// Game Loop
 		SMS_initSprites();
-		//GameObject_Update(&player);
-		//Scroll_Update();
 
 		// VBLANK
-
 		SMS_waitForVBlank ();
-		//SMS_setBGScrollX(Scroll_vdpHorizontalScroll);
-
-		/*
-		if (Scroll_updateMapColumn)
-		{
-			Scroll_updateMapColumn = FALSE;
-			unsigned char scrollMapColumn = Scroll_vdpHorizontalScroll >> 3;
-			SMS_loadTileMapColumn((32 - scrollMapColumn) & 31, 0, Scroll_column, 24);
-		}
-		*/
 
 		SMS_copySpritestoSAT();
 	}

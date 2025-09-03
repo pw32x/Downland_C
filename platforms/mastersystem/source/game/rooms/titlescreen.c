@@ -10,40 +10,40 @@
 #ifndef CUSTOM_ROOM_DRAW
 void titleScreen_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resources)
 {
-	dl_u8* framebuffer = gameData->cleanBackground;
+	dl_u8* cleanBackground = gameData->cleanBackground;
 
 	// init background and text
 	drawBackground(&resources->roomResources[roomNumber].backgroundDrawData, 
 				   resources,
-				   framebuffer);
+				   cleanBackground);
 
 	// title screen text
-	drawText(resources->text_downland, resources->characterFont, framebuffer, 0x03c9); // 0x07c9 original coco mem location
-	drawText(resources->text_writtenBy, resources->characterFont, framebuffer, 0x050a); // 0x090A original coco mem location
-	drawText(resources->text_michaelAichlmayer, resources->characterFont, framebuffer, 0x647); // 0x0A47 original coco mem location
-	drawText(resources->text_copyright1983, resources->characterFont, framebuffer, 0x789); // 0x0B89 original coco mem location
-	drawText(resources->text_spectralAssociates, resources->characterFont, framebuffer, 0x8c6); // 0x0CC6 original coco mem location
-	drawText(resources->text_licensedTo, resources->characterFont, framebuffer, 0xa0a); // 0x0E0A original coco mem location
-	drawText(resources->text_tandyCorporation, resources->characterFont, framebuffer, 0xb47); // 0x0F47 original coco mem location
-	drawText(resources->text_allRightsReserved, resources->characterFont, framebuffer, 0xc86); // 0x1086 original coco mem location
-	drawText(resources->text_onePlayer, resources->characterFont, framebuffer, 0xf05); // 0x1305 original coco mem location
-	drawText(resources->text_twoPlayer, resources->characterFont, framebuffer, 0xf11); // 0x1311 original coco mem location
-	drawText(resources->text_highScore, resources->characterFont, framebuffer, 0x118b); // 0x158B original coco mem location
-	drawText(resources->text_playerOne, resources->characterFont, framebuffer, 0x1406); // 0x1806 original coco mem location
-	drawText(resources->text_playerTwo, resources->characterFont, framebuffer, 0x1546); // 0x1946 original coco mem location
+	drawText(resources->text_downland, resources->characterFont, cleanBackground, 0x03c9); // 0x07c9 original coco mem location
+	drawText(resources->text_writtenBy, resources->characterFont, cleanBackground, 0x050a); // 0x090A original coco mem location
+	drawText(resources->text_michaelAichlmayer, resources->characterFont, cleanBackground, 0x647); // 0x0A47 original coco mem location
+	drawText(resources->text_copyright1983, resources->characterFont, cleanBackground, 0x789); // 0x0B89 original coco mem location
+	drawText(resources->text_spectralAssociates, resources->characterFont, cleanBackground, 0x8c6); // 0x0CC6 original coco mem location
+	drawText(resources->text_licensedTo, resources->characterFont, cleanBackground, 0xa0a); // 0x0E0A original coco mem location
+	drawText(resources->text_tandyCorporation, resources->characterFont, cleanBackground, 0xb47); // 0x0F47 original coco mem location
+	drawText(resources->text_allRightsReserved, resources->characterFont, cleanBackground, 0xc86); // 0x1086 original coco mem location
+	drawText(resources->text_onePlayer, resources->characterFont, cleanBackground, 0xf05); // 0x1305 original coco mem location
+	drawText(resources->text_twoPlayer, resources->characterFont, cleanBackground, 0xf11); // 0x1311 original coco mem location
+	drawText(resources->text_highScore, resources->characterFont, cleanBackground, 0x118b); // 0x158B original coco mem location
+	drawText(resources->text_playerOne, resources->characterFont, cleanBackground, 0x1406); // 0x1806 original coco mem location
+	drawText(resources->text_playerTwo, resources->characterFont, cleanBackground, 0x1546); // 0x1946 original coco mem location
 
 	convertScoreToString(gameData->playerData[PLAYER_ONE].score, gameData->playerData[PLAYER_ONE].scoreString);
 
 	drawText(gameData->playerData[PLAYER_ONE].scoreString, 
 			 resources->characterFont, 
-			 framebuffer, 
+			 cleanBackground, 
 			 TITLESCREEN_PLAYERONE_SCORE_LOCATION);
 
 	convertScoreToString(gameData->playerData[PLAYER_TWO].score, gameData->playerData[PLAYER_TWO].scoreString);
 
 	drawText(gameData->playerData[PLAYER_TWO].scoreString, 
 			 resources->characterFont, 
-			 framebuffer, 
+			 cleanBackground, 
 			 TITLESCREEN_PLAYERTWO_SCORE_LOCATION);
 
 	if (gameData->playerData[PLAYER_ONE].score > gameData->highScore)
@@ -55,7 +55,7 @@ void titleScreen_draw(dl_u8 roomNumber, GameData* gameData, const Resources* res
 
 	drawText(gameData->string_highScore, 
 			 resources->characterFont, 
-			 framebuffer, 
+			 cleanBackground, 
 			 TITLESCREEN_HIGHSCORE_LOCATION);
 }
 #else

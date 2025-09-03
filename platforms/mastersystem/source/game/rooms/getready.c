@@ -11,17 +11,17 @@ void get_ready_room_draw(dl_u8 roomNumber, GameData* gameData, const Resources* 
 {
 	const dl_u8* getReadyString;
 
-	dl_u8* framebuffer = gameData->cleanBackground;
+	dl_u8* cleanBackground = gameData->cleanBackground;
 
 	// init background and text
 	drawBackground(&resources->roomResources[TITLESCREEN_ROOM_INDEX].backgroundDrawData, 
 				   resources,
-				   framebuffer);
+				   cleanBackground);
 
 	// get ready text
 	getReadyString = gameData->currentPlayerData->playerNumber == PLAYER_ONE ? resources->text_getReadyPlayerOne : resources->text_getReadyPlayerTwo;
 
-	drawText(getReadyString, resources->characterFont, framebuffer, 0x0b66);
+	drawText(getReadyString, resources->characterFont, cleanBackground, 0x0b66);
 }
 #else
 void get_ready_room_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resources);

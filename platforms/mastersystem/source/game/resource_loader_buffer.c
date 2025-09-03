@@ -1,5 +1,7 @@
 #include "resource_loader_buffer.h"
 
+#ifndef DISABLE_RESOURCE_LOADER
+
 #include "base_defines.h"
 #include "dl_alloc.h"
 
@@ -332,3 +334,4 @@ void ResourceLoaderBuffer_Shutdown(Resources* resources)
 	// free shapes data
 }
 
+#endif

@@ -993,9 +993,9 @@ void saveStrings(const Resources& resources)
     outFile << oss.str();
 }
 
-void saveSprite(const dl_u8* sprite, dl_u8 spriteCount, dl_u8 rowCount, const char* name)
+void saveSprite(const dl_u8* sprite, dl_u8 width, dl_u8 rowCount, dl_u8 spriteCount, const char* name)
 {
-    const dl_u8 destinationBytesPerRow = 2; // 16 pixels
+    const dl_u8 destinationBytesPerRow = width / 8;
 
     dl_u16 bufferSize = spriteCount * rowCount * destinationBytesPerRow;
 
@@ -1004,7 +1004,9 @@ void saveSprite(const dl_u8* sprite, dl_u8 spriteCount, dl_u8 rowCount, const ch
     oss << "#include \"base_types.h\"\n";
     oss << "\n";
 
-    oss << "const dl_u8 " << name << "[" << bufferSize << "] = \n";
+    oss << "const dl_u8 " << name << "[" << bufferSize << "] = ";
+    oss << "// " << (dl_u16)width << " x " << (dl_u16)rowCount;
+    oss << "\n";
     oss << "{\n";
 
     dl_u8 rowCounter = 0;
@@ -1020,16 +1022,21 @@ void saveSprite(const dl_u8* sprite, dl_u8 spriteCount, dl_u8 rowCount, const ch
             oss << "    // sprite " << (dl_u16)spriteIndex << "\n";
         }
 
-        oss << "    " 
-            << "0x" << std::hex << std::uppercase << std::setw(2) << std::setfill('0')
-            << (dl_u16)sprite[0]
-            << ", " 
-            << "0x" << std::hex << std::uppercase << std::setw(2) << std::setfill('0')
-            << (dl_u16)sprite[1]
-            << ",\t // "
-            << std::bitset<8>(sprite[0]) << " "
-            << std::bitset<8>(sprite[1]) << " "
-            << "\n";
+        oss << "    ";
+
+        for (int innerLoop = 0; innerLoop < destinationBytesPerRow; innerLoop++)
+        {
+            oss << "0x" << std::hex << std::uppercase << std::setw(2) << std::setfill('0')
+                << (dl_u16)sprite[innerLoop]
+                << ", ";
+        }
+
+        oss << "\t // ";
+        for (int innerLoop = 0; innerLoop < destinationBytesPerRow; innerLoop++)
+        {
+            oss << std::bitset<8>(sprite[innerLoop]) << " ";
+        }
+        oss << "\n";
 
         sprite += destinationBytesPerRow;
         rowCounter++;
@@ -1378,10 +1385,11 @@ int main()
     saveBitshiftedSprite(resources.bitShiftedSprites_playerSplat, PLAYER_SPLAT_SPRITE_COUNT, PLAYER_SPLAT_SPRITE_ROWS, "bitShiftedSprite_playerSplat");
     saveBitshiftedSprite(resources.bitShiftedSprites_door, DOOR_SPRITE_COUNT, DOOR_SPRITE_ROWS, "bitShiftedSprite_door");
     saveBitshiftedSprite(resources.bitShiftedSprites_player, PLAYER_SPRITE_COUNT, PLAYER_SPRITE_ROWS, "bitShiftedSprite_player");
-    saveSprite(resources.sprite_diamond, 1, PICKUPS_NUM_SPRITE_ROWS, "diamondSprite");
-    saveSprite(resources.sprite_moneyBag, 1, PICKUPS_NUM_SPRITE_ROWS, "moneyBagSprite");
-    saveSprite(resources.sprite_key, 1, PICKUPS_NUM_SPRITE_ROWS, "keySprite");
-    saveSprite(resources.sprites_drops, 4, DROP_SPRITE_ROWS, "dropSprite");
+    saveSprite(resources.sprite_diamond, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, "diamondSprite");
+    saveSprite(resources.sprite_moneyBag, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, "moneyBagSprite");
+    saveSprite(resources.sprite_key, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, "keySprite");
+    saveSprite(resources.sprites_drops, DROP_SPRITE_WIDTH, DROP_SPRITE_ROWS, 4, "dropSprite");
+    saveSprite(resources.characterFont, CHARACTER_FONT_WIDTH, CHARACTER_FONT_HEIGHT, CHARACTER_FONT_COUNT, "characterFont");
 
     saveDropSpawns(resources);
     saveGeneralData(resources);

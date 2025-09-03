@@ -10,8 +10,10 @@
 
 typedef struct
 {
-#ifndef DISABLE_BACKGROUND_DRAWING
+#ifndef CUSTOM_BACKGROUND_DRAWING
     BackgroundDrawData backgroundDrawData;
+#else
+    const dl_u8* backgroundDrawData;
 #endif
     DropSpawnPositions dropSpawnPositions;
     DoorInfoData doorInfoData;
@@ -76,7 +78,7 @@ typedef struct
 
     const dl_u8* pickupSprites[3];
 
-#ifndef DISABLE_BACKGROUND_DRAWING
+#ifndef CUSTOM_BACKGROUND_DRAWING
     // background piece shapes
     ShapeDrawData shapeDrawData_00_Stalactite;	                        // 0xd5f7
     ShapeDrawData shapeDrawData_01_WallGoingDown;	                    // 0xd60c

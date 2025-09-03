@@ -14,5 +14,4 @@ dl_u8 dl_rand(void)
     rng_state ^= rng_state >> 17;
     rng_state ^= rng_state << 5;
     return rng_state;
-    return (rng_state & 0xff);
 }

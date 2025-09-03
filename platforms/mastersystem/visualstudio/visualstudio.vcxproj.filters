@@ -91,9 +91,6 @@
     <ClCompile Include="..\generated\bank3_chamber0\chamber0_cleanBackground.c">
       <Filter>Source Files\generated\bank2_chamber0</Filter>
     </ClCompile>
-    <ClCompile Include="..\generated\bank3_chamber0\chamber0_dropSpawnPositions.c">
-      <Filter>Source Files\generated\bank2_chamber0</Filter>
-    </ClCompile>
     <ClCompile Include="..\generated\bank2_vdp\ball4bpp.c">
       <Filter>Source Files\generated\bank_vdp</Filter>
     </ClCompile>
@@ -260,6 +257,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\SMSDev\devkitSMS-master\SMSlib\src\SMSlib.h">
       <Filter>SMSLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\custom_background_types.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

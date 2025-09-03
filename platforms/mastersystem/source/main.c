@@ -3,8 +3,10 @@
 
 #include "base_types.h"
 #include "game_types.h"
+#include "custom_background_types.h"
 
 #define VDP_ASSETS_BANK 2
+#define CHAMBER_BANK_START 3
 #define CHAMBER0_BANK 3
 #define CHAMBER1_BANK 4
 
@@ -57,32 +59,71 @@ extern unsigned char const key4bpp[128]; // 4 tiles x 32 bytes
 extern unsigned char const moneyBag4bpp[128]; // 4 tiles x 32 bytes
 extern unsigned char const player4bpp[1280]; // 40 tiles x 32 bytes
 
-void Scroll_InitTilemap(void)
+
+
+void drawBackground(const BackgroundDrawData* backgroundDrawData, 
+					const Resources* resources,
+					dl_u8* framebuffer)
 {
-	SMS_mapROMBank(CHAMBER0_BANK);
-	SMS_loadTileMap(0, 0, chamber0_tileMap, 32 * 24 * 2);
 }
 
 void chamber_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resources)
 {
+	SMS_mapROMBank(CHAMBER_BANK_START + roomNumber);
+
+
+	const SMSBackgroundData* backgroundData = (const SMSBackgroundData*)resources->roomResources[roomNumber].backgroundDrawData;
+	gameData->cleanBackground = backgroundData->cleanBackground;
+	SMS_loadTileMap(0, 0, backgroundData->tileMap, 32 * 24 * 2);
 }
+
 
 void get_ready_room_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resources)
 {
+	SMS_mapROMBank(CHAMBER_BANK_START + roomNumber);
+
+	const SMSBackgroundData* backgroundData = (const SMSBackgroundData*)resources->roomResources[roomNumber].backgroundDrawData;
+	gameData->cleanBackground = backgroundData->cleanBackground;
+	SMS_loadTileMap(0, 0, backgroundData->tileMap, 32 * 24 * 2);
 }
 
 void titleScreen_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resources)
 {
+	SMS_mapROMBank(CHAMBER_BANK_START + roomNumber);
 
+	const SMSBackgroundData* backgroundData = (const SMSBackgroundData*)resources->roomResources[roomNumber].backgroundDrawData;
+	gameData->cleanBackground = backgroundData->cleanBackground;
+	SMS_loadTileMap(0, 0, backgroundData->tileMap, 32 * 24 * 2);
 }
+
+
 
 GameData gameData;
 extern Resources resources;
+dl_u8 framebuffer[FRAMEBUFFER_PITCH * FRAMEBUFFER_HEIGHT];
+
+
+void drawDrops(const GameData* gameData)
+{
+    // draw drops
+    const Drop* dropsRunner = gameData->dropData.drops;
+
+    for (int loop = 0; loop < NUM_DROPS; loop++)
+    {
+        if ((dl_s8)dropsRunner->wiggleTimer < 0 || // wiggling
+            dropsRunner->wiggleTimer > 1)   // falling
+        {
+			SMS_addSprite((dropsRunner->x << 1), 
+						  (dropsRunner->y >> 8), 
+						  256 + 16);
+        }
+
+        dropsRunner++;
+    }
+}
 
 void main(void)
 {
-    Game_Init(&gameData, &resources, NULL /*framebuffer*/, NULL /*cleanBackground*/);
-
 	/* Clear VRAM */
 	SMS_VRAMmemsetW(0, 0x0000, 16384);
 
@@ -102,8 +143,10 @@ void main(void)
 
 	SMS_loadTiles(tileSet4bpp, 0, 6240);
 	SMS_loadTiles(characterFont4bpp, 195, 1248);
-  
-	Scroll_InitTilemap();
+
+    Game_Init(&gameData, &resources, framebuffer, NULL /*cleanBackground*/);
+
+	//chamber_draw(3, &gameData, &resources);
 
 	/* Turn on the display */
 	SMS_displayOn();
@@ -113,6 +156,11 @@ void main(void)
 	{ 
 		// Game Loop
 		SMS_initSprites();
+
+		Game_Update(&gameData, &resources);
+
+		drawDrops(&gameData);
+
 
 		// VBLANK
 		SMS_waitForVBlank ();

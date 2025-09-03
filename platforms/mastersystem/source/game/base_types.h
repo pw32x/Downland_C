@@ -7,8 +7,8 @@ typedef unsigned char dl_u8;
 typedef signed short dl_s16;
 typedef unsigned short dl_u16;
 
-typedef signed int dl_s32;
-typedef unsigned int dl_u32;
+typedef signed long dl_s32;
+typedef unsigned long dl_u32;
 
 #define BOOL dl_u8
 #define TRUE 1

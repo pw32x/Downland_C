@@ -1320,6 +1320,7 @@ void saveResources(Resources& resources)
 
     oss << "#include \"base_types.h\"\n";
     oss << "#include \"resource_types.h\"\n";
+    oss << "#include \"custom_background_types.h\"\n";
     oss << "\n";
 
 
@@ -1363,6 +1364,24 @@ void saveResources(Resources& resources)
     oss << "extern const dl_u8 offsetsToDoorsAlreadyActivated[16];\n";
     oss << "extern const dl_u8 roomsWithBouncingBall[9];\n";
     oss << "\n";
+    oss << "\n";
+
+    for (int loop = 0; loop < NUM_ROOMS_PLUS_TITLESCREN; loop++)
+    {
+        oss << "extern const dl_u8 " << roomNames[loop] << "_cleanBackground[" << FRAMEBUFFER_PITCH * FRAMEBUFFER_HEIGHT << "];\n";
+        oss << "extern const dl_u16 " << roomNames[loop] << "_tileMap[32 * 24];\n";
+
+        oss << "SMSBackgroundData " << roomNames[loop] << "_customBackgroundData = "
+            << "{ " 
+            << roomNames[loop] << "_cleanBackground"
+            << ", "
+            << roomNames[loop] << "_tileMap"
+            << "};\n";
+
+
+        oss << "\n";
+    }
+
     oss << "\n";
 
     for (int loop = 0; loop < NUM_ROOMS_PLUS_TITLESCREN; loop++)
@@ -1466,6 +1485,8 @@ void saveResources(Resources& resources)
     for (int loop = 0; loop < NUM_ROOMS_PLUS_TITLESCREN; loop++)
     {
         oss << "        { ";
+
+        oss << "(const dl_u8*)&" << roomNames[loop] << "_customBackgroundData, ";
 
         std::string dropSpawnPositionsName = roomNames[loop];
         dropSpawnPositionsName += "_dropSpawnPositions_array";

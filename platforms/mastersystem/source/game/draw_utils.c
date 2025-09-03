@@ -295,7 +295,7 @@ const dl_u8* getBitShiftedSprite(const dl_u8* bitShiftedSpriteData, dl_u8 frameN
 }
 
 
-#ifndef DISABLE_BACKGROUND_DRAWING
+#ifndef CUSTOM_BACKGROUND_DRAWING
 dl_u8* g_framebuffer;
 
 dl_u8 g_plotterCurrentY;
@@ -387,7 +387,7 @@ enum
 } CRT_MASKS;
 
 
-#ifndef DISABLE_BACKGROUND_DRAWING
+#ifndef CUSTOM_BACKGROUND_DRAWING
 
 void DrawPixel()
 {
@@ -728,11 +728,13 @@ void (*drawPieceFunctions[])(const Resources* resources) = {
 
 #endif
 
+
+#ifndef CUSTOM_BACKGROUND_DRAWING
 void drawBackground(const BackgroundDrawData* backgroundDrawData, 
 					const Resources* resources,
 					dl_u8* framebuffer)
 {
-#ifndef DISABLE_BACKGROUND_DRAWING
+
 	int counter;
 	int shapeLoop;
 	const BackgroundDrawCommand* backgroundDrawCommandRunner;
@@ -760,8 +762,8 @@ void drawBackground(const BackgroundDrawData* backgroundDrawData,
 
 		backgroundDrawCommandRunner++;
 	}
-#endif
 }
+#endif
 
 void drawSprite_16PixelsWide_static_IntoSpriteBuffer(const dl_u8* sourceSprite, dl_u8 numLines,	dl_u8* destinationSprite)
 {

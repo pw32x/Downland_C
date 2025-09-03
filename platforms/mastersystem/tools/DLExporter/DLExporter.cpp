@@ -1137,6 +1137,7 @@ void saveGeneralData(const Resources& resources)
     oss << "};\n";
     oss << "\n";
 
+    /*
     // door info data positions
     oss << "// door info data positions\n";
 
@@ -1170,6 +1171,7 @@ void saveGeneralData(const Resources& resources)
         oss << "\n";
         oss << "\n";
     }
+    */
 
     std::ofstream outFile(g_destinationPath + "general.c");
     outFile << oss.str();   
@@ -1312,7 +1314,7 @@ void saveTileSet(std::vector<Tile>& tileSet)
     outFile << oss.str();
 }
 
-void saveResources()
+void saveResources(Resources& resources)
 {
     std::ostringstream oss;
 
@@ -1363,10 +1365,49 @@ void saveResources()
     oss << "\n";
     oss << "\n";
 
-	std::string outputTileDataName = "tileSet4bpp";
+    for (int loop = 0; loop < NUM_ROOMS_PLUS_TITLESCREN; loop++)
+    {
+        std::string dropSpawnPositionsName = roomNames[loop];
+        dropSpawnPositionsName += "_dropSpawnPositions";
 
-	int tileIndex = 0;
-	int totalTiles = 0;
+        const DropSpawnPositions& dropSpawnPositions = resources.roomResources[loop].dropSpawnPositions;
+
+        oss << "const DropSpawnArea " << dropSpawnPositionsName << "_array[" << (dl_u16)dropSpawnPositions.spawnAreasCount << "] = \n";  
+        oss << "{\n";
+        for (int innerLoop = 0; innerLoop < dropSpawnPositions.spawnAreasCount; innerLoop++)
+        {
+            oss << "    { ";
+            oss << (dl_u16)dropSpawnPositions.dropSpawnAreas[innerLoop].dropSpawnPointsCount << ", ";
+            oss << (dl_u16)dropSpawnPositions.dropSpawnAreas[innerLoop].x << ", ";
+            oss << (dl_u16)dropSpawnPositions.dropSpawnAreas[innerLoop].y;
+            oss << " }, \n";
+        }
+        oss << "};\n";
+        oss << "\n";
+    }
+
+    for (int loop = 0; loop < NUM_ROOMS; loop++)
+    {
+        const DoorInfoData& doorInfoData = resources.roomResources[loop].doorInfoData;
+
+        oss << "const DoorInfo doorInfo" << (dl_u16)loop << "_array[" << (dl_u16)doorInfoData.drawInfosCount << "] = \n";
+        oss << "{ \n";
+        for (int innerLoop = 0; innerLoop < doorInfoData.drawInfosCount; innerLoop++)
+        {
+            const DoorInfo& doorInfo = doorInfoData.doorInfos[innerLoop];
+
+            oss << "    { ";
+            oss << (dl_u16)doorInfo.y << ", ";
+            oss << (dl_u16)doorInfo.x << ", ";
+            oss << (dl_u16)doorInfo.yLocationInNextRoom << ", ";
+            oss << (dl_u16)doorInfo.xLocationInNextRoom << ", ";
+            oss << (dl_u16)doorInfo.nextRoomNumber << ", ";
+            oss << (dl_u16)doorInfo.globalDoorIndex << " },\n";
+        }
+        oss << "};\n";
+        oss << "\n";
+    }
+
 	oss << "const Resources resources = \n";
 	oss << "{\n";
     oss << "    characterFont,\n";
@@ -1421,17 +1462,37 @@ void saveResources()
     // RoomResources roomResources[NUM_ROOMS_PLUS_TITLESCREN];
     oss << "    // room resources \n";
     oss << "    {\n";
-    oss << "        {0, 0},\n";
-    oss << "        {0, 0},\n";
-    oss << "        {0, 0},\n";
-    oss << "        {0, 0},\n";
-    oss << "        {0, 0},\n";
-    oss << "        {0, 0},\n";
-    oss << "        {0, 0},\n";
-    oss << "        {0, 0},\n";
-    oss << "        {0, 0},\n";
-    oss << "        {0, 0},\n";
-    oss << "        {0, 0},\n";
+
+    for (int loop = 0; loop < NUM_ROOMS_PLUS_TITLESCREN; loop++)
+    {
+        oss << "        { ";
+
+        std::string dropSpawnPositionsName = roomNames[loop];
+        dropSpawnPositionsName += "_dropSpawnPositions_array";
+        const DropSpawnPositions& dropSpawnPositions = resources.roomResources[loop].dropSpawnPositions;
+
+        oss << "{ " 
+            << (dl_u16)dropSpawnPositions.spawnAreasCount
+            << ", "
+            << dropSpawnPositionsName
+            << " }, ";
+
+        if (loop < NUM_ROOMS)
+        {
+            const DoorInfoData& doorInfoData = resources.roomResources[loop].doorInfoData;
+
+            oss << "{ " 
+                << (dl_u16)doorInfoData.drawInfosCount
+                << ", "
+                << "doorInfo" << (dl_u16)loop << "_array"
+                << " } },\n";
+        }
+        else
+        {
+            oss << "{ 0, NULL } },\n";
+        }
+    }
+
     oss << "    },\n";
     oss << "\n";
 
@@ -1530,7 +1591,7 @@ int main()
     saveSprite(resources.sprites_drops, DROP_SPRITE_WIDTH, DROP_SPRITE_ROWS, 4, "dropSprite");
     saveSprite(resources.characterFont, CHARACTER_FONT_WIDTH, CHARACTER_FONT_HEIGHT, CHARACTER_FONT_COUNT, "characterFont");
 
-    saveDropSpawns(resources);
+    //saveDropSpawns(resources);
     saveGeneralData(resources);
 
     saveCharacterFont(resources.characterFont);
@@ -1562,7 +1623,7 @@ int main()
 
     saveTileMapSource(tileMaps);
 
-    saveResources();
+    saveResources(resources);
 
     //saveTileMapHeader();
 

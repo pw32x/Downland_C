@@ -4,23 +4,6 @@
 #include "dl_rand.h"
 #include "dl_platform.h"
 
-void setPixel(dl_u8* framebuffer, dl_s16 x, dl_s16 y, dl_u8 value) 
-{
-	dl_u8 pixel;
-	int index;
-
-    if (x < 0 || x >= FRAMEBUFFER_WIDTH || y < 0 || y >= FRAMEBUFFER_HEIGHT) 
-        return;
-
-    pixel = 1 << (7 - (x % 8));
-    index = (x / 8) + (y * FRAMEBUFFER_PITCH);
-
-    if (value)
-        framebuffer[index] |= pixel;  // set bit/pixel
-    else
-        framebuffer[index] &= ~pixel; // clear bit/pixel
-}
-
 void drawText(const dl_u8* text, const dl_u8* characterFont, dl_u8* framebuffer, dl_u16 framebufferPosition)
 {
 	const dl_u8* character;

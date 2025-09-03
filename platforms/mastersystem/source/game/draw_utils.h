@@ -9,9 +9,6 @@
 
 extern dl_u8 pixelMasks[4];
 
-// Set or clear a pixel in the 1-bit framebuffer
-void setPixel(dl_u8* framebuffer, dl_s16 x, dl_s16 y, dl_u8 value);
-
 void drawText(const dl_u8* text, const dl_u8* characterFont, dl_u8* framebuffer, dl_u16 framebufferPosition);
 
 void drawSprite_16PixelsWide(const dl_u8* spriteData, dl_u8 x, dl_u8 y, dl_u8 numLines, dl_u8* framebuffer);
@@ -28,8 +25,8 @@ void eraseSprite_24PixelsWide_simple(dl_u8 x, dl_u8 y, dl_u8 numLines, dl_u8* fr
 
 const dl_u8* getBitShiftedSprite(const dl_u8* bitShiftedSpriteData, dl_u8 frameNumber, dl_u8 x, dl_u8 spriteFrameSize);
 
-//void drawBackground(const BackgroundDrawData* backgroundDrawData, 
-//					const Resources* resources,
-//					dl_u8* framebuffer);
+void drawBackground(const BackgroundDrawData* backgroundDrawData, 
+					const Resources* resources,
+					dl_u8* framebuffer);
 
 #endif

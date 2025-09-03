@@ -294,62 +294,8 @@ const dl_u8* getBitShiftedSprite(const dl_u8* bitShiftedSpriteData, dl_u8 frameN
 	return bitShiftedSpriteData + (frameNumber * (spriteFrameSize * 4)) + (x * spriteFrameSize);
 }
 
-/*
-// keeping these just in case
-void eraseSprite(dl_u8* framebuffer, 
-				 dl_u8* cleanBackground,
-				 dl_u16 framebufferDrawLocation, 
-				 const dl_u8* spriteData, 
-				 dl_u8 rowCount)
-{
-	framebuffer += framebufferDrawLocation;
-	cleanBackground += framebufferDrawLocation;
 
-	for (int loop = 0; loop < rowCount; loop++)
-	{
-		// remove the bits of the sprite from the frame buffer 
-		// and restore with the clean background
-		*framebuffer &= ~(*spriteData);
-		*framebuffer |= *cleanBackground;
-		spriteData++;
-		framebuffer++;
-		cleanBackground++;
-
-		// remove the bits of the sprite from the frame buffer 
-		// and restore with the clean background
-		*framebuffer &= ~(*spriteData);
-		*framebuffer |= *cleanBackground;
-		spriteData++;
-
-		framebuffer += (FRAMEBUFFER_PITCH - 1); // move to the next row
-		cleanBackground += (FRAMEBUFFER_PITCH - 1);
-	}
-}
-
-void drawSprite(dl_u8* framebuffer, 
-				dl_u16 framebufferDrawLocation, 
-				const dl_u8* spriteData, 
-				dl_u8 rowCount)
-{
-	framebuffer += framebufferDrawLocation;
-
-	for (int loop = 0; loop < rowCount; loop++)
-	{
-		// blend the first byte of sprite's pixels with the frame buffer
-		*framebuffer |= *spriteData;
-		spriteData++;
-		framebuffer++;
-
-		// blend the second byte of sprite's pixels with the frame buffer
-		*framebuffer |= *spriteData;
-		spriteData++;
-
-		framebuffer += (FRAMEBUFFER_PITCH - 1); // move to the next row
-	}
-}
-*/
-
-/*
+#ifndef DISABLE_BACKGROUND_DRAWING
 dl_u8* g_framebuffer;
 
 dl_u8 g_plotterCurrentY;
@@ -409,7 +355,8 @@ void DrawSegment_MovePlotterUpAndLeft()
 	g_plotterCurrentX--;
 	g_plotterHiresPos -= g_subpixelIncrement;
 }
-*/
+#endif
+
 // depending on the x position, chose 
 // of these to get at the corresponding
 // two bits you want to activate.
@@ -438,7 +385,10 @@ enum
 	CRT_MASK_REVERSE,
 	CRT_MASK_FULL
 } CRT_MASKS;
-/*
+
+
+#ifndef DISABLE_BACKGROUND_DRAWING
+
 void DrawPixel()
 {
 	dl_u8 y = g_plotterCurrentX;
@@ -775,12 +725,14 @@ void (*drawPieceFunctions[])(const Resources* resources) = {
 	DrawPiece_19_BlankAreaGoingDownRight, 
 	DrawPiece_20_UnknownOrBuggy, 
 };
-*/
+
+#endif
+
 void drawBackground(const BackgroundDrawData* backgroundDrawData, 
 					const Resources* resources,
 					dl_u8* framebuffer)
 {
-	/*
+#ifndef DISABLE_BACKGROUND_DRAWING
 	int counter;
 	int shapeLoop;
 	const BackgroundDrawCommand* backgroundDrawCommandRunner;
@@ -808,7 +760,7 @@ void drawBackground(const BackgroundDrawData* backgroundDrawData,
 
 		backgroundDrawCommandRunner++;
 	}
-	*/
+#endif
 }
 
 void drawSprite_16PixelsWide_static_IntoSpriteBuffer(const dl_u8* sourceSprite, dl_u8 numLines,	dl_u8* destinationSprite)

@@ -111,7 +111,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <NMakeOutput>..\out\Downland.sms</NMakeOutput>
-    <NMakePreprocessorDefinitions>WIN32;NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+    <NMakePreprocessorDefinitions>DISABLE_BACKGROUND_DRAWING;DISABLE_DOOR_DRAWING;DISABLE_RESOURCE_LOADER;WIN32;NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
     <NMakeBuildCommandLine>..\build\build.bat</NMakeBuildCommandLine>
     <NMakeReBuildCommandLine>..\build\rebuild.bat</NMakeReBuildCommandLine>
     <NMakeCleanCommandLine>..\build\clean.bat</NMakeCleanCommandLine>
@@ -148,6 +148,7 @@
     <ClCompile Include="..\generated\general.c" />
     <ClCompile Include="..\generated\keySprite.c" />
     <ClCompile Include="..\generated\moneyBagSprite.c" />
+    <ClCompile Include="..\generated\resources.c" />
     <ClCompile Include="..\generated\strings.c" />
     <ClCompile Include="..\source\game\ball.c" />
     <ClCompile Include="..\source\game\bird.c" />
@@ -171,7 +172,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\..\SMSDev\devkitSMS-master\SMSlib\src\SMSlib.h" />
-    <ClInclude Include="..\generated\tileMaps.h" />
     <ClInclude Include="..\source\game\dl_alloc.h" />
     <ClInclude Include="..\source\game\background_types.h" />
     <ClInclude Include="..\source\game\ball.h" />

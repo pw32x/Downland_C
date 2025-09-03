@@ -77,7 +77,7 @@ void titleScreen_draw(dl_u8 roomNumber, GameData* gameData, const Resources* res
 }
 
 GameData gameData;
-Resources resources;
+extern Resources resources;
 
 void buildResources()
 {
@@ -166,6 +166,8 @@ void buildResources()
 void main(void)
 {
 	buildResources();
+
+    Game_Init(&gameData, &resources, NULL /*framebuffer*/, NULL /*cleanBackground*/);
 
 	/* Clear VRAM */
 	SMS_VRAMmemsetW(0, 0x0000, 16384);

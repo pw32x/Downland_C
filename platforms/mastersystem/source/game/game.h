@@ -4,7 +4,7 @@
 #include "game_types.h"
 #include "resource_types.h"
 
-void Game_Init(struct GameData* gameData, const Resources* resources);
+void Game_Init(struct GameData* gameData, const Resources* resources, dl_u8* framebuffer, dl_u8* cleanBackground);
 void Game_InitPlayers(struct GameData* gameData, const Resources* resources);
 void Game_Update(struct GameData* gameData, const Resources* resources);
 void Game_EnterRoom(struct GameData* gameData, dl_u8 roomNumber, const Resources* resources);

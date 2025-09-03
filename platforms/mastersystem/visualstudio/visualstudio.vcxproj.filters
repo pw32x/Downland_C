@@ -163,6 +163,9 @@
     <ClCompile Include="..\generated\general.c">
       <Filter>Source Files\generated</Filter>
     </ClCompile>
+    <ClCompile Include="..\generated\resources.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\source\game\dl_alloc.h">
@@ -257,9 +260,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\SMSDev\devkitSMS-master\SMSlib\src\SMSlib.h">
       <Filter>SMSLib</Filter>
-    </ClInclude>
-    <ClInclude Include="..\generated\tileMaps.h">
-      <Filter>Source Files\generated</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -7,16 +7,13 @@
 Game_ChangedRoomCallbackType Game_ChangedRoomCallback = NULL;
 Game_ChangedRoomCallbackType Game_TransitionDone = NULL;
 
-static dl_u8 initializedFramebuffers = FALSE;
-
-void Game_Init(struct GameData* gameData, const Resources* resources)
+void Game_Init(struct GameData* gameData, 
+			   const Resources* resources,
+			   dl_u8* framebuffer,
+			   dl_u8* cleanBackground)
 {
-	if (!initializedFramebuffers)
-	{
-		initializedFramebuffers = TRUE;
-		gameData->framebuffer = (dl_u8*)dl_alloc(FRAMEBUFFER_HEIGHT * FRAMEBUFFER_PITCH);
-		gameData->cleanBackground = (dl_u8*)dl_alloc(FRAMEBUFFER_HEIGHT * FRAMEBUFFER_PITCH);
-	}
+	gameData->framebuffer = framebuffer;
+	gameData->cleanBackground = cleanBackground;
 
 	gameData->numPlayers = 1;
 

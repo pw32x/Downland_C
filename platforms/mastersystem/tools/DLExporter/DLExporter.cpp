@@ -1312,6 +1312,27 @@ void saveTileSet(std::vector<Tile>& tileSet)
     outFile << oss.str();
 }
 
+void saveResources()
+{
+    std::ostringstream oss;
+
+    oss << "#include \"base_types.h\"\n";
+    oss << "#include \"resource_types.h\"\n";
+    oss << "\n";
+
+	std::string outputTileDataName = "tileSet4bpp";
+
+	int tileIndex = 0;
+	int totalTiles = 0;
+	oss << "const Resources resources = \n";
+	oss << "{\n";
+
+	oss << "};\n\n";
+
+    std::ofstream outFile(g_destinationPath + "resources.c");
+    outFile << oss.str();
+}
+
 void createFolder(std::string& folder)
 {
     if (!std::filesystem::exists(folder)) 
@@ -1423,9 +1444,9 @@ int main()
 
     saveTileMapSource(tileMaps);
 
+    saveResources();
 
-
-    saveTileMapHeader();
+    //saveTileMapHeader();
 
     //saveResFile();
 

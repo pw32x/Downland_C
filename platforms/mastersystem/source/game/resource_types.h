@@ -10,7 +10,9 @@
 
 typedef struct
 {
+#ifndef DISABLE_BACKGROUND_DRAWING
     BackgroundDrawData backgroundDrawData;
+#endif
     DropSpawnPositions dropSpawnPositions;
     DoorInfoData doorInfoData;
 } RoomResources;
@@ -74,6 +76,7 @@ typedef struct
 
     const dl_u8* pickupSprites[3];
 
+#ifndef DISABLE_BACKGROUND_DRAWING
     // background piece shapes
     ShapeDrawData shapeDrawData_00_Stalactite;	                        // 0xd5f7
     ShapeDrawData shapeDrawData_01_WallGoingDown;	                    // 0xd60c
@@ -99,6 +102,7 @@ typedef struct
     ShapeDrawData shapeDrawData_13_RediculouslyLongRope;	            // 0xd72d
     ShapeDrawData shapeDrawData_PreRope_Maybe;	                        // 0xd74c
     ShapeDrawData shapeDrawData_PostRope_Maybe;	                        // 0xd750  
+#endif
 
     RoomResources roomResources[NUM_ROOMS_PLUS_TITLESCREN];
 

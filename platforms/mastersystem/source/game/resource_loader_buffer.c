@@ -5,8 +5,6 @@
 #include "base_defines.h"
 #include "dl_alloc.h"
 
-
-
 static const dl_u8* getBytes(const dl_u8* fileBuffer, dl_u16 start)
 {
 	// take into account that the rom starts at c000

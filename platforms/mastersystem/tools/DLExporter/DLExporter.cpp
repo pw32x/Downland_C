@@ -1496,14 +1496,12 @@ void saveResources(Resources& resources)
     oss << "    },\n";
     oss << "\n";
 
-    oss << "    roomPickupPositions,\n";
+    oss << "    roomPickupPositions,            // 50 items\n";
     oss << "    keyPickUpDoorIndexes,           // 20 items\n";
     oss << "    keyPickUpDoorIndexesHardMode,   // 20 items\n";
     oss << "    offsetsToDoorsAlreadyActivated, // 16 items\n";
     oss << "    roomsWithBouncingBall,          // 10 items\n";
 
-    oss << "\n";
-    oss << "\n";
     oss << "\n";
 
 	oss << "};\n\n";

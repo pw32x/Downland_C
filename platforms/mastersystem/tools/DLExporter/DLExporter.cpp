@@ -1076,8 +1076,8 @@ void saveGeneralData(const Resources& resources)
     for (int loop = 0; loop < NUM_ROOMS * NUM_PICKUPS_PER_ROOM; loop++)
     {
         oss << "    { ";
-        oss << (dl_u16)roomPickupPositions->x << ", ";
-        oss << (dl_u16)roomPickupPositions->y;
+        oss << (dl_u16)roomPickupPositions->y << ", ";
+        oss << (dl_u16)roomPickupPositions->x;
         oss << " },\n";
 
         roomPickupPositions++;
@@ -1397,8 +1397,8 @@ void saveResources(Resources& resources)
         {
             oss << "    { ";
             oss << (dl_u16)dropSpawnPositions.dropSpawnAreas[innerLoop].dropSpawnPointsCount << ", ";
-            oss << (dl_u16)dropSpawnPositions.dropSpawnAreas[innerLoop].x << ", ";
-            oss << (dl_u16)dropSpawnPositions.dropSpawnAreas[innerLoop].y;
+            oss << (dl_u16)dropSpawnPositions.dropSpawnAreas[innerLoop].y << ", ";
+            oss << (dl_u16)dropSpawnPositions.dropSpawnAreas[innerLoop].x;
             oss << " }, \n";
         }
         oss << "};\n";

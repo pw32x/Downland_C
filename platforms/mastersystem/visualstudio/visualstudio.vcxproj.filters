@@ -169,6 +169,9 @@
     <ClCompile Include="..\generated\bank2_vdp\playerLives4bpp.c">
       <Filter>Source Files\generated\bank_vdp</Filter>
     </ClCompile>
+    <ClCompile Include="..\generated\bank2_vdp\playerRegen4bpp.c">
+      <Filter>Source Files\generated\bank_vdp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\source\game\dl_alloc.h">

@@ -13,6 +13,9 @@
 #define CHAMBER0_BANK 3
 #define CHAMBER1_BANK 4
 
+dl_u8 g_regenSpriteIndex;
+#define REGEN_NUM_FRAMES 5
+
 void* dl_alloc(dl_u32 size)
 {
 	return NULL;
@@ -63,7 +66,7 @@ extern unsigned char const moneyBag4bpp[128]; // 4 tiles x 32 bytes
 extern unsigned char const player4bpp[1280]; // 40 tiles x 32 bytes
 extern unsigned char const playerSplat4bpp[384];
 extern unsigned char const playerLives4bpp[640]; // 20 tiles x 32 bytes
-
+extern unsigned char const playerRegen4bpp[1280]; // 40 tiles x 32 bytes
 
 
 void drawBackground(const BackgroundDrawData* backgroundDrawData, 
@@ -247,6 +250,10 @@ void main(void)
 	SMS_loadTiles(player4bpp, 256 + 28, 1280); // 40 tiles x 32 bytes
 	SMS_loadTiles(playerSplat4bpp, 256 + 68, 384); // 12 tiles x 32 bytes
 	SMS_loadTiles(playerLives4bpp, 256 + 80, 640); // 20 tiles x 32 bytes
+	SMS_loadTiles(playerRegen4bpp, 256 + 100, 1280); // 40 tiles x 32 bytes
+
+	g_regenSpriteIndex = 0;
+
 
 	const dl_u8 pickUpSprites[] = { 8, 22, 18 };
 
@@ -330,13 +337,14 @@ void main(void)
 									   4 + (birdData->animationFrame << 1));
 		}
 
+		dl_u8 tileIndex;
 
 		// draw player
 		switch (playerData->state)
 		{
 		case PLAYER_STATE_SPLAT: 
 
-			dl_u8 tileIndex = 68 + (playerData->splatFrameNumber * 6);
+			tileIndex = 68 + (playerData->splatFrameNumber * 6);
 
 			SMS_addThreeAdjoiningSprites(playerX, playerY + 7, tileIndex);
 			SMS_addThreeAdjoiningSprites(playerX, playerY + 15, tileIndex + 3);
@@ -344,29 +352,30 @@ void main(void)
 			break;
 
 		case PLAYER_STATE_REGENERATION: 
-		/*
-	
-			if (!gameData->paused)
+
+			if (!gameData.paused)
 			{
 				g_regenSpriteIndex++;
 				if (g_regenSpriteIndex == REGEN_NUM_FRAMES - 1)
 					g_regenSpriteIndex = 0;
 			}
 
-			drawSprite(playerX,
-					   playerY,
-					   g_regenSpriteIndex + (playerData->facingDirection ? 0 : REGEN_NUM_FRAMES),
-					   &regenSprite);
+			if (playerData->facingDirection)
+			{
+				tileIndex = 100 + (g_regenSpriteIndex << 2);
+			}
+			else
+			{
+				tileIndex = 100 + ((g_regenSpriteIndex + REGEN_NUM_FRAMES) << 2);
+			}
+
+			
+			SMS_addTwoAdjoiningSprites(playerX, playerY, tileIndex);
+			SMS_addTwoAdjoiningSprites(playerX, playerY + 8, tileIndex + 2);
 
 			break;
-			*/	
 
 		default: 
-			//drawSprite(playerX,
-			//		   playerY,
-			//		   playerData->currentSpriteNumber,
-			//		   &playerSprite);
-
 			g_playerTileIndex = 28 + (playerData->currentSpriteNumber << 2);
 
 			SMS_addTwoAdjoiningSprites(playerX, playerY, g_playerTileIndex);

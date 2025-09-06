@@ -606,7 +606,7 @@ void saveCursor()
 
 dl_u8* saveRegenSprite(const dl_u8* playerSprite)
 {
-    const int numFrames = 8;
+    const int numFrames = 5;
     const int width = 16;
     const int height = 16;
 
@@ -665,10 +665,12 @@ dl_u8* saveRegenSprite(const dl_u8* playerSprite)
         sprite8bppRunner += destinationFrameSize; 
     }
 
-    save_png_8bpp(sprite8bpp, 
-                  destinationWidth,
-                  destinationHeight * (numFrames * 2),
-                  g_destinationPath + "regenTileset.png");
+    //save_png_8bpp(sprite8bpp, 
+    //              destinationWidth,
+    //              destinationHeight * (numFrames * 2),
+    //              g_destinationPath + "regenTileset.png");
+
+    saveSpritePlanar(sprite8bpp, destinationWidth / 8, (destinationHeight / 8) * numFrames * 2, "playerRegen4bpp");
 
     delete [] regenBuffer;
 
@@ -1619,13 +1621,14 @@ int main()
 	saveSprite4bpp(resources.sprite_moneyBag, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, "moneyBag4bpp");
 	saveSprite4bpp(resources.sprite_door, DOOR_SPRITE_WIDTH, DOOR_SPRITE_ROWS, 1, "door4bpp");
 
-    /*
-    saveCursor();
+
+    //saveCursor();
 
     dl_u8* regenSprite = saveRegenSprite(resources.sprites_player);
-    saveRegenLivesSprite(regenSprite);
+
+    //saveRegenLivesSprite(regenSprite);
+
     delete [] regenSprite;
-    */
 
 
     saveSplatSprite(resources.sprite_playerSplat);

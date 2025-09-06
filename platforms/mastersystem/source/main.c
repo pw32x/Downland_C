@@ -67,7 +67,7 @@ extern unsigned char const player4bpp[1280]; // 40 tiles x 32 bytes
 extern unsigned char const playerSplat4bpp[384];
 extern unsigned char const playerLives4bpp[640]; // 20 tiles x 32 bytes
 extern unsigned char const playerRegen4bpp[1280]; // 40 tiles x 32 bytes
-
+extern unsigned char const playerLivesRegen4bpp[320]; // 10 tiles x 32 bytes
 
 void drawBackground(const BackgroundDrawData* backgroundDrawData, 
 					const Resources* resources,
@@ -180,6 +180,15 @@ void drawUIPlayerLives(const PlayerData* playerData)
 
 	if (playerData->state == PLAYER_STATE_REGENERATION)
 	{
+		if (playerData->facingDirection)
+		{
+			tileIndex = 160 + (g_regenSpriteIndex << 1);
+		}
+		else
+		{
+			tileIndex = 160 + ((g_regenSpriteIndex + REGEN_NUM_FRAMES) << 1);
+		}
+
 		SMS_addTwoAdjoiningSprites(x << 1, y, tileIndex);
     }
 }
@@ -251,6 +260,8 @@ void main(void)
 	SMS_loadTiles(playerSplat4bpp, 256 + 68, 384); // 12 tiles x 32 bytes
 	SMS_loadTiles(playerLives4bpp, 256 + 80, 640); // 20 tiles x 32 bytes
 	SMS_loadTiles(playerRegen4bpp, 256 + 100, 1280); // 40 tiles x 32 bytes
+	SMS_loadTiles(playerLivesRegen4bpp, 256 + 160, 640); // 20 tiles x 32 bytes
+	
 
 	g_regenSpriteIndex = 0;
 

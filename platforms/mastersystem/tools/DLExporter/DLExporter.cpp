@@ -604,9 +604,11 @@ void saveCursor()
                   g_destinationPath + "cursorTileset.png");
 }
 
+#define NUM_REGEN_FRAMES 5
+
 dl_u8* saveRegenSprite(const dl_u8* playerSprite)
 {
-    const int numFrames = 5;
+    const int numFrames = NUM_REGEN_FRAMES;
     const int width = 16;
     const int height = 16;
 
@@ -679,7 +681,7 @@ dl_u8* saveRegenSprite(const dl_u8* playerSprite)
 
 void saveRegenLivesSprite(dl_u8* regenSprite)
 {
-    const int numFrames = 16;
+    const int numFrames = NUM_REGEN_FRAMES * 2;
     const int regenWidth = 16;
     const int regenHeight = 16;
     const int iconImageHeight = 8;
@@ -700,10 +702,12 @@ void saveRegenLivesSprite(dl_u8* regenSprite)
         regenIconBufferRunner += regenIconFrameSize;
     }
 
-    save_png_8bpp(regenIconBuffer, 
-                  regenWidth,
-                  iconImageHeight * numFrames,
-                  g_destinationPath + "playerLivesRegenTileset.png");
+//    save_png_8bpp(regenIconBuffer, 
+//                  regenWidth,
+//                  iconImageHeight * numFrames,
+//                  g_destinationPath + "playerLivesRegenTileset.png");
+
+    saveSpritePlanar(regenIconBuffer, regenWidth / 8, (iconImageHeight / 8) * numFrames, "playerLivesRegen4bpp");
 
     delete [] regenIconBuffer;
 }
@@ -1626,7 +1630,7 @@ int main()
 
     dl_u8* regenSprite = saveRegenSprite(resources.sprites_player);
 
-    //saveRegenLivesSprite(regenSprite);
+    saveRegenLivesSprite(regenSprite);
 
     delete [] regenSprite;
 

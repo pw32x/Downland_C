@@ -818,10 +818,7 @@ void saveSprite4bppClipped(const dl_u8* sprite,
         sprite8bppRunner += destinationFrameSize; 
     }
 
-    save_png_8bpp(sprite8bpp, 
-                  destinationWidth,
-                  destinationHeight * numFrames,
-                  g_destinationPath + name + ".png");
+    saveSpritePlanar(sprite8bpp, destinationWidth / 8, (destinationHeight / 8) * numFrames, name.c_str());
 
     delete [] sprite8bpp;
 }
@@ -1632,8 +1629,9 @@ int main()
 
 
     saveSplatSprite(resources.sprite_playerSplat);
-    /*
     saveSprite4bppClipped(resources.sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYERICON_NUM_SPRITE_ROWS, PLAYER_SPRITE_COUNT, "playerLives4bpp");
+
+    /*
     saveTransitionTileset();
     saveTileSetToPng(tileSet);
     */

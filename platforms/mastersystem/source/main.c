@@ -62,6 +62,7 @@ extern unsigned char const key4bpp[128]; // 4 tiles x 32 bytes
 extern unsigned char const moneyBag4bpp[128]; // 4 tiles x 32 bytes
 extern unsigned char const player4bpp[1280]; // 40 tiles x 32 bytes
 extern unsigned char const playerSplat4bpp[384];
+extern unsigned char const playerLives4bpp[640]; // 20 tiles x 32 bytes
 
 
 
@@ -165,16 +166,18 @@ void drawUIPlayerLives(const PlayerData* playerData)
 	dl_u8 x = PLAYERLIVES_ICON_X;
 	dl_u8 y = PLAYERLIVES_ICON_Y;
 
+	dl_u8 tileIndex = 80 + (playerData->currentSpriteNumber << 1);
+
     for (dl_u8 loop = 0; loop < playerData->lives; loop++)
 	{
-		SMS_addTwoAdjoiningSprites(x << 1, y, g_playerTileIndex);
+		SMS_addTwoAdjoiningSprites(x << 1, y, tileIndex);
 
 		x += PLAYERLIVES_ICON_SPACING;
     }
 
 	if (playerData->state == PLAYER_STATE_REGENERATION)
 	{
-		SMS_addTwoAdjoiningSprites(x << 1, y, g_playerTileIndex);
+		SMS_addTwoAdjoiningSprites(x << 1, y, tileIndex);
     }
 }
 
@@ -243,6 +246,7 @@ void main(void)
 	SMS_loadTiles(moneyBag4bpp, 256 + 22, 128); // 4 tiles x 32 bytes
 	SMS_loadTiles(player4bpp, 256 + 28, 1280); // 40 tiles x 32 bytes
 	SMS_loadTiles(playerSplat4bpp, 256 + 68, 384); // 12 tiles x 32 bytes
+	SMS_loadTiles(playerLives4bpp, 256 + 80, 640); // 20 tiles x 32 bytes
 
 	const dl_u8 pickUpSprites[] = { 8, 22, 18 };
 

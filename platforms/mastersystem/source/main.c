@@ -61,6 +61,7 @@ extern unsigned char const drop4bpp[64]; // 2 tiles x 32 bytes
 extern unsigned char const key4bpp[128]; // 4 tiles x 32 bytes
 extern unsigned char const moneyBag4bpp[128]; // 4 tiles x 32 bytes
 extern unsigned char const player4bpp[1280]; // 40 tiles x 32 bytes
+extern unsigned char const playerSplat4bpp[384];
 
 
 
@@ -238,9 +239,10 @@ void main(void)
 	SMS_loadTiles(diamond4bpp, 256 + 8, 128);  // 4 tiles x 32 bytes
 	SMS_loadTiles(door4bpp, 256 + 12, 128); // 4 tiles x 32 bytes
 	SMS_loadTiles(drop4bpp, 256 + 16, 64); // 2 tiles x 32 bytes
-	SMS_loadTiles(key4bpp, 256 + 18, 1280); // 4 tiles x 32 bytes
+	SMS_loadTiles(key4bpp, 256 + 18, 128); // 4 tiles x 32 bytes
 	SMS_loadTiles(moneyBag4bpp, 256 + 22, 128); // 4 tiles x 32 bytes
-	SMS_loadTiles(player4bpp, 256 + 64, 1280); // 40 tiles x 32 bytes
+	SMS_loadTiles(player4bpp, 256 + 28, 1280); // 40 tiles x 32 bytes
+	SMS_loadTiles(playerSplat4bpp, 256 + 68, 384); // 12 tiles x 32 bytes
 
 	const dl_u8 pickUpSprites[] = { 8, 22, 18 };
 
@@ -329,12 +331,12 @@ void main(void)
 		switch (playerData->state)
 		{
 		case PLAYER_STATE_SPLAT: 
-			/*
-			drawSprite(playerX,
-					   playerY + 7,
-					   playerData->splatFrameNumber,
-					   &splatSprite);
-			*/
+
+			dl_u8 tileIndex = 68 + (playerData->splatFrameNumber * 6);
+
+			SMS_addThreeAdjoiningSprites(playerX, playerY + 7, tileIndex);
+			SMS_addThreeAdjoiningSprites(playerX, playerY + 15, tileIndex + 3);
+
 			break;
 
 		case PLAYER_STATE_REGENERATION: 
@@ -361,7 +363,7 @@ void main(void)
 			//		   playerData->currentSpriteNumber,
 			//		   &playerSprite);
 
-			g_playerTileIndex = 64 + (playerData->currentSpriteNumber << 2);
+			g_playerTileIndex = 28 + (playerData->currentSpriteNumber << 2);
 
 			SMS_addTwoAdjoiningSprites(playerX, playerY, g_playerTileIndex);
 			SMS_addTwoAdjoiningSprites(playerX, playerY + 8, g_playerTileIndex + 2);

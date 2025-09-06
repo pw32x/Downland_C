@@ -738,10 +738,7 @@ void saveSplatSprite(const dl_u8* splatSprite)
     // clear the top five rows
     memset(secondFrame, 0, 24 * 5);
 
-    save_png_8bpp(sprite8bpp, 
-                  destinationWidth,
-                  destinationHeight * numFrames,
-                  g_destinationPath + "playerSplatTileset.png");
+    saveSpritePlanar(sprite8bpp, destinationWidth / 8, (destinationHeight / 8) * numFrames, "playerSplat4bpp");
 
     delete [] sprite8bpp;
 }
@@ -1631,8 +1628,11 @@ int main()
     dl_u8* regenSprite = saveRegenSprite(resources.sprites_player);
     saveRegenLivesSprite(regenSprite);
     delete [] regenSprite;
+    */
+
 
     saveSplatSprite(resources.sprite_playerSplat);
+    /*
     saveSprite4bppClipped(resources.sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYERICON_NUM_SPRITE_ROWS, PLAYER_SPRITE_COUNT, "playerLives4bpp");
     saveTransitionTileset();
     saveTileSetToPng(tileSet);

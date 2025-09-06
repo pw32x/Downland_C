@@ -132,6 +132,7 @@
     <ClCompile Include="..\generated\bank2_vdp\key4bpp.c" />
     <ClCompile Include="..\generated\bank2_vdp\moneyBag4bpp.c" />
     <ClCompile Include="..\generated\bank2_vdp\player4bpp.c" />
+    <ClCompile Include="..\generated\bank2_vdp\playerSplat4bpp.c" />
     <ClCompile Include="..\generated\bank2_vdp\tileSet4bpp.c" />
     <ClCompile Include="..\generated\bank3_chamber0\chamber0_cleanBackground.c" />
     <ClCompile Include="..\generated\bank3_chamber0\chamber0_tileMap.c" />

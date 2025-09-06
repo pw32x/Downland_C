@@ -101,6 +101,19 @@ void chamber_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resourc
 	const SMSBackgroundData* backgroundData = (const SMSBackgroundData*)resources->roomResources[roomNumber].backgroundDrawData;
 	gameData->cleanBackground = backgroundData->cleanBackground;
 	SMS_loadTileMap(0, 0, backgroundData->tileMap, 32 * 24 * 2);
+
+	drawTileText(resources->text_pl1, PLAYERLIVES_TEXT_DRAW_LOCATION);
+	drawTileText(resources->text_chamber, CHAMBER_TEXT_DRAW_LOCATION);
+	drawTileText(gameData->string_roomNumber, CHAMBER_NUMBER_TEXT_DRAW_LOCATION);
+
+	PlayerData* playerData = gameData->playerData;
+	convertScoreToString(playerData->score, playerData->scoreString);
+	drawTileText(playerData->scoreString, SCORE_DRAW_LOCATION);
+
+	dl_u16 currentTimer = playerData->roomTimers[playerData->currentRoom->roomNumber];
+	convertTimerToString(currentTimer,
+						 gameData->string_timer);
+	drawTileText(gameData->string_timer, TIMER_DRAW_LOCATION);
 }
 
 
@@ -408,6 +421,9 @@ void main(void)
 
 			pickups++;
 		}
+
+		drawTileText(gameData.string_timer, TIMER_DRAW_LOCATION);
+		drawTileText(playerData->scoreString, SCORE_DRAW_LOCATION);
 
 		drawUIPlayerLives(playerData);
 

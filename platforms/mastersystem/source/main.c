@@ -229,7 +229,7 @@ void updateControls(dl_u8 controllerIndex, JoystickState* joystickState)
     dl_u8 upDown = (KeysStatus & PORT_A_KEY_UP) != 0;
     dl_u8 downDown = (KeysStatus & PORT_A_KEY_DOWN) != 0;
     dl_u8 jumpDown = (KeysStatus & PORT_A_KEY_1) != 0;
-    dl_u8 startDown = (KeysStatus & PORT_A_KEY_2) != 0;
+    dl_u8 startDown = FALSE;//(KeysStatus & PORT_A_KEY_2) != 0;
 
     joystickState->leftPressed = (!joystickState->leftDown) & leftDown;
     joystickState->rightPressed = (!joystickState->rightDown) & rightDown;
@@ -253,7 +253,7 @@ void updateControls(dl_u8 controllerIndex, JoystickState* joystickState)
     joystickState->startDown = startDown;
 
 #ifdef DEV_MODE
-    bool debugStateDown = keys & BUTTON_B;
+    dl_u8 debugStateDown = (KeysStatus & PORT_A_KEY_2) != 0;
 
     joystickState->debugStatePressed = !joystickState->debugStateDown & debugStateDown;
     joystickState->debugStateReleased = joystickState->debugStatePressed & !debugStateDown;
@@ -374,103 +374,132 @@ SMS_EMBED_SDSC_HEADER_AUTO_DATE(1,0,"pw","basicsmsproject","A basic SMS example 
 
 void drawChamber(struct GameData* gameData, const Resources* resources)
 {
-		PlayerData* playerData = gameData->currentPlayerData;
+	PlayerData* playerData = gameData->currentPlayerData;
 
-		dl_u8 playerX = (playerData->x >> 8) << 1;
-		dl_u8 playerY = (playerData->y >> 8);
+	dl_u8 playerX = (playerData->x >> 8) << 1;
+	dl_u8 playerY = (playerData->y >> 8);
 
-		dl_u16 currentTimer = playerData->roomTimers[playerData->currentRoom->roomNumber];
+	dl_u16 currentTimer = playerData->roomTimers[playerData->currentRoom->roomNumber];
 
-		drawDrops(gameData);
+	drawDrops(gameData);
 		
-		// draw ball
-		if (gameData->ballData.enabled)
+	// draw ball
+	if (gameData->ballData.enabled)
+	{
+
+
+		//drawSprite((ballData->x >> 8) << 1,
+		//		   ballData->y >> 8,
+		//		   (dl_s8)ballData->fallStateCounter < 0,
+		//		   &ballSprite);
+
+		SMS_addTwoAdjoiningSprites((ballData->x >> 8) << 1, 
+									ballData->y >> 8, 
+									2 * ((dl_s8)ballData->fallStateCounter < 0));
+	}
+
+	// draw bird
+	if (gameData->birdData.state && currentTimer == 0)
+	{
+		SMS_addTwoAdjoiningSprites((birdData->x >> 8) << 1,
+									birdData->y >> 8,
+									4 + (birdData->animationFrame << 1));
+	}
+
+	dl_u8 tileIndex;
+
+	// draw player
+	switch (playerData->state)
+	{
+	case PLAYER_STATE_SPLAT: 
+
+		tileIndex = 68 + (playerData->splatFrameNumber * 6);
+
+		SMS_addThreeAdjoiningSprites(playerX, playerY + 7, tileIndex);
+		SMS_addThreeAdjoiningSprites(playerX, playerY + 15, tileIndex + 3);
+
+		break;
+
+	case PLAYER_STATE_REGENERATION: 
+
+		if (!gameData->paused)
 		{
-
-
-			//drawSprite((ballData->x >> 8) << 1,
-			//		   ballData->y >> 8,
-			//		   (dl_s8)ballData->fallStateCounter < 0,
-			//		   &ballSprite);
-
-			SMS_addTwoAdjoiningSprites((ballData->x >> 8) << 1, 
-									   ballData->y >> 8, 
-									   2 * ((dl_s8)ballData->fallStateCounter < 0));
+			g_regenSpriteIndex++;
+			if (g_regenSpriteIndex == REGEN_NUM_FRAMES - 1)
+				g_regenSpriteIndex = 0;
 		}
 
-		// draw bird
-		if (gameData->birdData.state && currentTimer == 0)
+		if (playerData->facingDirection)
 		{
-			SMS_addTwoAdjoiningSprites((birdData->x >> 8) << 1,
-									   birdData->y >> 8,
-									   4 + (birdData->animationFrame << 1));
+			tileIndex = 100 + (g_regenSpriteIndex << 2);
 		}
-
-		dl_u8 tileIndex;
-
-		// draw player
-		switch (playerData->state)
+		else
 		{
-		case PLAYER_STATE_SPLAT: 
-
-			tileIndex = 68 + (playerData->splatFrameNumber * 6);
-
-			SMS_addThreeAdjoiningSprites(playerX, playerY + 7, tileIndex);
-			SMS_addThreeAdjoiningSprites(playerX, playerY + 15, tileIndex + 3);
-
-			break;
-
-		case PLAYER_STATE_REGENERATION: 
-
-			if (!gameData->paused)
-			{
-				g_regenSpriteIndex++;
-				if (g_regenSpriteIndex == REGEN_NUM_FRAMES - 1)
-					g_regenSpriteIndex = 0;
-			}
-
-			if (playerData->facingDirection)
-			{
-				tileIndex = 100 + (g_regenSpriteIndex << 2);
-			}
-			else
-			{
-				tileIndex = 100 + ((g_regenSpriteIndex + REGEN_NUM_FRAMES) << 2);
-			}
+			tileIndex = 100 + ((g_regenSpriteIndex + REGEN_NUM_FRAMES) << 2);
+		}
 
 			
-			SMS_addTwoAdjoiningSprites(playerX, playerY, tileIndex);
-			SMS_addTwoAdjoiningSprites(playerX, playerY + 8, tileIndex + 2);
+		SMS_addTwoAdjoiningSprites(playerX, playerY, tileIndex);
+		SMS_addTwoAdjoiningSprites(playerX, playerY + 8, tileIndex + 2);
 
-			break;
+		break;
 
-		default: 
-			g_playerTileIndex = 28 + (playerData->currentSpriteNumber << 2);
+	default: 
+		g_playerTileIndex = 28 + (playerData->currentSpriteNumber << 2);
 
-			SMS_addTwoAdjoiningSprites(playerX, playerY, g_playerTileIndex);
-			SMS_addTwoAdjoiningSprites(playerX, playerY + 8, g_playerTileIndex + 2);
-		}
+		SMS_addTwoAdjoiningSprites(playerX, playerY, g_playerTileIndex);
+		SMS_addTwoAdjoiningSprites(playerX, playerY + 8, g_playerTileIndex + 2);
+	}
 
-		// draw pickups
-		int roomIndex = gameData->currentRoom->roomNumber;
-		const Pickup* pickups = &playerData->gamePickups[roomIndex][0];
-		for (int loop = 0; loop < NUM_PICKUPS_PER_ROOM; loop++)
+	// draw pickups
+	int roomIndex = gameData->currentRoom->roomNumber;
+	const Pickup* pickups = &playerData->gamePickups[roomIndex][0];
+	for (int loop = 0; loop < NUM_PICKUPS_PER_ROOM; loop++)
+	{
+		if ((pickups->state & playerData->playerMask))
 		{
-			if ((pickups->state & playerData->playerMask))
-			{
-				const dl_u8 tileIndex = pickUpSprites[pickups->type];
+			const dl_u8 tileIndex = pickUpSprites[pickups->type];
 
-				SMS_addTwoAdjoiningSprites((pickups->x) << 1, pickups->y, tileIndex);
-				SMS_addTwoAdjoiningSprites((pickups->x) << 1, pickups->y + 8, tileIndex + 2);
-			}
-
-			pickups++;
+			SMS_addTwoAdjoiningSprites((pickups->x) << 1, pickups->y, tileIndex);
+			SMS_addTwoAdjoiningSprites((pickups->x) << 1, pickups->y + 8, tileIndex + 2);
 		}
 
-		drawTileText(gameData->string_timer, TIMER_DRAW_LOCATION);
-		drawTileText(playerData->scoreString, SCORE_DRAW_LOCATION);
+		pickups++;
+	}
 
-		drawUIPlayerLives(playerData);
+	// draw doors
+    int roomNumber = gameData->currentRoom->roomNumber;
+	const DoorInfoData* doorInfoData = &resources->roomResources[roomNumber].doorInfoData;
+	const DoorInfo* doorInfoRunner = doorInfoData->doorInfos;
+
+	for (dl_u8 loop = 0; loop < doorInfoData->drawInfosCount; loop++)
+	{
+        if (playerData->doorStateData[doorInfoRunner->globalDoorIndex] & playerData->playerMask &&
+			doorInfoRunner->x != 0xff)
+		{
+			int xPosition = doorInfoRunner->x;
+			// adjust the door position, as per the original game.
+			if (xPosition > 40) 
+				xPosition += 7;
+			else
+				xPosition -= 4;
+
+//			drawSprite(xPosition << 1,
+//					   doorInfoRunner->y,
+//					   0,
+//					   &doorSprite);
+
+			SMS_addTwoAdjoiningSprites(xPosition << 1, doorInfoRunner->y, 12);
+			SMS_addTwoAdjoiningSprites(xPosition << 1, doorInfoRunner->y + 8, 14);
+		}
+
+		doorInfoRunner++;
+	}
+
+	drawTileText(gameData->string_timer, TIMER_DRAW_LOCATION);
+	drawTileText(playerData->scoreString, SCORE_DRAW_LOCATION);
+
+	drawUIPlayerLives(playerData);
 
 }
 

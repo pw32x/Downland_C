@@ -19,7 +19,7 @@ void transition_init(Room* targetRoom, GameData* gameData, const Resources* reso
 
 	// setup screen transition
 	gameData->transitionInitialDelay = INITIAL_TRANSITION_DELAY;
-	dl_memset(gameData->framebuffer, 0, FRAMEBUFFER_SIZE_IN_BYTES);
+	//dl_memset(gameData->framebuffer, 0, FRAMEBUFFER_SIZE_IN_BYTES);
 }
 
 void transition_update(Room* room, GameData* gameData, const Resources* resources)
@@ -33,7 +33,7 @@ void transition_update(Room* room, GameData* gameData, const Resources* resource
 
 	// dump the cleanBackground to the framebuffer and go 
 	// to the next room.
-	dl_memcpy(gameData->framebuffer, gameData->cleanBackground, FRAMEBUFFER_SIZE_IN_BYTES);
+	// dl_memcpy(gameData->framebuffer, gameData->cleanBackground, FRAMEBUFFER_SIZE_IN_BYTES);
 
 	Game_EnterRoom(gameData, gameData->transitionRoomNumber, resources);
 }
@@ -48,7 +48,6 @@ Room transitionRoom =
 
 void wipe_transition_init(Room* targetRoom, GameData* gameData, const Resources* resources)
 {
-	/*
 	// init the clean background with the target room. 
 	// we'll be slowly revealing it during the room transition.
 	targetRoom->draw(gameData->transitionRoomNumber, (struct GameData*)gameData, resources);
@@ -57,12 +56,11 @@ void wipe_transition_init(Room* targetRoom, GameData* gameData, const Resources*
 	gameData->transitionInitialDelay = INITIAL_TRANSITION_DELAY;
 	gameData->transitionCurrentLine = 0;
 	gameData->transitionFrameDelay = 0;
-	*/
 }
 
 void wipe_transition_update(Room* room, GameData* gameData, const Resources* resources)
 {
-	/*
+
 	dl_u8 loopCount;
 	dl_u8 loopCounter;
 	dl_u16 offset;
@@ -96,6 +94,7 @@ void wipe_transition_update(Room* room, GameData* gameData, const Resources* res
 
 	for (loopCounter = 0; loopCounter < loopCount; loopCounter++)
 	{
+		/*
 		offset = gameData->transitionCurrentLine * FRAMEBUFFER_PITCH;
 
 		cleanBackgroundRunner = gameData->cleanBackground + offset;
@@ -128,6 +127,7 @@ void wipe_transition_update(Room* room, GameData* gameData, const Resources* res
 			cleanBackgroundRunner += 0x3e0; 
 			framebufferRunner += 0x3e0;		
 		}
+		*/
 
 		gameData->transitionCurrentLine++;
 	}
@@ -139,7 +139,7 @@ void wipe_transition_update(Room* room, GameData* gameData, const Resources* res
 
 		if (Game_TransitionDone)
 			Game_TransitionDone(gameData, gameData->transitionRoomNumber, WIPE_TRANSITION_ROOM_INDEX);
-	}*/
+	}
 }
 
 Room wipeTransitionRoom =

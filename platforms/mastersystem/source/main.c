@@ -495,5 +495,5 @@ void drawWipeTransition(struct GameData* gameData, const Resources* resources)
 
 void drawGetReadyScreen(struct GameData* gameData, const Resources* resources)
 {
-
+	drawDrops(gameData);
 }

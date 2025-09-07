@@ -1124,14 +1124,14 @@ void saveGeneralData(const Resources& resources)
     // rooms with the bouncing ball
     oss << "// rooms with the bouncing ball\n";
     const dl_u8* roomsWithBouncingBall = resources.roomsWithBouncingBall;
-    oss << "const dl_u8 roomsWithBouncingBall[9] = { ";
+    oss << "const dl_u8 roomsWithBouncingBall[10] = { ";
 
-    for (int loop = 0; loop < 9; loop++)
+    while (*roomsWithBouncingBall != 0xff)
     {
         oss << (dl_u16)*roomsWithBouncingBall << ", ";
         roomsWithBouncingBall++;
     }
-    oss << "};\n";
+    oss << "0xff };\n";
     oss << "\n";
 
     /*
@@ -1359,7 +1359,7 @@ void saveResources(Resources& resources)
     oss << "extern const dl_u8 keyPickUpDoorIndexes[20];\n";
     oss << "extern const dl_u8 keyPickUpDoorIndexesHardMode[20];\n";
     oss << "extern const dl_u8 offsetsToDoorsAlreadyActivated[16];\n";
-    oss << "extern const dl_u8 roomsWithBouncingBall[9];\n";
+    oss << "extern const dl_u8 roomsWithBouncingBall[10];\n";
     oss << "\n";
     oss << "\n";
 

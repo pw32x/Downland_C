@@ -598,10 +598,7 @@ void saveCursor()
     memset(cursor8bpp, 0, 8*8);
     memset(cursor8bpp, 3, 8);
 
-    save_png_8bpp(cursor8bpp, 
-                  8,
-                  8,
-                  g_destinationPath + "cursorTileset.png");
+    saveSpritePlanar(cursor8bpp, 1, 1, "cursor4bpp");
 }
 
 #define NUM_REGEN_FRAMES 5
@@ -1626,7 +1623,7 @@ int main()
 	saveSprite4bpp(resources.sprite_door, DOOR_SPRITE_WIDTH, DOOR_SPRITE_ROWS, 1, "door4bpp");
 
 
-    //saveCursor();
+    saveCursor();
 
     dl_u8* regenSprite = saveRegenSprite(resources.sprites_player);
 

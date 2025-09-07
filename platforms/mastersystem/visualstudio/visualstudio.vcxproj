@@ -126,6 +126,7 @@
     <ClCompile Include="..\generated\bank2_vdp\ball4bpp.c" />
     <ClCompile Include="..\generated\bank2_vdp\bird4bpp.c" />
     <ClCompile Include="..\generated\bank2_vdp\characterFont4bpp.c" />
+    <ClCompile Include="..\generated\bank2_vdp\cursor4bpp.c" />
     <ClCompile Include="..\generated\bank2_vdp\diamond4bpp.c" />
     <ClCompile Include="..\generated\bank2_vdp\door4bpp.c" />
     <ClCompile Include="..\generated\bank2_vdp\drop4bpp.c" />

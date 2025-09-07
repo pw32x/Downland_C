@@ -16,6 +16,15 @@
 dl_u8 g_regenSpriteIndex;
 #define REGEN_NUM_FRAMES 5
 
+typedef void (*DrawRoomFunction)(struct GameData* gameData, const Resources* resources);
+DrawRoomFunction m_drawRoomFunctions[NUM_ROOMS_AND_ALL];
+
+void drawChamber(struct GameData* gameData, const Resources* resources);
+void drawTitleScreen(struct GameData* gameData, const Resources* resources);
+void drawTransition(struct GameData* gameData, const Resources* resources);
+void drawWipeTransition(struct GameData* gameData, const Resources* resources);
+void drawGetReadyScreen(struct GameData* gameData, const Resources* resources);
+
 void* dl_alloc(dl_u32 size)
 {
 	return NULL;
@@ -68,6 +77,7 @@ extern unsigned char const playerSplat4bpp[384];
 extern unsigned char const playerLives4bpp[640]; // 20 tiles x 32 bytes
 extern unsigned char const playerRegen4bpp[1280]; // 40 tiles x 32 bytes
 extern unsigned char const playerLivesRegen4bpp[320]; // 10 tiles x 32 bytes
+extern unsigned char const cursor4bpp[32]; // 1 tiles x 32 bytes
 
 void drawBackground(const BackgroundDrawData* backgroundDrawData, 
 					const Resources* resources,
@@ -195,11 +205,11 @@ void drawUIPlayerLives(const PlayerData* playerData)
 	{
 		if (playerData->facingDirection)
 		{
-			tileIndex = 160 + (g_regenSpriteIndex << 1);
+			tileIndex = 140 + (g_regenSpriteIndex << 1);
 		}
 		else
 		{
-			tileIndex = 160 + ((g_regenSpriteIndex + REGEN_NUM_FRAMES) << 1);
+			tileIndex = 140 + ((g_regenSpriteIndex + REGEN_NUM_FRAMES) << 1);
 		}
 
 		SMS_addTwoAdjoiningSprites(x << 1, y, tileIndex);
@@ -251,6 +261,9 @@ void updateControls(dl_u8 controllerIndex, JoystickState* joystickState)
 #endif
 }
 
+const dl_u8 pickUpSprites[] = { 8, 22, 18 };
+const BallData* ballData = NULL;
+const BirdData* birdData = NULL;
 
 void main(void)
 {
@@ -273,13 +286,14 @@ void main(void)
 	SMS_loadTiles(playerSplat4bpp, 256 + 68, 384); // 12 tiles x 32 bytes
 	SMS_loadTiles(playerLives4bpp, 256 + 80, 640); // 20 tiles x 32 bytes
 	SMS_loadTiles(playerRegen4bpp, 256 + 100, 1280); // 40 tiles x 32 bytes
-	SMS_loadTiles(playerLivesRegen4bpp, 256 + 160, 640); // 20 tiles x 32 bytes
+	SMS_loadTiles(playerLivesRegen4bpp, 256 + 140, 640); // 20 tiles x 32 bytes
+	SMS_loadTiles(cursor4bpp, 256 + 160, 32); // 1 tiles x 32 bytes
 	
 
 	g_regenSpriteIndex = 0;
 
 
-	const dl_u8 pickUpSprites[] = { 8, 22, 18 };
+
 
 	//g_pickUpSprites[0] = &diamondSprite;
 	//g_pickUpSprites[1] = &moneyBagSprite;
@@ -287,6 +301,22 @@ void main(void)
 
 	SMS_loadTiles(tileSet4bpp, 0, 6240);
 	SMS_loadTiles(characterFont4bpp, 195, 1248);
+
+	// room draw setup
+    m_drawRoomFunctions[0] = drawChamber;
+    m_drawRoomFunctions[1] = drawChamber;
+    m_drawRoomFunctions[2] = drawChamber;
+    m_drawRoomFunctions[3] = drawChamber;
+    m_drawRoomFunctions[4] = drawChamber;
+    m_drawRoomFunctions[5] = drawChamber;
+    m_drawRoomFunctions[6] = drawChamber;
+    m_drawRoomFunctions[7] = drawChamber;
+    m_drawRoomFunctions[8] = drawChamber;
+    m_drawRoomFunctions[9] = drawChamber;
+    m_drawRoomFunctions[TITLESCREEN_ROOM_INDEX] = drawTitleScreen;
+    m_drawRoomFunctions[TRANSITION_ROOM_INDEX] = drawTransition;
+    m_drawRoomFunctions[WIPE_TRANSITION_ROOM_INDEX] = drawWipeTransition;
+    m_drawRoomFunctions[GET_READY_ROOM_INDEX] = drawGetReadyScreen;
 
 	memset((void*)gameData, 0, sizeof(gameData));
 
@@ -299,8 +329,8 @@ void main(void)
 	SMS_waitForVBlank ();
 
 
-	const BallData* ballData = &gameData.ballData;
-	const BirdData* birdData = &gameData.birdData;
+	ballData = &gameData.ballData;
+	birdData = &gameData.birdData;
 
 	dl_u8 controllerIndex = 0;
 
@@ -329,17 +359,32 @@ void main(void)
 			Game_Update(&gameData, &resources);
 		}
 
-		PlayerData* playerData = gameData.currentPlayerData;
+		m_drawRoomFunctions[gameData.currentRoom->roomNumber](&gameData, &resources);
+
+		// VBLANK
+		SMS_waitForVBlank ();
+		SMS_copySpritestoSAT();
+	}
+}
+
+SMS_EMBED_SEGA_ROM_HEADER(9999,0);
+SMS_EMBED_SDSC_HEADER_AUTO_DATE(1,0,"pw","basicsmsproject","A basic SMS example project with devkitSMS");
+
+
+
+void drawChamber(struct GameData* gameData, const Resources* resources)
+{
+		PlayerData* playerData = gameData->currentPlayerData;
 
 		dl_u8 playerX = (playerData->x >> 8) << 1;
 		dl_u8 playerY = (playerData->y >> 8);
 
 		dl_u16 currentTimer = playerData->roomTimers[playerData->currentRoom->roomNumber];
 
-		drawDrops(&gameData);
+		drawDrops(gameData);
 		
 		// draw ball
-		if (gameData.ballData.enabled)
+		if (gameData->ballData.enabled)
 		{
 
 
@@ -354,7 +399,7 @@ void main(void)
 		}
 
 		// draw bird
-		if (gameData.birdData.state && currentTimer == 0)
+		if (gameData->birdData.state && currentTimer == 0)
 		{
 			SMS_addTwoAdjoiningSprites((birdData->x >> 8) << 1,
 									   birdData->y >> 8,
@@ -377,7 +422,7 @@ void main(void)
 
 		case PLAYER_STATE_REGENERATION: 
 
-			if (!gameData.paused)
+			if (!gameData->paused)
 			{
 				g_regenSpriteIndex++;
 				if (g_regenSpriteIndex == REGEN_NUM_FRAMES - 1)
@@ -407,7 +452,7 @@ void main(void)
 		}
 
 		// draw pickups
-		int roomIndex = gameData.currentRoom->roomNumber;
+		int roomIndex = gameData->currentRoom->roomNumber;
 		const Pickup* pickups = &playerData->gamePickups[roomIndex][0];
 		for (int loop = 0; loop < NUM_PICKUPS_PER_ROOM; loop++)
 		{
@@ -422,18 +467,33 @@ void main(void)
 			pickups++;
 		}
 
-		drawTileText(gameData.string_timer, TIMER_DRAW_LOCATION);
+		drawTileText(gameData->string_timer, TIMER_DRAW_LOCATION);
 		drawTileText(playerData->scoreString, SCORE_DRAW_LOCATION);
 
 		drawUIPlayerLives(playerData);
 
-
-		// VBLANK
-		SMS_waitForVBlank ();
-
-		SMS_copySpritestoSAT();
-	}
 }
 
-SMS_EMBED_SEGA_ROM_HEADER(9999,0);
-SMS_EMBED_SDSC_HEADER_AUTO_DATE(1,0,"pw","basicsmsproject","A basic SMS example project with devkitSMS");
+void drawTitleScreen(struct GameData* gameData, const Resources* resources)
+{
+	drawDrops(gameData);
+
+	dl_u8 x = gameData->numPlayers == 1 ? 32 : 128;
+
+	SMS_addSprite(x, 123, 160);
+}
+
+void drawTransition(struct GameData* gameData, const Resources* resources)
+{
+
+}
+
+void drawWipeTransition(struct GameData* gameData, const Resources* resources)
+{
+
+}
+
+void drawGetReadyScreen(struct GameData* gameData, const Resources* resources)
+{
+
+}

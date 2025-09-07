@@ -175,6 +175,9 @@
     <ClCompile Include="..\generated\bank2_vdp\playerLivesRegen4bpp.c">
       <Filter>Source Files\generated\bank_vdp</Filter>
     </ClCompile>
+    <ClCompile Include="..\generated\bank2_vdp\cursor4bpp.c">
+      <Filter>Source Files\generated\bank_vdp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\source\game\dl_alloc.h">

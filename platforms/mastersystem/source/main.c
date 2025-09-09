@@ -12,9 +12,20 @@
 #define CHAMBER_BANK_START 3
 #define CHAMBER0_BANK 3
 #define CHAMBER1_BANK 4
+#define CHAMBER2_BANK 5
+#define CHAMBER3_BANK 6
+#define CHAMBER4_BANK 7
+#define CHAMBER5_BANK 8
+#define CHAMBER6_BANK 9
+#define CHAMBER7_BANK 10
+#define CHAMBER8_BANK 11
+#define CHAMBER9_BANK 12
+#define TITLE_SCREEN_BANK 13
 
 dl_u8 g_regenSpriteIndex;
 #define REGEN_NUM_FRAMES 5
+
+extern const dl_u8 getReadyScreen_cleanBackground[6144];
 
 typedef void (*DrawRoomFunction)(struct GameData* gameData, const Resources* resources);
 DrawRoomFunction m_drawRoomFunctions[NUM_ROOMS_AND_ALL];
@@ -129,11 +140,15 @@ void chamber_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resourc
 
 void get_ready_room_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resources)
 {
-	SMS_mapROMBank(CHAMBER_BANK_START + roomNumber);
+	SMS_mapROMBank(CHAMBER_BANK_START + TITLESCREEN_ROOM_INDEX);
 
-	const SMSBackgroundData* backgroundData = (const SMSBackgroundData*)resources->roomResources[roomNumber].backgroundDrawData;
-	gameData->cleanBackground = backgroundData->cleanBackground;
+	const SMSBackgroundData* backgroundData = (const SMSBackgroundData*)resources->roomResources[TITLESCREEN_ROOM_INDEX].backgroundDrawData;
+	gameData->cleanBackground = getReadyScreen_cleanBackground;
 	SMS_loadTileMap(0, 0, backgroundData->tileMap, 32 * 24 * 2);
+
+	// get ready text
+	const dl_u8* getReadyString = gameData->currentPlayerData->playerNumber == PLAYER_ONE ? resources->text_getReadyPlayerOne : resources->text_getReadyPlayerTwo;
+	drawTileText(getReadyString, 0x0b66);
 }
 
 void titleScreen_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resources)

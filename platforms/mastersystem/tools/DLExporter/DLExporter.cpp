@@ -60,7 +60,7 @@ const char* bankFolderNames[] =
     "bank10_chamber7",
     "bank11_chamber8",
     "bank12_chamber9",
-    "bank13_titlescreen"
+    "bank13_titlescreen",
 };
 
 int bankFolderNameCount = sizeof(bankFolderNames) / sizeof(bankFolderNames[0]);
@@ -92,7 +92,9 @@ dl_u8 roomToBank[] =
     9,
     10,
     11,
-    12
+    12,
+    1,
+    11
 };
 
 #define TILE_WIDTH 8
@@ -432,7 +434,10 @@ std::string roomNames[] =
 "chamber7",
 "chamber8",
 "chamber9",
-"titleScreen"
+"titleScreen",
+"none",
+"none",
+"getReadyScreen"
 };
 
 void saveTileMapSource(const std::vector<TileMap>& tileMaps)
@@ -1176,7 +1181,7 @@ void saveGeneralData(const Resources& resources)
 
 void saveDropSpawns(const Resources& resources)
 {
-    //resources->roomResources[0].dropSpawnPositions);
+    //resources.roomResources[0].dropSpawnPositions);
 
     for (int loop = 0; loop < NUM_ROOMS_PLUS_TITLESCREN; loop++)
     {
@@ -1378,7 +1383,9 @@ void saveResources(Resources& resources)
 
         oss << "\n";
     }
+    oss << "\n";
 
+    oss << "extern const dl_u8 getReadyScreen_cleanBackground[" << FRAMEBUFFER_PITCH * FRAMEBUFFER_HEIGHT << "];\n";
     oss << "\n";
 
     for (int loop = 0; loop < NUM_ROOMS_PLUS_TITLESCREN; loop++)
@@ -1578,13 +1585,31 @@ int main()
 				       &resources,
 				       background);
 
-        saveCleanBackground(background, loop);
-
         convert1bppImageTo8bppCrtEffectImage(background,
                                              background8bpp,
                                              FRAMEBUFFER_WIDTH,
                                              FRAMEBUFFER_HEIGHT,
                                              CrtColor_Blue);
+
+        if (loop == TITLESCREEN_ROOM_INDEX)
+        {
+	        // title screen text
+	        drawText(resources.text_downland, resources.characterFont, background, 0x03c9); // 0x07c9 original coco mem location
+	        drawText(resources.text_writtenBy, resources.characterFont, background, 0x050a); // 0x090A original coco mem location
+	        drawText(resources.text_michaelAichlmayer, resources.characterFont, background, 0x647); // 0x0A47 original coco mem location
+	        drawText(resources.text_copyright1983, resources.characterFont, background, 0x789); // 0x0B89 original coco mem location
+	        drawText(resources.text_spectralAssociates, resources.characterFont, background, 0x8c6); // 0x0CC6 original coco mem location
+	        drawText(resources.text_licensedTo, resources.characterFont, background, 0xa0a); // 0x0E0A original coco mem location
+	        drawText(resources.text_tandyCorporation, resources.characterFont, background, 0xb47); // 0x0F47 original coco mem location
+	        drawText(resources.text_allRightsReserved, resources.characterFont, background, 0xc86); // 0x1086 original coco mem location
+	        drawText(resources.text_onePlayer, resources.characterFont, background, 0xf05); // 0x1305 original coco mem location
+	        drawText(resources.text_twoPlayer, resources.characterFont, background, 0xf11); // 0x1311 original coco mem location
+	        drawText(resources.text_highScore, resources.characterFont, background, 0x118b); // 0x158B original coco mem location
+	        drawText(resources.text_playerOne, resources.characterFont, background, 0x1406); // 0x1806 original coco mem location
+	        drawText(resources.text_playerTwo, resources.characterFont, background, 0x1546); // 0x1946 original coco mem location
+        }
+
+        saveCleanBackground(background, loop);
 
         TileMap tileMap;
 
@@ -1592,6 +1617,15 @@ int main()
 
         tileMaps.push_back(tileMap);
     }
+
+    // get ready screen
+    drawBackground(&resources.roomResources[TITLESCREEN_ROOM_INDEX].backgroundDrawData, 
+				   &resources,
+				   background);
+
+	drawText(resources.text_getReadyPlayerOne, resources.characterFont, background, 0x0b66);
+
+    saveCleanBackground(background, GET_READY_ROOM_INDEX);
 
     saveStrings(resources);
 

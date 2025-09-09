@@ -5,6 +5,7 @@
 #include "game_types.h"
 #include "custom_background_types.h"
 #include "chambers.h"
+#include "rooms/titlescreen.h"
 
 #include "string.h"
 
@@ -172,6 +173,21 @@ void titleScreen_draw(dl_u8 roomNumber, GameData* gameData, const Resources* res
 	drawTileText(resources->text_highScore, 0x118b); // 0x158B original coco mem location
 	drawTileText(resources->text_playerOne, 0x1406); // 0x1806 original coco mem location
 	drawTileText(resources->text_playerTwo, 0x1546); // 0x1946 original coco mem location
+
+	convertScoreToString(gameData->playerData[PLAYER_ONE].score, gameData->playerData[PLAYER_ONE].scoreString);
+	drawTileText(gameData->playerData[PLAYER_ONE].scoreString, TITLESCREEN_PLAYERONE_SCORE_LOCATION);
+
+	convertScoreToString(gameData->playerData[PLAYER_TWO].score, gameData->playerData[PLAYER_TWO].scoreString);
+	drawTileText(gameData->playerData[PLAYER_TWO].scoreString, TITLESCREEN_PLAYERTWO_SCORE_LOCATION);
+
+	if (gameData->playerData[PLAYER_ONE].score > gameData->highScore)
+		gameData->highScore = gameData->playerData[PLAYER_ONE].score;
+	else if (gameData->playerData[PLAYER_TWO].score > gameData->highScore)
+		gameData->highScore = gameData->playerData[PLAYER_TWO].score;
+
+	convertScoreToString(gameData->highScore, gameData->string_highScore);
+
+	drawTileText(gameData->string_highScore, TITLESCREEN_HIGHSCORE_LOCATION);
 }
 
 

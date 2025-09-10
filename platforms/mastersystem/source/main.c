@@ -301,6 +301,8 @@ const dl_u8 pickUpSprites[] = { 8, 22, 18 };
 const BallData* ballData = NULL;
 const BirdData* birdData = NULL;
 
+void GameRunner_ChangedRoomCallback(const struct GameData* gameData, dl_u8 roomNumber, dl_s8 transitionType);
+
 void main(void)
 {
 	/* Clear VRAM */
@@ -362,15 +364,11 @@ void main(void)
 
 	memset((void*)gameData, 0, sizeof(gameData));
 
+	Game_ChangedRoomCallback = GameRunner_ChangedRoomCallback;
+
     Game_Init(&gameData, &resources, framebuffer, NULL /*cleanBackground*/);
 
 	//chamber_draw(3, &gameData, &resources);
-
-	SMS_waitForVBlank ();
-	SMS_loadBGPalette(downlandPalette);
-	SMS_loadSpritePalette(downlandPalette);
-
-
 	ballData = &gameData.ballData;
 	birdData = &gameData.birdData;
 
@@ -407,6 +405,24 @@ void main(void)
 		// VBLANK
 		SMS_waitForVBlank ();
 		SMS_copySpritestoSAT();
+	}
+}
+
+
+void GameRunner_ChangedRoomCallback(const struct GameData* gameData, dl_u8 roomNumber, dl_s8 transitionType)
+{
+	//SMS_debugPrintf("GameRunner_ChangedRoomCallback\n");
+
+	SMS_waitForVBlank();
+	SMS_initSprites();
+	SMS_copySpritestoSAT();
+
+	//SMS_debugPrintf("transitionType: %d\n", transitionType);
+	if (transitionType < 0)
+	{
+		//SMS_debugPrintf("downland palette 2\n");
+		SMS_loadBGPalette(downlandPalette);
+		SMS_loadSpritePalette(downlandPalette);
 	}
 }
 
@@ -568,4 +584,68 @@ void drawWipeTransition(struct GameData* gameData, const Resources* resources)
 void drawGetReadyScreen(struct GameData* gameData, const Resources* resources)
 {
 	drawDrops(gameData);
+}
+
+#define INITIAL_TRANSITION_DELAY 30
+
+void transition_init(Room* targetRoom, GameData* gameData, const Resources* resources)
+{
+	SMS_waitForVBlank();
+	//SMS_debugPrintf("black palette\n");
+	SMS_loadBGPalette(blackPalette);
+	SMS_loadSpritePalette(blackPalette);
+
+	// init the clean background with the target room. 
+	// it'll be revealed at the end of the transition.
+	targetRoom->draw(gameData->transitionRoomNumber, (struct GameData*)gameData, resources);
+
+	// setup screen transition
+	gameData->transitionInitialDelay = INITIAL_TRANSITION_DELAY;
+
+	////SMS_debugPrintf("transition_init\n");
+}
+
+void transition_update(Room* room, GameData* gameData, const Resources* resources)
+{
+	// wait to draw anything until the delay is over
+	if (gameData->transitionInitialDelay)
+	{
+		gameData->transitionInitialDelay--;
+		////SMS_debugPrintf("transition_update delay\n");
+		return;
+	}
+
+	////SMS_debugPrintf("transition_update enter game room\n");
+	Game_EnterRoom(gameData, gameData->transitionRoomNumber, resources);
+}
+
+void wipe_transition_init(Room* targetRoom, GameData* gameData, const Resources* resources)
+{
+	SMS_waitForVBlank();
+	//SMS_debugPrintf("black palette\n");
+	SMS_loadBGPalette(blackPalette);
+	SMS_loadSpritePalette(blackPalette);
+
+	// init the clean background with the target room. 
+	// it'll be revealed at the end of the transition.
+	targetRoom->draw(gameData->transitionRoomNumber, (struct GameData*)gameData, resources);
+
+	// setup screen transition
+	gameData->transitionInitialDelay = INITIAL_TRANSITION_DELAY;
+
+	//SMS_debugPrintf("transition_init\n");
+}
+
+void wipe_transition_update(Room* room, GameData* gameData, const Resources* resources)
+{
+	// wait to draw anything until the delay is over
+	if (gameData->transitionInitialDelay)
+	{
+		gameData->transitionInitialDelay--;
+		//SMS_debugPrintf("transition_update delay\n");
+		return;
+	}
+
+	//SMS_debugPrintf("transition_update enter game room\n");
+	Game_EnterRoom(gameData, gameData->transitionRoomNumber, resources);
 }

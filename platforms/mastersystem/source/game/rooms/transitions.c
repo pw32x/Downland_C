@@ -8,6 +8,8 @@
 
 #define INITIAL_TRANSITION_DELAY 30
 
+#ifndef CUSTOM_TRANSITIONS
+
 // This simulates the pause before a room appears in the original game.
 // In the original game, the pause is because the background is being
 // drawn in the clearBackground off-screen buffer.
@@ -19,7 +21,7 @@ void transition_init(Room* targetRoom, GameData* gameData, const Resources* reso
 
 	// setup screen transition
 	gameData->transitionInitialDelay = INITIAL_TRANSITION_DELAY;
-	//dl_memset(gameData->framebuffer, 0, FRAMEBUFFER_SIZE_IN_BYTES);
+	dl_memset(gameData->framebuffer, 0, FRAMEBUFFER_SIZE_IN_BYTES);
 }
 
 void transition_update(Room* room, GameData* gameData, const Resources* resources)
@@ -33,10 +35,14 @@ void transition_update(Room* room, GameData* gameData, const Resources* resource
 
 	// dump the cleanBackground to the framebuffer and go 
 	// to the next room.
-	// dl_memcpy(gameData->framebuffer, gameData->cleanBackground, FRAMEBUFFER_SIZE_IN_BYTES);
+	dl_memcpy(gameData->framebuffer, gameData->cleanBackground, FRAMEBUFFER_SIZE_IN_BYTES);
 
 	Game_EnterRoom(gameData, gameData->transitionRoomNumber, resources);
 }
+#else
+void transition_init(Room* targetRoom, GameData* gameData, const Resources* resources);
+void transition_update(Room* room, GameData* gameData, const Resources* resources);
+#endif
 
 Room transitionRoom =
 {
@@ -45,6 +51,8 @@ Room transitionRoom =
 	NULL, // don't draw anything. 
 	(UpdateRoomFunctionType)transition_update
 };
+
+#ifndef CUSTOM_TRANSITIONS
 
 void wipe_transition_init(Room* targetRoom, GameData* gameData, const Resources* resources)
 {
@@ -60,7 +68,6 @@ void wipe_transition_init(Room* targetRoom, GameData* gameData, const Resources*
 
 void wipe_transition_update(Room* room, GameData* gameData, const Resources* resources)
 {
-
 	dl_u8 loopCount;
 	dl_u8 loopCounter;
 	dl_u16 offset;
@@ -94,7 +101,6 @@ void wipe_transition_update(Room* room, GameData* gameData, const Resources* res
 
 	for (loopCounter = 0; loopCounter < loopCount; loopCounter++)
 	{
-		/*
 		offset = gameData->transitionCurrentLine * FRAMEBUFFER_PITCH;
 
 		cleanBackgroundRunner = gameData->cleanBackground + offset;
@@ -127,7 +133,6 @@ void wipe_transition_update(Room* room, GameData* gameData, const Resources* res
 			cleanBackgroundRunner += 0x3e0; 
 			framebufferRunner += 0x3e0;		
 		}
-		*/
 
 		gameData->transitionCurrentLine++;
 	}
@@ -141,6 +146,10 @@ void wipe_transition_update(Room* room, GameData* gameData, const Resources* res
 			Game_TransitionDone(gameData, gameData->transitionRoomNumber, WIPE_TRANSITION_ROOM_INDEX);
 	}
 }
+#else
+void wipe_transition_init(Room* targetRoom, GameData* gameData, const Resources* resources);
+void wipe_transition_update(Room* room, GameData* gameData, const Resources* resources);
+#endif
 
 Room wipeTransitionRoom =
 {

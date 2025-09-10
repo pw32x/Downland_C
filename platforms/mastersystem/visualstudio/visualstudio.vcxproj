@@ -111,7 +111,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <NMakeOutput>..\out\Downland.sms</NMakeOutput>
-    <NMakePreprocessorDefinitions>CUSTOM_BACKGROUND_DRAWING;DISABLE_DOOR_DRAWING;DISABLE_RESOURCE_LOADER;WIN32;NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+    <NMakePreprocessorDefinitions>CUSTOM_TRANSITIONS;CUSTOM_BACKGROUND_DRAWING;DISABLE_DOOR_DRAWING;DISABLE_RESOURCE_LOADER;WIN32;NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
     <NMakeBuildCommandLine>..\build\build.bat</NMakeBuildCommandLine>
     <NMakeReBuildCommandLine>..\build\rebuild.bat</NMakeReBuildCommandLine>
     <NMakeCleanCommandLine>..\build\clean.bat</NMakeCleanCommandLine>

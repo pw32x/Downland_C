@@ -72,6 +72,11 @@ dl_u8 downlandPalette[] =
 	0x00, 0x30, 0x0b, 0x3f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
+dl_u8 blackPalette[] = 
+{
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+};
+
 extern unsigned char const tileSet4bpp[6240];
 extern unsigned char const characterFont4bpp[1248];
 extern const dl_u16 chamber0_tileMap[];
@@ -301,9 +306,15 @@ void main(void)
 	/* Clear VRAM */
 	SMS_VRAMmemsetW(0, 0x0000, 16384);
 
-	SMS_loadBGPalette(downlandPalette);
-	SMS_loadSpritePalette(downlandPalette);
-  
+	/* Turn on the display */
+	SMS_displayOn();
+	SMS_loadBGPalette(blackPalette);
+	SMS_loadSpritePalette(blackPalette);
+	SMS_waitForVBlank ();
+
+	SMS_initSprites();
+	SMS_copySpritestoSAT();
+
 	// load tiles for background
 	SMS_mapROMBank(VDP_ASSETS_BANK);
 	SMS_loadTiles(ball4bpp, 256, 128); // 4 tiles x 32 bytes
@@ -355,13 +366,14 @@ void main(void)
 
 	//chamber_draw(3, &gameData, &resources);
 
-	/* Turn on the display */
-	SMS_displayOn();
 	SMS_waitForVBlank ();
+	SMS_loadBGPalette(downlandPalette);
+	SMS_loadSpritePalette(downlandPalette);
 
 
 	ballData = &gameData.ballData;
 	birdData = &gameData.birdData;
+
 
 	dl_u8 controllerIndex = 0;
 

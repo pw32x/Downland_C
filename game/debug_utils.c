@@ -29,7 +29,7 @@ void debugDrawBox(unsigned char x,
     for (int loop = 0; loop < height; loop++)
     {
         debugFramebuffer[x + ((y + loop) * FRAMEBUFFER_WIDTH)] = pixel;
-        debugFramebuffer[x + width + ((y + loop) * FRAMEBUFFER_WIDTH)] = pixel;
+        debugFramebuffer[x + (width - 1) + ((y + loop) * FRAMEBUFFER_WIDTH)] = pixel;
     }
 }
 

@@ -28,6 +28,8 @@ dl_u8 g_regenSpriteIndex;
 
 extern const dl_u8 getReadyScreen_cleanBackground[6144];
 
+//dl_u8 tileMapBuffer[32 * 16];
+
 typedef void (*DrawRoomFunction)(struct GameData* gameData, const Resources* resources);
 DrawRoomFunction m_drawRoomFunctions[NUM_ROOMS_AND_ALL];
 
@@ -95,13 +97,6 @@ extern unsigned char const playerLives4bpp[640]; // 20 tiles x 32 bytes
 extern unsigned char const playerRegen4bpp[1280]; // 40 tiles x 32 bytes
 extern unsigned char const playerLivesRegen4bpp[320]; // 10 tiles x 32 bytes
 extern unsigned char const cursor4bpp[32]; // 1 tiles x 32 bytes
-
-void drawBackground(const BackgroundDrawData* backgroundDrawData, 
-					const Resources* resources,
-					dl_u8* framebuffer)
-{
-}
-
 
 void drawTileText(const dl_u8* text, dl_u16 xyLocation)
 {
@@ -199,8 +194,6 @@ void titleScreen_draw(dl_u8 roomNumber, GameData* gameData, const Resources* res
 
 GameData gameData;
 extern Resources resources;
-dl_u8 framebuffer[FRAMEBUFFER_PITCH * FRAMEBUFFER_HEIGHT];
-
 
 void drawDrops(const GameData* gameData)
 {
@@ -366,7 +359,7 @@ void main(void)
 
 	Game_ChangedRoomCallback = GameRunner_ChangedRoomCallback;
 
-    Game_Init(&gameData, &resources, framebuffer, NULL /*cleanBackground*/);
+    Game_Init(&gameData, &resources, NULL, NULL /*cleanBackground*/);
 
 	//chamber_draw(3, &gameData, &resources);
 	ballData = &gameData.ballData;

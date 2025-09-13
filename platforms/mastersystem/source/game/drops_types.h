@@ -6,7 +6,8 @@
 
 #define NUM_DROPS 10
 
-#define DROP_WIDTH  4
+#define DROP_WIDTH  2
+#define DROP_COLLISION_WIDTH  2
 #define DROP_HEIGHT	6
 
 typedef DL_PACKED struct

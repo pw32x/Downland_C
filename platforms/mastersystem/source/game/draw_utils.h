@@ -5,9 +5,11 @@
 #include "background_types.h"
 #include "resource_types.h"
 
-#define CRT_EFFECT_MASK 0x55 // 01010101b
-
 extern dl_u8 pixelMasks[4];
+
+#ifndef DISABLE_FRAMEBUFFER
+
+#define CRT_EFFECT_MASK 0x55 // 01010101b
 
 void drawText(const dl_u8* text, const dl_u8* characterFont, dl_u8* framebuffer, dl_u16 framebufferPosition);
 
@@ -28,5 +30,6 @@ const dl_u8* getBitShiftedSprite(const dl_u8* bitShiftedSpriteData, dl_u8 frameN
 void drawBackground(const BackgroundDrawData* backgroundDrawData, 
 					const Resources* resources,
 					dl_u8* framebuffer);
+#endif
 
 #endif

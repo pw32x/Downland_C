@@ -10,7 +10,20 @@
 #ifndef CUSTOM_ROOM_DRAW
 void titleScreen_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resources)
 {
+	convertScoreToString(gameData->playerData[PLAYER_ONE].score, gameData->playerData[PLAYER_ONE].scoreString);
+
+	convertScoreToString(gameData->playerData[PLAYER_TWO].score, gameData->playerData[PLAYER_TWO].scoreString);
+
+	if (gameData->playerData[PLAYER_ONE].score > gameData->highScore)
+		gameData->highScore = gameData->playerData[PLAYER_ONE].score;
+	else if (gameData->playerData[PLAYER_TWO].score > gameData->highScore)
+		gameData->highScore = gameData->playerData[PLAYER_TWO].score;
+
+	convertScoreToString(gameData->highScore, gameData->string_highScore);
+
+#ifndef DISABLE_FRAMEBUFFER
 	dl_u8* cleanBackground = gameData->cleanBackground;
+
 
 	// init background and text
 	drawBackground(&resources->roomResources[roomNumber].backgroundDrawData, 
@@ -32,31 +45,27 @@ void titleScreen_draw(dl_u8 roomNumber, GameData* gameData, const Resources* res
 	drawText(resources->text_playerOne, resources->characterFont, cleanBackground, 0x1406); // 0x1806 original coco mem location
 	drawText(resources->text_playerTwo, resources->characterFont, cleanBackground, 0x1546); // 0x1946 original coco mem location
 
-	convertScoreToString(gameData->playerData[PLAYER_ONE].score, gameData->playerData[PLAYER_ONE].scoreString);
+
 
 	drawText(gameData->playerData[PLAYER_ONE].scoreString, 
 			 resources->characterFont, 
 			 cleanBackground, 
 			 TITLESCREEN_PLAYERONE_SCORE_LOCATION);
 
-	convertScoreToString(gameData->playerData[PLAYER_TWO].score, gameData->playerData[PLAYER_TWO].scoreString);
+
 
 	drawText(gameData->playerData[PLAYER_TWO].scoreString, 
 			 resources->characterFont, 
 			 cleanBackground, 
 			 TITLESCREEN_PLAYERTWO_SCORE_LOCATION);
 
-	if (gameData->playerData[PLAYER_ONE].score > gameData->highScore)
-		gameData->highScore = gameData->playerData[PLAYER_ONE].score;
-	else if (gameData->playerData[PLAYER_TWO].score > gameData->highScore)
-		gameData->highScore = gameData->playerData[PLAYER_TWO].score;
 
-	convertScoreToString(gameData->highScore, gameData->string_highScore);
 
 	drawText(gameData->string_highScore, 
 			 resources->characterFont, 
 			 cleanBackground, 
 			 TITLESCREEN_HIGHSCORE_LOCATION);
+#endif
 }
 #else
 void titleScreen_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resources);
@@ -74,8 +83,10 @@ void titleScreen_init(Room* room, GameData* gameData, const Resources* resources
 void titleScreen_update(Room* room, GameData* gameData, const Resources* resources)
 {
 	int loop;
+#ifndef DISABLE_FRAMEBUFFER
 	dl_u16 drawLocation;
 	dl_u16 eraseLocation;
+#endif
 
 	// run the drops manager three times to simulate
 	// the lack of checking for vsync in the original 
@@ -101,19 +112,23 @@ void titleScreen_update(Room* room, GameData* gameData, const Resources* resourc
 		gameData->numPlayers = 2;
 	}
 
+#ifndef DISABLE_FRAMEBUFFER
 	// draw the cursor
 	drawLocation = gameData->numPlayers == 1 ? 0xf64 : 0xf70;  // hardcoded locations in the frambuffer
 	eraseLocation = gameData->numPlayers == 1 ? 0xf70 : 0xf64; // based on the original game.
 
 	gameData->framebuffer[drawLocation] = 0xff;// draw the cursor (a white horizontal line)
 	gameData->framebuffer[eraseLocation] = 0;  // erase the cursor
+#endif
 
 	// press button to start
 	if (gameData->joystickState.jumpPressed)
 	{
 		Game_InitPlayers(gameData, resources);
 
+#ifndef DISABLE_FRAMEBUFFER
 		dl_memset(gameData->framebuffer, 0, FRAMEBUFFER_SIZE_IN_BYTES);		
+#endif
 		Game_WipeTransitionToRoom(gameData, 0, resources);
 	}
 }

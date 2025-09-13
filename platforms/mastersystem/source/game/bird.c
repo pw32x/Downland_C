@@ -23,16 +23,20 @@ void initBirdPhysics(BirdData* birdData)
 	birdData->speedx = 0x0100 + (dl_rand() % 256);
 	birdData->speedy = 0x0100 + (dl_rand() % 256);
 
+#ifndef DISABLE_FRAMEBUFFER
 	birdData->currentSprite = getBitShiftedSprite(birdData->bitShiftedSprites, 
 											      0,
 											      BIRD_START_X & 3,
 											      BITSHIFTED_SPRITE_FRAME_SIZE);
+#endif
 }
 
 void Bird_Init(BirdData* birdData, dl_u8 roomNumber, const Resources* resources)
 {
 	birdData->state = BIRD_INACTIVE;
+#ifndef DISABLE_FRAMEBUFFER
 	birdData->bitShiftedSprites = resources->bitShiftedSprites_bird;
+#endif
 	birdData->animationCounter = 0;
 	initBirdPhysics(birdData);
 }
@@ -45,13 +49,14 @@ void Bird_Update(BirdData* birdData, dl_u16 currentRoomTimer, dl_u8* framebuffer
 
 	if (birdData->state == BIRD_SHUTDOWN)
 	{
+#ifndef DISABLE_FRAMEBUFFER
 		eraseSprite_24PixelsWide(birdData->currentSprite,
 								 GET_HIGH_BYTE(birdData->x),
 								 GET_HIGH_BYTE(birdData->y),
 								 BIRD_SPRITE_ROWS,
 								 framebuffer, 
 								 cleanBackground);
-
+#endif
 		birdData->state = BIRD_INACTIVE;
 	}
 
@@ -64,12 +69,14 @@ void Bird_Update(BirdData* birdData, dl_u16 currentRoomTimer, dl_u8* framebuffer
 		return;
 	}
 
+#ifndef DISABLE_FRAMEBUFFER
 	eraseSprite_24PixelsWide(birdData->currentSprite,
 								GET_HIGH_BYTE(birdData->x),
 								GET_HIGH_BYTE(birdData->y),
 								BIRD_SPRITE_ROWS,
 								framebuffer, 
 								cleanBackground);
+#endif
 
 	birdData->animationCounter++;
 	birdData->animationFrame = (birdData->animationCounter >> 3) & 0x1;
@@ -94,6 +101,7 @@ void Bird_Update(BirdData* birdData, dl_u16 currentRoomTimer, dl_u8* framebuffer
 
 	birdData->x += birdData->speedx;
 
+#ifndef DISABLE_FRAMEBUFFER
 	birdData->currentSprite = getBitShiftedSprite(birdData->bitShiftedSprites, 
 											      birdData->animationFrame,
 											      GET_HIGH_BYTE(birdData->x) & 3, 
@@ -104,4 +112,5 @@ void Bird_Update(BirdData* birdData, dl_u16 currentRoomTimer, dl_u8* framebuffer
 							GET_HIGH_BYTE(birdData->y), 
 							BIRD_SPRITE_ROWS, 
 							framebuffer);
+#endif
 }

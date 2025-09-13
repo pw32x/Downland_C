@@ -7,7 +7,7 @@
 #define NUM_PICKUPS_PER_ROOM 5
 
 #define PICKUP_HEIGHT	0xa
-#define PICKUP_WIDTH	0x8
+#define PICKUP_WIDTH	0x4 // collision width
 
 #define PICKUPS_NUM_SPRITE_WIDTH 16
 #define PICKUPS_NUM_SPRITE_ROWS 10

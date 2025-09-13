@@ -19,8 +19,10 @@ typedef struct
 	dl_u16 y; // high resolution position 256 pixels, 256 subpixels
 	dl_u16 speedx;
 	dl_u16 speedy; // high resolution
+#ifndef DISABLE_FRAMEBUFFER
 	const dl_u8* currentSprite;
 	const dl_u8* bitShiftedSprites;
+#endif
 	dl_u8 fallStateCounter;
 } BallData;
 

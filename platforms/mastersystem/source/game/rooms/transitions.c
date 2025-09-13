@@ -21,7 +21,9 @@ void transition_init(Room* targetRoom, GameData* gameData, const Resources* reso
 
 	// setup screen transition
 	gameData->transitionInitialDelay = INITIAL_TRANSITION_DELAY;
+#ifndef DISABLE_FRAMEBUFFER
 	dl_memset(gameData->framebuffer, 0, FRAMEBUFFER_SIZE_IN_BYTES);
+#endif
 }
 
 void transition_update(Room* room, GameData* gameData, const Resources* resources)
@@ -35,7 +37,9 @@ void transition_update(Room* room, GameData* gameData, const Resources* resource
 
 	// dump the cleanBackground to the framebuffer and go 
 	// to the next room.
+#ifndef DISABLE_FRAMEBUFFER
 	dl_memcpy(gameData->framebuffer, gameData->cleanBackground, FRAMEBUFFER_SIZE_IN_BYTES);
+#endif
 
 	Game_EnterRoom(gameData, gameData->transitionRoomNumber, resources);
 }
@@ -101,6 +105,7 @@ void wipe_transition_update(Room* room, GameData* gameData, const Resources* res
 
 	for (loopCounter = 0; loopCounter < loopCount; loopCounter++)
 	{
+#ifndef DISABLE_FRAMEBUFFER
 		offset = gameData->transitionCurrentLine * FRAMEBUFFER_PITCH;
 
 		cleanBackgroundRunner = gameData->cleanBackground + offset;
@@ -133,7 +138,7 @@ void wipe_transition_update(Room* room, GameData* gameData, const Resources* res
 			cleanBackgroundRunner += 0x3e0; 
 			framebufferRunner += 0x3e0;		
 		}
-
+#endif
 		gameData->transitionCurrentLine++;
 	}
 

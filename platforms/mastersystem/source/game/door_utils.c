@@ -1,6 +1,7 @@
 #include "door_utils.h"
 #include "draw_utils.h"
 
+#ifndef DISABLE_DOOR_DRAWING
 void drawDoor(const DoorInfo* doorInfo, 
 			  const dl_u8* bitShiftedDoorSprites, 
 			  dl_u8* framebuffer, 
@@ -19,6 +20,7 @@ void drawDoor(const DoorInfo* doorInfo,
 	else
 		x -= 4;
 
+#ifndef DISABLE_FRAMEBUFFER
 	doorSprite = getBitShiftedSprite(bitShiftedDoorSprites, 
 									 0,
 									 x & 3, 
@@ -38,6 +40,6 @@ void drawDoor(const DoorInfo* doorInfo,
 							y, 
 							DOOR_SPRITE_ROWS, 
 							cleanBackground);
-
+#endif
 }
-
+#endif

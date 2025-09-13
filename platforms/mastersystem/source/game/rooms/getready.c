@@ -9,9 +9,11 @@
 #ifndef CUSTOM_ROOM_DRAW
 void get_ready_room_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resources)
 {
+#ifndef DISABLE_FRAMEBUFFER
 	const dl_u8* getReadyString;
 
 	dl_u8* cleanBackground = gameData->cleanBackground;
+
 
 	// init background and text
 	drawBackground(&resources->roomResources[TITLESCREEN_ROOM_INDEX].backgroundDrawData, 
@@ -20,8 +22,8 @@ void get_ready_room_draw(dl_u8 roomNumber, GameData* gameData, const Resources* 
 
 	// get ready text
 	getReadyString = gameData->currentPlayerData->playerNumber == PLAYER_ONE ? resources->text_getReadyPlayerOne : resources->text_getReadyPlayerTwo;
-
 	drawText(getReadyString, resources->characterFont, cleanBackground, 0x0b66);
+#endif
 }
 #else
 void get_ready_room_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resources);
@@ -59,7 +61,9 @@ void get_ready_room_update(Room* room, GameData* gameData, const Resources* reso
 		if (gameData->currentPlayerData->lastDoor != NULL)
 			roomNumber = gameData->currentPlayerData->lastDoor->nextRoomNumber;
 
+#ifndef DISABLE_FRAMEBUFFER
 		dl_memset(gameData->framebuffer, 0, FRAMEBUFFER_SIZE_IN_BYTES);		
+#endif
 		Game_WipeTransitionToRoom(gameData, roomNumber, resources);
 	}
 }

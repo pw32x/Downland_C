@@ -38,7 +38,10 @@ void Player_Update(PlayerData* playerData,
 
 void Player_StartRegen(PlayerData* playerData);
 
+#ifndef DISABLE_FRAMEBUFFER
 dl_u8 Player_HasCollision(PlayerData* playerData, dl_u8* framebuffer, dl_u8* cleanBackground);
+#endif
+
 void Player_PerformCollisions(struct GameData* gameData, const Resources* resources);
 
 void Player_CompleteGameLoop(PlayerData* playerData, const Resources* resource);

@@ -997,6 +997,8 @@ dl_u8 Player_HasCollision(PlayerData* playerData, dl_u8* framebuffer, dl_u8* cle
 	framebuffer = &framebuffer[location];
 	cleanBackgroundRunner = &cleanBackground[location];
 
+	//dl_u32* debugFramebufferRunner = &debugFramebuffer[(sensorX << 1) + (sensorY * FRAMEBUFFER_WIDTH)];
+
 	collisionTestBufferRunner = collisionTestBuffer;
 
 
@@ -1006,13 +1008,36 @@ dl_u8 Player_HasCollision(PlayerData* playerData, dl_u8* framebuffer, dl_u8* cle
 		collisionTestBufferRunner[1] = (framebuffer[1] & currentCollisionMask[1]) | cleanBackgroundRunner[1];
 		collisionTestBufferRunner[2] = (framebuffer[2] & currentCollisionMask[2]) | cleanBackgroundRunner[2];
 
+		/*
+		dl_u8 collisionTestBufferRunner0 = currentCollisionMask[0];
+		dl_u8 collisionTestBufferRunner1 = currentCollisionMask[1];
+		dl_u8 collisionTestBufferRunner2 = currentCollisionMask[2];
+
+		for (int i = 0; i < 8; i++)
+		{
+			//debugFramebufferRunner[i] = (collisionTestBufferRunner0 & 0x80) ? 0xFFFF0000 : 0;
+			//debugFramebufferRunner[i + 8] = (collisionTestBufferRunner1 & 0x80) ? 0xFFFF0000 : 0;
+			//debugFramebufferRunner[i + 16] = (collisionTestBufferRunner2 & 0x80) ? 0xFFFF0000 : 0;
+
+			collisionTestBufferRunner0 <<= 1;
+			collisionTestBufferRunner1 <<= 1;
+			collisionTestBufferRunner2 <<= 1;
+		}
+		*/
 
 		// move along buffers
 		framebuffer += FRAMEBUFFER_PITCH * 3;
 		cleanBackgroundRunner += FRAMEBUFFER_PITCH * 3;
+		//debugFramebufferRunner += FRAMEBUFFER_WIDTH * 3;
 		collisionTestBufferRunner += 3;
 		currentCollisionMask += 3;
 	}
+
+	/*
+	if (playerData->facingDirection)
+		debugDrawBox((sensorX + 1) << 1, sensorY, 4 << 1, 14, 0xff0000ff);
+	else
+		debugDrawBox((sensorX + 2) << 1, sensorY, 4 << 1, 14, 0xff0000ff);
 
 	currentSprite = playerData->currentSprite + 3; // start one line down
 	cleanBackgroundRunner = &cleanBackground[location];
@@ -1031,7 +1056,7 @@ dl_u8 Player_HasCollision(PlayerData* playerData, dl_u8* framebuffer, dl_u8* cle
 		collisionTestBufferRunner += 3;
 		currentSprite += 3 * 3;
 	}
-
+	*/
 	return FALSE;
 }
 
@@ -1040,11 +1065,16 @@ dl_u8 Player_HasCollision(PlayerData* playerData, dl_u8* framebuffer, dl_u8* cle
 BOOL objectCollisionTest(PlayerData* playerData, dl_u8 x, dl_u8 y, dl_u8 width, dl_u8 height)
 {
 	dl_u8 playerX = GET_HIGH_BYTE(playerData->x);
-	dl_u8 playerY = GET_HIGH_BYTE(playerData->y);
+	dl_u8 playerY = GET_HIGH_BYTE(playerData->y) + 1;
+
+	playerX += playerData->facingDirection ? 1 : 2;
+
+	//debugDrawBox( GET_HIGH_BYTE(playerData->x) << 1, GET_HIGH_BYTE(playerData->y), 16, PLAYER_SPRITE_ROWS, 0xff00ff00);
+	//debugDrawBox(playerX << 1, playerY, PLAYER_COLLISION_WIDTH << 1, PLAYER_COLLISION_HEIGHT, 0xff0000ff);
 
 	return (x < playerX + PLAYER_COLLISION_WIDTH &&
 		    x + width > playerX &&
-		    y < playerY + PLAYER_SPRITE_ROWS &&
+		    y < playerY + PLAYER_COLLISION_HEIGHT &&
 		    y + height > playerY);
 }
 
@@ -1108,7 +1138,7 @@ void Player_PerformCollisions(struct GameData* gameDataStruct,
 		if (!(pickUp->state & playerData->playerMask))
 			continue;
 
-		if (objectCollisionTest(playerData, pickUp->x, pickUp->y, PICKUP_WIDTH, PICKUP_HEIGHT))
+		if (objectCollisionTest(playerData, pickUp->x + 2, pickUp->y, PICKUP_WIDTH, PICKUP_HEIGHT))
 		{
 			pickUp->state = pickUp->state & ~playerData->playerMask;
 
@@ -1204,7 +1234,7 @@ void Player_PerformCollisions(struct GameData* gameDataStruct,
 
 	if (ballData->state == BALL_ACTIVE &&
 		objectCollisionTest(playerData, 
-							GET_HIGH_BYTE(ballData->x),
+							GET_HIGH_BYTE(ballData->x) + 1,
 							GET_HIGH_BYTE(ballData->y),
 							BALL_COLLISION_WIDTH,
 							BALL_SPRITE_ROWS))
@@ -1220,7 +1250,7 @@ void Player_PerformCollisions(struct GameData* gameDataStruct,
 
 	if (birdData->state == BIRD_ACTIVE &&
 		objectCollisionTest(playerData, 
-							GET_HIGH_BYTE(birdData->x),
+							GET_HIGH_BYTE(birdData->x) + 1,
 							GET_HIGH_BYTE(birdData->y),
 							BIRD_COLLISION_WIDTH,
 							BIRD_SPRITE_ROWS))

@@ -1060,7 +1060,7 @@ BOOL objectCollisionTest(PlayerData* playerData, dl_u8 x, dl_u8 y, dl_u8 width, 
 	//debugDrawBox( GET_HIGH_BYTE(playerData->x) << 1, GET_HIGH_BYTE(playerData->y), 16, PLAYER_SPRITE_ROWS, 0xff00ff00);
 	//debugDrawBox(playerX << 1, playerY, PLAYER_COLLISION_WIDTH << 1, PLAYER_COLLISION_HEIGHT, 0xff0000ff);
 
-	return (x < playerX + PLAYER_COLLISION_WIDTH &&
+	return (x < playerX + PLAYER_COLLISION_WIDTH + 1 &&
 		    x + width > playerX &&
 		    y < playerY + PLAYER_COLLISION_HEIGHT &&
 		    y + height > playerY);

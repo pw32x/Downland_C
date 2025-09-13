@@ -330,7 +330,7 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
         }
 
 #ifdef DEV_MODE
-        else if (event->key.key == SDLK_SPACE && gameData.currentPlayerData->currentRoom->roomNumber != TITLESCREEN_ROOM_INDEX)
+        else if (event->key.key == SDLK_SPACE/* && gameData.currentPlayerData->currentRoom->roomNumber != TITLESCREEN_ROOM_INDEX*/)
         {
             stepFrame = TRUE;
             gameData.paused = FALSE;
@@ -494,7 +494,7 @@ SDL_AppResult SDL_AppIterate(void *appstate)
     SDLUtils_updateDebugFramebufferTexture(debugFramebuffer, 
                                            debugFramebufferTexture);
 
-    SDL_RenderTexture(renderer, debugFramebufferTexture, NULL, NULL);
+    SDL_RenderTexture(renderer, debugFramebufferTexture, NULL, &destRect);
 #endif
 
     // Compute elapsed time for the frame

@@ -117,7 +117,7 @@ void drawTileText(const dl_u8* text, dl_u16 xyLocation)
 
 void chamber_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resources)
 {
-	SMS_mapROMBank(CHAMBER_BANK_START + roomNumber);
+	
 
 
 	const SMSBackgroundData* backgroundData = (const SMSBackgroundData*)resources->roomResources[roomNumber].backgroundDrawData;
@@ -141,8 +141,6 @@ void chamber_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resourc
 
 void get_ready_room_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resources)
 {
-	SMS_mapROMBank(CHAMBER_BANK_START + TITLESCREEN_ROOM_INDEX);
-
 	const SMSBackgroundData* backgroundData = (const SMSBackgroundData*)resources->roomResources[TITLESCREEN_ROOM_INDEX].backgroundDrawData;
 	gameData->cleanBackground = getReadyScreen_cleanBackground;
 	SMS_loadTileMap(0, 0, backgroundData->tileMap, 32 * 24 * 2);
@@ -154,7 +152,6 @@ void get_ready_room_draw(dl_u8 roomNumber, GameData* gameData, const Resources* 
 
 void titleScreen_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resources)
 {
-	SMS_mapROMBank(CHAMBER_BANK_START + roomNumber);
 
 	const SMSBackgroundData* backgroundData = (const SMSBackgroundData*)resources->roomResources[roomNumber].backgroundDrawData;
 	gameData->cleanBackground = backgroundData->cleanBackground;
@@ -584,9 +581,18 @@ void drawGetReadyScreen(struct GameData* gameData, const Resources* resources)
 void transition_init(Room* targetRoom, GameData* gameData, const Resources* resources)
 {
 	SMS_waitForVBlank();
-	//SMS_debugPrintf("black palette\n");
-	SMS_loadBGPalette(blackPalette);
-	SMS_loadSpritePalette(blackPalette);
+	SMS_initSprites();
+	SMS_copySpritestoSAT();
+	SMS_VRAMmemset(XYtoADDR((0),(0)), 0, 32 * 24 * 2);
+
+	if (gameData->transitionRoomNumber != GET_READY_ROOM_INDEX)
+		SMS_mapROMBank(CHAMBER_BANK_START + gameData->transitionRoomNumber);
+	else 
+		SMS_mapROMBank(CHAMBER_BANK_START + TITLESCREEN_ROOM_INDEX);
+
+	////SMS_debugPrintf("black palette\n");
+	//SMS_loadBGPalette(blackPalette);
+	//SMS_loadSpritePalette(blackPalette);
 
 	// init the clean background with the target room. 
 	// it'll be revealed at the end of the transition.
@@ -615,6 +621,15 @@ void transition_update(Room* room, GameData* gameData, const Resources* resource
 void wipe_transition_init(Room* targetRoom, GameData* gameData, const Resources* resources)
 {
 	SMS_waitForVBlank();
+	SMS_initSprites();
+	SMS_copySpritestoSAT();
+	SMS_VRAMmemset(XYtoADDR((0),(0)), 0, 32 * 24 * 2);
+
+	if (gameData->transitionRoomNumber != GET_READY_ROOM_INDEX)
+		SMS_mapROMBank(CHAMBER_BANK_START + gameData->transitionRoomNumber);
+	else 
+		SMS_mapROMBank(CHAMBER_BANK_START + TITLESCREEN_ROOM_INDEX);
+
 	//SMS_debugPrintf("black palette\n");
 	SMS_loadBGPalette(blackPalette);
 	SMS_loadSpritePalette(blackPalette);

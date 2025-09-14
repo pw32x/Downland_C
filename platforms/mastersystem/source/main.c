@@ -6,7 +6,7 @@
 #include "custom_background_types.h"
 #include "chambers.h"
 #include "rooms/titlescreen.h"
-
+#include "dl_sound.h"
 #include "string.h"
 
 #define VDP_ASSETS_BANK 2
@@ -29,6 +29,8 @@ dl_u8 g_regenSpriteIndex;
 extern const dl_u8 getReadyScreen_cleanBackground[6144];
 
 //dl_u8 tileMapBuffer[32 * 16];
+
+dl_u8 g_transitionDirection;
 
 typedef void (*DrawRoomFunction)(struct GameData* gameData, const Resources* resources);
 DrawRoomFunction m_drawRoomFunctions[NUM_ROOMS_AND_ALL];
@@ -631,15 +633,20 @@ void wipe_transition_init(Room* targetRoom, GameData* gameData, const Resources*
 		SMS_mapROMBank(CHAMBER_BANK_START + TITLESCREEN_ROOM_INDEX);
 
 	//SMS_debugPrintf("black palette\n");
-	SMS_loadBGPalette(blackPalette);
-	SMS_loadSpritePalette(blackPalette);
+	//SMS_loadBGPalette(blackPalette);
+	//SMS_loadSpritePalette(blackPalette);
 
 	// init the clean background with the target room. 
 	// it'll be revealed at the end of the transition.
-	targetRoom->draw(gameData->transitionRoomNumber, (struct GameData*)gameData, resources);
+	//targetRoom->draw(gameData->transitionRoomNumber, (struct GameData*)gameData, resources);
 
 	// setup screen transition
 	gameData->transitionInitialDelay = INITIAL_TRANSITION_DELAY;
+	gameData->transitionCurrentLine = 0;
+	gameData->transitionFrameDelay = 0;
+
+	const PlayerData* playerData = gameData->currentPlayerData;
+	g_transitionDirection = playerData->lastDoor->xLocationInNextRoom < 50;
 
 	//SMS_debugPrintf("transition_init\n");
 }
@@ -654,6 +661,40 @@ void wipe_transition_update(Room* room, GameData* gameData, const Resources* res
 		return;
 	}
 
-	//SMS_debugPrintf("transition_update enter game room\n");
-	Game_EnterRoom(gameData, gameData->transitionRoomNumber, resources);
+	// only update every other frame to simulate the 
+	// original game.
+	gameData->transitionFrameDelay = !gameData->transitionFrameDelay;
+
+	if (gameData->transitionFrameDelay)
+		return;
+
+	// play the transition sound effect at the start
+	if (!gameData->transitionCurrentLine)
+	{
+		Sound_Play(SOUND_SCREEN_TRANSITION, FALSE);
+	}
+
+	dl_u8 currentColumn = g_transitionDirection ? gameData->transitionCurrentLine : 31 - gameData->transitionCurrentLine;
+
+	const SMSBackgroundData* backgroundData = (const SMSBackgroundData*)resources->roomResources[gameData->transitionRoomNumber].backgroundDrawData;
+	for (dl_u8 loop = 0; loop < 24; loop++)
+	{
+		SMS_setTileatXY(currentColumn, 
+						loop, 
+						backgroundData->tileMap[currentColumn + (loop << 5)]);
+	}
+
+	gameData->transitionCurrentLine++;
+
+	// we're done
+	if (gameData->transitionCurrentLine == 32)
+	{
+		Room* transitionRoom = g_rooms[gameData->transitionRoomNumber];
+		transitionRoom->draw(gameData->transitionRoomNumber, (struct GameData*)gameData, resources);
+
+		Game_EnterRoom(gameData, gameData->transitionRoomNumber, resources);
+
+		if (Game_TransitionDone)
+			Game_TransitionDone(gameData, gameData->transitionRoomNumber, WIPE_TRANSITION_ROOM_INDEX);
+	}
 }

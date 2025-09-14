@@ -38,7 +38,6 @@ void Bird_Init(BirdData* birdData, dl_u8 roomNumber, const Resources* resources)
 	birdData->bitShiftedSprites = resources->bitShiftedSprites_bird;
 #endif
 	birdData->animationCounter = 0;
-	initBirdPhysics(birdData);
 }
 
 

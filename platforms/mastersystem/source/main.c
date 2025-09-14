@@ -678,8 +678,6 @@ void wipe_transition_update(Room* room, GameData* gameData, const Resources* res
 	dl_s8 offset = g_transitionDirection ? 1 : -1;
 	dl_u16 flip = g_transitionDirection ? TILE_FLIPPED_X : 0;
 
-	SMS_debugPrintf("flip: %d\n", flip);
-
 	const SMSBackgroundData* backgroundData = (const SMSBackgroundData*)resources->roomResources[gameData->transitionRoomNumber].backgroundDrawData;
 	for (dl_u8 loop = 0; loop < 24; loop++)
 	{

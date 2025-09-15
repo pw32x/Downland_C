@@ -81,6 +81,8 @@ void Game_EnterRoom(struct GameData* gameData, dl_u8 roomNumber, const Resources
 
 void Game_TransitionToRoom(struct GameData* gameData, dl_u8 roomNumber, const Resources* resources)
 {
+	UNUSED(gameData);
+
 	gameData->transitionRoomNumber = roomNumber;
 
 	gameData->currentRoom = g_rooms[roomNumber];
@@ -117,5 +119,5 @@ void Game_WipeTransitionToRoom(struct GameData* gameData, dl_u8 roomNumber, cons
 
 void Game_Shutdown(struct GameData* gameData)
 {
-
+	UNUSED(gameData);
 }

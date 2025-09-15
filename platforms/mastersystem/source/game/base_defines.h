@@ -44,7 +44,7 @@
 #define SCORE_DRAW_LOCATION			0x1703
 
 
-#define SET_HIGH_BYTE(v) (v << 8)
+#define SET_HIGH_BYTE(v) ((dl_u16)((v) << 8))
 #define GET_HIGH_BYTE(v) ((dl_u8)((v) >> 8))
 #define GET_LOW_BYTE(v) ((dl_u8)v)
 

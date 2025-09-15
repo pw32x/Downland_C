@@ -1,5 +1,7 @@
 #include "debug_utils.h"
 
+const unsigned char placeHolder = 3; // SDCC warning 190: ISO C forbids an empty translation unit
+
 #ifdef DEV_MODE
 #ifdef _WINDOWS
 

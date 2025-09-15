@@ -86,6 +86,8 @@ void Ball_Init(BallData* ballData, dl_u8 roomNumber, const Resources* resources)
 
 void Ball_Update(BallData* ballData, dl_u8* framebuffer, dl_u8* cleanBackground)
 {
+	UNUSED(framebuffer);
+
 	dl_u8 terrainTest;
 
 	if (!ballData->enabled)

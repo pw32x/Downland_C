@@ -120,6 +120,8 @@ void DropsManager_Update(DropData* dropData,
 						 dl_u8 gameCompletionCount,
 						 const dl_u8* dropSprites)
 {
+	UNUSED(framebuffer);
+
 	int loop;
 	Drop* drop;
 	Drop* drops = dropData->drops;

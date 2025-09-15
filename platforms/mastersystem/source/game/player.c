@@ -93,6 +93,9 @@ dl_u16 ropeCollisionMasks[4] =
 
 void playerKill(PlayerData* playerData, dl_u8* framebuffer, dl_u8* cleanBackground)
 {
+	UNUSED(framebuffer);
+	UNUSED(cleanBackground);
+
 #ifndef DISABLE_FRAMEBUFFER
 	dl_u8 x;
 	dl_u8 y;
@@ -269,6 +272,8 @@ void Player_GameInit(PlayerData* playerData, const Resources* resources)
 
 void Player_RoomInit(PlayerData* playerData, const Resources* resources)
 {
+	UNUSED(resources);
+
 	// setup initial state for room
 
 	if (playerData->isDead)
@@ -1096,6 +1101,8 @@ BOOL dropsManagerCollisionTest(DropData* dropData, PlayerData* playerData)
 void Player_PerformCollisions(struct GameData* gameDataStruct, 
 							  const Resources* resources)
 {
+	UNUSED(resources);
+
 	dl_u8 roomNumber;
 	dl_u8 loop;
 	Pickup* pickUp;

@@ -33,6 +33,9 @@ void initBirdPhysics(BirdData* birdData)
 
 void Bird_Init(BirdData* birdData, dl_u8 roomNumber, const Resources* resources)
 {
+	UNUSED(roomNumber);
+	UNUSED(resources);
+
 	birdData->state = BIRD_INACTIVE;
 #ifndef DISABLE_FRAMEBUFFER
 	birdData->bitShiftedSprites = resources->bitShiftedSprites_bird;
@@ -43,6 +46,9 @@ void Bird_Init(BirdData* birdData, dl_u8 roomNumber, const Resources* resources)
 
 void Bird_Update(BirdData* birdData, dl_u16 currentRoomTimer, dl_u8* framebuffer, dl_u8* cleanBackground)
 {
+	UNUSED(framebuffer);
+	UNUSED(cleanBackground);
+
 	dl_u8 newPixelX;
 	dl_u8 newPixelY;
 

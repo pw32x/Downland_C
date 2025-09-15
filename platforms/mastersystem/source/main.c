@@ -43,24 +43,37 @@ void drawGetReadyScreen(struct GameData* gameData, const Resources* resources);
 
 void* dl_alloc(dl_u32 size)
 {
+	UNUSED(size);
 	return NULL;
 }
 
 void dl_memset(void* source, dl_u8 value, dl_u16 count)
 {
+	dl_u8* src = (dl_u8*)source;
 
+	for (dl_u16 loop = 0; loop < count; loop++)
+	{
+		*src = value;
+		src++;
+	}
 }
 
 void dl_memcpy(void* destination, const void* source, dl_u16 count)
 {
+	UNUSED(destination);
+	UNUSED(source);
+	UNUSED(count);
 }
 
 void Sound_Play(dl_u8 soundIndex, dl_u8 loop)
 {
+	(void)soundIndex;
+	(void)loop;
 }
 
 void Sound_Stop(dl_u8 soundIndex)
 {
+	(void)soundIndex;
 }
 
 void Sound_StopAll(void)
@@ -123,8 +136,8 @@ void chamber_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resourc
 
 
 	const SMSBackgroundData* backgroundData = (const SMSBackgroundData*)resources->roomResources[roomNumber].backgroundDrawData;
-	gameData->cleanBackground = backgroundData->cleanBackground;
-	SMS_loadTileMap(0, 0, backgroundData->tileMap, 32 * 24 * 2);
+	gameData->cleanBackground = (dl_u8*)backgroundData->cleanBackground;
+	SMS_loadTileMap(0, 0, (dl_u8*)backgroundData->tileMap, 32 * 24 * 2);
 
 	drawTileText(resources->text_pl1, PLAYERLIVES_TEXT_DRAW_LOCATION);
 	drawTileText(resources->text_chamber, CHAMBER_TEXT_DRAW_LOCATION);
@@ -143,9 +156,11 @@ void chamber_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resourc
 
 void get_ready_room_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resources)
 {
+	(void)roomNumber;
+
 	const SMSBackgroundData* backgroundData = (const SMSBackgroundData*)resources->roomResources[TITLESCREEN_ROOM_INDEX].backgroundDrawData;
-	gameData->cleanBackground = getReadyScreen_cleanBackground;
-	SMS_loadTileMap(0, 0, backgroundData->tileMap, 32 * 24 * 2);
+	gameData->cleanBackground = (dl_u8*)getReadyScreen_cleanBackground;
+	SMS_loadTileMap(0, 0, (dl_u8*)backgroundData->tileMap, 32 * 24 * 2);
 
 	// get ready text
 	const dl_u8* getReadyString = gameData->currentPlayerData->playerNumber == PLAYER_ONE ? resources->text_getReadyPlayerOne : resources->text_getReadyPlayerTwo;
@@ -156,8 +171,8 @@ void titleScreen_draw(dl_u8 roomNumber, GameData* gameData, const Resources* res
 {
 
 	const SMSBackgroundData* backgroundData = (const SMSBackgroundData*)resources->roomResources[roomNumber].backgroundDrawData;
-	gameData->cleanBackground = backgroundData->cleanBackground;
-	SMS_loadTileMap(0, 0, backgroundData->tileMap, 32 * 24 * 2);
+	gameData->cleanBackground = (dl_u8*)backgroundData->cleanBackground;
+	SMS_loadTileMap(0, 0, (dl_u8*)backgroundData->tileMap, 32 * 24 * 2);
 
 	drawTileText(resources->text_downland, 0x03c9 + 64); // 0x07c9 original coco mem location
 	drawTileText(resources->text_writtenBy, 0x050a); // 0x090A original coco mem location
@@ -249,6 +264,8 @@ extern volatile unsigned int PreviousKeysStatus;
 
 void updateControls(dl_u8 controllerIndex, JoystickState* joystickState)
 {
+	UNUSED(controllerIndex); // support 2 player
+
 	//dl_u16 state = JOY_readJoypad(controllerIndex);
 
     // Check D-Pad
@@ -403,6 +420,9 @@ void main(void)
 
 void GameRunner_ChangedRoomCallback(const struct GameData* gameData, dl_u8 roomNumber, dl_s8 transitionType)
 {
+	UNUSED(gameData);
+	UNUSED(roomNumber);
+
 	//SMS_debugPrintf("GameRunner_ChangedRoomCallback\n");
 
 	SMS_waitForVBlank();
@@ -556,6 +576,8 @@ void drawChamber(struct GameData* gameData, const Resources* resources)
 
 void drawTitleScreen(struct GameData* gameData, const Resources* resources)
 {
+	UNUSED(resources);
+
 	drawDrops(gameData);
 
 	dl_u8 x = gameData->numPlayers == 1 ? 32 : 128;
@@ -565,16 +587,20 @@ void drawTitleScreen(struct GameData* gameData, const Resources* resources)
 
 void drawTransition(struct GameData* gameData, const Resources* resources)
 {
-
+	UNUSED(gameData);
+	UNUSED(resources);
 }
 
 void drawWipeTransition(struct GameData* gameData, const Resources* resources)
 {
-
+	UNUSED(gameData);
+	UNUSED(resources);
 }
 
 void drawGetReadyScreen(struct GameData* gameData, const Resources* resources)
 {
+	UNUSED(resources);
+
 	drawDrops(gameData);
 }
 
@@ -608,6 +634,8 @@ void transition_init(Room* targetRoom, GameData* gameData, const Resources* reso
 
 void transition_update(Room* room, GameData* gameData, const Resources* resources)
 {
+	UNUSED(room);
+
 	// wait to draw anything until the delay is over
 	if (gameData->transitionInitialDelay)
 	{
@@ -622,6 +650,9 @@ void transition_update(Room* room, GameData* gameData, const Resources* resource
 
 void wipe_transition_init(Room* targetRoom, GameData* gameData, const Resources* resources)
 {
+	UNUSED(resources);
+	UNUSED(targetRoom);
+
 	SMS_waitForVBlank();
 	SMS_initSprites();
 	SMS_copySpritestoSAT();
@@ -653,6 +684,8 @@ void wipe_transition_init(Room* targetRoom, GameData* gameData, const Resources*
 
 void wipe_transition_update(Room* room, GameData* gameData, const Resources* resources)
 {
+	UNUSED(room);
+
 	// wait to draw anything until the delay is over
 	if (gameData->transitionInitialDelay)
 	{

@@ -82,6 +82,8 @@ void titleScreen_init(Room* room, GameData* gameData, const Resources* resources
 
 void titleScreen_update(Room* room, GameData* gameData, const Resources* resources)
 {
+	UNUSED(room);
+
 	int loop;
 #ifndef DISABLE_FRAMEBUFFER
 	dl_u16 drawLocation;

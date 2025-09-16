@@ -123,44 +123,43 @@ void DropsManager_Update(DropData* dropData,
 	UNUSED(framebuffer);
 
 	int loop;
-	Drop* drop;
-	Drop* drops = dropData->drops;
+	Drop* dropsRunner = dropData->drops;
 
 	if (g_dropTickTockTimer)
-		drops++; // move to the second drop every other frame
+		dropsRunner++; // move to the second drop every other frame
 
 	g_dropTickTockTimer = !g_dropTickTockTimer;
 
 	// only process a max five drops per frame. 
 	// alternating which five.
-	for (loop = 0; loop < 5; loop++) 
+	dl_u8 count = 5;
+	while (count--)
 	{
-		drop = drops;
-		if (!drop->wiggleTimer) // we've hit an inactive drop, we've hit the end of
-			return;				// the active drops.
+		if (!dropsRunner->wiggleTimer) // we've hit an inactive drop, we've hit the end of
+			return;					   // the active drops.
 
-		if (drop->wiggleTimer == 1)
+		if (dropsRunner->wiggleTimer == 1)
 		{
-			initDrop(drop, 
+			initDrop(dropsRunner, 
 					 dropData, 
 					 gameCompletionCount, 
 					 dropSprites, 
 					 cleanBackground);
 		}
-		else if ((dl_s8)drop->wiggleTimer < 0)
+		else if ((dl_s8)dropsRunner->wiggleTimer < 0)
 		{
 			// wiggling
-			wiggleDrop(drop);
+			wiggleDrop(dropsRunner);
 		}
 		else
 		{
 			// falling
 
-			dl_u16 cleanBackgroundLocation = GET_FRAMEBUFFER_LOCATION(drop->x, GET_HIGH_BYTE(drop->y));
+			dl_u16 cleanBackgroundLocation = GET_FRAMEBUFFER_LOCATION(dropsRunner->x, GET_HIGH_BYTE(dropsRunner->y));
 
-			if ((cleanBackground[cleanBackgroundLocation + 0xc0] & drop->collisionMask) || // 6 pixels down
-				(cleanBackground[cleanBackgroundLocation + 0xe0] & drop->collisionMask) || // 7 pixels down
-				(GET_HIGH_BYTE(drop->y) > FRAMEBUFFER_HEIGHT - 16)) // bottom of the screen bounds checking. not in the original game.
+			if ((cleanBackground[cleanBackgroundLocation + 0xc0] & dropsRunner->collisionMask) || // 6 pixels down
+				(cleanBackground[cleanBackgroundLocation + 0xe0] & dropsRunner->collisionMask) || // 7 pixels down
+				(GET_HIGH_BYTE(dropsRunner->y) > FRAMEBUFFER_HEIGHT - 16)) // bottom of the screen bounds checking. not in the original game.
 			{
 #ifndef DISABLE_FRAMEBUFFER
 				eraseSprite_16PixelsWide(drop->spriteData,
@@ -171,7 +170,7 @@ void DropsManager_Update(DropData* dropData,
 										 cleanBackground);
 #endif
 
-				initDrop(drop, 
+				initDrop(dropsRunner, 
 						 dropData, 
 						 gameCompletionCount, 
 						 dropSprites, 
@@ -181,24 +180,24 @@ void DropsManager_Update(DropData* dropData,
 
 #ifndef DISABLE_FRAMEBUFFER
 		// erase drop from screen
-		eraseSprite_16PixelsWide(drop->spriteData, 
-								 drop->x,
-								 GET_HIGH_BYTE(drop->y),
+		eraseSprite_16PixelsWide(dropsRunner->spriteData, 
+								 dropsRunner->x,
+								 GET_HIGH_BYTE(dropsRunner->y),
 								 DROP_SPRITE_ROWS,
 								 framebuffer, 
 								 cleanBackground);
 #endif
 
 		// update y
-		drop->y += drop->speedY;
-		drop->speedY = DROP_FALL_SPEED;
+		dropsRunner->y += dropsRunner->speedY;
+		dropsRunner->speedY = DROP_FALL_SPEED;
 
 #ifndef DISABLE_FRAMEBUFFER
 		// draw sprite
 		drawSprite_16PixelsWide(drop->spriteData, drop->x, GET_HIGH_BYTE(drop->y), DROP_SPRITE_ROWS, framebuffer);
 #endif
 
-		drops += 2; // skip to the second drop
+		dropsRunner += 2; // skip to the second drop
 	}
 }
 

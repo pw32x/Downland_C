@@ -4,25 +4,38 @@
 
 void convertTimerToString(dl_u16 timerValue, dl_u8* timerString)
 {
-	int loop;
+	static const dl_u16 divisors[5] = { 10000, 1000, 100, 10, 1 };
 
-	timerString[0] = timerValue / 10000;
-	timerValue %= 10000;
-	timerString[1] = timerValue / 1000;
-	timerValue %= 1000;
-	timerString[2] = timerValue / 100;
-	timerValue %= 100;
-	timerString[3] = timerValue / 10;
-	timerValue %= 10;
-	timerString[4] = (dl_u8)timerValue;
+	const dl_u16* divisorsRunner = divisors;
+	dl_u8* timerStringRunner = timerString;
 
-	for (loop = 0; loop < TIMER_STRING_SIZE - 2; loop++)
+    dl_u8 i = 5;
+
+    do
 	{
-		if (timerString[loop] == CHAR_0)
-			timerString[loop] = CHAR_SPACE;
-		else
-			break;
-	}
+        dl_u8 digit = 0;
+        while (timerValue >= *divisorsRunner) 
+		{
+            timerValue -= *divisorsRunner;
+            digit++;
+        }
+
+		divisorsRunner++;
+
+        *timerStringRunner = digit;
+		timerStringRunner++;
+    } while (--i);
+
+	/*
+    // strip leading zeros -> spaces
+    for (i = 0; i < 4; i++) 
+	{
+        if (timerString[i] == CHAR_0)
+            timerString[i] = CHAR_SPACE;
+        else
+            break;
+    }
+	*/
 }
 
 void convertScoreToString(dl_u32 score, dl_u8* scoreString)

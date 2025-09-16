@@ -15,6 +15,7 @@ SMSLIB_LIB=$(SMSLIB_BASE)/SMSlib.lib          # Use distributed lib
 #SMSLIB_LIB=$(SMSLIB_BASE)/src/SMSlib.lib      # Use locally compiled lib
 
 CFLAGS=-mz80 -I$(SMSLIB_INCDIR) -I$(GENERATED_DIR) -I$(SOURCE_DIR) -I$(SOURCE_DIR)/game -I$(SOURCE_DIR)/game/rooms --peep-file $(PEEP_RULES) \
+		--opt-code-speed --peep-asm \
 		-DDISABLE_DOOR_DRAWING -DCUSTOM_ROOM_DRAW -DDISABLE_RESOURCE_LOADER -DCUSTOM_BACKGROUND_DRAWING -DCUSTOM_TRANSITIONS -DDISABLE_FRAMEBUFFER
 
 #--opt-code-speed --peep-asm --fomit-frame-pointer --max-allocs-per-node 200000

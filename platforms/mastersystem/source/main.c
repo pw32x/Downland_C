@@ -41,28 +41,15 @@ void drawTransition(struct GameData* gameData, const Resources* resources);
 void drawWipeTransition(struct GameData* gameData, const Resources* resources);
 void drawGetReadyScreen(struct GameData* gameData, const Resources* resources);
 
-void* dl_alloc(dl_u32 size)
-{
-	UNUSED(size);
-	return NULL;
-}
-
 void dl_memset(void* source, dl_u8 value, dl_u16 count)
 {
 	dl_u8* src = (dl_u8*)source;
 
-	for (dl_u16 loop = 0; loop < count; loop++)
+	while (count--)
 	{
 		*src = value;
 		src++;
 	}
-}
-
-void dl_memcpy(void* destination, const void* source, dl_u16 count)
-{
-	UNUSED(destination);
-	UNUSED(source);
-	UNUSED(count);
 }
 
 void Sound_Play(dl_u8 soundIndex, dl_u8 loop)
@@ -376,7 +363,7 @@ void main(void)
 
 	Game_ChangedRoomCallback = GameRunner_ChangedRoomCallback;
 
-    Game_Init(&gameData, &resources, NULL, NULL /*cleanBackground*/);
+    Game_Init(&gameData, &resources, NULL /*cleanBackground*/);
 
 	//chamber_draw(3, &gameData, &resources);
 	ballData = &gameData.ballData;

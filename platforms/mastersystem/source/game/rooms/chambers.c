@@ -7,75 +7,6 @@
 #include "../ball.h"
 #include "../bird.h"
 #include "../player.h"
-#include "../door_utils.h"
-
-#ifndef DISABLE_FRAMEBUFFER
-void drawPickups(Pickup* pickups, 
-				 dl_u8 playerMask,
-				 const Resources* resources, 
-				 dl_u8* framebuffer)
-{
-	dl_u8 count = NUM_PICKUPS_PER_ROOM;
-
-	while (count--)
-	{
-		if ((pickups->state & playerMask))
-		{
-			drawSprite_16PixelsWide(resources->pickupSprites[pickups->type],
-									pickups->x, 
-									pickups->y, 
-									PICKUPS_NUM_SPRITE_ROWS,
-									framebuffer);
-		}
-		pickups++;
-	}
-}
-#endif
-
-#ifndef DISABLE_FRAMEBUFFER
-void drawPlayerLives(dl_u8 playerLives,
-					 dl_u8 currentSpriteNumber,
-					 const dl_u8* playerBitShiftedSprites,
-					 dl_u8* framebuffer,
-					 dl_u8* cleanBackground,
-					 dl_u8 isRegenerating)
-{
-	dl_u8 x = PLAYERLIVES_ICON_X;
-	dl_u8 y = PLAYERLIVES_ICON_Y;
-	dl_u8 loop;
-
-	const dl_u8* currentSprite = getBitShiftedSprite(playerBitShiftedSprites, 
-											currentSpriteNumber, 
-											0, 
-											PLAYER_BITSHIFTED_SPRITE_FRAME_SIZE);
-
-	for (loop = 0; loop < playerLives; loop++)
-	{
-		drawSprite_24PixelsWide_noblend(currentSprite,
-										x, 
-										y, 
-										PLAYERICON_NUM_SPRITE_ROWS,
-										framebuffer);
-
-		x += PLAYERLIVES_ICON_SPACING;
-	}
-
-	eraseSprite_24PixelsWide_simple(x, 
-									y, 
-									PLAYERICON_NUM_SPRITE_ROWS,
-									framebuffer,
-									cleanBackground);
-
-	if (isRegenerating)
-	{
-		drawSprite_24PixelsWide_static(currentSprite,
-									   x, 
-									   y, 
-									   PLAYERICON_NUM_SPRITE_ROWS,
-									   framebuffer);
-	}
-}
-#endif
 
 void updateTimers(dl_u8 roomNumber, dl_u16* roomTimers)
 {
@@ -98,47 +29,7 @@ void updateTimers(dl_u8 roomNumber, dl_u16* roomTimers)
 	}
 }
 
-#ifndef CUSTOM_ROOM_DRAW
-void chamber_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resources)
-{
-#ifndef DISABLE_DOOR_DRAWING
-	const DoorInfoData* doorInfoData;
-	const DoorInfo* doorInfoRunner;
-	dl_u8 loop;
-#endif
-
-#ifndef DISABLE_FRAMEBUFFER
-	drawBackground(&resources->roomResources[roomNumber].backgroundDrawData, 
-				   resources,
-				   gameData->cleanBackground);
-#endif
-
-#ifndef DISABLE_DOOR_DRAWING
-	// draw active doors in the room
-	doorInfoData = &resources->roomResources[roomNumber].doorInfoData;
-	doorInfoRunner = doorInfoData->doorInfos;
-	for (loop = 0; loop < doorInfoData->drawInfosCount; loop++)
-	{
-		if ((doorInfoRunner->y != 0xff) &&
-			(gameData->currentPlayerData->doorStateData[doorInfoRunner->globalDoorIndex] & 
-			 gameData->currentPlayerData->playerMask))
-		{
-#ifndef DISABLE_FRAMEBUFFER
-			drawDoor(doorInfoRunner, 
-					resources->bitShiftedSprites_door, 
-					gameData->framebuffer, 
-					gameData->cleanBackground,
-					FALSE);
-#endif
-		}
-
-		doorInfoRunner++;
-	}
-#endif
-}
-#else
 void chamber_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resources);
-#endif
 
 void chamber_init(Room* room, GameData* gameData, const Resources* resources)
 {
@@ -150,33 +41,11 @@ void chamber_init(Room* room, GameData* gameData, const Resources* resources)
 	DropsManager_Init(&gameData->dropData, roomNumber, playerData->gameCompletionCount);
 
 	Ball_Init(&gameData->ballData, roomNumber, resources);
-	Bird_Init(&gameData->birdData, roomNumber, resources);
-	Player_RoomInit(playerData, resources);
+	Bird_Init(&gameData->birdData);
+	Player_RoomInit(playerData);
 
 	convertScoreToString(playerData->score, playerData->scoreString);
 	gameData->string_roomNumber[0] = roomNumber;
-
-#ifndef DISABLE_FRAMEBUFFER
-	drawText(resources->text_pl1, 
-			 resources->characterFont, 
-			 gameData->framebuffer, 
-			 PLAYERLIVES_TEXT_DRAW_LOCATION);
-
-	drawText(resources->text_chamber, 
-			 resources->characterFont, 
-			 gameData->framebuffer, 
-			 CHAMBER_TEXT_DRAW_LOCATION);
-
-	drawText(gameData->string_roomNumber, 
-			 resources->characterFont, 
-			 gameData->framebuffer, 
-			 CHAMBER_NUMBER_TEXT_DRAW_LOCATION);
-
-	drawText(playerData->scoreString, 
-			 resources->characterFont, 
-			 gameData->framebuffer, 
-			 SCORE_DRAW_LOCATION);
-#endif
 }
 
 void chamber_update(Room* room, GameData* gameData, const Resources* resources)
@@ -187,15 +56,6 @@ void chamber_update(Room* room, GameData* gameData, const Resources* resources)
 	dl_u8 playerLives;
 	PlayerData* temp;
 
-#ifndef DISABLE_FRAMEBUFFER
-	// in the original rom, pickups are indeed drawn every frame
-	// otherwise, falling drops will erase them
-	drawPickups(playerData->gamePickups[room->roomNumber], 
-				gameData->currentPlayerData->playerMask,
-				resources, 
-				gameData->framebuffer);
-#endif
-
 	if (playerData->state != PLAYER_STATE_REGENERATION)
 	{
 		updateTimers(playerData->currentRoom->roomNumber, playerData->roomTimers);
@@ -205,7 +65,6 @@ void chamber_update(Room* room, GameData* gameData, const Resources* resources)
 
 #ifndef DISABLE_ENEMIES
 	DropsManager_Update(&gameData->dropData, 
-						gameData->framebuffer, 
 						gameData->cleanBackground, 
 						playerData->gameCompletionCount,
 						resources->sprites_drops);	
@@ -217,7 +76,6 @@ void chamber_update(Room* room, GameData* gameData, const Resources* resources)
 
 	Player_Update(playerData, 
 				  &gameData->joystickState, 
-				  gameData->framebuffer, 
 				  gameData->cleanBackground,
 				  &resources->roomResources[room->roomNumber].doorInfoData,
 				  playerData->doorStateData);
@@ -286,35 +144,16 @@ void chamber_update(Room* room, GameData* gameData, const Resources* resources)
 	}
 
 #ifndef DISABLE_ENEMIES
-	Ball_Update(&gameData->ballData, gameData->framebuffer, gameData->cleanBackground);
-	Bird_Update(&gameData->birdData, currentTimer, gameData->framebuffer, gameData->cleanBackground);
+	Ball_Update(&gameData->ballData, gameData->cleanBackground);
+	Bird_Update(&gameData->birdData, currentTimer);
 #endif
 
-#ifndef DISABLE_FRAMEBUFFER
-	if (Player_HasCollision(playerData, gameData->framebuffer, gameData->cleanBackground))
-#endif
-	{
-		// compute collisions
-		// pick up item or die
-		Player_PerformCollisions((struct GameData*)gameData, resources);
-	}
+	// compute collisions
+	// pick up item or die
+	Player_PerformCollisions((struct GameData*)gameData);
 
 	convertTimerToString(currentTimer,
 						 gameData->string_timer);
-
-#ifndef DISABLE_FRAMEBUFFER
-	drawText(gameData->string_timer, 
-			 resources->characterFont, 
-			 gameData->framebuffer, 
-			 TIMER_DRAW_LOCATION);
-
-	drawPlayerLives(playerData->lives,
-					playerData->currentSpriteNumber,
-					playerData->bitShiftedSprites,
-					gameData->framebuffer,
-					gameData->cleanBackground,
-					playerData->regenerationCounter > 0);
-#endif
 }
 
 // All the chambers are the same, but this makes it easier

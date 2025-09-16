@@ -14,7 +14,6 @@ void DropsManager_Init(DropData* dropData,
 					   dl_u8 gameCompletionCount);
 
 void DropsManager_Update(DropData* dropData, 
-						 dl_u8* framebuffer, 
 						 dl_u8* cleanBackground, 
 						 dl_u8 gameCompletionCount, 
 						 const dl_u8* dropSprites);

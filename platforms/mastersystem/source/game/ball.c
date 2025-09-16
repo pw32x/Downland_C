@@ -1,6 +1,5 @@
 #include "ball.h"
 #include "draw_utils.h"
-#include "debug_utils.h"
 #include "physics_utils.h"
 
 
@@ -43,13 +42,6 @@ void initBallPhysics(BallData* ballData)
 	ballData->y = SET_HIGH_BYTE(BALL_START_Y);
 	ballData->speedx = 0xffa8;
 	ballData->speedy = 0;
-
-#ifndef DISABLE_FRAMEBUFFER
-	ballData->currentSprite = getBitShiftedSprite(ballData->bitShiftedSprites, 
-											      0,
-											      BALL_START_X & 3,
-											      BITSHIFTED_SPRITE_FRAME_SIZE);
-#endif
 }
 
 void Ball_Init(BallData* ballData, dl_u8 roomNumber, const Resources* resources)
@@ -76,18 +68,12 @@ void Ball_Init(BallData* ballData, dl_u8 roomNumber, const Resources* resources)
 	ballData->enabled = TRUE;
 	ballData->fallStateCounter = 0; // unsure if should init every reset or just at room start
 
-#ifndef DISABLE_FRAMEBUFFER
-	ballData->bitShiftedSprites = resources->bitShiftedSprites_bouncyBall;
-#endif
-
 	initBallPhysics(ballData);
 }
 
 
-void Ball_Update(BallData* ballData, dl_u8* framebuffer, dl_u8* cleanBackground)
+void Ball_Update(BallData* ballData, dl_u8* cleanBackground)
 {
-	UNUSED(framebuffer);
-
 	dl_u8 terrainTest;
 
 	if (!ballData->enabled)
@@ -146,15 +132,6 @@ void Ball_Update(BallData* ballData, dl_u8* framebuffer, dl_u8* cleanBackground)
 		}
 	}
 	
-#ifndef DISABLE_FRAMEBUFFER
-	eraseSprite_24PixelsWide(ballData->currentSprite,
-							 GET_HIGH_BYTE(ballData->x),
-							 GET_HIGH_BYTE(ballData->y),
-							 BALL_SPRITE_ROWS,
-							 framebuffer, 
-							 cleanBackground);
-#endif
-
 	if ((dl_s8)ballData->fallStateCounter >= 0)
 	{
 		ballData->x += ballData->speedx;
@@ -172,24 +149,9 @@ void Ball_Update(BallData* ballData, dl_u8* framebuffer, dl_u8* cleanBackground)
 		}
 	}
 
-#ifndef DISABLE_FRAMEBUFFER
-	ballData->currentSprite = getBitShiftedSprite(ballData->bitShiftedSprites, 
-												  ((dl_s8)ballData->fallStateCounter < 0), // sprite 0 (not squished) if fallStateCounterSigned >= 0, else sprite 1 (squished)
-												  GET_HIGH_BYTE(ballData->x) & 3, 
-												  BITSHIFTED_SPRITE_FRAME_SIZE);
-#endif
-
 	if (ballData->state == 0xff)
 	{
 		ballData->state = 0;
 		return;
 	}
-
-#ifndef DISABLE_FRAMEBUFFER
-	drawSprite_24PixelsWide(ballData->currentSprite, 
-							GET_HIGH_BYTE(ballData->x), 
-							GET_HIGH_BYTE(ballData->y), 
-							BALL_SPRITE_ROWS, 
-							framebuffer);
-#endif
 }

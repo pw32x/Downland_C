@@ -1,6 +1,5 @@
 #include "bird.h"
 #include "draw_utils.h"
-#include "debug_utils.h"
 #include "dl_rand.h"
 
 #define BIRD_START_X 0x23 // 35
@@ -22,46 +21,22 @@ void initBirdPhysics(BirdData* birdData)
 	birdData->y = SET_HIGH_BYTE(BIRD_START_Y);
 	birdData->speedx = 0x0100 + (dl_rand() % 256);
 	birdData->speedy = 0x0100 + (dl_rand() % 256);
-
-#ifndef DISABLE_FRAMEBUFFER
-	birdData->currentSprite = getBitShiftedSprite(birdData->bitShiftedSprites, 
-											      0,
-											      BIRD_START_X & 3,
-											      BITSHIFTED_SPRITE_FRAME_SIZE);
-#endif
 }
 
-void Bird_Init(BirdData* birdData, dl_u8 roomNumber, const Resources* resources)
+void Bird_Init(BirdData* birdData)
 {
-	UNUSED(roomNumber);
-	UNUSED(resources);
-
 	birdData->state = BIRD_INACTIVE;
-#ifndef DISABLE_FRAMEBUFFER
-	birdData->bitShiftedSprites = resources->bitShiftedSprites_bird;
-#endif
 	birdData->animationCounter = 0;
 }
 
 
-void Bird_Update(BirdData* birdData, dl_u16 currentRoomTimer, dl_u8* framebuffer, dl_u8* cleanBackground)
+void Bird_Update(BirdData* birdData, dl_u16 currentRoomTimer)
 {
-	UNUSED(framebuffer);
-	UNUSED(cleanBackground);
-
 	dl_u8 newPixelX;
 	dl_u8 newPixelY;
 
 	if (birdData->state == BIRD_SHUTDOWN)
 	{
-#ifndef DISABLE_FRAMEBUFFER
-		eraseSprite_24PixelsWide(birdData->currentSprite,
-								 GET_HIGH_BYTE(birdData->x),
-								 GET_HIGH_BYTE(birdData->y),
-								 BIRD_SPRITE_ROWS,
-								 framebuffer, 
-								 cleanBackground);
-#endif
 		birdData->state = BIRD_INACTIVE;
 	}
 
@@ -73,15 +48,6 @@ void Bird_Update(BirdData* birdData, dl_u16 currentRoomTimer, dl_u8* framebuffer
 		initBirdPhysics(birdData);
 		return;
 	}
-
-#ifndef DISABLE_FRAMEBUFFER
-	eraseSprite_24PixelsWide(birdData->currentSprite,
-								GET_HIGH_BYTE(birdData->x),
-								GET_HIGH_BYTE(birdData->y),
-								BIRD_SPRITE_ROWS,
-								framebuffer, 
-								cleanBackground);
-#endif
 
 	birdData->animationCounter++;
 	birdData->animationFrame = (birdData->animationCounter >> 3) & 0x1;
@@ -105,17 +71,4 @@ void Bird_Update(BirdData* birdData, dl_u16 currentRoomTimer, dl_u8* framebuffer
 	}
 
 	birdData->x += birdData->speedx;
-
-#ifndef DISABLE_FRAMEBUFFER
-	birdData->currentSprite = getBitShiftedSprite(birdData->bitShiftedSprites, 
-											      birdData->animationFrame,
-											      GET_HIGH_BYTE(birdData->x) & 3, 
-											      BITSHIFTED_SPRITE_FRAME_SIZE);
-
-	drawSprite_24PixelsWide(birdData->currentSprite, 
-							GET_HIGH_BYTE(birdData->x), 
-							GET_HIGH_BYTE(birdData->y), 
-							BIRD_SPRITE_ROWS, 
-							framebuffer);
-#endif
 }

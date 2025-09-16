@@ -2,17 +2,14 @@
 
 #include "draw_utils.h"
 #include "rooms/rooms.h"
-#include "dl_alloc.h"
 
 Game_ChangedRoomCallbackType Game_ChangedRoomCallback = NULL;
 Game_ChangedRoomCallbackType Game_TransitionDone = NULL;
 
 void Game_Init(struct GameData* gameData, 
 			   const Resources* resources,
-			   dl_u8* framebuffer,
 			   dl_u8* cleanBackground)
 {
-	gameData->framebuffer = framebuffer;
 	gameData->cleanBackground = cleanBackground;
 
 	gameData->numPlayers = 1;
@@ -81,8 +78,6 @@ void Game_EnterRoom(struct GameData* gameData, dl_u8 roomNumber, const Resources
 
 void Game_TransitionToRoom(struct GameData* gameData, dl_u8 roomNumber, const Resources* resources)
 {
-	UNUSED(gameData);
-
 	gameData->transitionRoomNumber = roomNumber;
 
 	gameData->currentRoom = g_rooms[roomNumber];
@@ -115,9 +110,4 @@ void Game_WipeTransitionToRoom(struct GameData* gameData, dl_u8 roomNumber, cons
 
 	if (Game_ChangedRoomCallback != NULL)
 		Game_ChangedRoomCallback(gameData, roomNumber, WIPE_TRANSITION_ROOM_INDEX);
-}
-
-void Game_Shutdown(struct GameData* gameData)
-{
-	UNUSED(gameData);
 }

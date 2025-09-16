@@ -20,7 +20,6 @@
 // contains the global state of the game
 typedef struct GameData
 {
-	dl_u8* framebuffer; // main game 1bpp frame buffer
 	dl_u8* cleanBackground; // the game background without UI or objects. Used for terrain collision detection.
 
 	// objects

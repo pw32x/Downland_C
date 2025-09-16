@@ -2,7 +2,6 @@
 
 #include "base_defines.h"
 #include "draw_utils.h"
-#include "debug_utils.h"
 #include "dl_rand.h"
 
 #define DROP_FALL_SPEED 0x200
@@ -115,13 +114,10 @@ void initDrop(Drop* drop,
 }
 
 void DropsManager_Update(DropData* dropData, 
-						 dl_u8* framebuffer, 
 						 dl_u8* cleanBackground, 
 						 dl_u8 gameCompletionCount,
 						 const dl_u8* dropSprites)
 {
-	UNUSED(framebuffer);
-
 	int loop;
 	Drop* dropsRunner = dropData->drops;
 
@@ -161,15 +157,6 @@ void DropsManager_Update(DropData* dropData,
 				(cleanBackground[cleanBackgroundLocation + 0xe0] & dropsRunner->collisionMask) || // 7 pixels down
 				(GET_HIGH_BYTE(dropsRunner->y) > FRAMEBUFFER_HEIGHT - 16)) // bottom of the screen bounds checking. not in the original game.
 			{
-#ifndef DISABLE_FRAMEBUFFER
-				eraseSprite_16PixelsWide(drop->spriteData,
-										 drop->x,
-										 GET_HIGH_BYTE(drop->y),										  
-										 DROP_SPRITE_ROWS,
-										 framebuffer, 
-										 cleanBackground);
-#endif
-
 				initDrop(dropsRunner, 
 						 dropData, 
 						 gameCompletionCount, 
@@ -178,24 +165,9 @@ void DropsManager_Update(DropData* dropData,
 			}
 		}
 
-#ifndef DISABLE_FRAMEBUFFER
-		// erase drop from screen
-		eraseSprite_16PixelsWide(dropsRunner->spriteData, 
-								 dropsRunner->x,
-								 GET_HIGH_BYTE(dropsRunner->y),
-								 DROP_SPRITE_ROWS,
-								 framebuffer, 
-								 cleanBackground);
-#endif
-
 		// update y
 		dropsRunner->y += dropsRunner->speedY;
 		dropsRunner->speedY = DROP_FALL_SPEED;
-
-#ifndef DISABLE_FRAMEBUFFER
-		// draw sprite
-		drawSprite_16PixelsWide(drop->spriteData, drop->x, GET_HIGH_BYTE(drop->y), DROP_SPRITE_ROWS, framebuffer);
-#endif
 
 		dropsRunner += 2; // skip to the second drop
 	}

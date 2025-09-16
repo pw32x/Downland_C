@@ -40,13 +40,7 @@
     <ClCompile Include="..\source\game\checksum_utils.c">
       <Filter>Source Files\game</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\game\debug_utils.c">
-      <Filter>Source Files\game</Filter>
-    </ClCompile>
     <ClCompile Include="..\source\game\dl_rand.c">
-      <Filter>Source Files\game</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\game\door_utils.c">
       <Filter>Source Files\game</Filter>
     </ClCompile>
     <ClCompile Include="..\source\game\draw_utils.c">
@@ -62,9 +56,6 @@
       <Filter>Source Files\game</Filter>
     </ClCompile>
     <ClCompile Include="..\source\game\player.c">
-      <Filter>Source Files\game</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\game\resource_loader_buffer.c">
       <Filter>Source Files\game</Filter>
     </ClCompile>
     <ClCompile Include="..\source\game\string_utils.c">
@@ -180,9 +171,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\source\game\dl_alloc.h">
-      <Filter>Source Files\game</Filter>
-    </ClInclude>
     <ClInclude Include="..\source\game\background_types.h">
       <Filter>Source Files\game</Filter>
     </ClInclude>
@@ -201,9 +189,6 @@
     <ClInclude Include="..\source\game\checksum_utils.h">
       <Filter>Source Files\game</Filter>
     </ClInclude>
-    <ClInclude Include="..\source\game\debug_utils.h">
-      <Filter>Source Files\game</Filter>
-    </ClInclude>
     <ClInclude Include="..\source\game\dl_platform.h">
       <Filter>Source Files\game</Filter>
     </ClInclude>
@@ -214,9 +199,6 @@
       <Filter>Source Files\game</Filter>
     </ClInclude>
     <ClInclude Include="..\source\game\door_types.h">
-      <Filter>Source Files\game</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\game\door_utils.h">
       <Filter>Source Files\game</Filter>
     </ClInclude>
     <ClInclude Include="..\source\game\draw_utils.h">
@@ -247,9 +229,6 @@
       <Filter>Source Files\game</Filter>
     </ClInclude>
     <ClInclude Include="..\source\game\player_types.h">
-      <Filter>Source Files\game</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\game\resource_loader_buffer.h">
       <Filter>Source Files\game</Filter>
     </ClInclude>
     <ClInclude Include="..\source\game\resource_types.h">

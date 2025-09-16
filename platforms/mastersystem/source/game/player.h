@@ -27,22 +27,17 @@
 #define PLAYER_START_Y 0xa5 // 165
 
 void Player_GameInit(PlayerData* playerData, const Resources* resources);
-void Player_RoomInit(PlayerData* playerData, const Resources* resources);
+void Player_RoomInit(PlayerData* playerData);
 
 void Player_Update(PlayerData* playerData, 
 				   const JoystickState* joystickState, 
-				   dl_u8* framebuffer, 
 				   dl_u8* cleanBackground, 
 				   const DoorInfoData* doorInfoData,
 				   dl_u8* doorStateData);
 
 void Player_StartRegen(PlayerData* playerData);
 
-#ifndef DISABLE_FRAMEBUFFER
-dl_u8 Player_HasCollision(PlayerData* playerData, dl_u8* framebuffer, dl_u8* cleanBackground);
-#endif
-
-void Player_PerformCollisions(struct GameData* gameData, const Resources* resources);
+void Player_PerformCollisions(struct GameData* gameData);
 
 void Player_CompleteGameLoop(PlayerData* playerData, const Resources* resource);
 #endif

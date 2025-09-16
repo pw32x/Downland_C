@@ -157,15 +157,12 @@
     <ClCompile Include="..\source\game\ball.c" />
     <ClCompile Include="..\source\game\bird.c" />
     <ClCompile Include="..\source\game\checksum_utils.c" />
-    <ClCompile Include="..\source\game\debug_utils.c" />
     <ClCompile Include="..\source\game\dl_rand.c" />
-    <ClCompile Include="..\source\game\door_utils.c" />
     <ClCompile Include="..\source\game\draw_utils.c" />
     <ClCompile Include="..\source\game\drops_manager.c" />
     <ClCompile Include="..\source\game\game.c" />
     <ClCompile Include="..\source\game\physics_utils.c" />
     <ClCompile Include="..\source\game\player.c" />
-    <ClCompile Include="..\source\game\resource_loader_buffer.c" />
     <ClCompile Include="..\source\game\rooms\chambers.c" />
     <ClCompile Include="..\source\game\rooms\getready.c" />
     <ClCompile Include="..\source\game\rooms\rooms.c" />
@@ -177,19 +174,16 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\..\SMSDev\devkitSMS-master\SMSlib\src\SMSlib.h" />
     <ClInclude Include="..\source\custom_background_types.h" />
-    <ClInclude Include="..\source\game\dl_alloc.h" />
     <ClInclude Include="..\source\game\background_types.h" />
     <ClInclude Include="..\source\game\ball.h" />
     <ClInclude Include="..\source\game\base_defines.h" />
     <ClInclude Include="..\source\game\base_types.h" />
     <ClInclude Include="..\source\game\bird.h" />
     <ClInclude Include="..\source\game\checksum_utils.h" />
-    <ClInclude Include="..\source\game\debug_utils.h" />
     <ClInclude Include="..\source\game\dl_platform.h" />
     <ClInclude Include="..\source\game\dl_rand.h" />
     <ClInclude Include="..\source\game\dl_sound.h" />
     <ClInclude Include="..\source\game\door_types.h" />
-    <ClInclude Include="..\source\game\door_utils.h" />
     <ClInclude Include="..\source\game\draw_utils.h" />
     <ClInclude Include="..\source\game\drops_manager.h" />
     <ClInclude Include="..\source\game\drops_types.h" />
@@ -200,7 +194,6 @@
     <ClInclude Include="..\source\game\pickup_types.h" />
     <ClInclude Include="..\source\game\player.h" />
     <ClInclude Include="..\source\game\player_types.h" />
-    <ClInclude Include="..\source\game\resource_loader_buffer.h" />
     <ClInclude Include="..\source\game\resource_types.h" />
     <ClInclude Include="..\source\game\rooms\chambers.h" />
     <ClInclude Include="..\source\game\rooms\rooms.h" />

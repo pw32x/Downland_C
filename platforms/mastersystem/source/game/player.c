@@ -3,10 +3,8 @@
 #include "base_defines.h"
 #include "draw_utils.h"
 #include "physics_utils.h"
-#include "debug_utils.h"
 #include "game_types.h"
 #include "pickup_types.h"
-#include "door_utils.h"
 #include "dl_sound.h"
 #include "dl_rand.h"
 #include "dl_platform.h"
@@ -91,17 +89,8 @@ dl_u16 ropeCollisionMasks[4] =
     0x0c00, // 0000110000000000b
 };
 
-void playerKill(PlayerData* playerData, dl_u8* framebuffer, dl_u8* cleanBackground)
+void playerKill(PlayerData* playerData)
 {
-	UNUSED(framebuffer);
-	UNUSED(cleanBackground);
-
-#ifndef DISABLE_FRAMEBUFFER
-	dl_u8 x;
-	dl_u8 y;
-	const dl_u8* splatSprite;
-#endif
-
 	playerData->speedx = 0;
 	playerData->speedy = 0;
 	playerData->regenerationCounter = 0;
@@ -117,31 +106,6 @@ void playerKill(PlayerData* playerData, dl_u8* framebuffer, dl_u8* cleanBackgrou
 		playerData->state = PLAYER_STATE_SPLAT;
 		Sound_Play(SOUND_SPLAT, FALSE);
 		playerData->cantMoveCounter = PLAYER_SPLAT_WAIT_TIME;
-
-#ifndef DISABLE_FRAMEBUFFER
-		x = GET_HIGH_BYTE(playerData->x);
-		y = GET_HIGH_BYTE(playerData->y);
-
-		// erase the player, then draw the splat sprite
-		// we won't redraw this again, like the original game
-		eraseSprite_24PixelsWide_simple(x,
-										y,
-										PLAYER_SPRITE_ROWS,
-										framebuffer, 
-										cleanBackground);
-
-		splatSprite = getBitShiftedSprite(playerData->bitShiftedSplatSprite, 
-										  0,
-										  x & 3, 
-										  PLAYER_SPLAT_SPRITE_FRAME_SIZE);
-
-		drawSprite_24PixelsWide(splatSprite, 
-								x, 
-								y + 7, // draw the sprite to the ground
-								PLAYER_SPLAT_SPRITE_ROWS, 
-								framebuffer);
-#endif
-
 	}
 	else
 	{
@@ -270,10 +234,8 @@ void Player_GameInit(PlayerData* playerData, const Resources* resources)
 		playerData->roomTimers[loop] = ROOM_TIMER_DEFAULT;
 }
 
-void Player_RoomInit(PlayerData* playerData, const Resources* resources)
+void Player_RoomInit(PlayerData* playerData)
 {
-	UNUSED(resources);
-
 	// setup initial state for room
 
 	if (playerData->isDead)
@@ -311,13 +273,6 @@ void Player_RoomInit(PlayerData* playerData, const Resources* resources)
 	playerData->ignoreRopesCounter = 0;
 
 	playerData->currentSpriteNumber = computeSpriteNumber(playerData->facingDirection, playerData->currentFrameNumber);
-
-#ifndef DISABLE_FRAMEBUFFER
-	playerData->currentSprite = getBitShiftedSprite(playerData->bitShiftedSprites, 
-											        playerData->currentSpriteNumber,
-											        PLAYER_START_X & 3,
-											        PLAYER_BITSHIFTED_SPRITE_FRAME_SIZE);
-#endif
 }
 
 void Player_StartRegen(PlayerData* playerData)
@@ -330,17 +285,10 @@ void Player_StartRegen(PlayerData* playerData)
 
 void Player_Update(PlayerData* playerData, 
 				   const JoystickState* joystickState, 
-				   dl_u8* framebuffer, 
 				   dl_u8* cleanBackground,
 				   const DoorInfoData* doorInfoData,
 				   dl_u8* doorStateData)
 {
-#ifndef DISABLE_FRAMEBUFFER
-	dl_u8 x;
-	dl_u8 y;
-	dl_u8 ropeX;
-	dl_u16 location;
-#endif
 	const DoorInfo* doorInfoRunner;
 	dl_u8 testResult;
 	dl_u8 processLeftRight;
@@ -365,19 +313,6 @@ void Player_Update(PlayerData* playerData,
 		if (playerData->cantMoveCounter == PLAYER_SPLAT_ANIMATION_TRIGGER_TIME)
 		{
 			playerData->splatFrameNumber = 1;
-
-#ifndef DISABLE_FRAMEBUFFER
-			x = GET_HIGH_BYTE(playerData->x);
-			y = GET_HIGH_BYTE(playerData->y);
-
-			// erase the top 12 lines of the player sprite
-			// to simulate animation of the splat sprite.
-			eraseSprite_24PixelsWide_simple(x,
-											y,
-											12, 
-											framebuffer, 
-											cleanBackground);
-#endif
 		}
 
 		if (playerData->cantMoveCounter)
@@ -424,40 +359,6 @@ void Player_Update(PlayerData* playerData,
 		}
 	}
 #endif
-
-#ifndef DISABLE_FRAMEBUFFER
-	if (playerData->state == PLAYER_STATE_REGENERATION)
-	{
-		eraseSprite_24PixelsWide_simple(GET_HIGH_BYTE(playerData->x),
-										GET_HIGH_BYTE(playerData->y),
-										PLAYER_SPRITE_ROWS,
-										framebuffer, 
-										cleanBackground);
-	}
-	else
-	{
-		eraseSprite_24PixelsWide(playerData->currentSprite,
-								 GET_HIGH_BYTE(playerData->x),
-								 GET_HIGH_BYTE(playerData->y),
-								 PLAYER_SPRITE_ROWS,
-								 framebuffer, 
-								 cleanBackground);
-	}
-#endif
-	/*
-	// to test the regeneration effect
-	if (joystickState->jumpPressed)
-	{
-		playerData->state = PLAYER_STATE_REGENERATION;
-		playerData->speedx = 0;
-		playerData->speedy = 0;
-		playerData->regenerationCounter = PLAYER_REGENERATION_TIME;
-		playerData->cantMoveCounter = PLAYER_REGENERATION_IMMOBILE_TIME;
-	}
-	*/
-	
-
-
 
 	if (playerData->state == PLAYER_STATE_DEBUG)
 	{
@@ -661,7 +562,7 @@ void Player_Update(PlayerData* playerData,
 
 			if (killPlayer)
 			{
-				playerKill(playerData, framebuffer, cleanBackground);
+				playerKill(playerData);
 				return;
 			}
 
@@ -931,46 +832,6 @@ void Player_Update(PlayerData* playerData,
 	// from the frame number, get the actual sprite to use
 	playerData->currentSpriteNumber = computeSpriteNumber(playerData->facingDirection, playerData->currentFrameNumber);
 
-
-#ifndef DISABLE_FRAMEBUFFER
-	// get the sprite for the current horizontal bit the player is on
-	playerData->currentSprite = getBitShiftedSprite(playerData->bitShiftedSprites, 
-												    playerData->currentSpriteNumber,
-												    GET_HIGH_BYTE(playerData->x) & 3, 
-												    PLAYER_BITSHIFTED_SPRITE_FRAME_SIZE);
-
-	if (playerData->state == PLAYER_STATE_CLIMB)
-	{
-		// erase the rope behind the player so that it 
-		// doesn't blend with the player sprite, making it
-		// appear on top
-		for (loop = 0; loop < 12; loop++)
-		{
-			// turn off the pixels on the rope
-			ropeX = GET_HIGH_BYTE(playerData->x) + 3;
-			location = GET_FRAMEBUFFER_LOCATION(ropeX, GET_HIGH_BYTE(playerData->y) + loop);
-			framebuffer[location] &= ~pixelMasks[ropeX & 3];
-		}
-	}
-
-	if (playerData->state != PLAYER_STATE_REGENERATION)
-	{
-		drawSprite_24PixelsWide(playerData->currentSprite, 
-								GET_HIGH_BYTE(playerData->x), 
-								GET_HIGH_BYTE(playerData->y), 
-								PLAYER_SPRITE_ROWS, 
-								framebuffer);
-	}
-	else
-	{
-		drawSprite_24PixelsWide_static(playerData->currentSprite, 
-									   GET_HIGH_BYTE(playerData->x), 
-									   GET_HIGH_BYTE(playerData->y), 
-									   PLAYER_SPRITE_ROWS, 
-									   framebuffer);
-	}
-#endif
-
 	// door touching check
 	doorInfoRunner = doorInfoData->doorInfos;
 	for (loop = 0; loop < doorInfoData->drawInfosCount; loop++)
@@ -992,78 +853,12 @@ void Player_Update(PlayerData* playerData,
 	}
 }
 
-#ifndef DISABLE_FRAMEBUFFER
-dl_u8 collisionTestBuffer[PLAYER_BITSHIFTED_COLLISION_MASK_FRAME_SIZE];
-
-dl_u8 Player_HasCollision(PlayerData* playerData, dl_u8* framebuffer, dl_u8* cleanBackground)
-{
-	dl_u8* cleanBackgroundRunner;
-	dl_u8* collisionTestBufferRunner;
-	dl_u8 loop;
-	const dl_u8* currentSprite;
-
-	dl_u8 sensorX = GET_HIGH_BYTE(playerData->x);
-
-	const dl_u8* currentCollisionMask = getBitShiftedSprite(playerData->bitShiftedCollisionMasks, 
-														 playerData->currentSpriteNumber,
-														 sensorX & 3, 
-														 PLAYER_BITSHIFTED_COLLISION_MASK_FRAME_SIZE);
-
-	dl_u8 sensorY = GET_HIGH_BYTE(playerData->y) + 1; // start one line down
-	dl_u16 location = GET_FRAMEBUFFER_LOCATION(sensorX, sensorY);
-
-	framebuffer = &framebuffer[location];
-	cleanBackgroundRunner = &cleanBackground[location];
-
-	collisionTestBufferRunner = collisionTestBuffer;
-
-
-	for (loop = 0; loop < PLAYER_COLLISION_MASK_ROWS; loop++)
-	{
-		collisionTestBufferRunner[0] = (framebuffer[0] & currentCollisionMask[0]) | cleanBackgroundRunner[0];
-		collisionTestBufferRunner[1] = (framebuffer[1] & currentCollisionMask[1]) | cleanBackgroundRunner[1];
-		collisionTestBufferRunner[2] = (framebuffer[2] & currentCollisionMask[2]) | cleanBackgroundRunner[2];
-
-
-		// move along buffers
-		framebuffer += FRAMEBUFFER_PITCH * 3;
-		cleanBackgroundRunner += FRAMEBUFFER_PITCH * 3;
-		collisionTestBufferRunner += 3;
-		currentCollisionMask += 3;
-	}
-
-	currentSprite = playerData->currentSprite + 3; // start one line down
-	cleanBackgroundRunner = &cleanBackground[location];
-	collisionTestBufferRunner = collisionTestBuffer;
-
-	for (loop = 0; loop < PLAYER_COLLISION_MASK_ROWS; loop++)
-	{
-		if ((collisionTestBufferRunner[0] != (currentSprite[0] | cleanBackgroundRunner[0])) ||
-		    (collisionTestBufferRunner[1] != (currentSprite[1] | cleanBackgroundRunner[1])) ||
-		    (collisionTestBufferRunner[2] != (currentSprite[2] | cleanBackgroundRunner[2])))
-		{
-			return TRUE;
-		}
-
-		cleanBackgroundRunner += FRAMEBUFFER_PITCH * 3;
-		collisionTestBufferRunner += 3;
-		currentSprite += 3 * 3;
-	}
-
-	return FALSE;
-}
-#endif
-
-
 BOOL objectCollisionTest(PlayerData* playerData, dl_u8 x, dl_u8 y, dl_u8 width, dl_u8 height)
 {
 	dl_u8 playerX = GET_HIGH_BYTE(playerData->x);
 	dl_u8 playerY = GET_HIGH_BYTE(playerData->y) + 1;
 
 	playerX += playerData->facingDirection ? 1 : 2;
-
-	//debugDrawBox( GET_HIGH_BYTE(playerData->x) << 1, GET_HIGH_BYTE(playerData->y), 16, PLAYER_SPRITE_ROWS, 0xff00ff00);
-	//debugDrawBox(playerX << 1, playerY, PLAYER_COLLISION_WIDTH << 1, PLAYER_COLLISION_HEIGHT, 0xff0000ff);
 
 	return (x < playerX + PLAYER_COLLISION_WIDTH + 1 &&
 		    x + width > playerX &&
@@ -1098,19 +893,11 @@ BOOL dropsManagerCollisionTest(DropData* dropData, PlayerData* playerData)
 	return FALSE;
 }
 
-void Player_PerformCollisions(struct GameData* gameDataStruct, 
-							  const Resources* resources)
+void Player_PerformCollisions(struct GameData* gameDataStruct)
 {
-	UNUSED(resources);
-
 	dl_u8 roomNumber;
 	dl_u8 loop;
 	Pickup* pickUp;
-#ifndef DISABLE_DOOR_DRAWING
-	dl_u8 doorLoop;
-	const DoorInfoData* doorInfoData;
-	const DoorInfo* doorInfoRunner;
-#endif
 	BallData* ballData;
 	BirdData* birdData;
 	dl_u8 doorIndex;
@@ -1139,15 +926,6 @@ void Player_PerformCollisions(struct GameData* gameDataStruct,
 
 			Sound_Play(SOUND_PICKUP, FALSE);
 
-#ifndef DISABLE_FRAMEBUFFER
-			eraseSprite_16PixelsWide(resources->pickupSprites[pickUp->type],
-									 pickUp->x, 
-									 pickUp->y, 
-									 PICKUPS_NUM_SPRITE_ROWS,
-									 gameData->framebuffer,
-									 gameData->cleanBackground);
-#endif
-
 			switch (pickUp->type)
 			{
 				case PICKUP_TYPE_KEY:
@@ -1161,29 +939,6 @@ void Player_PerformCollisions(struct GameData* gameDataStruct,
 
 					playerData->doorStateData[doorIndex] |= playerData->playerMask;
 
-#ifndef DISABLE_DOOR_DRAWING
-					// check if we need to activate a door in the room
-					doorInfoData = &resources->roomResources[roomNumber].doorInfoData;
-					doorInfoRunner = doorInfoData->doorInfos;
-
-					for (doorLoop = 0; doorLoop < doorInfoData->drawInfosCount; doorLoop++)
-					{
-						if (doorInfoRunner->globalDoorIndex == doorIndex) // the key actives a door in this room
-						{
-							if (doorInfoRunner->x != 0xff &&
-								doorInfoRunner->y != 0xff ) // initial invisible game door
-							{
-								drawDoor(doorInfoRunner, 
-										resources->bitShiftedSprites_door, 
-										gameData->framebuffer, 
-										gameData->cleanBackground,
-										TRUE ); //draw on framebuffer
-							}
-						}
-
-						doorInfoRunner++;
-					}
-#endif
 					break;
 				}
 				case PICKUP_TYPE_DIAMOND:
@@ -1200,16 +955,6 @@ void Player_PerformCollisions(struct GameData* gameDataStruct,
 
 			// add a random value between 0 and 0x7f, as per the original game
 			playerData->score += dl_rand() % 0x7f;
-
-#ifndef DISABLE_FRAMEBUFFER
-			// update score and string
-			convertScoreToString(playerData->score, playerData->scoreString);
-
-			drawText(playerData->scoreString, 
-					 resources->characterFont, 
-					 gameData->framebuffer, 
-					 SCORE_DRAW_LOCATION);
-#endif
 		}
 	}
 
@@ -1222,9 +967,7 @@ void Player_PerformCollisions(struct GameData* gameDataStruct,
 	// collide with drops
 	if (dropsManagerCollisionTest(&gameData->dropData, playerData))
 	{
-		playerKill(playerData, 
-				   gameData->framebuffer, 
-				   gameData->cleanBackground);
+		playerKill(playerData);
 		return;
 	}
 
@@ -1238,9 +981,7 @@ void Player_PerformCollisions(struct GameData* gameDataStruct,
 							BALL_COLLISION_WIDTH,
 							BALL_SPRITE_ROWS))
 	{
-		playerKill(playerData, 
-				   gameData->framebuffer, 
-				   gameData->cleanBackground);
+		playerKill(playerData);
 		return;
 	}
 
@@ -1254,9 +995,7 @@ void Player_PerformCollisions(struct GameData* gameDataStruct,
 							BIRD_COLLISION_WIDTH,
 							BIRD_SPRITE_ROWS))
 	{
-		playerKill(playerData, 
-				   gameData->framebuffer, 
-				   gameData->cleanBackground);
+		playerKill(playerData);
 		return;
 	}
 }

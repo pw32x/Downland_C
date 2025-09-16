@@ -1,5 +1,7 @@
 #include "resource_loader_buffer.h"
 
+typedef int make_iso_compilers_happy;
+
 #ifndef DISABLE_RESOURCE_LOADER
 
 #include "base_defines.h"

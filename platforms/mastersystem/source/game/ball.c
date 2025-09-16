@@ -1,8 +1,18 @@
 #include "ball.h"
 #include "draw_utils.h"
 #include "physics_utils.h"
+#include "dl_platform.h"
 
-
+dl_u8 ballData_enabled;
+dl_u8 ballData_state;	// 0 - inactive
+						// 1 - resetting?
+						// 2 - active
+						// 0xff - dying?
+dl_u16 ballData_x; // high resolution position 256 pixels, 256 subpixels
+dl_u16 ballData_y; // high resolution position 256 pixels, 256 subpixels
+dl_u16 ballData_speedx;
+dl_u16 ballData_speedy; // high resolution
+dl_u8 ballData_fallStateCounter;
 
 #define BALL_START_X 0x65 // 101
 #define BALL_START_Y 0x74 // 116
@@ -35,21 +45,21 @@ dl_u16 ballWideCollisionMasks[4] =
     0xffc0, // 1111111111000000b
 };
 
-void initBallPhysics(BallData* ballData)
+void initBallPhysics()
 {
-	ballData->state = BALL_ACTIVE;
-	ballData->x = SET_HIGH_BYTE(BALL_START_X);
-	ballData->y = SET_HIGH_BYTE(BALL_START_Y);
-	ballData->speedx = 0xffa8;
-	ballData->speedy = 0;
+	ballData_state = BALL_ACTIVE;
+	ballData_x = SET_HIGH_BYTE(BALL_START_X);
+	ballData_y = SET_HIGH_BYTE(BALL_START_Y);
+	ballData_speedx = 0xffa8;
+	ballData_speedy = 0;
 }
 
-void Ball_Init(BallData* ballData, dl_u8 roomNumber, const Resources* resources)
+void Ball_Init(dl_u8 roomNumber, const Resources* resources)
 {
 	const dl_u8* roomsWithBouncingBall;
 
-	ballData->state = BALL_INACTIVE;
-	ballData->enabled = FALSE;
+	ballData_state = BALL_INACTIVE;
+	ballData_enabled = FALSE;
 
 	// check if this room uses the ball. if not, then return and
 	// stay disabled.
@@ -65,53 +75,53 @@ void Ball_Init(BallData* ballData, dl_u8 roomNumber, const Resources* resources)
 		return;
 	}
 
-	ballData->enabled = TRUE;
-	ballData->fallStateCounter = 0; // unsure if should init every reset or just at room start
+	ballData_enabled = TRUE;
+	ballData_fallStateCounter = 0; // unsure if should init every reset or just at room start
 
-	initBallPhysics(ballData);
+	initBallPhysics();
 }
 
 
-void Ball_Update(BallData* ballData, dl_u8* cleanBackground)
+void Ball_Update(dl_u8* cleanBackground)
 {
 	dl_u8 terrainTest;
 
-	if (!ballData->enabled)
+	if (!ballData_enabled)
 		return;
 
 	// we're deactivated, so activate
-	if (!ballData->state)
+	if (!ballData_state)
 	{
-		initBallPhysics(ballData);
+		initBallPhysics();
 		return;
 	}
 
-	if ((dl_s8)ballData->fallStateCounter > 0)
+	if ((dl_s8)ballData_fallStateCounter > 0)
 	{
 		// jumping up
-		ballData->speedy += 0xa;
-		ballData->fallStateCounter--;
+		ballData_speedy += 0xa;
+		ballData_fallStateCounter--;
 
-		if (!ballData->fallStateCounter)
+		if (!ballData_fallStateCounter)
 		{
-			ballData->speedy = 0;
+			ballData_speedy = 0;
 		}
 	}
-	else if ((dl_s8)ballData->fallStateCounter < 0)
+	else if ((dl_s8)ballData_fallStateCounter < 0)
 	{
 		// on ground
-		ballData->fallStateCounter++;
+		ballData_fallStateCounter++;
 
-		if (!ballData->fallStateCounter)
+		if (!ballData_fallStateCounter)
 		{
-			ballData->speedy = 0xff00;
-			ballData->fallStateCounter = 0xa;
+			ballData_speedy = 0xff00;
+			ballData_fallStateCounter = 0xa;
 		}
 	}
 	else
 	{
-		if (TOUCHES_TERRAIN(testTerrainCollision(ballData->x, 
-												 ballData->y, 
+		if (TOUCHES_TERRAIN(testTerrainCollision(ballData_x, 
+												 ballData_y, 
 												 BALL_SPRITE_ROWS, 
 												 ballGroundCollisionMasks, 
 												 cleanBackground)))
@@ -119,39 +129,49 @@ void Ball_Update(BallData* ballData, dl_u8* cleanBackground)
 			// we've hit the ground. stop our y speed
 			// and set the counter so that we don't move
 			// for a bit.
-			ballData->speedy = 0xff00;
-			ballData->fallStateCounter = BALL_GROUND_FREEZE_TIME; 
+			ballData_speedy = 0xff00;
+			ballData_fallStateCounter = BALL_GROUND_FREEZE_TIME; 
 		}
 		else
 		{
 			// continue falling
-			ballData->speedy += 0x12;
+			ballData_speedy += 0x12;
 
-			if (ballData->speedy > 0x100)
-				ballData->speedy = 0x100;
+			if (ballData_speedy > 0x100)
+				ballData_speedy = 0x100;
 		}
 	}
 	
-	if ((dl_s8)ballData->fallStateCounter >= 0)
+	if ((dl_s8)ballData_fallStateCounter >= 0)
 	{
-		ballData->x += ballData->speedx;
-		ballData->y += ballData->speedy;	
+		ballData_x += ballData_speedx;
+		ballData_y += ballData_speedy;	
 
-		terrainTest = testTerrainCollision(ballData->x, 
-										   ballData->y, 
+		terrainTest = testTerrainCollision(ballData_x, 
+										   ballData_y, 
 										   BALL_WALL_SENSOR_YOFFSET, 
 										   ballWideCollisionMasks, 
 										   cleanBackground);
 
 		if (TOUCHES_TERRAIN(terrainTest))
 		{
-			ballData->state = 0xff;
+			ballData_state = 0xff;
 		}
 	}
 
-	if (ballData->state == 0xff)
+	if (ballData_state == 0xff)
 	{
-		ballData->state = 0;
+		ballData_state = 0;
 		return;
+	}
+}
+
+void Ball_Draw(void)
+{
+	if (ballData_enabled)
+	{
+		SMS_addTwoAdjoiningSprites((ballData_x >> 8) << 1, 
+									ballData_y >> 8, 
+									2 * ((dl_s8)ballData_fallStateCounter < 0));
 	}
 }

@@ -10,19 +10,17 @@
 #define BIRD_ACTIVE				1
 #define BIRD_SHUTDOWN			2
 
-typedef struct
-{
-	dl_u8 state;	// 0 - inactive
-					// 1 - active
-	dl_u16 x; // high resolution position 256 pixels, 256 subpixels
-	dl_u16 y; // high resolution position 256 pixels, 256 subpixels
-	dl_u16 speedx;
-	dl_u16 speedy; // high resolution
-	dl_u8 animationCounter;
-	dl_u8 animationFrame;
-} BirdData;
+extern dl_u8 birdData_state;	// 0 - inactive
+								// 1 - active
+extern dl_u16 birdData_x; // high resolution position 256 pixels, 256 subpixels
+extern dl_u16 birdData_y; // high resolution position 256 pixels, 256 subpixels
+extern dl_u16 birdData_speedx;
+extern dl_u16 birdData_speedy; // high resolution
+extern dl_u8 birdData_animationCounter;
+extern dl_u8 birdData_animationFrame;
 
-void Bird_Init(BirdData* birdData);
-void Bird_Update(BirdData* birdData, dl_u16 currentRoomTimer);
+void Bird_Init(void);
+void Bird_Update(dl_u16 currentRoomTimer);
+void Bird_Draw(dl_u16 currentTimer);
 
 #endif

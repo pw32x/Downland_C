@@ -8,6 +8,7 @@
 #include "dl_sound.h"
 #include "dl_rand.h"
 #include "dl_platform.h"
+#include "bird.h"
 
 
 #define PLAYER_START_LIVES 3
@@ -898,8 +899,6 @@ void Player_PerformCollisions(struct GameData* gameDataStruct)
 	dl_u8 roomNumber;
 	dl_u8 loop;
 	Pickup* pickUp;
-	BallData* ballData;
-	BirdData* birdData;
 	dl_u8 doorIndex;
 
 	GameData* gameData = (GameData*) gameDataStruct;
@@ -972,12 +971,10 @@ void Player_PerformCollisions(struct GameData* gameDataStruct)
 	}
 
 	// collide with ball
-	ballData = &gameData->ballData;
-
-	if (ballData->state == BALL_ACTIVE &&
+	if (ballData_state == BALL_ACTIVE &&
 		objectCollisionTest(playerData, 
-							GET_HIGH_BYTE(ballData->x) + 1,
-							GET_HIGH_BYTE(ballData->y),
+							GET_HIGH_BYTE(ballData_x) + 1,
+							GET_HIGH_BYTE(ballData_y),
 							BALL_COLLISION_WIDTH,
 							BALL_SPRITE_ROWS))
 	{
@@ -986,12 +983,10 @@ void Player_PerformCollisions(struct GameData* gameDataStruct)
 	}
 
 	// collide with bird
-	birdData = &gameData->birdData;
-
-	if (birdData->state == BIRD_ACTIVE &&
+	if (birdData_state == BIRD_ACTIVE &&
 		objectCollisionTest(playerData, 
-							GET_HIGH_BYTE(birdData->x) + 1,
-							GET_HIGH_BYTE(birdData->y),
+							GET_HIGH_BYTE(birdData_x) + 1,
+							GET_HIGH_BYTE(birdData_y),
 							BIRD_COLLISION_WIDTH,
 							BIRD_SPRITE_ROWS))
 	{

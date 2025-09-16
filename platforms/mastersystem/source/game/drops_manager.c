@@ -118,7 +118,6 @@ void DropsManager_Update(DropData* dropData,
 						 dl_u8 gameCompletionCount,
 						 const dl_u8* dropSprites)
 {
-	int loop;
 	Drop* dropsRunner = dropData->drops;
 
 	if (g_dropTickTockTimer)

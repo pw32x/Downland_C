@@ -8,21 +8,19 @@
 #define BALL_ACTIVE				1
 #define BALL_DYING_MAYBE		0xff
 
-typedef struct
-{
-	dl_u8 enabled;
-	dl_u8 state;	// 0 - inactive
-				// 1 - resetting?
-				// 2 - active
-				// 0xff - dying?
-	dl_u16 x; // high resolution position 256 pixels, 256 subpixels
-	dl_u16 y; // high resolution position 256 pixels, 256 subpixels
-	dl_u16 speedx;
-	dl_u16 speedy; // high resolution
-	dl_u8 fallStateCounter;
-} BallData;
+extern dl_u8 ballData_enabled;
+extern dl_u8 ballData_state;	// 0 - inactive
+								// 1 - resetting?
+								// 2 - active
+								// 0xff - dying?
+extern dl_u16 ballData_x; // high resolution position 256 pixels, 256 subpixels
+extern dl_u16 ballData_y; // high resolution position 256 pixels, 256 subpixels
+extern dl_u16 ballData_speedx;
+extern dl_u16 ballData_speedy; // high resolution
+extern dl_u8 ballData_fallStateCounter;
 
-void Ball_Init(BallData* ballData, dl_u8 roomNumber, const Resources* resources);
-void Ball_Update(BallData* ballData, dl_u8* cleanBackground);
+void Ball_Init(dl_u8 roomNumber, const Resources* resources);
+void Ball_Update(dl_u8* cleanBackground);
+void Ball_Draw(void);
 
 #endif

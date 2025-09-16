@@ -40,8 +40,8 @@ void chamber_init(Room* room, GameData* gameData, const Resources* resources)
 	gameData->dropData.dropSpawnPositions = &resources->roomResources[roomNumber].dropSpawnPositions;
 	DropsManager_Init(&gameData->dropData, roomNumber, playerData->gameCompletionCount);
 
-	Ball_Init(&gameData->ballData, roomNumber, resources);
-	Bird_Init(&gameData->birdData);
+	Ball_Init(roomNumber, resources);
+	Bird_Init();
 	Player_RoomInit(playerData);
 
 	convertScoreToString(playerData->score, playerData->scoreString);
@@ -114,9 +114,9 @@ void chamber_update(Room* room, GameData* gameData, const Resources* resources)
 			}
 			else
 			{
-				if (gameData->birdData.state == BIRD_ACTIVE)
+				if (birdData_state == BIRD_ACTIVE)
 				{
-					gameData->birdData.state = BIRD_SHUTDOWN;
+					birdData_state = BIRD_SHUTDOWN;
 				}
 
 				if (!currentTimer)
@@ -144,8 +144,8 @@ void chamber_update(Room* room, GameData* gameData, const Resources* resources)
 	}
 
 #ifndef DISABLE_ENEMIES
-	Ball_Update(&gameData->ballData, gameData->cleanBackground);
-	Bird_Update(&gameData->birdData, currentTimer);
+	Ball_Update(gameData->cleanBackground);
+	Bird_Update(currentTimer);
 #endif
 
 	// compute collisions

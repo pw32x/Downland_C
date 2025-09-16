@@ -9,6 +9,8 @@
 #include "dl_sound.h"
 #include "string.h"
 
+#include "bird.h"
+
 #define VDP_ASSETS_BANK 2
 #define CHAMBER_BANK_START 3
 #define CHAMBER0_BANK 3
@@ -295,8 +297,6 @@ void updateControls(dl_u8 controllerIndex, JoystickState* joystickState)
 }
 
 const dl_u8 pickUpSprites[] = { 8, 22, 18 };
-const BallData* ballData = NULL;
-const BirdData* birdData = NULL;
 
 void GameRunner_ChangedRoomCallback(const struct GameData* gameData, dl_u8 roomNumber, dl_s8 transitionType);
 
@@ -364,11 +364,6 @@ void main(void)
 	Game_ChangedRoomCallback = GameRunner_ChangedRoomCallback;
 
     Game_Init(&gameData, &resources, NULL /*cleanBackground*/);
-
-	//chamber_draw(3, &gameData, &resources);
-	ballData = &gameData.ballData;
-	birdData = &gameData.birdData;
-
 
 	dl_u8 controllerIndex = 0;
 
@@ -441,29 +436,9 @@ void drawChamber(struct GameData* gameData, const Resources* resources)
 	dl_u16 currentTimer = playerData->roomTimers[playerData->currentRoom->roomNumber];
 
 	drawDrops(gameData);
-		
-	// draw ball
-	if (gameData->ballData.enabled)
-	{
 
-
-		//drawSprite((ballData->x >> 8) << 1,
-		//		   ballData->y >> 8,
-		//		   (dl_s8)ballData->fallStateCounter < 0,
-		//		   &ballSprite);
-
-		SMS_addTwoAdjoiningSprites((ballData->x >> 8) << 1, 
-									ballData->y >> 8, 
-									2 * ((dl_s8)ballData->fallStateCounter < 0));
-	}
-
-	// draw bird
-	if (gameData->birdData.state && currentTimer == 0)
-	{
-		SMS_addTwoAdjoiningSprites((birdData->x >> 8) << 1,
-									birdData->y >> 8,
-									4 + (birdData->animationFrame << 1));
-	}
+	Ball_Draw();
+	Bird_Draw(currentTimer);
 
 	dl_u8 tileIndex;
 

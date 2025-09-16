@@ -25,9 +25,6 @@ typedef struct GameData
 	// objects
 	PlayerData playerData[NUM_PLAYERS];
 	DropData dropData;
-	BallData ballData;
-	BirdData birdData;
-
 	JoystickState joystickState;
 
 	// there's no distinct player one or player two

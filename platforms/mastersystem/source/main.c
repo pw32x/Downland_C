@@ -214,7 +214,8 @@ void drawDrops(const GameData* gameData)
     // draw drops
     const Drop* dropsRunner = gameData->dropData.drops;
 
-    for (int loop = 0; loop < NUM_DROPS; loop++)
+	int counter = NUM_DROPS;
+	while (counter--)
     {
         if ((dl_s8)dropsRunner->wiggleTimer < 0 || // wiggling
             dropsRunner->wiggleTimer > 1)   // falling

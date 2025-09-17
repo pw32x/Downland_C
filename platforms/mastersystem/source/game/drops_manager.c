@@ -3,6 +3,7 @@
 #include "base_defines.h"
 #include "draw_utils.h"
 #include "dl_rand.h"
+#include "game_data.h"
 
 #define DROP_FALL_SPEED 0x200
 #define DROP_WIGGLE_START_TIME 0xa8 // wiggle timer starts at 168 which signed is -40. The value is decremented
@@ -11,6 +12,11 @@
 #define DROP_WIGGLE_UP_SPEED 0xff80
 #define DROP_WIGGLE_DOWN_SPEED 0x80
 #define DROP_SPRITE_FRAME_SIZE_IN_BYTES 0xc
+
+Drop dropData_drops[NUM_DROPS];
+const DropSpawnPositions* dropData_dropSpawnPositions;
+dl_u8 dropData_activeDropsCount;
+
 
 dl_u8 g_dropTickTockTimer;
 
@@ -22,15 +28,17 @@ dl_u8 drop_CollisionMasks[4] =
     0x03, // 00000011b
 };
 
-void DropsManager_Init(DropData* dropData, dl_u8 roomNumber, dl_u8 gameCompletionCount)
+void DropsManager_Init(const DropSpawnPositions* dropSpawnPositions, dl_u8 roomNumber, dl_u8 gameCompletionCount)
 {
+	dropData_dropSpawnPositions = dropSpawnPositions;
+
 	int loop;
 	dl_u8 dropsToInitCount = 10; // always 10 drops after finishing a cycle
 
 	g_dropTickTockTimer = 0;
 
 	for (loop = 0; loop < NUM_DROPS; loop++)
-		dropData->drops[loop].wiggleTimer = 0;
+		dropData_drops[loop].wiggleTimer = 0;
 
 
 
@@ -47,10 +55,10 @@ void DropsManager_Init(DropData* dropData, dl_u8 roomNumber, dl_u8 gameCompletio
 		dropsToInitCount++; // always one more
 	}
 
-	dropData->activeDropsCount = dropsToInitCount;
+	dropData_activeDropsCount = dropsToInitCount;
 
 	for (loop = 0; loop < dropsToInitCount; loop++)
-		dropData->drops[loop].wiggleTimer = 1;
+		dropData_drops[loop].wiggleTimer = 1;
 }
 
 void wiggleDrop(Drop* drop)
@@ -60,18 +68,15 @@ void wiggleDrop(Drop* drop)
 }
 
 void initDrop(Drop* drop, 
-			  DropData* dropData, 
-			  dl_u8 gameCompletionCount, 
-			  const dl_u8* dropSprites,
-			  dl_u8* cleanBackground)
+			  dl_u8 gameCompletionCount)
 {
 	dl_u8 value;
 	dl_u8 pixelMask;
 	dl_u8 spriteIndex;
 
 	// randomly pick a drop spawn area
-	dl_u8 dropSpawnAreaIndex = dl_rand() % dropData->dropSpawnPositions->spawnAreasCount;
-	const DropSpawnArea* dropSpawnArea = &dropData->dropSpawnPositions->dropSpawnAreas[dropSpawnAreaIndex];
+	dl_u8 dropSpawnAreaIndex = dl_rand() % dropData_dropSpawnPositions->spawnAreasCount;
+	const DropSpawnArea* dropSpawnArea = &dropData_dropSpawnPositions->dropSpawnAreas[dropSpawnAreaIndex];
 
 	// randomly pick a position in the drop spawn area
 	dl_u8 dropSpawnPointX = dl_rand() % (dropSpawnArea->dropSpawnPointsCount + 1); // spawn points count is inclusive in the original
@@ -94,7 +99,7 @@ void initDrop(Drop* drop,
 	// here, check if there's a collision with the background 6 pixels down and 
 	// 4 to the right. If so, then move the drop's x position to the left.
 	// See address 0xcfeb in the disassembly
-	value = cleanBackground[GET_FRAMEBUFFER_LOCATION(drop->x + 4, GET_HIGH_BYTE(drop->y) + 6)];
+	value = gameData_cleanBackground[GET_FRAMEBUFFER_LOCATION(drop->x + 4, GET_HIGH_BYTE(drop->y) + 6)];
 	pixelMask = pixelMasks[drop->x & 3];
 
 	// check for a rope. If there is one, then move the
@@ -107,18 +112,14 @@ void initDrop(Drop* drop,
 
 	spriteIndex = drop->x & 3; // sprite depends on which column of four pixels it lands on
 
-	drop->spriteData = dropSprites + (DROP_SPRITE_FRAME_SIZE_IN_BYTES * spriteIndex);
 	drop->collisionMask = drop_CollisionMasks[spriteIndex];
 
 	wiggleDrop(drop);
 }
 
-void DropsManager_Update(DropData* dropData, 
-						 dl_u8* cleanBackground, 
-						 dl_u8 gameCompletionCount,
-						 const dl_u8* dropSprites)
+void DropsManager_Update(dl_u8 gameCompletionCount)
 {
-	Drop* dropsRunner = dropData->drops;
+	Drop* dropsRunner = dropData_drops;
 
 	if (g_dropTickTockTimer)
 		dropsRunner++; // move to the second drop every other frame
@@ -136,10 +137,7 @@ void DropsManager_Update(DropData* dropData,
 		if (dropsRunner->wiggleTimer == 1)
 		{
 			initDrop(dropsRunner, 
-					 dropData, 
-					 gameCompletionCount, 
-					 dropSprites, 
-					 cleanBackground);
+					 gameCompletionCount);
 		}
 		else if ((dl_s8)dropsRunner->wiggleTimer < 0)
 		{
@@ -152,15 +150,12 @@ void DropsManager_Update(DropData* dropData,
 
 			dl_u16 cleanBackgroundLocation = GET_FRAMEBUFFER_LOCATION(dropsRunner->x, GET_HIGH_BYTE(dropsRunner->y));
 
-			if ((cleanBackground[cleanBackgroundLocation + 0xc0] & dropsRunner->collisionMask) || // 6 pixels down
-				(cleanBackground[cleanBackgroundLocation + 0xe0] & dropsRunner->collisionMask) || // 7 pixels down
+			if ((gameData_cleanBackground[cleanBackgroundLocation + 0xc0] & dropsRunner->collisionMask) || // 6 pixels down
+				(gameData_cleanBackground[cleanBackgroundLocation + 0xe0] & dropsRunner->collisionMask) || // 7 pixels down
 				(GET_HIGH_BYTE(dropsRunner->y) > FRAMEBUFFER_HEIGHT - 16)) // bottom of the screen bounds checking. not in the original game.
 			{
 				initDrop(dropsRunner, 
-						 dropData, 
-						 gameCompletionCount, 
-						 dropSprites, 
-						 cleanBackground);
+						 gameCompletionCount);
 			}
 		}
 

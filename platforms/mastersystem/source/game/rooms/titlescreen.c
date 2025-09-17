@@ -1,6 +1,7 @@
 #include "titlescreen.h"
 #include "room_types.h"
 
+#include "../game.h"
 #include "../game_data.h"
 #include "../draw_utils.h"
 #include "../drops_manager.h"
@@ -15,8 +16,9 @@ void titleScreen_init(Room* room, const Resources* resources)
 	dl_u8 roomNumber = room->roomNumber;
 
 	// init drops
-	gameData_dropData.dropSpawnPositions = &resources->roomResources[roomNumber].dropSpawnPositions;
-	DropsManager_Init(&gameData_dropData, roomNumber, 1 /*gameCompletionCount*/);
+	DropsManager_Init(&resources->roomResources[roomNumber].dropSpawnPositions,
+					  roomNumber, 
+					  1 /*gameCompletionCount*/);
 }
 
 void titleScreen_update(Room* room, const Resources* resources)
@@ -30,10 +32,7 @@ void titleScreen_update(Room* room, const Resources* resources)
 	// game, making drops fall more often and faster.
 	for (loop = 0; loop < 3; loop++)
 	{
-		DropsManager_Update(&gameData_dropData, 
-							gameData_cleanBackground, 
-							1 /*gameCompletionCount*/,
-							resources->sprites_drops);
+		DropsManager_Update(1 /*gameCompletionCount*/);
 	}
 
 	// update the number of players and cursor depending on the direction

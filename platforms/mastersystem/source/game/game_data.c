@@ -4,7 +4,6 @@ dl_u8* gameData_cleanBackground; // the game background without UI or objects. U
 
 // objects
 PlayerData gameData_playerData[NUM_PLAYERS];
-DropData gameData_dropData;
 
 // there's no distinct player one or player two
 // the pointers swap every time a player dies.

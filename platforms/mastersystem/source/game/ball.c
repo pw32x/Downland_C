@@ -45,7 +45,7 @@ dl_u16 ballWideCollisionMasks[4] =
     0xffc0, // 1111111111000000b
 };
 
-void initBallPhysics()
+void initBallPhysics(void)
 {
 	ballData_state = BALL_ACTIVE;
 	ballData_x = SET_HIGH_BYTE(BALL_START_X);
@@ -82,7 +82,7 @@ void Ball_Init(dl_u8 roomNumber, const Resources* resources)
 }
 
 
-void Ball_Update(dl_u8* cleanBackground)
+void Ball_Update(void)
 {
 	dl_u8 terrainTest;
 
@@ -123,8 +123,7 @@ void Ball_Update(dl_u8* cleanBackground)
 		if (TOUCHES_TERRAIN(testTerrainCollision(ballData_x, 
 												 ballData_y, 
 												 BALL_SPRITE_ROWS, 
-												 ballGroundCollisionMasks, 
-												 cleanBackground)))
+												 ballGroundCollisionMasks)))
 		{
 			// we've hit the ground. stop our y speed
 			// and set the counter so that we don't move
@@ -150,8 +149,7 @@ void Ball_Update(dl_u8* cleanBackground)
 		terrainTest = testTerrainCollision(ballData_x, 
 										   ballData_y, 
 										   BALL_WALL_SENSOR_YOFFSET, 
-										   ballWideCollisionMasks, 
-										   cleanBackground);
+										   ballWideCollisionMasks);
 
 		if (TOUCHES_TERRAIN(terrainTest))
 		{

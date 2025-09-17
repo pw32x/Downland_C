@@ -9,11 +9,9 @@
 Game_ChangedRoomCallbackType Game_ChangedRoomCallback = NULL;
 Game_ChangedRoomCallbackType Game_TransitionDone = NULL;
 
-void Game_Init(const Resources* resources,
-			   dl_u8* cleanBackground)
+void Game_Init(const Resources* resources)
 {
-	dl_memset((void*)&gameData_playerData, 0, sizeof(gameData_playerData[NUM_PLAYERS]));
-	dl_memset((void*)gameData_dropData, 0, sizeof(gameData_dropData));
+	dl_memset((void*)&gameData_playerData, 0, sizeof(gameData_playerData));
 	
 	joystickState_leftDown = FALSE;
 	joystickState_rightDown = FALSE;
@@ -25,9 +23,6 @@ void Game_Init(const Resources* resources,
 	joystickState_jumpPressed = FALSE;
 
 	gameData_paused = 0;
-
-	gameData_cleanBackground = cleanBackground;
-
 	gameData_numPlayers = 1;
 
 	// init strings

@@ -20,7 +20,7 @@ extern dl_u16 ballData_speedy; // high resolution
 extern dl_u8 ballData_fallStateCounter;
 
 void Ball_Init(dl_u8 roomNumber, const Resources* resources);
-void Ball_Update(dl_u8* cleanBackground);
+void Ball_Update(void);
 void Ball_Draw(void);
 
 #endif

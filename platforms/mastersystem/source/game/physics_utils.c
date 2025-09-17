@@ -1,5 +1,6 @@
 #include "physics_utils.h"
 #include "base_defines.h"
+#include "game_data.h"
 
 dl_u8 collisionCheckXOffsets[4] = { 0, 0, 0, 1 };
 
@@ -40,8 +41,7 @@ dl_u8 terrainTest(dl_u8 pixelData)
 dl_u8 testTerrainCollision(dl_u16 x, 
 						dl_u16 y, 
 						dl_u16 yOffset, 
-						const dl_u16* objectCollisionMasks,
-						const dl_u8* cleanBackground)
+						const dl_u16* objectCollisionMasks)
 {
 	dl_u8 pixelX = GET_HIGH_BYTE(x);
 	dl_u8 tableIndex = pixelX & 0x3;
@@ -53,8 +53,8 @@ dl_u8 testTerrainCollision(dl_u16 x,
 
 	dl_u16 framebufferPosition = GET_FRAMEBUFFER_LOCATION(sensorX, sensorY);
 
-	dl_u8 firstResult = terrainTest(cleanBackground[framebufferPosition] & GET_HIGH_BYTE(objectCollisionMask));
-	dl_u8 secondResult = terrainTest(cleanBackground[framebufferPosition + 1] & GET_LOW_BYTE(objectCollisionMask));
+	dl_u8 firstResult = terrainTest(gameData_cleanBackground[framebufferPosition] & GET_HIGH_BYTE(objectCollisionMask));
+	dl_u8 secondResult = terrainTest(gameData_cleanBackground[framebufferPosition + 1] & GET_LOW_BYTE(objectCollisionMask));
 
 	return firstResult | secondResult;
 }
@@ -65,8 +65,7 @@ dl_u8 rightPixelData;
 void getTerrainValue(dl_u16 x, 
 				     dl_u16 y, 
 				     dl_u16 yOffset, 
-				     const dl_u16* objectCollisionMasks,
-				     const dl_u8* cleanBackground)
+				     const dl_u16* objectCollisionMasks)
 {
 	dl_u8 pixelX = GET_HIGH_BYTE(x);
 	dl_u8 tableIndex = pixelX & 0x3;
@@ -78,8 +77,8 @@ void getTerrainValue(dl_u16 x,
 
 	dl_u16 framebufferPosition = GET_FRAMEBUFFER_LOCATION(sensorX, sensorY);
 
-	leftPixelData = cleanBackground[framebufferPosition] & GET_HIGH_BYTE(objectCollisionMask);
-	rightPixelData = cleanBackground[framebufferPosition + 1] & GET_LOW_BYTE(objectCollisionMask);
+	leftPixelData = gameData_cleanBackground[framebufferPosition] & GET_HIGH_BYTE(objectCollisionMask);
+	rightPixelData = gameData_cleanBackground[framebufferPosition + 1] & GET_LOW_BYTE(objectCollisionMask);
 
 	if (leftPixelData || rightPixelData)
 		terrainTest(1);

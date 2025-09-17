@@ -9,13 +9,14 @@
 #define DROP_SPRITE_ROWS 6
 #define DROP_SPRITE_COUNT 1
 
-void DropsManager_Init(DropData* dropData, 
+void DropsManager_Init(const DropSpawnPositions* dropSpawnPositions,
 					   dl_u8 roomNumber, 
 					   dl_u8 gameCompletionCount);
 
-void DropsManager_Update(DropData* dropData, 
-						 dl_u8* cleanBackground, 
-						 dl_u8 gameCompletionCount, 
-						 const dl_u8* dropSprites);
+void DropsManager_Update(dl_u8 gameCompletionCount);
+
+extern Drop dropData_drops[NUM_DROPS];
+extern const DropSpawnPositions* dropData_dropSpawnPositions;
+extern dl_u8 dropData_activeDropsCount;
 
 #endif

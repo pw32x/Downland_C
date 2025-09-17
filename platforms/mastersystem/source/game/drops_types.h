@@ -16,7 +16,6 @@ typedef DL_PACKED struct
 	dl_u16 speedY;
 	dl_u16 y; // dl_u16 because 256 pixels with 256 subpixels resolution
 	dl_u8 x; // position in half resolution (0 - 127)
-	const dl_u8* spriteData;
 	dl_u8 collisionMask;
 } Drop;
 
@@ -33,11 +32,5 @@ typedef DL_PACKED struct
 	const DropSpawnArea* dropSpawnAreas;
 } DropSpawnPositions;
 
-typedef DL_PACKED struct
-{
-	Drop drops[NUM_DROPS];
-	const DropSpawnPositions* dropSpawnPositions;
-	dl_u8 activeDropsCount;
-} DropData;
 
 #endif

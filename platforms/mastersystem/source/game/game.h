@@ -3,7 +3,7 @@
 
 #include "resource_types.h"
 
-void Game_Init(const Resources* resources, dl_u8* cleanBackground);
+void Game_Init(const Resources* resources);
 void Game_InitPlayers(const Resources* resources);
 void Game_Update(const Resources* resources);
 void Game_EnterRoom(dl_u8 roomNumber, const Resources* resources);

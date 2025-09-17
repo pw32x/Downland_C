@@ -1,6 +1,7 @@
 #include "chambers.h"
 #include "room_types.h"
 
+#include "../game.h"
 #include "../game_data.h"
 #include "../draw_utils.h"
 #include "../drops_manager.h"
@@ -37,8 +38,9 @@ void chamber_init(Room* room, const Resources* resources)
 	PlayerData* playerData = gameData_currentPlayerData;
 
 	// init drops
-	gameData_dropData.dropSpawnPositions = &resources->roomResources[roomNumber].dropSpawnPositions;
-	DropsManager_Init(&gameData_dropData, roomNumber, playerData->gameCompletionCount);
+	DropsManager_Init(&resources->roomResources[roomNumber].dropSpawnPositions,
+					  roomNumber, 
+					  playerData->gameCompletionCount);
 
 	Ball_Init(roomNumber, resources);
 	Bird_Init();
@@ -64,10 +66,7 @@ void chamber_update(Room* room, const Resources* resources)
 	currentTimer = playerData->roomTimers[playerData->currentRoom->roomNumber];
 
 #ifndef DISABLE_ENEMIES
-	DropsManager_Update(&gameData_dropData, 
-						gameData_cleanBackground, 
-						playerData->gameCompletionCount,
-						resources->sprites_drops);	
+	DropsManager_Update(playerData->gameCompletionCount);	
 #endif
 
 	lastDoor = playerData->lastDoor;
@@ -75,7 +74,6 @@ void chamber_update(Room* room, const Resources* resources)
 	playerLives = playerData->lives;
 
 	Player_Update(playerData, 
-				  gameData_cleanBackground,
 				  &resources->roomResources[room->roomNumber].doorInfoData,
 				  playerData->doorStateData);
 
@@ -140,7 +138,7 @@ void chamber_update(Room* room, const Resources* resources)
 	}
 
 #ifndef DISABLE_ENEMIES
-	Ball_Update(gameData_cleanBackground);
+	Ball_Update();
 	Bird_Update(currentTimer);
 #endif
 

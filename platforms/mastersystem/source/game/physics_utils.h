@@ -9,8 +9,7 @@
 dl_u8 testTerrainCollision(dl_u16 x, 
 						dl_u16 y, 
 						dl_u16 yOffset, 
-						const dl_u16* objectCollisionMasks, 
-						const dl_u8* cleanBackground);
+						const dl_u16* objectCollisionMasks);
 
 
 
@@ -20,7 +19,6 @@ extern dl_u8 rightPixelData;
 void getTerrainValue(dl_u16 x, 
 				     dl_u16 y, 
 				     dl_u16 yOffset, 
-				     const dl_u16* objectCollisionMasks,
-				     const dl_u8* cleanBackground);
+				     const dl_u16* objectCollisionMasks);
 
 #endif

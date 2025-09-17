@@ -1,13 +1,9 @@
 #ifndef PLAYER_INCLUDE_H
 #define PLAYER_INCLUDE_H
 
-#include "base_types.h"
 #include "player_types.h"
 #include "resource_types.h"
-#include "door_types.h"
-#include "string_utils.h"
-#include "rooms/rooms.h"
-#include "game.h"
+
 
 // all the states are mutually exclusive
 #define PLAYER_STATE_STAND			0
@@ -29,7 +25,6 @@ void Player_GameInit(PlayerData* playerData, const Resources* resources);
 void Player_RoomInit(PlayerData* playerData);
 
 void Player_Update(PlayerData* playerData, 
-				   dl_u8* cleanBackground, 
 				   const DoorInfoData* doorInfoData,
 				   dl_u8* doorStateData);
 

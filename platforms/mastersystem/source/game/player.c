@@ -10,7 +10,7 @@
 #include "dl_platform.h"
 #include "bird.h"
 #include "joystick_data.h"
-
+#include "drops_manager.h"
 
 #define PLAYER_START_LIVES 3
 
@@ -286,7 +286,6 @@ void Player_StartRegen(PlayerData* playerData)
 }
 
 void Player_Update(PlayerData* playerData, 
-				   dl_u8* cleanBackground,
 				   const DoorInfoData* doorInfoData,
 				   dl_u8* doorStateData)
 {
@@ -497,8 +496,7 @@ void Player_Update(PlayerData* playerData,
 			if (!TOUCHES_TERRAIN(testTerrainCollision(playerData->x, 
 													  playerData->y, 
 													  PLAYER_GROUND_SENSOR_YOFFSET, 
-													  playerGroundCollisionMasks,
-													  cleanBackground)))
+													  playerGroundCollisionMasks)))
 			{
 				Sound_Stop(SOUND_RUN);
 				playerData->state = PLAYER_STATE_FALL;
@@ -552,8 +550,7 @@ void Player_Update(PlayerData* playerData,
 		if (TOUCHES_TERRAIN(testTerrainCollision(playerData->x, 
 												 playerData->y, 
 												 PLAYER_GROUND_SENSOR_YOFFSET, 
-												 playerGroundCollisionMasks,
-												 cleanBackground)))
+												 playerGroundCollisionMasks)))
 		{
 			dl_u8 killPlayer = (playerData->speedy == PLAYER_MAX_FALL_SPEED || playerData->isDead);
 
@@ -577,8 +574,7 @@ void Player_Update(PlayerData* playerData,
 		testResult = testTerrainCollision(playerData->x, 
 										  playerData->y, 
 										  PLAYER_OFF_ROPE_SENSOR_YOFFSET, 
-										  ropeCollisionMasks,
-										  cleanBackground);
+										  ropeCollisionMasks);
 
 		processLeftRight = TRUE;
 
@@ -785,8 +781,7 @@ void Player_Update(PlayerData* playerData,
 		dl_u8 testResult = testTerrainCollision(playerData->x, 
 											 playerData->y, 
 											 PLAYER_ROPE_SENSOR_YOFFSET, 
-											 ropeCollisionMasks,
-											 cleanBackground);
+											 ropeCollisionMasks);
 		if (TOUCHES_VINE(testResult))
 		{
 			Sound_Stop(SOUND_JUMP);
@@ -805,8 +800,7 @@ void Player_Update(PlayerData* playerData,
 	if (TOUCHES_TERRAIN(testTerrainCollision(playerData->x, 
 						playerData->y, 
 						PLAYER_WALL_SENSOR_YOFFSET, 
-						playerGroundCollisionMasks,
-						cleanBackground)))
+						playerGroundCollisionMasks)))
 	{
 		playerData->x -= playerData->speedx;
 
@@ -867,12 +861,12 @@ BOOL objectCollisionTest(PlayerData* playerData, dl_u8 x, dl_u8 y, dl_u8 width, 
 		    y + height > playerY);
 }
 
-BOOL dropsManagerCollisionTest(DropData* dropData, PlayerData* playerData)
+BOOL dropsManagerCollisionTest(PlayerData* playerData)
 {
-	const Drop* dropRunner = dropData->drops;
+	const Drop* dropRunner = dropData_drops;
 	dl_u8 loop;
 
-	for (loop = 0; loop < dropData->activeDropsCount; loop++)
+	for (loop = 0; loop < dropData_activeDropsCount; loop++)
 	{
 		if ((dl_s8)dropRunner->wiggleTimer > 0) // see note about wiggle time. 
 											 // only test collision when it is positive in signed.
@@ -963,7 +957,7 @@ void Player_PerformCollisions(void)
 	}
 
 	// collide with drops
-	if (dropsManagerCollisionTest(&gameData_dropData, playerData))
+	if (dropsManagerCollisionTest(playerData))
 	{
 		playerKill(playerData);
 		return;

@@ -1,5 +1,6 @@
 #include "room_types.h"
 
+#include "../game.h"
 #include "../game_data.h"
 #include "../draw_utils.h"
 #include "../drops_manager.h"
@@ -15,8 +16,9 @@ void get_ready_room_init(Room* room, const Resources* resources)
 	UNUSED(room);
 
 	// init drops
-	gameData_dropData.dropSpawnPositions = &resources->roomResources[TITLESCREEN_ROOM_INDEX].dropSpawnPositions;
-	DropsManager_Init(&gameData_dropData, TITLESCREEN_ROOM_INDEX, 1 /*gameCompletionCount*/);
+	DropsManager_Init(&resources->roomResources[TITLESCREEN_ROOM_INDEX].dropSpawnPositions,
+					  TITLESCREEN_ROOM_INDEX, 
+					  1 /*gameCompletionCount*/);
 }
 
 void get_ready_room_update(Room* room, const Resources* resources)
@@ -31,10 +33,7 @@ void get_ready_room_update(Room* room, const Resources* resources)
 	// game, making drops fall more often and faster.
 	for (loop = 0; loop < 3; loop++)
 	{
-		DropsManager_Update(&gameData_dropData, 
-							gameData_cleanBackground, 
-							1 /*gameCompletionCount*/,
-							resources->sprites_drops);
+		DropsManager_Update(1 /*gameCompletionCount*/);
 	}
 
 	// press button to start

@@ -3,6 +3,7 @@
 
 #include "base_types.h"
 #include "game_data.h"
+#include "game.h"
 #include "custom_background_types.h"
 #include "chambers.h"
 #include "rooms/titlescreen.h"
@@ -10,6 +11,7 @@
 #include "string.h"
 #include "joystick_data.h"
 #include "bird.h"
+#include "drops_manager.h"
 
 #define VDP_ASSETS_BANK 2
 #define CHAMBER_BANK_START 3
@@ -121,9 +123,6 @@ void drawTileText(const dl_u8* text, dl_u16 xyLocation)
 
 void chamber_draw(dl_u8 roomNumber, const Resources* resources)
 {
-	
-
-
 	const SMSBackgroundData* backgroundData = (const SMSBackgroundData*)resources->roomResources[roomNumber].backgroundDrawData;
 	gameData_cleanBackground = (dl_u8*)backgroundData->cleanBackground;
 	SMS_loadTileMap(0, 0, (dl_u8*)backgroundData->tileMap, 32 * 24 * 2);
@@ -158,7 +157,6 @@ void get_ready_room_draw(dl_u8 roomNumber, const Resources* resources)
 
 void titleScreen_draw(dl_u8 roomNumber, const Resources* resources)
 {
-
 	const SMSBackgroundData* backgroundData = (const SMSBackgroundData*)resources->roomResources[roomNumber].backgroundDrawData;
 	gameData_cleanBackground = (dl_u8*)backgroundData->cleanBackground;
 	SMS_loadTileMap(0, 0, (dl_u8*)backgroundData->tileMap, 32 * 24 * 2);
@@ -200,7 +198,7 @@ extern Resources resources;
 void drawDrops(void)
 {
     // draw drops
-    const Drop* dropsRunner = gameData_dropData.drops;
+    const Drop* dropsRunner = dropData_drops;
 
 	int counter = NUM_DROPS;
 	while (counter--)
@@ -359,7 +357,7 @@ void main(void)
 
 	Game_ChangedRoomCallback = GameRunner_ChangedRoomCallback;
 
-    Game_Init(&resources, NULL /*cleanBackground*/);
+    Game_Init(&resources);
 
 	dl_u8 controllerIndex = 0;
 

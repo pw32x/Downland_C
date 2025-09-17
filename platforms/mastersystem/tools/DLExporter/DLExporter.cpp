@@ -1060,14 +1060,14 @@ void saveGeneralData(const Resources& resources)
     oss << "#include \"door_types.h\"\n";
     oss << "\n";
 
-    // pickups
-    oss << "// pick ups\n";
-    oss << "extern const dl_u8 diamondSprite[20];\n";
-    oss << "extern const dl_u8 moneyBagSprite[20];\n";
-    oss << "extern const dl_u8 keySprite[20];\n";
-    oss << "\n";
-    oss << "const dl_u8* pickupSprites[3] = { diamondSprite, moneyBagSprite, keySprite };\n";
-    oss << "\n";
+    //// pickups
+    //oss << "// pick ups\n";
+    //oss << "extern const dl_u8 diamondSprite[20];\n";
+    //oss << "extern const dl_u8 moneyBagSprite[20];\n";
+    //oss << "extern const dl_u8 keySprite[20];\n";
+    //oss << "\n";
+    //oss << "const dl_u8* pickupSprites[3] = { diamondSprite, moneyBagSprite, keySprite };\n";
+    //oss << "\n";
 
 
     // pick up positions
@@ -1326,8 +1326,8 @@ void saveResources(Resources& resources)
     oss << "\n";
 
 
-    oss << "extern const dl_u8 characterFont[273];\n";
-    oss << "\n";
+    //oss << "extern const dl_u8 characterFont[273];\n";
+    //oss << "\n";
     oss << "extern const dl_u8 string_downland[14];\n";
     oss << "extern const dl_u8 string_writtenBy[12];\n";
     oss << "extern const dl_u8 string_michaelAichlmayer[18];\n";
@@ -1347,18 +1347,18 @@ void saveResources(Resources& resources)
     oss << "extern const dl_u8 string_getReadyPlayerTwo[21];\n";
     oss << "extern const dl_u8 string_chamber[8];\n";
     oss << "\n";
-    oss << "extern const dl_u8 bitShiftedSprite_player[1920];\n";
-    oss << "extern const dl_u8 bitShiftedSprite_ball[192];\n";
-    oss << "extern const dl_u8 bitShiftedSprite_bird[144];\n";
-    oss << "extern const dl_u8 bitShiftedSprite_door[192];\n";
-    oss << "extern const dl_u8 bitShiftedSprite_playerCollisionMasks[600];\n";
-    oss << "extern const dl_u8 bitShiftedSprite_playerSplat[108];\n";
-    oss << "\n";
-    oss << "extern const dl_u8 diamondSprite[20];\n";
-    oss << "extern const dl_u8 moneyBagSprite[20];\n";
-    oss << "extern const dl_u8 keySprite[20];\n";
-    oss << "\n";
-    oss << "extern const dl_u8 dropSprite[48];\n";
+    //oss << "extern const dl_u8 bitShiftedSprite_player[1920];\n";
+    //oss << "extern const dl_u8 bitShiftedSprite_ball[192];\n";
+    //oss << "extern const dl_u8 bitShiftedSprite_bird[144];\n";
+    //oss << "extern const dl_u8 bitShiftedSprite_door[192];\n";
+    //oss << "extern const dl_u8 bitShiftedSprite_playerCollisionMasks[600];\n";
+    //oss << "extern const dl_u8 bitShiftedSprite_playerSplat[108];\n";
+    //oss << "\n";
+    //oss << "extern const dl_u8 diamondSprite[20];\n";
+    //oss << "extern const dl_u8 moneyBagSprite[20];\n";
+    //oss << "extern const dl_u8 keySprite[20];\n";
+    //oss << "\n";
+    //oss << "extern const dl_u8 dropSprite[48];\n";
     oss << "\n";
     oss << "extern const PickupPosition roomPickupPositions[50];\n";
     oss << "extern const dl_u8 keyPickUpDoorIndexes[20];\n";
@@ -1433,8 +1433,8 @@ void saveResources(Resources& resources)
 
 	oss << "const Resources resources = \n";
 	oss << "{\n";
-    oss << "    characterFont,\n";
-    oss << "\n";
+    //oss << "    characterFont,\n";
+    //oss << "\n";
 
     oss << "    // strings\n";
     oss << "    string_downland,\n";
@@ -1457,30 +1457,30 @@ void saveResources(Resources& resources)
     oss << "    string_chamber,\n";
     oss << "\n";
 
-    oss << "    // sprites\n";
-    oss << "    NULL, // sprites_player\n";
-    oss << "    NULL, // collisionmasks_player,\n";
-    oss << "    NULL, // sprites_bouncyBall,\n";
-    oss << "    NULL, // sprites_bird,\n";
-    oss << "    moneyBagSprite,\n";
-    oss << "    diamondSprite,\n";
-    oss << "    keySprite,\n";
-    oss << "    NULL, // sprite_playerSplat,\n";
-    oss << "    NULL, // sprite_door,\n";
-    oss << "    dropSprite,\n";
-    oss << "\n";
+    //oss << "    // sprites\n";
+    //oss << "    NULL, // sprites_player\n";
+    //oss << "    NULL, // collisionmasks_player,\n";
+    //oss << "    NULL, // sprites_bouncyBall,\n";
+    //oss << "    NULL, // sprites_bird,\n";
+    //oss << "    moneyBagSprite,\n";
+    //oss << "    diamondSprite,\n";
+    //oss << "    keySprite,\n";
+    //oss << "    NULL, // sprite_playerSplat,\n";
+    //oss << "    NULL, // sprite_door,\n";
+    //oss << "    dropSprite,\n";
+    //oss << "\n";
 
-    oss << "    // bit shifted sprites\n";
-    oss << "    bitShiftedSprite_player,\n";
-    oss << "    bitShiftedSprite_playerCollisionMasks,\n";
-    oss << "    bitShiftedSprite_ball,\n";
-    oss << "    bitShiftedSprite_bird,\n";
-    oss << "    bitShiftedSprite_playerSplat,\n";
-    oss << "    bitShiftedSprite_door,\n";
-    oss << "\n";
-
-    oss << "    { diamondSprite, moneyBagSprite, keySprite },\n";
-    oss << "\n";
+    //oss << "    // bit shifted sprites\n";
+    //oss << "    bitShiftedSprite_player,\n";
+    //oss << "    bitShiftedSprite_playerCollisionMasks,\n";
+    //oss << "    bitShiftedSprite_ball,\n";
+    //oss << "    bitShiftedSprite_bird,\n";
+    //oss << "    bitShiftedSprite_playerSplat,\n";
+    //oss << "    bitShiftedSprite_door,\n";
+    //oss << "\n";
+    //
+    //oss << "    { diamondSprite, moneyBagSprite, keySprite },\n";
+    //oss << "\n";
 
     // RoomResources roomResources[NUM_ROOMS_PLUS_TITLESCREN];
     oss << "    // room resources \n";
@@ -1629,17 +1629,17 @@ int main()
 
     saveStrings(resources);
 
-    saveBitshiftedSprite(resources.bitShiftedCollisionmasks_player, PLAYER_SPRITE_COUNT, PLAYER_COLLISION_MASK_ROWS, "bitShiftedSprite_playerCollisionMasks");
-    saveBitshiftedSprite(resources.bitShiftedSprites_bouncyBall, BALL_SPRITE_COUNT, BALL_SPRITE_ROWS, "bitShiftedSprite_ball");
-    saveBitshiftedSprite(resources.bitShiftedSprites_bird, BIRD_SPRITE_COUNT, BIRD_SPRITE_ROWS, "bitShiftedSprite_bird");
-    saveBitshiftedSprite(resources.bitShiftedSprites_playerSplat, PLAYER_SPLAT_SPRITE_COUNT, PLAYER_SPLAT_SPRITE_ROWS, "bitShiftedSprite_playerSplat");
-    saveBitshiftedSprite(resources.bitShiftedSprites_door, DOOR_SPRITE_COUNT, DOOR_SPRITE_ROWS, "bitShiftedSprite_door");
-    saveBitshiftedSprite(resources.bitShiftedSprites_player, PLAYER_SPRITE_COUNT, PLAYER_SPRITE_ROWS, "bitShiftedSprite_player");
-    saveSprite(resources.sprite_diamond, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, "diamondSprite");
-    saveSprite(resources.sprite_moneyBag, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, "moneyBagSprite");
-    saveSprite(resources.sprite_key, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, "keySprite");
-    saveSprite(resources.sprites_drops, DROP_SPRITE_WIDTH, DROP_SPRITE_ROWS, 4, "dropSprite");
-    saveSprite(resources.characterFont, CHARACTER_FONT_WIDTH, CHARACTER_FONT_HEIGHT, CHARACTER_FONT_COUNT, "characterFont");
+    //saveBitshiftedSprite(resources.bitShiftedCollisionmasks_player, PLAYER_SPRITE_COUNT, PLAYER_COLLISION_MASK_ROWS, "bitShiftedSprite_playerCollisionMasks");
+    //saveBitshiftedSprite(resources.bitShiftedSprites_bouncyBall, BALL_SPRITE_COUNT, BALL_SPRITE_ROWS, "bitShiftedSprite_ball");
+    //saveBitshiftedSprite(resources.bitShiftedSprites_bird, BIRD_SPRITE_COUNT, BIRD_SPRITE_ROWS, "bitShiftedSprite_bird");
+    //saveBitshiftedSprite(resources.bitShiftedSprites_playerSplat, PLAYER_SPLAT_SPRITE_COUNT, PLAYER_SPLAT_SPRITE_ROWS, "bitShiftedSprite_playerSplat");
+    //saveBitshiftedSprite(resources.bitShiftedSprites_door, DOOR_SPRITE_COUNT, DOOR_SPRITE_ROWS, "bitShiftedSprite_door");
+    //saveBitshiftedSprite(resources.bitShiftedSprites_player, PLAYER_SPRITE_COUNT, PLAYER_SPRITE_ROWS, "bitShiftedSprite_player");
+    //saveSprite(resources.sprite_diamond, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, "diamondSprite");
+    //saveSprite(resources.sprite_moneyBag, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, "moneyBagSprite");
+    //saveSprite(resources.sprite_key, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, "keySprite");
+    //saveSprite(resources.sprites_drops, DROP_SPRITE_WIDTH, DROP_SPRITE_ROWS, 4, "dropSprite");
+    //saveSprite(resources.characterFont, CHARACTER_FONT_WIDTH, CHARACTER_FONT_HEIGHT, CHARACTER_FONT_COUNT, "characterFont");
 
     //saveDropSpawns(resources);
     saveGeneralData(resources);

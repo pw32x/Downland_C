@@ -112,40 +112,7 @@
     <ClCompile Include="..\generated\bank2_vdp\tileSet4bpp.c">
       <Filter>Source Files\generated\bank_vdp</Filter>
     </ClCompile>
-    <ClCompile Include="..\generated\keySprite.c">
-      <Filter>Source Files\generated</Filter>
-    </ClCompile>
-    <ClCompile Include="..\generated\moneyBagSprite.c">
-      <Filter>Source Files\generated</Filter>
-    </ClCompile>
     <ClCompile Include="..\generated\strings.c">
-      <Filter>Source Files\generated</Filter>
-    </ClCompile>
-    <ClCompile Include="..\generated\bitShiftedSprite_ball.c">
-      <Filter>Source Files\generated</Filter>
-    </ClCompile>
-    <ClCompile Include="..\generated\bitShiftedSprite_bird.c">
-      <Filter>Source Files\generated</Filter>
-    </ClCompile>
-    <ClCompile Include="..\generated\bitShiftedSprite_door.c">
-      <Filter>Source Files\generated</Filter>
-    </ClCompile>
-    <ClCompile Include="..\generated\bitShiftedSprite_player.c">
-      <Filter>Source Files\generated</Filter>
-    </ClCompile>
-    <ClCompile Include="..\generated\bitShiftedSprite_playerCollisionMasks.c">
-      <Filter>Source Files\generated</Filter>
-    </ClCompile>
-    <ClCompile Include="..\generated\bitShiftedSprite_playerSplat.c">
-      <Filter>Source Files\generated</Filter>
-    </ClCompile>
-    <ClCompile Include="..\generated\characterFont.c">
-      <Filter>Source Files\generated</Filter>
-    </ClCompile>
-    <ClCompile Include="..\generated\diamondSprite.c">
-      <Filter>Source Files\generated</Filter>
-    </ClCompile>
-    <ClCompile Include="..\generated\dropSprite.c">
       <Filter>Source Files\generated</Filter>
     </ClCompile>
     <ClCompile Include="..\generated\general.c">

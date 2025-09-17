@@ -29,9 +29,6 @@ typedef struct
 
 typedef struct
 {
-    // font
-    const dl_u8* characterFont;
-
     //strings
     const dl_u8* text_downland;
     const dl_u8* text_writtenBy;
@@ -51,28 +48,6 @@ typedef struct
     const dl_u8* text_getReadyPlayerOne;
     const dl_u8* text_getReadyPlayerTwo;
     const dl_u8* text_chamber;
-    
-    //sprites
-    const dl_u8* sprites_player;
-    const dl_u8* collisionmasks_player;
-    const dl_u8* sprites_bouncyBall;
-    const dl_u8* sprites_bird;
-    const dl_u8* sprite_moneyBag;
-    const dl_u8* sprite_diamond;
-    const dl_u8* sprite_key;
-    const dl_u8* sprite_playerSplat;
-    const dl_u8* sprite_door;
-    const dl_u8* sprites_drops;
-
-    // bit shifted sprites
-    const dl_u8* bitShiftedSprites_player;
-    const dl_u8* bitShiftedCollisionmasks_player;
-    const dl_u8* bitShiftedSprites_bouncyBall;
-    const dl_u8* bitShiftedSprites_bird;
-    const dl_u8* bitShiftedSprites_playerSplat;
-    const dl_u8* bitShiftedSprites_door;
-
-    const dl_u8* pickupSprites[3];
 
     RoomResources roomResources[NUM_ROOMS_PLUS_TITLESCREN];
 

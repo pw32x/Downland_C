@@ -227,10 +227,6 @@ void Player_GameInit(PlayerData* playerData, const Resources* resources)
 	playerData->score = 0;
 	playerData->gameCompletionCount = 0;
 
-	playerData->bitShiftedSprites = resources->bitShiftedSprites_player;
-	playerData->bitShiftedCollisionMasks = resources->bitShiftedCollisionmasks_player;
-	playerData->bitShiftedSplatSprite = resources->bitShiftedSprites_playerSplat;
-
 	// init timers
 	for (loop = 0; loop < NUM_ROOMS; loop++)
 		playerData->roomTimers[loop] = ROOM_TIMER_DEFAULT;

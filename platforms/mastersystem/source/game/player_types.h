@@ -33,10 +33,6 @@ typedef struct
 	dl_u8 playerMask;
 	dl_u8 currentFrameNumber; // 0 to 3 for run animation (both directions), 4 to 5 for climbing animation
 	dl_u8 currentSpriteNumber; // 0 to 3 run right, 4/5 climb, 6-9 run left
-	const dl_u8* currentSprite;
-	const dl_u8* bitShiftedSprites;
-	const dl_u8* bitShiftedCollisionMasks;
-	const dl_u8* bitShiftedSplatSprite;
 
 	dl_u8 facingDirection;
 

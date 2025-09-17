@@ -15,18 +15,6 @@ typedef struct
     DoorInfoData doorInfoData;
 } RoomResources;
 
-// computes the size from the location of the memory
-// addresses in the game rom.
-#define SIZE_FROM_RANGE(start, end) (end - start)
-
-#define DESTINATION_BYTES_PER_ROW	3
-#define NUM_BIT_SHIFTS 4
-#define BITSHIFTED_SIZE(spriteCount, rowCount) (spriteCount * rowCount * DESTINATION_BYTES_PER_ROW * NUM_BIT_SHIFTS)
-
-#define CHARACTER_FONT_COUNT    39
-#define CHARACTER_FONT_WIDTH    8
-#define CHARACTER_FONT_HEIGHT   7
-
 typedef struct
 {
     //strings

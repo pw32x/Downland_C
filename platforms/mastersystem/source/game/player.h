@@ -4,7 +4,6 @@
 #include "base_types.h"
 #include "player_types.h"
 #include "resource_types.h"
-#include "joystick_types.h"
 #include "door_types.h"
 #include "string_utils.h"
 #include "rooms/rooms.h"
@@ -30,14 +29,13 @@ void Player_GameInit(PlayerData* playerData, const Resources* resources);
 void Player_RoomInit(PlayerData* playerData);
 
 void Player_Update(PlayerData* playerData, 
-				   const JoystickState* joystickState, 
 				   dl_u8* cleanBackground, 
 				   const DoorInfoData* doorInfoData,
 				   dl_u8* doorStateData);
 
 void Player_StartRegen(PlayerData* playerData);
 
-void Player_PerformCollisions(struct GameData* gameData);
+void Player_PerformCollisions(void);
 
 void Player_CompleteGameLoop(PlayerData* playerData, const Resources* resource);
 #endif

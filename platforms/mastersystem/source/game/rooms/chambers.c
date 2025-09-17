@@ -1,7 +1,7 @@
 #include "chambers.h"
 #include "room_types.h"
 
-#include "../game_types.h"
+#include "../game_data.h"
 #include "../draw_utils.h"
 #include "../drops_manager.h"
 #include "../ball.h"
@@ -29,28 +29,28 @@ void updateTimers(dl_u8 roomNumber, dl_u16* roomTimers)
 	}
 }
 
-void chamber_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resources);
+void chamber_draw(dl_u8 roomNumber, const Resources* resources);
 
-void chamber_init(Room* room, GameData* gameData, const Resources* resources)
+void chamber_init(Room* room, const Resources* resources)
 {
 	dl_u8 roomNumber = room->roomNumber;
-	PlayerData* playerData = gameData->currentPlayerData;
+	PlayerData* playerData = gameData_currentPlayerData;
 
 	// init drops
-	gameData->dropData.dropSpawnPositions = &resources->roomResources[roomNumber].dropSpawnPositions;
-	DropsManager_Init(&gameData->dropData, roomNumber, playerData->gameCompletionCount);
+	gameData_dropData.dropSpawnPositions = &resources->roomResources[roomNumber].dropSpawnPositions;
+	DropsManager_Init(&gameData_dropData, roomNumber, playerData->gameCompletionCount);
 
 	Ball_Init(roomNumber, resources);
 	Bird_Init();
 	Player_RoomInit(playerData);
 
 	convertScoreToString(playerData->score, playerData->scoreString);
-	gameData->string_roomNumber[0] = roomNumber;
+	gameData_string_roomNumber[0] = roomNumber;
 }
 
-void chamber_update(Room* room, GameData* gameData, const Resources* resources)
+void chamber_update(Room* room, const Resources* resources)
 {
-	PlayerData* playerData = gameData->currentPlayerData;
+	PlayerData* playerData = gameData_currentPlayerData;
 	dl_u16 currentTimer;
 	const DoorInfo* lastDoor;
 	dl_u8 playerLives;
@@ -64,8 +64,8 @@ void chamber_update(Room* room, GameData* gameData, const Resources* resources)
 	currentTimer = playerData->roomTimers[playerData->currentRoom->roomNumber];
 
 #ifndef DISABLE_ENEMIES
-	DropsManager_Update(&gameData->dropData, 
-						gameData->cleanBackground, 
+	DropsManager_Update(&gameData_dropData, 
+						gameData_cleanBackground, 
 						playerData->gameCompletionCount,
 						resources->sprites_drops);	
 #endif
@@ -75,8 +75,7 @@ void chamber_update(Room* room, GameData* gameData, const Resources* resources)
 	playerLives = playerData->lives;
 
 	Player_Update(playerData, 
-				  &gameData->joystickState, 
-				  gameData->cleanBackground,
+				  gameData_cleanBackground,
 				  &resources->roomResources[room->roomNumber].doorInfoData,
 				  playerData->doorStateData);
 
@@ -86,16 +85,15 @@ void chamber_update(Room* room, GameData* gameData, const Resources* resources)
 	{
 		// if there's another player and they
 		// have lives left, then switch.
-		if (gameData->otherPlayerData != NULL &&
-			!gameData->otherPlayerData->gameOver)
+		if (gameData_otherPlayerData != NULL &&
+			!gameData_otherPlayerData->gameOver)
 		{
 			// switch players
-			temp = gameData->otherPlayerData;
-			gameData->otherPlayerData = gameData->currentPlayerData;
-			gameData->currentPlayerData = temp;
+			temp = gameData_otherPlayerData;
+			gameData_otherPlayerData = gameData_currentPlayerData;
+			gameData_currentPlayerData = temp;
 
-			Game_TransitionToRoom(gameData, 
-								  GET_READY_ROOM_INDEX, 
+			Game_TransitionToRoom(GET_READY_ROOM_INDEX, 
 								  resources);
 			return;
 		}
@@ -107,8 +105,7 @@ void chamber_update(Room* room, GameData* gameData, const Resources* resources)
 
 			if (playerData->gameOver)
 			{
-				Game_TransitionToRoom(gameData, 
-									  TITLESCREEN_ROOM_INDEX, 
+				Game_TransitionToRoom(TITLESCREEN_ROOM_INDEX, 
 									  resources);
 				return;
 			}
@@ -137,23 +134,22 @@ void chamber_update(Room* room, GameData* gameData, const Resources* resources)
 			Player_CompleteGameLoop(playerData, resources);
 		}
 
-		Game_WipeTransitionToRoom(gameData, 
-								  playerData->lastDoor->nextRoomNumber, 
+		Game_WipeTransitionToRoom(playerData->lastDoor->nextRoomNumber, 
 								  resources);
 		return;
 	}
 
 #ifndef DISABLE_ENEMIES
-	Ball_Update(gameData->cleanBackground);
+	Ball_Update(gameData_cleanBackground);
 	Bird_Update(currentTimer);
 #endif
 
 	// compute collisions
 	// pick up item or die
-	Player_PerformCollisions((struct GameData*)gameData);
+	Player_PerformCollisions();
 
 	convertTimerToString(currentTimer,
-						 gameData->string_timer);
+						 gameData_string_timer);
 }
 
 // All the chambers are the same, but this makes it easier

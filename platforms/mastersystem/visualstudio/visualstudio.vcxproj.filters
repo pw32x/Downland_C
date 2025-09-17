@@ -169,6 +169,12 @@
     <ClCompile Include="..\generated\bank2_vdp\cursor4bpp.c">
       <Filter>Source Files\generated\bank_vdp</Filter>
     </ClCompile>
+    <ClCompile Include="..\source\game\game_data.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\game\joystick_data.c">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\source\game\background_types.h">
@@ -213,10 +219,10 @@
     <ClInclude Include="..\source\game\game.h">
       <Filter>Source Files\game</Filter>
     </ClInclude>
-    <ClInclude Include="..\source\game\game_types.h">
+    <ClInclude Include="..\source\game\game_data.h">
       <Filter>Source Files\game</Filter>
     </ClInclude>
-    <ClInclude Include="..\source\game\joystick_types.h">
+    <ClInclude Include="..\source\game\joystick_data.h">
       <Filter>Source Files\game</Filter>
     </ClInclude>
     <ClInclude Include="..\source\game\physics_utils.h">

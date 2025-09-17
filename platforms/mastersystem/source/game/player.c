@@ -3,12 +3,13 @@
 #include "base_defines.h"
 #include "draw_utils.h"
 #include "physics_utils.h"
-#include "game_types.h"
+#include "game_data.h"
 #include "pickup_types.h"
 #include "dl_sound.h"
 #include "dl_rand.h"
 #include "dl_platform.h"
 #include "bird.h"
+#include "joystick_data.h"
 
 
 #define PLAYER_START_LIVES 3
@@ -285,7 +286,6 @@ void Player_StartRegen(PlayerData* playerData)
 }
 
 void Player_Update(PlayerData* playerData, 
-				   const JoystickState* joystickState, 
 				   dl_u8* cleanBackground,
 				   const DoorInfoData* doorInfoData,
 				   dl_u8* doorStateData)
@@ -335,7 +335,7 @@ void Player_Update(PlayerData* playerData,
 	}
 
 #ifdef DEV_MODE
-	if (joystickState->debugStatePressed)
+	if (joystickState_debugStatePressed)
 	{
 		Sound_Stop(SOUND_RUN);
 		Sound_Stop(SOUND_CLIMB_UP);
@@ -364,20 +364,20 @@ void Player_Update(PlayerData* playerData,
 	if (playerData->state == PLAYER_STATE_DEBUG)
 	{
 		// apply side movement if a direction was held
-		if (joystickState->leftDown)
+		if (joystickState_leftDown)
 		{
 			playerData->x -= PLAYER_DEBUG_SPEED;
 		}
-		else if (joystickState->rightDown)
+		else if (joystickState_rightDown)
 		{
 			playerData->x += PLAYER_DEBUG_SPEED;
 		}
 
-		if (joystickState->upDown)
+		if (joystickState_upDown)
 		{
 			playerData->y -= PLAYER_DEBUG_SPEED;
 		}	
-		else if (joystickState->downDown)
+		else if (joystickState_downDown)
 		{
 			playerData->y += PLAYER_DEBUG_SPEED;
 		}
@@ -385,10 +385,10 @@ void Player_Update(PlayerData* playerData,
 
 	if (playerData->state == PLAYER_STATE_REGENERATION)
 	{
-		if (joystickState->leftDown ||
-			joystickState->rightDown ||
-			joystickState->upDown ||
-			joystickState->downDown)
+		if (joystickState_leftDown ||
+			joystickState_rightDown ||
+			joystickState_upDown ||
+			joystickState_downDown)
 		{
 			playerData->regenerationCounter = 0;
 		}
@@ -413,7 +413,7 @@ void Player_Update(PlayerData* playerData,
 		playerData->speedx = 0;
 		playerData->currentFrameNumber = PLAYER_RUN_FRAME_0_STAND;
 
-		if (joystickState->jumpPressed)
+		if (joystickState_jumpPressed)
 		{
 			playerData->speedy = 0xff61;
 			playerData->jumpAirCounter = PLAYER_JUMP_AIR_COUNT;
@@ -422,19 +422,19 @@ void Player_Update(PlayerData* playerData,
 			Sound_Play(SOUND_JUMP, FALSE);
 
 			// apply side movement if a direction was held
-			if (joystickState->leftDown)
+			if (joystickState_leftDown)
 			{
 				playerData->speedx = PLAYER_RUN_SPEED_LEFT;
 				playerData->facingDirection = PLAYER_FACING_LEFT;
 			}
-			else if (joystickState->rightDown)
+			else if (joystickState_rightDown)
 			{
 				playerData->speedx = PLAYER_RUN_SPEED_RIGHT;
 				playerData->facingDirection = PLAYER_FACING_RIGHT;
 			}
 		}
-		else if (joystickState->leftDown ||
-				 joystickState->rightDown)
+		else if (joystickState_leftDown ||
+				 joystickState_rightDown)
 		{
 			playerData->state = PLAYER_STATE_RUN;
 		}		
@@ -442,7 +442,7 @@ void Player_Update(PlayerData* playerData,
 
 	else if (playerData->state == PLAYER_STATE_RUN)
 	{
-		if (joystickState->jumpPressed)
+		if (joystickState_jumpPressed)
 		{
 			playerData->speedy = 0xff61;
 			playerData->jumpAirCounter = PLAYER_JUMP_AIR_COUNT;
@@ -451,12 +451,12 @@ void Player_Update(PlayerData* playerData,
 			Sound_Stop(SOUND_RUN);
 			Sound_Play(SOUND_JUMP, FALSE);
 
-			if (joystickState->leftDown)
+			if (joystickState_leftDown)
 			{
 				playerData->speedx = PLAYER_RUN_SPEED_LEFT;
 				playerData->facingDirection = PLAYER_FACING_LEFT;
 			}
-			else if (joystickState->rightDown)
+			else if (joystickState_rightDown)
 			{
 				playerData->speedx = PLAYER_RUN_SPEED_RIGHT;
 				playerData->facingDirection = PLAYER_FACING_RIGHT;
@@ -464,7 +464,7 @@ void Player_Update(PlayerData* playerData,
 		}
 		else
 		{
-			if (joystickState->leftDown)
+			if (joystickState_leftDown)
 			{
 				if (!playerData->speedx)
 				{
@@ -474,7 +474,7 @@ void Player_Update(PlayerData* playerData,
 				playerData->speedx = PLAYER_RUN_SPEED_LEFT;
 				playerData->facingDirection = PLAYER_FACING_LEFT;
 			}
-			else if (joystickState->rightDown)
+			else if (joystickState_rightDown)
 			{
 				if (!playerData->speedx)
 				{
@@ -582,10 +582,10 @@ void Player_Update(PlayerData* playerData,
 
 		processLeftRight = TRUE;
 
-		if (joystickState->jumpPressed)
+		if (joystickState_jumpPressed)
 		{
 			// apply side movement if a direction was held
-			if (joystickState->leftDown)
+			if (joystickState_leftDown)
 			{
 				playerData->speedx = PLAYER_RUN_SPEED_LEFT;
 				playerData->facingDirection = PLAYER_FACING_LEFT;
@@ -599,7 +599,7 @@ void Player_Update(PlayerData* playerData,
 				Sound_Stop(SOUND_CLIMB_DOWN);
 				playerData->ignoreRopesCounter = 20;
 			}
-			else if (joystickState->rightDown)
+			else if (joystickState_rightDown)
 			{
 				playerData->speedx = PLAYER_RUN_SPEED_RIGHT;
 				playerData->facingDirection = PLAYER_FACING_RIGHT;
@@ -616,7 +616,7 @@ void Player_Update(PlayerData* playerData,
 
 			processLeftRight = FALSE;
 		}
-		else if (joystickState->upDown)
+		else if (joystickState_upDown)
 		{
 			if (!playerData->speedy)
 			{
@@ -636,7 +636,7 @@ void Player_Update(PlayerData* playerData,
 
 			processLeftRight = FALSE;
 		}	
-		else if (joystickState->downDown)
+		else if (joystickState_downDown)
 		{
 			if (!playerData->speedy)
 			{
@@ -663,7 +663,7 @@ void Player_Update(PlayerData* playerData,
 		if (processLeftRight)
 		{
 
-			if (joystickState->leftDown)
+			if (joystickState_leftDown)
 			{
 				Sound_Stop(SOUND_CLIMB_UP);
 				Sound_Stop(SOUND_CLIMB_DOWN);
@@ -676,7 +676,7 @@ void Player_Update(PlayerData* playerData,
 					playerData->holdLeftCounter = 0;
 				}
 			}
-			else if (joystickState->rightDown)
+			else if (joystickState_rightDown)
 			{
 				Sound_Stop(SOUND_CLIMB_UP);
 				Sound_Stop(SOUND_CLIMB_DOWN);
@@ -702,7 +702,7 @@ void Player_Update(PlayerData* playerData,
 		playerData->currentFrameNumber = PLAYER_RUN_FRAME_2_JUMP;
 		playerData->facingDirection = PLAYER_FACING_LEFT;
 
-		if (joystickState->leftDown)
+		if (joystickState_leftDown)
 		{
 			playerData->holdLeftCounter++;
 			playerData->facingDirection = PLAYER_FACING_LEFT;
@@ -714,7 +714,7 @@ void Player_Update(PlayerData* playerData,
 				playerData->holdLeftCounter = 0;
 			}
 		}
-		else if (joystickState->rightDown)
+		else if (joystickState_rightDown)
 		{
 			playerData->holdRightCounter++;
 			playerData->facingDirection = PLAYER_FACING_RIGHT;
@@ -738,7 +738,7 @@ void Player_Update(PlayerData* playerData,
 		playerData->currentFrameNumber = PLAYER_RUN_FRAME_2_JUMP;
 		playerData->facingDirection = PLAYER_FACING_RIGHT;
 
-		if (joystickState->leftDown)
+		if (joystickState_leftDown)
 		{
 			playerData->holdLeftCounter++;
 			playerData->facingDirection = PLAYER_FACING_LEFT;
@@ -751,7 +751,7 @@ void Player_Update(PlayerData* playerData,
 				playerData->holdLeftCounter = 0;
 			}
 		}
-		else if (joystickState->rightDown)
+		else if (joystickState_rightDown)
 		{
 			playerData->holdRightCounter++;
 			playerData->facingDirection = PLAYER_FACING_RIGHT;
@@ -894,15 +894,14 @@ BOOL dropsManagerCollisionTest(DropData* dropData, PlayerData* playerData)
 	return FALSE;
 }
 
-void Player_PerformCollisions(struct GameData* gameDataStruct)
+void Player_PerformCollisions(void)
 {
 	dl_u8 roomNumber;
 	dl_u8 loop;
 	Pickup* pickUp;
 	dl_u8 doorIndex;
 
-	GameData* gameData = (GameData*) gameDataStruct;
-	PlayerData* playerData = gameData->currentPlayerData;
+	PlayerData* playerData = gameData_currentPlayerData;
 
 	if (playerData->isDead)
 		return;
@@ -964,7 +963,7 @@ void Player_PerformCollisions(struct GameData* gameDataStruct)
 	}
 
 	// collide with drops
-	if (dropsManagerCollisionTest(&gameData->dropData, playerData))
+	if (dropsManagerCollisionTest(&gameData_dropData, playerData))
 	{
 		playerKill(playerData);
 		return;

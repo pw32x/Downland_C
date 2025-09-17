@@ -1,24 +1,25 @@
 #include "room_types.h"
 
-#include "../game_types.h"
+#include "../game_data.h"
 #include "../draw_utils.h"
 #include "../drops_manager.h"
 #include "../dl_sound.h"
 #include "../dl_platform.h"
+#include "../joystick_data.h"
 
 
-void get_ready_room_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resources);
+void get_ready_room_draw(dl_u8 roomNumber, const Resources* resources);
 
-void get_ready_room_init(Room* room, GameData* gameData, const Resources* resources)
+void get_ready_room_init(Room* room, const Resources* resources)
 {
 	UNUSED(room);
 
 	// init drops
-	gameData->dropData.dropSpawnPositions = &resources->roomResources[TITLESCREEN_ROOM_INDEX].dropSpawnPositions;
-	DropsManager_Init(&gameData->dropData, TITLESCREEN_ROOM_INDEX, 1 /*gameCompletionCount*/);
+	gameData_dropData.dropSpawnPositions = &resources->roomResources[TITLESCREEN_ROOM_INDEX].dropSpawnPositions;
+	DropsManager_Init(&gameData_dropData, TITLESCREEN_ROOM_INDEX, 1 /*gameCompletionCount*/);
 }
 
-void get_ready_room_update(Room* room, GameData* gameData, const Resources* resources)
+void get_ready_room_update(Room* room, const Resources* resources)
 {
 	UNUSED(room);
 
@@ -30,21 +31,21 @@ void get_ready_room_update(Room* room, GameData* gameData, const Resources* reso
 	// game, making drops fall more often and faster.
 	for (loop = 0; loop < 3; loop++)
 	{
-		DropsManager_Update(&gameData->dropData, 
-							gameData->cleanBackground, 
+		DropsManager_Update(&gameData_dropData, 
+							gameData_cleanBackground, 
 							1 /*gameCompletionCount*/,
 							resources->sprites_drops);
 	}
 
 	// press button to start
-	if (gameData->joystickState.jumpPressed)
+	if (joystickState_jumpPressed)
 	{
 		// enter the new player's room
 		roomNumber = 0;
-		if (gameData->currentPlayerData->lastDoor != NULL)
-			roomNumber = gameData->currentPlayerData->lastDoor->nextRoomNumber;
+		if (gameData_currentPlayerData->lastDoor != NULL)
+			roomNumber = gameData_currentPlayerData->lastDoor->nextRoomNumber;
 
-		Game_WipeTransitionToRoom(gameData, roomNumber, resources);
+		Game_WipeTransitionToRoom(roomNumber, resources);
 	}
 }
 

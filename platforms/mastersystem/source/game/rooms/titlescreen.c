@@ -1,24 +1,25 @@
 #include "titlescreen.h"
 #include "room_types.h"
 
-#include "../game_types.h"
+#include "../game_data.h"
 #include "../draw_utils.h"
 #include "../drops_manager.h"
 #include "../dl_sound.h"
 #include "../dl_platform.h"
+#include "../joystick_data.h"
 
-void titleScreen_draw(dl_u8 roomNumber, GameData* gameData, const Resources* resources);
+void titleScreen_draw(dl_u8 roomNumber, const Resources* resources);
 
-void titleScreen_init(Room* room, GameData* gameData, const Resources* resources)
+void titleScreen_init(Room* room, const Resources* resources)
 {
 	dl_u8 roomNumber = room->roomNumber;
 
 	// init drops
-	gameData->dropData.dropSpawnPositions = &resources->roomResources[roomNumber].dropSpawnPositions;
-	DropsManager_Init(&gameData->dropData, roomNumber, 1 /*gameCompletionCount*/);
+	gameData_dropData.dropSpawnPositions = &resources->roomResources[roomNumber].dropSpawnPositions;
+	DropsManager_Init(&gameData_dropData, roomNumber, 1 /*gameCompletionCount*/);
 }
 
-void titleScreen_update(Room* room, GameData* gameData, const Resources* resources)
+void titleScreen_update(Room* room, const Resources* resources)
 {
 	UNUSED(room);
 
@@ -29,29 +30,29 @@ void titleScreen_update(Room* room, GameData* gameData, const Resources* resourc
 	// game, making drops fall more often and faster.
 	for (loop = 0; loop < 3; loop++)
 	{
-		DropsManager_Update(&gameData->dropData, 
-							gameData->cleanBackground, 
+		DropsManager_Update(&gameData_dropData, 
+							gameData_cleanBackground, 
 							1 /*gameCompletionCount*/,
 							resources->sprites_drops);
 	}
 
 	// update the number of players and cursor depending on the direction
 	// pressed on the controls.
-	if (gameData->joystickState.leftPressed)
+	if (joystickState_leftPressed)
 	{
-		gameData->numPlayers = 1;
+		gameData_numPlayers = 1;
 
 	}
-	else if (gameData->joystickState.rightPressed)
+	else if (joystickState_rightPressed)
 	{
-		gameData->numPlayers = 2;
+		gameData_numPlayers = 2;
 	}
 
 	// press button to start
-	if (gameData->joystickState.jumpPressed)
+	if (joystickState_jumpPressed)
 	{
-		Game_InitPlayers(gameData, resources);
-		Game_WipeTransitionToRoom(gameData, 0, resources);
+		Game_InitPlayers(resources);
+		Game_WipeTransitionToRoom(0, resources);
 	}
 }
 

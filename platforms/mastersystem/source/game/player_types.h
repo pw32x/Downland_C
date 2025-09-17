@@ -3,7 +3,6 @@
 
 #include "base_types.h"
 #include "resource_types.h"
-#include "joystick_types.h"
 #include "door_types.h"
 #include "string_utils.h"
 #include "rooms/rooms.h"

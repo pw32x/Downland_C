@@ -11,7 +11,7 @@
 
 void titleScreen_draw(dl_u8 roomNumber);
 
-void titleScreen_init(Room* room)
+void titleScreen_init(const Room* room)
 {
 	dl_u8 roomNumber = room->roomNumber;
 

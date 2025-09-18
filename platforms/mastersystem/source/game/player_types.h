@@ -58,7 +58,7 @@ typedef struct
 	RoomPickups gamePickups;
 	dl_u8 doorStateData[DOOR_TOTAL_COUNT];
 	dl_u8 gameCompletionCount;
-	Room* currentRoom;
+	const Room* currentRoom;
 
 	dl_u16 roomTimers[NUM_ROOMS];
 

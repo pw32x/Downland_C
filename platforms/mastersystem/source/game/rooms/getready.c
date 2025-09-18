@@ -10,7 +10,7 @@
 
 void get_ready_room_draw(dl_u8 roomNumber);
 
-void get_ready_room_init(Room* room)
+void get_ready_room_init(const Room* room)
 {
 	UNUSED(room);
 

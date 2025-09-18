@@ -12,7 +12,7 @@
 typedef struct Room
 {
 	dl_u8 roomNumber;
-	void (*init)(struct Room* room);
+	void (*init)(const struct Room* room);
 	void (*draw)(dl_u8 roomNumber);
 	void (*update)(struct Room* room);
 } Room;

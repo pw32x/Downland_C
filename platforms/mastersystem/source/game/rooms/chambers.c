@@ -32,7 +32,7 @@ void updateTimers(dl_u8 roomNumber, dl_u16* roomTimers)
 
 void chamber_draw(dl_u8 roomNumber);
 
-void chamber_init(Room* room)
+void chamber_init(const Room* room)
 {
 	dl_u8 roomNumber = room->roomNumber;
 	PlayerData* playerData = gameData_currentPlayerData;

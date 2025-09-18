@@ -391,9 +391,8 @@ void main(void)
 		// VBLANK
 		SMS_waitForVBlank ();
 
-extern unsigned char SpriteNextFree;
-
-		SMS_debugPrintf("sprites: %d\n", SpriteNextFree);
+		//extern unsigned char SpriteNextFree;
+		//SMS_debugPrintf("sprites: %d\n", SpriteNextFree);
 
 		SMS_copySpritestoSAT();
 	}
@@ -559,7 +558,7 @@ void drawGetReadyScreen(void)
 
 #define INITIAL_TRANSITION_DELAY 30
 
-void transition_init(Room* targetRoom)
+void transition_init(const Room* targetRoom)
 {
 	SMS_waitForVBlank();
 	SMS_initSprites();
@@ -601,7 +600,7 @@ void transition_update(Room* room)
 	Game_EnterRoom(gameData_transitionRoomNumber);
 }
 
-void wipe_transition_init(Room* targetRoom)
+void wipe_transition_init(const Room* targetRoom)
 {
 	UNUSED(targetRoom);
 

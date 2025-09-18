@@ -9,7 +9,7 @@
 Game_ChangedRoomCallbackType Game_ChangedRoomCallback = NULL;
 Game_ChangedRoomCallbackType Game_TransitionDone = NULL;
 
-void Game_Init(const Resources* resources)
+void Game_Init(void)
 {
 	dl_memset((void*)&gameData_playerData, 0, sizeof(gameData_playerData));
 	
@@ -42,16 +42,16 @@ void Game_Init(const Resources* resources)
 
 #ifdef START_AT_TITLESCREEN
 	// init title screen
-	Game_TransitionToRoom(TITLESCREEN_ROOM_INDEX, resources);
+	Game_TransitionToRoom(TITLESCREEN_ROOM_INDEX);
 #else
 	gameData_currentPlayerData = &gameData_playerData[PLAYER_ONE];
 	gameData_otherPlayerData = NULL;
-	Player_GameInit(gameData_currentPlayerData, resources);
-	Game_TransitionToRoom(gameData, 0 /*roomNumber*/, resources);
+	Player_GameInit(gameData_currentPlayerData);
+	Game_TransitionToRoom(gameData, 0 /*roomNumber*/);
 #endif
 }
 
-void Game_InitPlayers(const Resources* resources)
+void Game_InitPlayers(void)
 {
 	dl_u8 loop;
 
@@ -61,30 +61,29 @@ void Game_InitPlayers(const Resources* resources)
 
 	for (loop = 0; loop < gameData_numPlayers; loop++)
 	{
-		Player_GameInit(&gameData_playerData[loop], resources);
+		Player_GameInit(&gameData_playerData[loop]);
 	}
 }
 
-void Game_Update(const Resources* resources)
+void Game_Update(void)
 {
-	gameData_currentRoom->update((struct Room*)gameData_currentRoom, resources);
+	gameData_currentRoom->update((struct Room*)gameData_currentRoom);
 }
 
-void Game_EnterRoom(dl_u8 roomNumber, const Resources* resources)
+void Game_EnterRoom(dl_u8 roomNumber)
 {
 	gameData_currentRoom = g_rooms[roomNumber];
 
 	if (gameData_currentPlayerData != NULL)
 		gameData_currentPlayerData->currentRoom = gameData_currentRoom;
 
-	gameData_currentRoom->init(gameData_currentRoom, 
-								resources);
+	gameData_currentRoom->init(gameData_currentRoom);
 
 	if (Game_ChangedRoomCallback != NULL)
 		Game_ChangedRoomCallback(roomNumber, -1);
 }
 
-void Game_TransitionToRoom(dl_u8 roomNumber, const Resources* resources)
+void Game_TransitionToRoom(dl_u8 roomNumber)
 {
 	gameData_transitionRoomNumber = roomNumber;
 
@@ -94,14 +93,13 @@ void Game_TransitionToRoom(dl_u8 roomNumber, const Resources* resources)
 		gameData_currentPlayerData->currentRoom = gameData_currentRoom;
 
 	gameData_currentRoom = g_rooms[TRANSITION_ROOM_INDEX];
-	gameData_currentRoom->init(g_rooms[roomNumber], 
-							   resources);
+	gameData_currentRoom->init(g_rooms[roomNumber]);
 
 	if (Game_ChangedRoomCallback != NULL)
 		Game_ChangedRoomCallback(roomNumber, TRANSITION_ROOM_INDEX);
 }
 
-void Game_WipeTransitionToRoom(dl_u8 roomNumber, const Resources* resources)
+void Game_WipeTransitionToRoom(dl_u8 roomNumber)
 {
 	gameData_transitionRoomNumber = roomNumber;
 
@@ -111,8 +109,7 @@ void Game_WipeTransitionToRoom(dl_u8 roomNumber, const Resources* resources)
 		gameData_currentPlayerData->currentRoom = gameData_currentRoom;
 
 	gameData_currentRoom = g_rooms[WIPE_TRANSITION_ROOM_INDEX];
-	gameData_currentRoom->init(g_rooms[roomNumber], 
-							   resources);
+	gameData_currentRoom->init(g_rooms[roomNumber]);
 
 	if (Game_ChangedRoomCallback != NULL)
 		Game_ChangedRoomCallback(roomNumber, WIPE_TRANSITION_ROOM_INDEX);

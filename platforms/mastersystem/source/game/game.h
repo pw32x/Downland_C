@@ -3,13 +3,13 @@
 
 #include "resource_types.h"
 
-void Game_Init(const Resources* resources);
-void Game_InitPlayers(const Resources* resources);
-void Game_Update(const Resources* resources);
-void Game_EnterRoom(dl_u8 roomNumber, const Resources* resources);
+void Game_Init(void);
+void Game_InitPlayers(void);
+void Game_Update(void);
+void Game_EnterRoom(dl_u8 roomNumber);
 
-void Game_TransitionToRoom(dl_u8 roomNumber, const Resources* resources);
-void Game_WipeTransitionToRoom(dl_u8 roomNumber, const Resources* resources);
+void Game_TransitionToRoom(dl_u8 roomNumber);
+void Game_WipeTransitionToRoom(dl_u8 roomNumber);
 
 typedef void (*Game_ChangedRoomCallbackType)(dl_u8 roomNumber, dl_s8 transitionType);
 

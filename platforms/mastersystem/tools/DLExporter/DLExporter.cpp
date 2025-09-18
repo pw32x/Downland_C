@@ -946,7 +946,7 @@ void saveString(const dl_u8* string, const char* name, std::ostringstream& oss)
 
     int length = (int)(stringRunner - string + 1);
 
-    oss << "const dl_u8 string_" << name << "[" << std::dec << (dl_u16)length << "] = { ";
+    oss << "const dl_u8 res_string_" << name << "[" << std::dec << (dl_u16)length << "] = { ";
     
     while (1) 
     {
@@ -1070,74 +1070,6 @@ void saveGeneralData(const Resources& resources)
     //oss << "\n";
 
 
-    // pick up positions
-    oss << "// pick up positions (x: 0 - 127, y: 0 - 191)\n";
-    const PickupPosition* roomPickupPositions = resources.roomPickupPositions;
-    oss << "const PickupPosition roomPickupPositions[" << NUM_ROOMS * NUM_PICKUPS_PER_ROOM << "] = \n";
-    oss << "{\n";
-    for (int loop = 0; loop < NUM_ROOMS * NUM_PICKUPS_PER_ROOM; loop++)
-    {
-        oss << "    { ";
-        oss << (dl_u16)roomPickupPositions->y << ", ";
-        oss << (dl_u16)roomPickupPositions->x;
-        oss << " },\n";
-
-        roomPickupPositions++;
-    }
-    oss << "};\n";
-    oss << "\n";
-
-    // pick up door indexes
-    oss << "// pick up door indexes\n";
-    const dl_u8* keyPickUpDoorIndexes = resources.keyPickUpDoorIndexes;
-    oss << "const dl_u8 keyPickUpDoorIndexes[20] = { ";
-
-    for (int loop = 0; loop < 20; loop++)
-    {
-        oss << (dl_u16)*keyPickUpDoorIndexes << ", ";
-        keyPickUpDoorIndexes++;
-    }
-    oss << "};\n";
-    oss << "\n";
-
-    // pick up door indexes
-    oss << "// pick up door indexes (hard mode)\n";
-    keyPickUpDoorIndexes = resources.keyPickUpDoorIndexesHardMode;
-    oss << "const dl_u8 keyPickUpDoorIndexesHardMode[20] = { ";
-
-    for (int loop = 0; loop < 20; loop++)
-    {
-        oss << (dl_u16)*keyPickUpDoorIndexes << ", ";
-        keyPickUpDoorIndexes++;
-    }
-    oss << "};\n";
-    oss << "\n";
-
-    // offests to doors alread activated
-    oss << "// offests to doors alread activated\n";
-    const dl_u8* offsetsToDoorsAlreadyActivated = resources.offsetsToDoorsAlreadyActivated;
-    oss << "const dl_u8 offsetsToDoorsAlreadyActivated[16] = { ";
-
-    for (int loop = 0; loop < 16; loop++)
-    {
-        oss << (dl_u16)*offsetsToDoorsAlreadyActivated << ", ";
-        offsetsToDoorsAlreadyActivated++;
-    }
-    oss << "};\n";
-    oss << "\n";
-
-    // rooms with the bouncing ball
-    oss << "// rooms with the bouncing ball\n";
-    const dl_u8* roomsWithBouncingBall = resources.roomsWithBouncingBall;
-    oss << "const dl_u8 roomsWithBouncingBall[10] = { ";
-
-    while (*roomsWithBouncingBall != 0xff)
-    {
-        oss << (dl_u16)*roomsWithBouncingBall << ", ";
-        roomsWithBouncingBall++;
-    }
-    oss << "0xff };\n";
-    oss << "\n";
 
     /*
     // door info data positions
@@ -1316,7 +1248,56 @@ void saveTileSet(std::vector<Tile>& tileSet)
     outFile << oss.str();
 }
 
-void saveResources(Resources& resources)
+void saveResourcesHeader(Resources& resources)
+{
+    std::ostringstream oss;
+
+    oss << "#ifndef RESOURCES_HEADER_INCLUDE_H\n";
+    oss << "#define RESOURCES_HEADER_INCLUDE_H\n";
+    oss << "\n";
+
+    oss << "#include \"base_types.h\"\n";
+    oss << "#include \"resource_types.h\"\n";
+    oss << "#include \"custom_background_types.h\"\n";
+    oss << "\n";
+
+    oss << "extern const dl_u8 res_string_downland[14];\n";
+    oss << "extern const dl_u8 res_string_writtenBy[12];\n";
+    oss << "extern const dl_u8 res_string_michaelAichlmayer[18];\n";
+    oss << "extern const dl_u8 res_string_copyright1983[15];\n";
+    oss << "extern const dl_u8 res_string_spectralAssociates[20];\n";
+    oss << "extern const dl_u8 res_string_licensedTo[13];\n";
+    oss << "extern const dl_u8 res_string_tandyCorporation[18] ;\n";
+    oss << "extern const dl_u8 res_string_allRightsReserved[20];\n";
+    oss << "extern const dl_u8 res_string_onePlayer[11];\n";
+    oss << "extern const dl_u8 res_string_twoPlayer[11];\n";
+    oss << "extern const dl_u8 res_string_highScore[11];\n";
+    oss << "extern const dl_u8 res_string_playerOne[11];\n";
+    oss << "extern const dl_u8 res_string_playerTwo[11];\n";
+    oss << "extern const dl_u8 res_string_pl1[4];\n";
+    oss << "extern const dl_u8 res_string_pl2[4];\n";
+    oss << "extern const dl_u8 res_string_getReadyPlayerOne[21];\n";
+    oss << "extern const dl_u8 res_string_getReadyPlayerTwo[21];\n";
+    oss << "extern const dl_u8 res_string_chamber[8];\n";
+    oss << "\n";
+
+    oss << "extern const PickupPosition res_roomPickupPositions[50];\n";
+    oss << "extern const dl_u8 res_keyPickUpDoorIndexes[20];\n";
+    oss << "extern const dl_u8 res_keyPickUpDoorIndexesHardMode[20];\n";
+    oss << "extern const dl_u8 res_offsetsToDoorsAlreadyActivated[16];\n";
+    oss << "extern const dl_u8 res_roomsWithBouncingBall[10];\n";
+
+    oss << "\n";
+    oss << "extern RoomResources res_roomResources[NUM_ROOMS_PLUS_TITLESCREN];\n";
+
+    oss << "\n";
+    oss << "#endif\n";
+
+    std::ofstream outFile(g_destinationPath + "resources.h");
+    outFile << oss.str();
+}
+
+void saveResourcesSource(Resources& resources)
 {
     std::ostringstream oss;
 
@@ -1328,25 +1309,25 @@ void saveResources(Resources& resources)
 
     //oss << "extern const dl_u8 characterFont[273];\n";
     //oss << "\n";
-    oss << "extern const dl_u8 string_downland[14];\n";
-    oss << "extern const dl_u8 string_writtenBy[12];\n";
-    oss << "extern const dl_u8 string_michaelAichlmayer[18];\n";
-    oss << "extern const dl_u8 string_copyright1983[15];\n";
-    oss << "extern const dl_u8 string_spectralAssociates[20];\n";
-    oss << "extern const dl_u8 string_licensedTo[13];\n";
-    oss << "extern const dl_u8 string_tandyCorporation[18] ;\n";
-    oss << "extern const dl_u8 string_allRightsReserved[20];\n";
-    oss << "extern const dl_u8 string_onePlayer[11];\n";
-    oss << "extern const dl_u8 string_twoPlayer[11];\n";
-    oss << "extern const dl_u8 string_highScore[11];\n";
-    oss << "extern const dl_u8 string_playerOne[11];\n";
-    oss << "extern const dl_u8 string_playerTwo[11];\n";
-    oss << "extern const dl_u8 string_pl1[4];\n";
-    oss << "extern const dl_u8 string_pl2[4];\n";
-    oss << "extern const dl_u8 string_getReadyPlayerOne[21];\n";
-    oss << "extern const dl_u8 string_getReadyPlayerTwo[21];\n";
-    oss << "extern const dl_u8 string_chamber[8];\n";
-    oss << "\n";
+    //oss << "extern const dl_u8 string_downland[14];\n";
+    //oss << "extern const dl_u8 string_writtenBy[12];\n";
+    //oss << "extern const dl_u8 string_michaelAichlmayer[18];\n";
+    //oss << "extern const dl_u8 string_copyright1983[15];\n";
+    //oss << "extern const dl_u8 string_spectralAssociates[20];\n";
+    //oss << "extern const dl_u8 string_licensedTo[13];\n";
+    //oss << "extern const dl_u8 string_tandyCorporation[18] ;\n";
+    //oss << "extern const dl_u8 string_allRightsReserved[20];\n";
+    //oss << "extern const dl_u8 string_onePlayer[11];\n";
+    //oss << "extern const dl_u8 string_twoPlayer[11];\n";
+    //oss << "extern const dl_u8 string_highScore[11];\n";
+    //oss << "extern const dl_u8 string_playerOne[11];\n";
+    //oss << "extern const dl_u8 string_playerTwo[11];\n";
+    //oss << "extern const dl_u8 string_pl1[4];\n";
+    //oss << "extern const dl_u8 string_pl2[4];\n";
+    //oss << "extern const dl_u8 string_getReadyPlayerOne[21];\n";
+    //oss << "extern const dl_u8 string_getReadyPlayerTwo[21];\n";
+    //oss << "extern const dl_u8 string_chamber[8];\n";
+    //oss << "\n";
     //oss << "extern const dl_u8 bitShiftedSprite_player[1920];\n";
     //oss << "extern const dl_u8 bitShiftedSprite_ball[192];\n";
     //oss << "extern const dl_u8 bitShiftedSprite_bird[144];\n";
@@ -1359,13 +1340,103 @@ void saveResources(Resources& resources)
     //oss << "extern const dl_u8 keySprite[20];\n";
     //oss << "\n";
     //oss << "extern const dl_u8 dropSprite[48];\n";
+    //oss << "\n";
+    //oss << "extern const PickupPosition roomPickupPositions[50];\n";
+    //oss << "extern const dl_u8 keyPickUpDoorIndexes[20];\n";
+    //oss << "extern const dl_u8 keyPickUpDoorIndexesHardMode[20];\n";
+    //oss << "extern const dl_u8 offsetsToDoorsAlreadyActivated[16];\n";
+    //oss << "extern const dl_u8 roomsWithBouncingBall[10];\n";
+    //oss << "\n";
+    //oss << "\n";
+
+    saveString(resources.text_downland, "downland", oss);
+    saveString(resources.text_writtenBy, "writtenBy", oss);
+    saveString(resources.text_michaelAichlmayer, "michaelAichlmayer", oss);
+    saveString(resources.text_copyright1983, "copyright1983", oss);
+    saveString(resources.text_spectralAssociates, "spectralAssociates", oss);
+    saveString(resources.text_licensedTo, "licensedTo", oss);
+    saveString(resources.text_tandyCorporation, "tandyCorporation", oss);
+    saveString(resources.text_allRightsReserved, "allRightsReserved", oss);
+    saveString(resources.text_onePlayer, "onePlayer", oss);
+    saveString(resources.text_twoPlayer, "twoPlayer", oss);
+    saveString(resources.text_highScore, "highScore", oss);
+    saveString(resources.text_playerOne, "playerOne", oss);
+    saveString(resources.text_playerTwo, "playerTwo", oss);
+    saveString(resources.text_pl1, "pl1", oss);
+    saveString(resources.text_pl2, "pl2", oss);
+    saveString(resources.text_getReadyPlayerOne, "getReadyPlayerOne", oss);
+    saveString(resources.text_getReadyPlayerTwo, "getReadyPlayerTwo", oss);
+    saveString(resources.text_chamber, "chamber", oss);
     oss << "\n";
-    oss << "extern const PickupPosition roomPickupPositions[50];\n";
-    oss << "extern const dl_u8 keyPickUpDoorIndexes[20];\n";
-    oss << "extern const dl_u8 keyPickUpDoorIndexesHardMode[20];\n";
-    oss << "extern const dl_u8 offsetsToDoorsAlreadyActivated[16];\n";
-    oss << "extern const dl_u8 roomsWithBouncingBall[10];\n";
     oss << "\n";
+
+    // pick up positions
+    oss << "// pick up positions (x: 0 - 127, y: 0 - 191)\n";
+    const PickupPosition* roomPickupPositions = resources.roomPickupPositions;
+    oss << "const PickupPosition res_roomPickupPositions[" << std::dec << NUM_ROOMS * NUM_PICKUPS_PER_ROOM << "] = \n";
+    oss << "{\n";
+    for (int loop = 0; loop < NUM_ROOMS * NUM_PICKUPS_PER_ROOM; loop++)
+    {
+        oss << "    { ";
+        oss << (dl_u16)roomPickupPositions->y << ", ";
+        oss << (dl_u16)roomPickupPositions->x;
+        oss << " },\n";
+
+        roomPickupPositions++;
+    }
+    oss << "};\n";
+    oss << "\n";
+
+    // pick up door indexes
+    oss << "// pick up door indexes\n";
+    const dl_u8* keyPickUpDoorIndexes = resources.keyPickUpDoorIndexes;
+    oss << "const dl_u8 res_keyPickUpDoorIndexes[20] = { ";
+
+    for (int loop = 0; loop < 20; loop++)
+    {
+        oss << (dl_u16)*keyPickUpDoorIndexes << ", ";
+        keyPickUpDoorIndexes++;
+    }
+    oss << "};\n";
+    oss << "\n";
+
+    // pick up door indexes
+    oss << "// pick up door indexes (hard mode)\n";
+    keyPickUpDoorIndexes = resources.keyPickUpDoorIndexesHardMode;
+    oss << "const dl_u8 res_keyPickUpDoorIndexesHardMode[20] = { ";
+
+    for (int loop = 0; loop < 20; loop++)
+    {
+        oss << (dl_u16)*keyPickUpDoorIndexes << ", ";
+        keyPickUpDoorIndexes++;
+    }
+    oss << "};\n";
+    oss << "\n";
+
+    // offests to doors alread activated
+    oss << "// offests to doors alread activated\n";
+    const dl_u8* offsetsToDoorsAlreadyActivated = resources.offsetsToDoorsAlreadyActivated;
+    oss << "const dl_u8 res_offsetsToDoorsAlreadyActivated[16] = { ";
+
+    for (int loop = 0; loop < 16; loop++)
+    {
+        oss << (dl_u16)*offsetsToDoorsAlreadyActivated << ", ";
+        offsetsToDoorsAlreadyActivated++;
+    }
+    oss << "};\n";
+    oss << "\n";
+
+    // rooms with the bouncing ball
+    oss << "// rooms with the bouncing ball\n";
+    const dl_u8* roomsWithBouncingBall = resources.roomsWithBouncingBall;
+    oss << "const dl_u8 res_roomsWithBouncingBall[10] = { ";
+
+    while (*roomsWithBouncingBall != 0xff)
+    {
+        oss << (dl_u16)*roomsWithBouncingBall << ", ";
+        roomsWithBouncingBall++;
+    }
+    oss << "0xff };\n";
     oss << "\n";
 
     for (int loop = 0; loop < NUM_ROOMS_PLUS_TITLESCREN; loop++)
@@ -1431,31 +1502,31 @@ void saveResources(Resources& resources)
         oss << "\n";
     }
 
-	oss << "const Resources resources = \n";
-	oss << "{\n";
+	//oss << "const Resources resources = \n";
+	//oss << "{\n";
     //oss << "    characterFont,\n";
     //oss << "\n";
 
-    oss << "    // strings\n";
-    oss << "    string_downland,\n";
-    oss << "    string_writtenBy,\n";
-    oss << "    string_michaelAichlmayer,\n";
-    oss << "    string_copyright1983,\n";
-    oss << "    string_spectralAssociates,\n";
-    oss << "    string_licensedTo,\n";
-    oss << "    string_tandyCorporation,\n";
-    oss << "    string_allRightsReserved,\n";
-    oss << "    string_onePlayer,\n";
-    oss << "    string_twoPlayer,\n";
-    oss << "    string_highScore,\n";
-    oss << "    string_playerOne,\n";
-    oss << "    string_playerTwo,\n";
-    oss << "    string_pl1,\n";
-    oss << "    string_pl2,\n";
-    oss << "    string_getReadyPlayerOne,\n";
-    oss << "    string_getReadyPlayerTwo,\n";
-    oss << "    string_chamber,\n";
-    oss << "\n";
+    //oss << "    // strings\n";
+    //oss << "    string_downland,\n";
+    //oss << "    string_writtenBy,\n";
+    //oss << "    string_michaelAichlmayer,\n";
+    //oss << "    string_copyright1983,\n";
+    //oss << "    string_spectralAssociates,\n";
+    //oss << "    string_licensedTo,\n";
+    //oss << "    string_tandyCorporation,\n";
+    //oss << "    string_allRightsReserved,\n";
+    //oss << "    string_onePlayer,\n";
+    //oss << "    string_twoPlayer,\n";
+    //oss << "    string_highScore,\n";
+    //oss << "    string_playerOne,\n";
+    //oss << "    string_playerTwo,\n";
+    //oss << "    string_pl1,\n";
+    //oss << "    string_pl2,\n";
+    //oss << "    string_getReadyPlayerOne,\n";
+    //oss << "    string_getReadyPlayerTwo,\n";
+    //oss << "    string_chamber,\n";
+    //oss << "\n";
 
     //oss << "    // sprites\n";
     //oss << "    NULL, // sprites_player\n";
@@ -1482,13 +1553,12 @@ void saveResources(Resources& resources)
     //oss << "    { diamondSprite, moneyBagSprite, keySprite },\n";
     //oss << "\n";
 
-    // RoomResources roomResources[NUM_ROOMS_PLUS_TITLESCREN];
-    oss << "    // room resources \n";
-    oss << "    {\n";
+    oss << "RoomResources res_roomResources[NUM_ROOMS_PLUS_TITLESCREN] = \n";
+    oss << "{\n";
 
     for (int loop = 0; loop < NUM_ROOMS_PLUS_TITLESCREN; loop++)
     {
-        oss << "        { ";
+        oss << "    { ";
 
         oss << "(const dl_u8*)&" << roomNames[loop] << "_customBackgroundData, ";
 
@@ -1518,18 +1588,18 @@ void saveResources(Resources& resources)
         }
     }
 
-    oss << "    },\n";
+    oss << "};\n";
     oss << "\n";
 
-    oss << "    roomPickupPositions,            // 50 items\n";
-    oss << "    keyPickUpDoorIndexes,           // 20 items\n";
-    oss << "    keyPickUpDoorIndexesHardMode,   // 20 items\n";
-    oss << "    offsetsToDoorsAlreadyActivated, // 16 items\n";
-    oss << "    roomsWithBouncingBall,          // 10 items\n";
-
-    oss << "\n";
-
-	oss << "};\n\n";
+    //oss << "    roomPickupPositions,            // 50 items\n";
+    //oss << "    keyPickUpDoorIndexes,           // 20 items\n";
+    //oss << "    keyPickUpDoorIndexesHardMode,   // 20 items\n";
+    //oss << "    offsetsToDoorsAlreadyActivated, // 16 items\n";
+    //oss << "    roomsWithBouncingBall,          // 10 items\n";
+    //
+    //oss << "\n";
+    //
+	//oss << "};\n\n";
 
     std::ofstream outFile(g_destinationPath + "resources.c");
     outFile << oss.str();
@@ -1627,7 +1697,7 @@ int main()
 
     saveCleanBackground(background, GET_READY_ROOM_INDEX);
 
-    saveStrings(resources);
+    //saveStrings(resources);
 
     //saveBitshiftedSprite(resources.bitShiftedCollisionmasks_player, PLAYER_SPRITE_COUNT, PLAYER_COLLISION_MASK_ROWS, "bitShiftedSprite_playerCollisionMasks");
     //saveBitshiftedSprite(resources.bitShiftedSprites_bouncyBall, BALL_SPRITE_COUNT, BALL_SPRITE_ROWS, "bitShiftedSprite_ball");
@@ -1642,7 +1712,7 @@ int main()
     //saveSprite(resources.characterFont, CHARACTER_FONT_WIDTH, CHARACTER_FONT_HEIGHT, CHARACTER_FONT_COUNT, "characterFont");
 
     //saveDropSpawns(resources);
-    saveGeneralData(resources);
+    //saveGeneralData(resources);
 
     saveCharacterFont(resources.characterFont);
 
@@ -1678,7 +1748,8 @@ int main()
 
     saveTileMapSource(tileMaps);
 
-    saveResources(resources);
+    saveResourcesHeader(resources);
+    saveResourcesSource(resources);
 
     //saveTileMapHeader();
 

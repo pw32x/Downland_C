@@ -21,7 +21,7 @@
 #define PLAYER_START_X 0x70 // 112
 #define PLAYER_START_Y 0xa5 // 165
 
-void Player_GameInit(PlayerData* playerData, const Resources* resources);
+void Player_GameInit(PlayerData* playerData);
 void Player_RoomInit(PlayerData* playerData);
 
 void Player_Update(PlayerData* playerData, 
@@ -32,5 +32,5 @@ void Player_StartRegen(PlayerData* playerData);
 
 void Player_PerformCollisions(void);
 
-void Player_CompleteGameLoop(PlayerData* playerData, const Resources* resource);
+void Player_CompleteGameLoop(PlayerData* playerData);
 #endif

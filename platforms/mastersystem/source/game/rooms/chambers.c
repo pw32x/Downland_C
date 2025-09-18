@@ -8,6 +8,7 @@
 #include "../ball.h"
 #include "../bird.h"
 #include "../player.h"
+#include "resources.h"
 
 void updateTimers(dl_u8 roomNumber, dl_u16* roomTimers)
 {
@@ -30,19 +31,19 @@ void updateTimers(dl_u8 roomNumber, dl_u16* roomTimers)
 	}
 }
 
-void chamber_draw(dl_u8 roomNumber, const Resources* resources);
+void chamber_draw(dl_u8 roomNumber);
 
-void chamber_init(Room* room, const Resources* resources)
+void chamber_init(Room* room)
 {
 	dl_u8 roomNumber = room->roomNumber;
 	PlayerData* playerData = gameData_currentPlayerData;
 
 	// init drops
-	DropsManager_Init(&resources->roomResources[roomNumber].dropSpawnPositions,
+	DropsManager_Init(&res_roomResources[roomNumber].dropSpawnPositions,
 					  roomNumber, 
 					  playerData->gameCompletionCount);
 
-	Ball_Init(roomNumber, resources);
+	Ball_Init(roomNumber);
 	Bird_Init();
 	Player_RoomInit(playerData);
 
@@ -50,7 +51,7 @@ void chamber_init(Room* room, const Resources* resources)
 	gameData_string_roomNumber[0] = roomNumber;
 }
 
-void chamber_update(Room* room, const Resources* resources)
+void chamber_update(Room* room)
 {
 	PlayerData* playerData = gameData_currentPlayerData;
 	dl_u16 currentTimer;
@@ -74,7 +75,7 @@ void chamber_update(Room* room, const Resources* resources)
 	playerLives = playerData->lives;
 
 	Player_Update(playerData, 
-				  &resources->roomResources[room->roomNumber].doorInfoData,
+				  &res_roomResources[room->roomNumber].doorInfoData,
 				  playerData->doorStateData);
 
 	// player lost a life check
@@ -91,8 +92,7 @@ void chamber_update(Room* room, const Resources* resources)
 			gameData_otherPlayerData = gameData_currentPlayerData;
 			gameData_currentPlayerData = temp;
 
-			Game_TransitionToRoom(GET_READY_ROOM_INDEX, 
-								  resources);
+			Game_TransitionToRoom(GET_READY_ROOM_INDEX);
 			return;
 		}
 		else
@@ -103,8 +103,7 @@ void chamber_update(Room* room, const Resources* resources)
 
 			if (playerData->gameOver)
 			{
-				Game_TransitionToRoom(TITLESCREEN_ROOM_INDEX, 
-									  resources);
+				Game_TransitionToRoom(TITLESCREEN_ROOM_INDEX);
 				return;
 			}
 			else
@@ -129,11 +128,10 @@ void chamber_update(Room* room, const Resources* resources)
 	{
 		if (playerData->lastDoor->globalDoorIndex == LAST_DOOR_INDEX)
 		{
-			Player_CompleteGameLoop(playerData, resources);
+			Player_CompleteGameLoop(playerData);
 		}
 
-		Game_WipeTransitionToRoom(playerData->lastDoor->nextRoomNumber, 
-								  resources);
+		Game_WipeTransitionToRoom(playerData->lastDoor->nextRoomNumber);
 		return;
 	}
 

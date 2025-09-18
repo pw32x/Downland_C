@@ -12,6 +12,8 @@
 #include "joystick_data.h"
 #include "bird.h"
 #include "drops_manager.h"
+#include "resources.h"
+
 
 #define VDP_ASSETS_BANK 2
 #define CHAMBER_BANK_START 3
@@ -36,14 +38,14 @@ extern const dl_u8 getReadyScreen_cleanBackground[6144];
 
 dl_u8 g_transitionDirection;
 
-typedef void (*DrawRoomFunction)(const Resources* resources);
+typedef void (*DrawRoomFunction)(void);
 DrawRoomFunction m_drawRoomFunctions[NUM_ROOMS_AND_ALL];
 
-void drawChamber(const Resources* resources);
-void drawTitleScreen(const Resources* resources);
-void drawTransition(const Resources* resources);
-void drawWipeTransition(const Resources* resources);
-void drawGetReadyScreen(const Resources* resources);
+void drawChamber(void);
+void drawTitleScreen(void);
+void drawTransition(void);
+void drawWipeTransition(void);
+void drawGetReadyScreen(void);
 
 void dl_memset(void* source, dl_u8 value, dl_u16 count)
 {
@@ -121,14 +123,14 @@ void drawTileText(const dl_u8* text, dl_u16 xyLocation)
     }
 }
 
-void chamber_draw(dl_u8 roomNumber, const Resources* resources)
+void chamber_draw(dl_u8 roomNumber)
 {
-	const SMSBackgroundData* backgroundData = (const SMSBackgroundData*)resources->roomResources[roomNumber].backgroundDrawData;
+	const SMSBackgroundData* backgroundData = (const SMSBackgroundData*)res_roomResources[roomNumber].backgroundDrawData;
 	gameData_cleanBackground = (dl_u8*)backgroundData->cleanBackground;
 	SMS_loadTileMap(0, 0, (dl_u8*)backgroundData->tileMap, 32 * 24 * 2);
 
-	drawTileText(resources->text_pl1, PLAYERLIVES_TEXT_DRAW_LOCATION);
-	drawTileText(resources->text_chamber, CHAMBER_TEXT_DRAW_LOCATION);
+	drawTileText(res_string_pl1, PLAYERLIVES_TEXT_DRAW_LOCATION);
+	drawTileText(res_string_chamber, CHAMBER_TEXT_DRAW_LOCATION);
 	drawTileText(gameData_string_roomNumber, CHAMBER_NUMBER_TEXT_DRAW_LOCATION);
 
 	PlayerData* playerData = gameData_playerData;
@@ -142,38 +144,38 @@ void chamber_draw(dl_u8 roomNumber, const Resources* resources)
 }
 
 
-void get_ready_room_draw(dl_u8 roomNumber, const Resources* resources)
+void get_ready_room_draw(dl_u8 roomNumber)
 {
 	(void)roomNumber;
 
-	const SMSBackgroundData* backgroundData = (const SMSBackgroundData*)resources->roomResources[TITLESCREEN_ROOM_INDEX].backgroundDrawData;
+	const SMSBackgroundData* backgroundData = (const SMSBackgroundData*)res_roomResources[TITLESCREEN_ROOM_INDEX].backgroundDrawData;
 	gameData_cleanBackground = (dl_u8*)getReadyScreen_cleanBackground;
 	SMS_loadTileMap(0, 0, (dl_u8*)backgroundData->tileMap, 32 * 24 * 2);
 
 	// get ready text
-	const dl_u8* getReadyString = gameData_currentPlayerData->playerNumber == PLAYER_ONE ? resources->text_getReadyPlayerOne : resources->text_getReadyPlayerTwo;
+	const dl_u8* getReadyString = gameData_currentPlayerData->playerNumber == PLAYER_ONE ? res_string_getReadyPlayerOne : res_string_getReadyPlayerTwo;
 	drawTileText(getReadyString, 0x0b66);
 }
 
-void titleScreen_draw(dl_u8 roomNumber, const Resources* resources)
+void titleScreen_draw(dl_u8 roomNumber)
 {
-	const SMSBackgroundData* backgroundData = (const SMSBackgroundData*)resources->roomResources[roomNumber].backgroundDrawData;
+	const SMSBackgroundData* backgroundData = (const SMSBackgroundData*)res_roomResources[roomNumber].backgroundDrawData;
 	gameData_cleanBackground = (dl_u8*)backgroundData->cleanBackground;
 	SMS_loadTileMap(0, 0, (dl_u8*)backgroundData->tileMap, 32 * 24 * 2);
 
-	drawTileText(resources->text_downland, 0x03c9 + 64); // 0x07c9 original coco mem location
-	drawTileText(resources->text_writtenBy, 0x050a); // 0x090A original coco mem location
-	drawTileText(resources->text_michaelAichlmayer, 0x647); // 0x0A47 original coco mem location
-	drawTileText(resources->text_copyright1983, 0x789); // 0x0B89 original coco mem location
-	drawTileText(resources->text_spectralAssociates, 0x8c6); // 0x0CC6 original coco mem location
-	drawTileText(resources->text_licensedTo, 0xa0a); // 0x0E0A original coco mem location
-	drawTileText(resources->text_tandyCorporation, 0xb47); // 0x0F47 original coco mem location
-	drawTileText(resources->text_allRightsReserved, 0xc86); // 0x1086 original coco mem location
-	drawTileText(resources->text_onePlayer, 0xf05); // 0x1305 original coco mem location
-	drawTileText(resources->text_twoPlayer, 0xf11); // 0x1311 original coco mem location
-	drawTileText(resources->text_highScore, 0x118b); // 0x158B original coco mem location
-	drawTileText(resources->text_playerOne, 0x1406); // 0x1806 original coco mem location
-	drawTileText(resources->text_playerTwo, 0x1546); // 0x1946 original coco mem location
+	drawTileText(res_string_downland, 0x03c9 + 64); // 0x07c9 original coco mem location
+	drawTileText(res_string_writtenBy, 0x050a); // 0x090A original coco mem location
+	drawTileText(res_string_michaelAichlmayer, 0x647); // 0x0A47 original coco mem location
+	drawTileText(res_string_copyright1983, 0x789); // 0x0B89 original coco mem location
+	drawTileText(res_string_spectralAssociates, 0x8c6); // 0x0CC6 original coco mem location
+	drawTileText(res_string_licensedTo, 0xa0a); // 0x0E0A original coco mem location
+	drawTileText(res_string_tandyCorporation, 0xb47); // 0x0F47 original coco mem location
+	drawTileText(res_string_allRightsReserved, 0xc86); // 0x1086 original coco mem location
+	drawTileText(res_string_onePlayer, 0xf05); // 0x1305 original coco mem location
+	drawTileText(res_string_twoPlayer, 0xf11); // 0x1311 original coco mem location
+	drawTileText(res_string_highScore, 0x118b); // 0x158B original coco mem location
+	drawTileText(res_string_playerOne, 0x1406); // 0x1806 original coco mem location
+	drawTileText(res_string_playerTwo, 0x1546); // 0x1946 original coco mem location
 
 	convertScoreToString(gameData_playerData[PLAYER_ONE].score, gameData_playerData[PLAYER_ONE].scoreString);
 	drawTileText(gameData_playerData[PLAYER_ONE].scoreString, TITLESCREEN_PLAYERONE_SCORE_LOCATION);
@@ -190,10 +192,6 @@ void titleScreen_draw(dl_u8 roomNumber, const Resources* resources)
 
 	drawTileText(gameData_string_highScore, TITLESCREEN_HIGHSCORE_LOCATION);
 }
-
-
-
-extern Resources resources;
 
 void drawDrops(void)
 {
@@ -357,7 +355,7 @@ void main(void)
 
 	Game_ChangedRoomCallback = GameRunner_ChangedRoomCallback;
 
-    Game_Init(&resources);
+    Game_Init();
 
 	dl_u8 controllerIndex = 0;
 
@@ -385,10 +383,10 @@ void main(void)
 
 		if (!gameData_paused)
 		{
-			Game_Update(&resources);
+			Game_Update();
 		}
 
-		m_drawRoomFunctions[gameData_currentRoom->roomNumber](&resources);
+		m_drawRoomFunctions[gameData_currentRoom->roomNumber]();
 
 		// VBLANK
 		SMS_waitForVBlank ();
@@ -421,7 +419,7 @@ SMS_EMBED_SDSC_HEADER_AUTO_DATE(1,0,"pw","basicsmsproject","A basic SMS example 
 
 
 
-void drawChamber(const Resources* resources)
+void drawChamber(void)
 {
 	PlayerData* playerData = gameData_currentPlayerData;
 
@@ -498,7 +496,7 @@ void drawChamber(const Resources* resources)
 
 	// draw doors
     int roomNumber = gameData_currentRoom->roomNumber;
-	const DoorInfoData* doorInfoData = &resources->roomResources[roomNumber].doorInfoData;
+	const DoorInfoData* doorInfoData = &res_roomResources[roomNumber].doorInfoData;
 	const DoorInfo* doorInfoRunner = doorInfoData->doorInfos;
 
 	for (dl_u8 loop = 0; loop < doorInfoData->drawInfosCount; loop++)
@@ -532,10 +530,8 @@ void drawChamber(const Resources* resources)
 
 }
 
-void drawTitleScreen(const Resources* resources)
+void drawTitleScreen(void)
 {
-	UNUSED(resources);
-
 	drawDrops();
 
 	dl_u8 x = gameData_numPlayers == 1 ? 32 : 128;
@@ -543,26 +539,22 @@ void drawTitleScreen(const Resources* resources)
 	SMS_addSprite(x, 123, 160);
 }
 
-void drawTransition(const Resources* resources)
+void drawTransition(void)
 {
-	UNUSED(resources);
 }
 
-void drawWipeTransition(const Resources* resources)
+void drawWipeTransition(void)
 {
-	UNUSED(resources);
 }
 
-void drawGetReadyScreen(const Resources* resources)
+void drawGetReadyScreen(void)
 {
-	UNUSED(resources);
-
 	drawDrops();
 }
 
 #define INITIAL_TRANSITION_DELAY 30
 
-void transition_init(Room* targetRoom, const Resources* resources)
+void transition_init(Room* targetRoom)
 {
 	SMS_waitForVBlank();
 	SMS_initSprites();
@@ -580,7 +572,7 @@ void transition_init(Room* targetRoom, const Resources* resources)
 
 	// init the clean background with the target room. 
 	// it'll be revealed at the end of the transition.
-	targetRoom->draw(gameData_transitionRoomNumber, resources);
+	targetRoom->draw(gameData_transitionRoomNumber);
 
 	// setup screen transition
 	gameData_transitionInitialDelay = INITIAL_TRANSITION_DELAY;
@@ -588,7 +580,7 @@ void transition_init(Room* targetRoom, const Resources* resources)
 	////SMS_debugPrintf("transition_init\n");
 }
 
-void transition_update(Room* room, const Resources* resources)
+void transition_update(Room* room)
 {
 	UNUSED(room);
 
@@ -601,12 +593,11 @@ void transition_update(Room* room, const Resources* resources)
 	}
 
 	////SMS_debugPrintf("transition_update enter game room\n");
-	Game_EnterRoom(gameData_transitionRoomNumber, resources);
+	Game_EnterRoom(gameData_transitionRoomNumber);
 }
 
-void wipe_transition_init(Room* targetRoom, const Resources* resources)
+void wipe_transition_init(Room* targetRoom)
 {
-	UNUSED(resources);
 	UNUSED(targetRoom);
 
 	SMS_waitForVBlank();
@@ -630,7 +621,7 @@ void wipe_transition_init(Room* targetRoom, const Resources* resources)
 	//SMS_debugPrintf("transition_init\n");
 }
 
-void wipe_transition_update(Room* room, const Resources* resources)
+void wipe_transition_update(Room* room)
 {
 	UNUSED(room);
 
@@ -659,7 +650,7 @@ void wipe_transition_update(Room* room, const Resources* resources)
 	dl_s8 offset = g_transitionDirection ? 1 : -1;
 	dl_u16 flip = g_transitionDirection ? TILE_FLIPPED_X : 0;
 
-	const SMSBackgroundData* backgroundData = (const SMSBackgroundData*)resources->roomResources[gameData_transitionRoomNumber].backgroundDrawData;
+	const SMSBackgroundData* backgroundData = (const SMSBackgroundData*)res_roomResources[gameData_transitionRoomNumber].backgroundDrawData;
 	for (dl_u8 loop = 0; loop < 24; loop++)
 	{
 		SMS_setTileatXY(currentColumn, 
@@ -678,9 +669,9 @@ void wipe_transition_update(Room* room, const Resources* resources)
 	if (gameData_transitionCurrentLine == 32)
 	{
 		Room* transitionRoom = g_rooms[gameData_transitionRoomNumber];
-		transitionRoom->draw(gameData_transitionRoomNumber, resources);
+		transitionRoom->draw(gameData_transitionRoomNumber);
 
-		Game_EnterRoom(gameData_transitionRoomNumber, resources);
+		Game_EnterRoom(gameData_transitionRoomNumber);
 
 		if (Game_TransitionDone)
 			Game_TransitionDone(gameData_transitionRoomNumber, WIPE_TRANSITION_ROOM_INDEX);

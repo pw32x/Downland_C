@@ -11,6 +11,7 @@
 #include "bird.h"
 #include "joystick_data.h"
 #include "drops_manager.h"
+#include "resources.h"
 
 #define PLAYER_START_LIVES 3
 
@@ -192,33 +193,33 @@ void initDoors(dl_u8* doorStateData, const dl_u8* offsetsToDoorsAlreadyActivated
 	}
 }
 
-void playerStartGameLoop(PlayerData* playerData, const Resources* resources)
+void playerStartGameLoop(PlayerData* playerData)
 {
-	const dl_u8* keyPickUpDoorIndexes = playerData->gameCompletionCount == 0 ? resources->keyPickUpDoorIndexes : resources->keyPickUpDoorIndexesHardMode;
+	const dl_u8* keyPickUpDoorIndexes = playerData->gameCompletionCount == 0 ? res_keyPickUpDoorIndexes : res_keyPickUpDoorIndexesHardMode;
 
 	playerData->facingDirection = PLAYER_FACING_LEFT;
 
 	initPickups(playerData->gamePickups, 
-				resources->roomPickupPositions,
+				res_roomPickupPositions,
 				keyPickUpDoorIndexes);
 
 	initDoors(playerData->doorStateData, 
-			  resources->offsetsToDoorsAlreadyActivated);
+			  res_offsetsToDoorsAlreadyActivated);
 }
 
 
 
-void Player_CompleteGameLoop(PlayerData* playerData, const Resources* resources)
+void Player_CompleteGameLoop(PlayerData* playerData)
 {
 	playerData->gameCompletionCount++;
-	playerStartGameLoop(playerData, resources);
+	playerStartGameLoop(playerData);
 }
 
-void Player_GameInit(PlayerData* playerData, const Resources* resources)
+void Player_GameInit(PlayerData* playerData)
 {
 	int loop;
 
-	playerStartGameLoop(playerData, resources);
+	playerStartGameLoop(playerData);
 
 	playerData->lastDoor = NULL;
 	playerData->lives = PLAYER_START_LIVES;

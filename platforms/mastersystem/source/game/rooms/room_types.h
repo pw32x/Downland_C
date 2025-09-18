@@ -12,14 +12,14 @@
 typedef struct Room
 {
 	dl_u8 roomNumber;
-	void (*init)(struct Room* room, const Resources* resources);
-	void (*draw)(dl_u8 roomNumber, const Resources* resources);
-	void (*update)(struct Room* room, const Resources* resources);
+	void (*init)(struct Room* room);
+	void (*draw)(dl_u8 roomNumber);
+	void (*update)(struct Room* room);
 } Room;
 
-typedef void (*InitRoomFunctionType)(Room* room, const Resources* resources);
-typedef void (*DrawRoomFunctionType)(dl_u8 roomNumber, const Resources* resources);
-typedef void (*UpdateRoomFunctionType)(Room* room, const Resources* resources);
+typedef void (*InitRoomFunctionType)(Room* room);
+typedef void (*DrawRoomFunctionType)(dl_u8 roomNumber);
+typedef void (*UpdateRoomFunctionType)(Room* room);
 
 
 #endif

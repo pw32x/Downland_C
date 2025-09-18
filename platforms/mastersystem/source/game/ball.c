@@ -2,6 +2,7 @@
 #include "draw_utils.h"
 #include "physics_utils.h"
 #include "dl_platform.h"
+#include "resources.h"
 
 dl_u8 ballData_enabled;
 dl_u8 ballData_state;	// 0 - inactive
@@ -54,7 +55,7 @@ void initBallPhysics(void)
 	ballData_speedy = 0;
 }
 
-void Ball_Init(dl_u8 roomNumber, const Resources* resources)
+void Ball_Init(dl_u8 roomNumber)
 {
 	const dl_u8* roomsWithBouncingBall;
 
@@ -63,7 +64,7 @@ void Ball_Init(dl_u8 roomNumber, const Resources* resources)
 
 	// check if this room uses the ball. if not, then return and
 	// stay disabled.
-	roomsWithBouncingBall = resources->roomsWithBouncingBall;
+	roomsWithBouncingBall = res_roomsWithBouncingBall;
 
 	while (*roomsWithBouncingBall != roomNumber && *roomsWithBouncingBall != 0xff)
 	{

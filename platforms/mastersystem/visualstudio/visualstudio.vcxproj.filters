@@ -112,12 +112,6 @@
     <ClCompile Include="..\generated\bank2_vdp\tileSet4bpp.c">
       <Filter>Source Files\generated\bank_vdp</Filter>
     </ClCompile>
-    <ClCompile Include="..\generated\strings.c">
-      <Filter>Source Files\generated</Filter>
-    </ClCompile>
-    <ClCompile Include="..\generated\general.c">
-      <Filter>Source Files\generated</Filter>
-    </ClCompile>
     <ClCompile Include="..\generated\resources.c">
       <Filter>Source Files\generated</Filter>
     </ClCompile>
@@ -227,6 +221,9 @@
     </ClInclude>
     <ClInclude Include="..\source\custom_background_types.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generated\resources.h">
+      <Filter>Source Files\generated</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

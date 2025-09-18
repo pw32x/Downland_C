@@ -8,20 +8,21 @@
 #include "../dl_sound.h"
 #include "../dl_platform.h"
 #include "../joystick_data.h"
+#include "resources.h"
 
-void titleScreen_draw(dl_u8 roomNumber, const Resources* resources);
+void titleScreen_draw(dl_u8 roomNumber);
 
-void titleScreen_init(Room* room, const Resources* resources)
+void titleScreen_init(Room* room)
 {
 	dl_u8 roomNumber = room->roomNumber;
 
 	// init drops
-	DropsManager_Init(&resources->roomResources[roomNumber].dropSpawnPositions,
+	DropsManager_Init(&res_roomResources[roomNumber].dropSpawnPositions,
 					  roomNumber, 
 					  1 /*gameCompletionCount*/);
 }
 
-void titleScreen_update(Room* room, const Resources* resources)
+void titleScreen_update(Room* room)
 {
 	UNUSED(room);
 
@@ -50,8 +51,8 @@ void titleScreen_update(Room* room, const Resources* resources)
 	// press button to start
 	if (joystickState_jumpPressed)
 	{
-		Game_InitPlayers(resources);
-		Game_WipeTransitionToRoom(0, resources);
+		Game_InitPlayers();
+		Game_WipeTransitionToRoom(0);
 	}
 }
 

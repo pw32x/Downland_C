@@ -11,7 +11,7 @@ PlayerData* gameData_currentPlayerData;
 PlayerData* gameData_otherPlayerData;
 dl_u8 gameData_numPlayers;
 
-Room* gameData_currentRoom;
+const Room* gameData_currentRoom;
 
 // used for screen transitions
 dl_u8 gameData_transitionRoomNumber;

@@ -1288,7 +1288,7 @@ void saveResourcesHeader(Resources& resources)
     oss << "extern const dl_u8 res_roomsWithBouncingBall[10];\n";
 
     oss << "\n";
-    oss << "extern RoomResources res_roomResources[NUM_ROOMS_PLUS_TITLESCREN];\n";
+    oss << "extern const RoomResources res_roomResources[NUM_ROOMS_PLUS_TITLESCREN];\n";
 
     oss << "\n";
     oss << "#endif\n";
@@ -1553,7 +1553,7 @@ void saveResourcesSource(Resources& resources)
     //oss << "    { diamondSprite, moneyBagSprite, keySprite },\n";
     //oss << "\n";
 
-    oss << "RoomResources res_roomResources[NUM_ROOMS_PLUS_TITLESCREN] = \n";
+    oss << "const RoomResources res_roomResources[NUM_ROOMS_PLUS_TITLESCREN] = \n";
     oss << "{\n";
 
     for (int loop = 0; loop < NUM_ROOMS_PLUS_TITLESCREN; loop++)

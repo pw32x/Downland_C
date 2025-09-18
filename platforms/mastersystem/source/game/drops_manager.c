@@ -1,7 +1,6 @@
 #include "drops_manager.h"
 
 #include "base_defines.h"
-#include "draw_utils.h"
 #include "dl_rand.h"
 #include "game_data.h"
 
@@ -20,12 +19,23 @@ dl_u8 dropData_activeDropsCount;
 
 dl_u8 g_dropTickTockTimer;
 
-dl_u8 drop_CollisionMasks[4] = 
+const dl_u8 drop_CollisionMasks[4] = 
 {
     0xf0, // 11110000b
     0x3c, // 00111100b
     0x0f, // 00001111b
     0x03, // 00000011b
+};
+
+// depending on the x position, chose 
+// of these to get at the corresponding
+// two bits you want to activate.
+const dl_u8 pixelMasks[4] = 
+{
+	0xc0, // 11000000b,
+	0x30, // 00110000b,
+	0x0C, // 00001100b,
+	0x03  // 00000011b,
 };
 
 void DropsManager_Init(const DropSpawnPositions* dropSpawnPositions, dl_u8 roomNumber, dl_u8 gameCompletionCount)

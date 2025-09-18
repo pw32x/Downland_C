@@ -145,7 +145,6 @@
     <ClCompile Include="..\source\game\bird.c" />
     <ClCompile Include="..\source\game\checksum_utils.c" />
     <ClCompile Include="..\source\game\dl_rand.c" />
-    <ClCompile Include="..\source\game\draw_utils.c" />
     <ClCompile Include="..\source\game\drops_manager.c" />
     <ClCompile Include="..\source\game\game.c" />
     <ClCompile Include="..\source\game\game_data.c" />
@@ -174,7 +173,6 @@
     <ClInclude Include="..\source\game\dl_rand.h" />
     <ClInclude Include="..\source\game\dl_sound.h" />
     <ClInclude Include="..\source\game\door_types.h" />
-    <ClInclude Include="..\source\game\draw_utils.h" />
     <ClInclude Include="..\source\game\drops_manager.h" />
     <ClInclude Include="..\source\game\drops_types.h" />
     <ClInclude Include="..\source\game\game.h" />

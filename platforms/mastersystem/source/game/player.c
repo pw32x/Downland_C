@@ -1,7 +1,6 @@
 #include "player.h"
 
 #include "base_defines.h"
-#include "draw_utils.h"
 #include "physics_utils.h"
 #include "game_data.h"
 #include "pickup_types.h"
@@ -74,7 +73,7 @@
 
 // used to determine whether the player
 // is touching the ground
-dl_u16 playerGroundCollisionMasks[4] =
+const dl_u16 playerGroundCollisionMasks[4] =
 {
 	0x03c0, // 0000001111000000b
     0x00f0, // 0000000011110000b
@@ -84,7 +83,7 @@ dl_u16 playerGroundCollisionMasks[4] =
 
 // used to determine whether the player
 // is touching a rope.
-dl_u16 ropeCollisionMasks[4] = 
+const dl_u16 ropeCollisionMasks[4] = 
 {
     0x0300, // 0000001100000000b
     0x00c0, // 0000000011000000b

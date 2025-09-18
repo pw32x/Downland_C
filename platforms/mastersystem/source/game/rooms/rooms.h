@@ -4,6 +4,6 @@
 #include "room_types.h"
 
 // global list of rooms
-extern Room* g_rooms[NUM_ROOMS_AND_ALL];
+extern const Room* g_rooms[NUM_ROOMS_AND_ALL];
 
 #endif

@@ -2,7 +2,7 @@
 #include "base_defines.h"
 #include "game_data.h"
 
-dl_u8 collisionCheckXOffsets[4] = { 0, 0, 0, 1 };
+const dl_u8 collisionCheckXOffsets[4] = { 0, 0, 0, 1 };
 
 // converted from TerrainCollisionTest in the disassembly
 // no idea exactly how it works, so just mimick it.

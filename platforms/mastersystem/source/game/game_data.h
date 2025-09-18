@@ -29,7 +29,7 @@ extern PlayerData* gameData_currentPlayerData;
 extern PlayerData* gameData_otherPlayerData;
 extern dl_u8 gameData_numPlayers;
 
-extern Room* gameData_currentRoom;
+extern const Room* gameData_currentRoom;
 
 // used for screen transitions
 extern dl_u8 gameData_transitionRoomNumber;

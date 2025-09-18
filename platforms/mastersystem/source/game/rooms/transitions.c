@@ -1,6 +1,5 @@
 #include "room_types.h"
 
-#include "../draw_utils.h"
 #include "../drops_manager.h"
 #include "../dl_sound.h"
 #include "../dl_platform.h"

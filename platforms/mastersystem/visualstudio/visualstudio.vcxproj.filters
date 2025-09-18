@@ -43,9 +43,6 @@
     <ClCompile Include="..\source\game\dl_rand.c">
       <Filter>Source Files\game</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\game\draw_utils.c">
-      <Filter>Source Files\game</Filter>
-    </ClCompile>
     <ClCompile Include="..\source\game\drops_manager.c">
       <Filter>Source Files\game</Filter>
     </ClCompile>
@@ -166,9 +163,6 @@
       <Filter>Source Files\game</Filter>
     </ClInclude>
     <ClInclude Include="..\source\game\door_types.h">
-      <Filter>Source Files\game</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\game\draw_utils.h">
       <Filter>Source Files\game</Filter>
     </ClInclude>
     <ClInclude Include="..\source\game\drops_manager.h">

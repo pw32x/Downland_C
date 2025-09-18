@@ -1,5 +1,4 @@
 #include "bird.h"
-#include "draw_utils.h"
 #include "dl_rand.h"
 #include "dl_platform.h"
 

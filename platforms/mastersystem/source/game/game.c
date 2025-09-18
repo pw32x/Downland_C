@@ -1,7 +1,6 @@
 #include "game.h"
 
 #include "dl_platform.h"
-#include "draw_utils.h"
 #include "rooms/rooms.h"
 #include "game_data.h"
 #include "joystick_data.h"

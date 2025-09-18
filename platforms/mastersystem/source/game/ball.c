@@ -1,5 +1,4 @@
 #include "ball.h"
-#include "draw_utils.h"
 #include "physics_utils.h"
 #include "dl_platform.h"
 #include "resources.h"
@@ -27,7 +26,7 @@ dl_u8 ballData_fallStateCounter;
 // used as a sensor at the bottom of the
 // ball to detect whether the ball is touching
 // the floor. 
-dl_u16 ballGroundCollisionMasks[4] =
+const dl_u16 ballGroundCollisionMasks[4] =
 {
 	0x0300, // 0000001100000000b
 	0x00c0, // 0000000011000000b
@@ -38,7 +37,7 @@ dl_u16 ballGroundCollisionMasks[4] =
 // used as a sensor mid-way across the
 // ball to detect whether it has touched
 // a wall.
-dl_u16 ballWideCollisionMasks[4] =
+const dl_u16 ballWideCollisionMasks[4] =
 {
     0x3ff0, // 0011111111110000b
     0x0ffc, // 0000111111111100b

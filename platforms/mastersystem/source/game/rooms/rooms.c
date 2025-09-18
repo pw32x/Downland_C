@@ -15,7 +15,7 @@ extern Room transitionRoom;
 extern Room wipeTransitionRoom;
 extern Room getReadyRoom;
 
-Room* g_rooms[] = 
+const Room* g_rooms[] = 
 {
 	&chamber0,
 	&chamber1,

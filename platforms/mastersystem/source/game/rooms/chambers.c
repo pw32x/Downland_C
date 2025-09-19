@@ -11,9 +11,9 @@
 
 void updateTimers(dl_u8 roomNumber, dl_u16* roomTimers)
 {
-	int loop;
+	dl_u8 loop = NUM_ROOMS;
 
-	for (loop = 0; loop < NUM_ROOMS; loop++)
+	while (loop--)
 	{
 		if (loop == roomNumber)
 		{
@@ -143,8 +143,7 @@ void chamber_update(Room* room)
 	// pick up item or die
 	Player_PerformCollisions();
 
-	convertTimerToString(currentTimer,
-						 gameData_string_timer);
+	convertTimerToString(currentTimer, gameData_string_timer);
 }
 
 // All the chambers are the same, but this makes it easier

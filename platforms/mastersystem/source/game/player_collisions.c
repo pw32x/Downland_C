@@ -14,17 +14,15 @@
 
 void playerKill(PlayerData* playerData);
 
-BOOL objectCollisionTest(PlayerData* playerData, dl_u8 x, dl_u8 y, dl_u8 width, dl_u8 height)
+dl_u8 playerX;
+dl_u8 playerY;
+
+BOOL objectCollisionTest(dl_u8 x, dl_u8 y, dl_u8 width, dl_u8 height)
 {
-	dl_u8 playerX = GET_HIGH_BYTE(playerData->x);
-	dl_u8 playerY = GET_HIGH_BYTE(playerData->y) + 1;
-
-	playerX += playerData->facingDirection ? 1 : 2;
-
-	return (x < playerX + PLAYER_COLLISION_WIDTH + 1 &&
-		    x + width > playerX &&
-		    y < playerY + PLAYER_COLLISION_HEIGHT &&
-		    y + height > playerY);
+	return !(x + width <= playerX ||
+			 x >= playerX + PLAYER_COLLISION_WIDTH + 1 ||
+			 y + height <= playerY ||
+			 y >= playerY + PLAYER_COLLISION_HEIGHT);
 }
 
 BOOL dropsManagerCollisionTest(PlayerData* playerData)
@@ -35,10 +33,9 @@ BOOL dropsManagerCollisionTest(PlayerData* playerData)
 	for (loop = 0; loop < dropData_activeDropsCount; loop++)
 	{
 		if ((dl_s8)dropRunner->wiggleTimer > 0) // see note about wiggle time. 
-											 // only test collision when it is positive in signed.
+											    // only test collision when it is positive in signed.
 		{
-			if (objectCollisionTest(playerData, 
-									dropRunner->x, 
+			if (objectCollisionTest(dropRunner->x, 
 									GET_HIGH_BYTE(dropRunner->y),
 									DROP_COLLISION_WIDTH,
 									DROP_HEIGHT))
@@ -62,6 +59,10 @@ void Player_PerformCollisions(void)
 	dl_u8 doorIndex;
 
 	PlayerData* playerData = gameData_currentPlayerData;
+	playerX = GET_HIGH_BYTE(playerData->x);
+	playerY = GET_HIGH_BYTE(playerData->y) + 1;
+
+	playerX += playerData->facingDirection ? 1 : 2;
 
 	if (playerData->isDead)
 		return;
@@ -78,7 +79,7 @@ void Player_PerformCollisions(void)
 		if (!(pickUp->state & playerData->playerMask))
 			continue;
 
-		if (objectCollisionTest(playerData, pickUp->x + 2, pickUp->y, PICKUP_WIDTH, PICKUP_HEIGHT))
+		if (objectCollisionTest(pickUp->x + 2, pickUp->y, PICKUP_WIDTH, PICKUP_HEIGHT))
 		{
 			pickUp->state = pickUp->state & ~playerData->playerMask;
 
@@ -131,8 +132,7 @@ void Player_PerformCollisions(void)
 
 	// collide with ball
 	if (ballData_state == BALL_ACTIVE &&
-		objectCollisionTest(playerData, 
-							GET_HIGH_BYTE(ballData_x) + 1,
+		objectCollisionTest(GET_HIGH_BYTE(ballData_x) + 1,
 							GET_HIGH_BYTE(ballData_y),
 							BALL_COLLISION_WIDTH,
 							BALL_SPRITE_ROWS))
@@ -143,8 +143,7 @@ void Player_PerformCollisions(void)
 
 	// collide with bird
 	if (birdData_state == BIRD_ACTIVE &&
-		objectCollisionTest(playerData, 
-							GET_HIGH_BYTE(birdData_x) + 1,
+		objectCollisionTest(GET_HIGH_BYTE(birdData_x) + 1,
 							GET_HIGH_BYTE(birdData_y),
 							BIRD_COLLISION_WIDTH,
 							BIRD_SPRITE_ROWS))

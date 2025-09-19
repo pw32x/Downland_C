@@ -252,16 +252,17 @@ dl_u8 g_playerTileIndex;
 
 void drawUIPlayerLives(const PlayerData* playerData)
 {
-	dl_u8 x = PLAYERLIVES_ICON_X;
+	dl_u8 x = PLAYERLIVES_ICON_X << 1;
 	dl_u8 y = PLAYERLIVES_ICON_Y;
 
 	dl_u8 tileIndex = 80 + (playerData->currentSpriteNumber << 1);
 
-    for (dl_u8 loop = 0; loop < playerData->lives; loop++)
+	dl_u8 count = playerData->lives;
+	while (count--)
 	{
-		SMS_addTwoAdjoiningSprites(x << 1, y, tileIndex);
+		SMS_addTwoAdjoiningSprites(x, y, tileIndex);
 
-		x += PLAYERLIVES_ICON_SPACING;
+		x += (PLAYERLIVES_ICON_SPACING << 1);
     }
 
 	if (playerData->state == PLAYER_STATE_REGENERATION)
@@ -275,7 +276,7 @@ void drawUIPlayerLives(const PlayerData* playerData)
 			tileIndex = 140 + ((g_regenSpriteIndex + REGEN_NUM_FRAMES) << 1);
 		}
 
-		SMS_addTwoAdjoiningSprites(x << 1, y, tileIndex);
+		SMS_addTwoAdjoiningSprites(x, y, tileIndex);
     }
 }
 

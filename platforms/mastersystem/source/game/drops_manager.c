@@ -131,10 +131,6 @@ void initDrop(Drop* drop,
 	wiggleDrop(drop);
 }
 
-dl_u8 y;
-dl_u16 cleanBackgroundLocation;
-dl_u8 collisionMask;
-
 void DropsManager_Update(dl_u8 gameCompletionCount)
 {
 	Drop* dropsRunner = dropData_drops;
@@ -166,9 +162,9 @@ void DropsManager_Update(dl_u8 gameCompletionCount)
 		{
 			// falling
 
-			y = GET_HIGH_BYTE(dropsRunner->y);
-			cleanBackgroundLocation = GET_FRAMEBUFFER_LOCATION(dropsRunner->x, y);
-			collisionMask = dropsRunner->collisionMask;
+			dl_u8 y = GET_HIGH_BYTE(dropsRunner->y);
+			dl_u16 cleanBackgroundLocation = GET_FRAMEBUFFER_LOCATION(dropsRunner->x, y);
+			dl_u8 collisionMask = dropsRunner->collisionMask;
 
 			if ((gameData_cleanBackground[cleanBackgroundLocation + 0xc0] & collisionMask) || // 6 pixels down
 				(gameData_cleanBackground[cleanBackgroundLocation + 0xe0] & collisionMask))   // 7 pixels down

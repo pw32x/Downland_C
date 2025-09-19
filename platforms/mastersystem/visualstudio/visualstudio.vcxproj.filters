@@ -133,6 +133,9 @@
     <ClCompile Include="..\source\game\joystick_data.c">
       <Filter>Source Files\game</Filter>
     </ClCompile>
+    <ClCompile Include="..\source\game\player_collisions.c">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\source\game\background_types.h">

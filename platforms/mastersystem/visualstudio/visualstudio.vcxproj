@@ -151,6 +151,7 @@
     <ClCompile Include="..\source\game\joystick_data.c" />
     <ClCompile Include="..\source\game\physics_utils.c" />
     <ClCompile Include="..\source\game\player.c" />
+    <ClCompile Include="..\source\game\player_collisions.c" />
     <ClCompile Include="..\source\game\rooms\chambers.c" />
     <ClCompile Include="..\source\game\rooms\getready.c" />
     <ClCompile Include="..\source\game\rooms\rooms.c" />

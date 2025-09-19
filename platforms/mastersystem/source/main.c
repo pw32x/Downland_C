@@ -106,21 +106,23 @@ extern unsigned char const playerRegen4bpp[1280]; // 40 tiles x 32 bytes
 extern unsigned char const playerLivesRegen4bpp[320]; // 10 tiles x 32 bytes
 extern unsigned char const cursor4bpp[32]; // 1 tiles x 32 bytes
 
+dl_u16 tileText[22];
+
 void drawTileText(const dl_u8* text, dl_u16 xyLocation)
 {
-    dl_u16 tilex = ((xyLocation % 32) * 8) / 8;
-    dl_u16 tiley = (xyLocation / 32) / 8;
+    dl_u16 tilex = (xyLocation & 31);
+    dl_u16 tiley = (xyLocation >> 8);
+	dl_u16* tileTextRunner = tileText;
 
     // for each character
     while (*text != 0xff)
     {
-		//VDP_setTileMapXY(BG_B, characterFontSprite.vdpTileIndex + *text, tilex, tiley);
-
-		SMS_setTileatXY(tilex, tiley, 195 + *text);
-
-        text++;
-        tilex++;
+		*tileTextRunner = *text + 195; // text tiles offset in vdp
+		tileTextRunner++;
+		text++;
     }
+
+	SMS_loadTileMap(tilex, tiley, tileText, (tileTextRunner - tileText) << 1);
 }
 
 void chamber_draw(dl_u8 roomNumber)
@@ -193,24 +195,57 @@ void titleScreen_draw(dl_u8 roomNumber)
 	drawTileText(gameData_string_highScore, TITLESCREEN_HIGHSCORE_LOCATION);
 }
 
+// moving the dropsDrawRunner to global memory makes drawDrops twice as fast
+const Drop* dropsDrawRunner;
+
 void drawDrops(void)
 {
     // draw drops
-    const Drop* dropsRunner = dropData_drops;
+    dropsDrawRunner = dropData_drops;
 
 	int counter = NUM_DROPS;
 	while (counter--)
     {
-        if ((dl_s8)dropsRunner->wiggleTimer < 0 || // wiggling
-            dropsRunner->wiggleTimer > 1)   // falling
+        if ((dl_s8)dropsDrawRunner->wiggleTimer < 0 || // wiggling
+            dropsDrawRunner->wiggleTimer > 1)   // falling
         {
-			SMS_addSprite((dropsRunner->x << 1), 
-						  (dropsRunner->y >> 8), 
+			SMS_addSprite((dropsDrawRunner->x << 1), 
+						  (dropsDrawRunner->y >> 8), 
 						  16);
         }
 
-        dropsRunner++;
+        dropsDrawRunner++;
     }
+}
+
+const dl_u8 pickUpSprites[] = { 8, 22, 18 };
+dl_u8 pickupx;
+dl_u8 pickupy;
+const Pickup* pickups;
+dl_u8 playerMask;
+
+void drawPickups()
+{
+	// draw pickups
+	int roomIndex = gameData_currentRoom->roomNumber;
+	pickups = &gameData_currentPlayerData->gamePickups[roomIndex][0];
+	playerMask = gameData_currentPlayerData->playerMask;
+
+	for (int loop = 0; loop < NUM_PICKUPS_PER_ROOM; loop++)
+	{
+		if ((pickups->state & playerMask))
+		{
+			const dl_u8 tileIndex = pickUpSprites[pickups->type];
+
+			pickupx = (pickups->x) << 1;
+			pickupy = pickups->y;
+
+			SMS_addTwoAdjoiningSprites(pickupx, pickupy, tileIndex);
+			SMS_addTwoAdjoiningSprites(pickupx, pickupy + 8, tileIndex + 2);
+		}
+
+		pickups++;
+	}
 }
 
 dl_u8 g_playerTileIndex;
@@ -290,7 +325,7 @@ void updateControls(dl_u8 controllerIndex)
 #endif
 }
 
-const dl_u8 pickUpSprites[] = { 8, 22, 18 };
+
 
 void GameRunner_ChangedRoomCallback(const dl_u8 roomNumber, dl_s8 transitionType);
 
@@ -298,6 +333,7 @@ void main(void)
 {
 	/* Clear VRAM */
 	SMS_VRAMmemsetW(0, 0x0000, 16384);
+	//SMS_setSpriteMode(SPRITEMODE_TALL);
 
 	/* Turn on the display */
 	SMS_displayOn();
@@ -482,21 +518,8 @@ void drawChamber(void)
 		SMS_addTwoAdjoiningSprites(playerX, playerY + 8, g_playerTileIndex + 2);
 	}
 
-	// draw pickups
-	int roomIndex = gameData_currentRoom->roomNumber;
-	const Pickup* pickups = &playerData->gamePickups[roomIndex][0];
-	for (int loop = 0; loop < NUM_PICKUPS_PER_ROOM; loop++)
-	{
-		if ((pickups->state & playerData->playerMask))
-		{
-			const dl_u8 tileIndex = pickUpSprites[pickups->type];
+	drawPickups();
 
-			SMS_addTwoAdjoiningSprites((pickups->x) << 1, pickups->y, tileIndex);
-			SMS_addTwoAdjoiningSprites((pickups->x) << 1, pickups->y + 8, tileIndex + 2);
-		}
-
-		pickups++;
-	}
 
 	// draw doors
     int roomNumber = gameData_currentRoom->roomNumber;

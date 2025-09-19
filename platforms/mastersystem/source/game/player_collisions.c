@@ -17,13 +17,24 @@ void playerKill(PlayerData* playerData);
 dl_u8 playerX;
 dl_u8 playerY;
 
-BOOL objectCollisionTest(dl_u8 x, dl_u8 y, dl_u8 width, dl_u8 height)
+dl_u8 object_x;
+dl_u8 object_y;
+dl_u8 object_width;
+dl_u8 object_height;
+
+BOOL objectCollisionTest(void)
 {
-	return !(x + width <= playerX ||
-			 x >= playerX + PLAYER_COLLISION_WIDTH + 1 ||
-			 y + height <= playerY ||
-			 y >= playerY + PLAYER_COLLISION_HEIGHT);
+	return !(object_x + object_width <= playerX ||
+			 object_x >= playerX + PLAYER_COLLISION_WIDTH + 1 ||
+			 object_y + object_height <= playerY ||
+			 object_y >= playerY + PLAYER_COLLISION_HEIGHT);
 }
+
+#define setParams(x, y, width, height) \
+object_x = x; \
+object_y = y; \
+object_width = width; \
+object_height = height
 
 BOOL dropsManagerCollisionTest(PlayerData* playerData)
 {
@@ -35,10 +46,12 @@ BOOL dropsManagerCollisionTest(PlayerData* playerData)
 		if ((dl_s8)dropRunner->wiggleTimer > 0) // see note about wiggle time. 
 											    // only test collision when it is positive in signed.
 		{
-			if (objectCollisionTest(dropRunner->x, 
+			setParams(dropRunner->x, 
 									GET_HIGH_BYTE(dropRunner->y),
 									DROP_COLLISION_WIDTH,
-									DROP_HEIGHT))
+									DROP_HEIGHT);
+
+			if (objectCollisionTest())
 			{
 				return TRUE;
 			}
@@ -79,7 +92,8 @@ void Player_PerformCollisions(void)
 		if (!(pickUp->state & playerData->playerMask))
 			continue;
 
-		if (objectCollisionTest(pickUp->x + 2, pickUp->y, PICKUP_WIDTH, PICKUP_HEIGHT))
+		setParams(pickUp->x + 2, pickUp->y, PICKUP_WIDTH, PICKUP_HEIGHT);
+		if (objectCollisionTest())
 		{
 			pickUp->state = pickUp->state & ~playerData->playerMask;
 
@@ -131,22 +145,24 @@ void Player_PerformCollisions(void)
 	}
 
 	// collide with ball
-	if (ballData_state == BALL_ACTIVE &&
-		objectCollisionTest(GET_HIGH_BYTE(ballData_x) + 1,
+	setParams(GET_HIGH_BYTE(ballData_x) + 1,
 							GET_HIGH_BYTE(ballData_y),
 							BALL_COLLISION_WIDTH,
-							BALL_SPRITE_ROWS))
+							BALL_SPRITE_ROWS);
+	if (ballData_state == BALL_ACTIVE &&
+		objectCollisionTest())
 	{
 		playerKill(playerData);
 		return;
 	}
 
 	// collide with bird
-	if (birdData_state == BIRD_ACTIVE &&
-		objectCollisionTest(GET_HIGH_BYTE(birdData_x) + 1,
+	setParams(GET_HIGH_BYTE(birdData_x) + 1,
 							GET_HIGH_BYTE(birdData_y),
 							BIRD_COLLISION_WIDTH,
-							BIRD_SPRITE_ROWS))
+							BIRD_SPRITE_ROWS);
+	if (birdData_state == BIRD_ACTIVE &&
+		objectCollisionTest())
 	{
 		playerKill(playerData);
 		return;

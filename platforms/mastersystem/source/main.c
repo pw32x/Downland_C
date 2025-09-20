@@ -486,7 +486,7 @@ void GameRunner_ChangedRoomCallback(const dl_u8 roomNumber, dl_s8 transitionType
 SMS_EMBED_SEGA_ROM_HEADER(9999,0);
 SMS_EMBED_SDSC_HEADER_AUTO_DATE(1,0,"pw","basicsmsproject","A basic SMS example project with devkitSMS");
 
-
+dl_u8 tickTock;
 
 void drawChamber(void)
 {
@@ -497,12 +497,10 @@ void drawChamber(void)
 
 	dl_u16 currentTimer = playerData->roomTimers[playerData->currentRoom->roomNumber];
 
-	drawDrops();
 
-	Ball_Draw();
-	Bird_Draw(currentTimer);
 
 	dl_u8 tileIndex;
+
 
 	// draw player
 	switch (playerData->state)
@@ -547,10 +545,24 @@ void drawChamber(void)
 		SMS_addTwoAdjoiningSprites(playerX, playerY + 8, g_playerTileIndex + 2);
 	}
 
-	drawPickups();
-
 	drawDoors();
 
+	tickTock = !tickTock;
+
+	if (tickTock)
+	{
+		Ball_Draw();
+		Bird_Draw(currentTimer);
+		drawPickups();
+		drawDrops();
+	}
+	else
+	{
+		drawDrops();
+		drawPickups();
+		Bird_Draw(currentTimer);
+		Ball_Draw();
+	}
 
 	drawTileText(gameData_string_timer, TIMER_DRAW_LOCATION);
 	drawTileText(playerData->scoreString, SCORE_DRAW_LOCATION);

@@ -139,9 +139,6 @@ void chamber_draw(dl_u8 roomNumber)
 	convertScoreToString(playerData->score, playerData->scoreString);
 	drawTileText(playerData->scoreString, SCORE_DRAW_LOCATION);
 
-	dl_u16 currentTimer = playerData->roomTimers[playerData->currentRoom->roomNumber];
-	convertTimerToString(currentTimer,
-						 gameData_string_timer);
 	drawTileText(gameData_string_timer, TIMER_DRAW_LOCATION);
 }
 
@@ -709,7 +706,7 @@ void wipe_transition_update(Room* room)
 	// we're done
 	if (gameData_transitionCurrentLine == 32)
 	{
-		Room* transitionRoom = g_rooms[gameData_transitionRoomNumber];
+		const Room* transitionRoom = g_rooms[gameData_transitionRoomNumber];
 		transitionRoom->draw(gameData_transitionRoomNumber);
 
 		Game_EnterRoom(gameData_transitionRoomNumber);

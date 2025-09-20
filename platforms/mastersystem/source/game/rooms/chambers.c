@@ -8,12 +8,11 @@
 #include "../bird.h"
 #include "../player.h"
 #include "resources.h"
+#include "smslib.h"
 
 void updateTimers(dl_u8 roomNumber, dl_u16* roomTimers)
 {
-	dl_u8 loop = NUM_ROOMS;
-
-	while (loop--)
+	for (dl_u8 loop = 0; loop < NUM_ROOMS; loop++)
 	{
 		if (loop == roomNumber)
 		{
@@ -28,6 +27,26 @@ void updateTimers(dl_u8 roomNumber, dl_u16* roomTimers)
 
 		roomTimers++;
 	}
+}
+
+void updateTimerText(void)
+{
+#define ZEROS		 4
+#define TENS		 3
+#define HUNDREDS	 2
+#define THOUSANDS	 1
+
+	dl_u16 currentTimer = gameData_currentPlayerData->roomTimers[gameData_currentPlayerData->currentRoom->roomNumber];
+	if (!currentTimer)
+	{
+		gameData_string_timer[ZEROS] = 0;
+		return;
+	}
+
+	if (gameData_string_timer[ZEROS] != 0) { gameData_string_timer[ZEROS]--; return; } else { gameData_string_timer[ZEROS] = 9; }
+	if (gameData_string_timer[TENS] != 0) { gameData_string_timer[TENS]--; return; } else { gameData_string_timer[TENS] = 9; }
+	if (gameData_string_timer[HUNDREDS] != 0) { gameData_string_timer[HUNDREDS]--; return; } else { gameData_string_timer[HUNDREDS] = 9; }
+	if (gameData_string_timer[THOUSANDS] != 0) { gameData_string_timer[THOUSANDS]--; return; } else { gameData_string_timer[THOUSANDS] = 9; }
 }
 
 void chamber_draw(dl_u8 roomNumber);
@@ -55,6 +74,8 @@ void chamber_init(const Room* room)
 	gameData_string_roomNumber[0] = roomNumber;
 }
 
+
+
 void chamber_update(Room* room)
 {
 	PlayerData* playerData = gameData_currentPlayerData;
@@ -66,6 +87,7 @@ void chamber_update(Room* room)
 	if (playerData->state != PLAYER_STATE_REGENERATION)
 	{
 		updateTimers(playerData->currentRoom->roomNumber, playerData->roomTimers);
+		updateTimerText();	
 	}
 
 	currentTimer = playerData->roomTimers[playerData->currentRoom->roomNumber];
@@ -121,6 +143,7 @@ void chamber_update(Room* room)
 				{
 					currentTimer = ROOM_TIMER_HALF_TIME;
 					playerData->roomTimers[playerData->currentRoom->roomNumber] = currentTimer;
+					convertTimerToString(currentTimer, gameData_string_timer);
 				}
 
 				Player_StartRegen(playerData);
@@ -148,7 +171,6 @@ void chamber_update(Room* room)
 	// pick up item or die
 	Player_PerformCollisions();
 
-	//convertTimerToString(currentTimer, gameData_string_timer);
 }
 
 // All the chambers are the same, but this makes it easier

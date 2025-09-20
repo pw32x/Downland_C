@@ -10,10 +10,11 @@ void convertTimerToString(dl_u16 timerValue, dl_u8* timerString)
 	dl_u8* timerStringRunner = timerString;
 
     dl_u8 i = 5;
+	dl_u8 digit = 0;
 
-    do
+    while (i--)
 	{
-        dl_u8 digit = 0;
+        digit = 0;
         while (timerValue >= *divisorsRunner) 
 		{
             timerValue -= *divisorsRunner;
@@ -24,9 +25,8 @@ void convertTimerToString(dl_u16 timerValue, dl_u8* timerString)
 
         *timerStringRunner = digit;
 		timerStringRunner++;
-    } while (--i);
+    };
 
-	/*
     // strip leading zeros -> spaces
     for (i = 0; i < 4; i++) 
 	{
@@ -35,7 +35,6 @@ void convertTimerToString(dl_u16 timerValue, dl_u8* timerString)
         else
             break;
     }
-	*/
 }
 
 void convertScoreToString(dl_u32 score, dl_u8* scoreString)

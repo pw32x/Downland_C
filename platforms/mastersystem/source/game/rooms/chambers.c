@@ -10,23 +10,21 @@
 #include "resources.h"
 #include "smslib.h"
 
+
 void updateTimers(dl_u8 roomNumber, dl_u16* roomTimers)
 {
-	for (dl_u8 loop = 0; loop < NUM_ROOMS; loop++)
-	{
-		if (loop == roomNumber)
-		{
-			if (*roomTimers)
-				(*roomTimers)--;
-		}
-		else 
-		{
-			if (*roomTimers < ROOM_TIMER_DEFAULT)
-				(*roomTimers)++;
-		}
+#define ROOM_TIMER_MAX_MASK 4095
 
-		roomTimers++;
-	}
+	if (roomNumber == 0) { if (roomTimers[0]) roomTimers[0]--; } else { if (roomTimers[0] < ROOM_TIMER_DEFAULT) roomTimers[0]++; }
+	if (roomNumber == 1) { if (roomTimers[1]) roomTimers[1]--; } else { if (roomTimers[1] < ROOM_TIMER_DEFAULT) roomTimers[1]++; }
+	if (roomNumber == 2) { if (roomTimers[2]) roomTimers[2]--; } else { if (roomTimers[2] < ROOM_TIMER_DEFAULT) roomTimers[2]++; }
+	if (roomNumber == 3) { if (roomTimers[3]) roomTimers[3]--; } else { if (roomTimers[3] < ROOM_TIMER_DEFAULT) roomTimers[3]++; }
+	if (roomNumber == 4) { if (roomTimers[4]) roomTimers[4]--; } else { if (roomTimers[4] < ROOM_TIMER_DEFAULT) roomTimers[4]++; }
+	if (roomNumber == 5) { if (roomTimers[5]) roomTimers[5]--; } else { if (roomTimers[5] < ROOM_TIMER_DEFAULT) roomTimers[5]++; }
+	if (roomNumber == 6) { if (roomTimers[6]) roomTimers[6]--; } else { if (roomTimers[6] < ROOM_TIMER_DEFAULT) roomTimers[6]++; }
+	if (roomNumber == 7) { if (roomTimers[7]) roomTimers[7]--; } else { if (roomTimers[7] < ROOM_TIMER_DEFAULT) roomTimers[7]++; }
+	if (roomNumber == 8) { if (roomTimers[8]) roomTimers[8]--; } else { if (roomTimers[8] < ROOM_TIMER_DEFAULT) roomTimers[8]++; }
+	if (roomNumber == 9) { if (roomTimers[9]) roomTimers[9]--; } else { if (roomTimers[9] < ROOM_TIMER_DEFAULT) roomTimers[9]++; }
 }
 
 void updateTimerText(void)

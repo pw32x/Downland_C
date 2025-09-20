@@ -1,16 +1,15 @@
 #include "dl_rand.h"
+#include "smslib.h"
 
-dl_u32 rng_state = 1;
+static dl_u16 rng16 = 0xACE1;  // seed
 
 void dl_srand(dl_u32 seed)
 {
-    rng_state = seed;
+    rng16 = seed;
 }
 
 dl_u8 dl_rand(void)
 {
-    rng_state ^= rng_state << 13;
-    rng_state ^= rng_state >> 17;
-    rng_state ^= rng_state << 5;
-    return rng_state;
+    rng16 = (rng16 * 25173u) + 13849u;  // proven full-period constants
+    return (dl_u8)(rng16 >> 8);         // use the high byte (better distributed)
 }

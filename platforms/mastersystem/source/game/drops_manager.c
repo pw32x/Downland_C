@@ -3,6 +3,7 @@
 #include "base_defines.h"
 #include "dl_rand.h"
 #include "game_data.h"
+#include "smslib.h"
 
 #define DROP_FALL_SPEED 0x200
 #define DROP_WIGGLE_START_TIME 0xa8 // wiggle timer starts at 168 which signed is -40. The value is decremented
@@ -82,18 +83,30 @@ void initDrop(Drop* drop,
 {
 	dl_u8 value;
 	dl_u8 pixelMask;
-	dl_u8 spriteIndex;
 	dl_u8 dropX;
 
 	// randomly pick a drop spawn area
 	dl_u8 randValue = dl_rand();
 
-	dl_u8 dropSpawnAreaIndex = randValue % dropData_dropSpawnPositions->spawnAreasCount;
+	dl_u8 dropSpawnAreaIndex = randValue;
+	dl_u8 spawnAreasCount = dropData_dropSpawnPositions->spawnAreasCount;
+	while (dropSpawnAreaIndex >= spawnAreasCount)
+    {
+        dropSpawnAreaIndex -= spawnAreasCount;
+    }
+
 	const DropSpawnArea* dropSpawnArea = &dropData_dropSpawnPositions->dropSpawnAreas[dropSpawnAreaIndex];
 
 	// randomly pick a position in the drop spawn area
-	dl_u8 dropSpawnPointX = randValue % (dropSpawnArea->dropSpawnPointsCount + 1); // spawn points count is inclusive in the original
-	dropSpawnPointX *= 8; // spacing between drops. 8 pixels, not 8 bytes.
+	dl_u8 dropSpawnPointX = randValue;
+
+	dl_u8 dropSpawnsPointCount = (dropSpawnArea->dropSpawnPointsCount + 1); // spawn points count is inclusive in the original
+	while (dropSpawnPointX >= dropSpawnsPointCount)
+    {
+        dropSpawnPointX -= dropSpawnsPointCount;
+    }
+
+	dropSpawnPointX <<= 3; // spacing between drops. 8 pixels, not 8 bytes.
 
 
 	// init drop
@@ -123,9 +136,7 @@ void initDrop(Drop* drop,
 		dropX--;
 	}
 
-	spriteIndex = dropX & 3; // sprite depends on which column of four pixels it lands on
-
-	drop->collisionMask = drop_CollisionMasks[spriteIndex];
+	drop->collisionMask = drop_CollisionMasks[dropX & 3];
 	drop->x = dropX;
 
 	wiggleDrop(drop);

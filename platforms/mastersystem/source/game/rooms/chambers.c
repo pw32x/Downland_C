@@ -47,6 +47,11 @@ void chamber_init(const Room* room)
 	Player_RoomInit(playerData);
 
 	convertScoreToString(playerData->score, playerData->scoreString);
+
+	dl_u16 currentTimer = playerData->roomTimers[playerData->currentRoom->roomNumber];
+	convertTimerToString(currentTimer, gameData_string_timer);
+
+
 	gameData_string_roomNumber[0] = roomNumber;
 }
 
@@ -143,7 +148,7 @@ void chamber_update(Room* room)
 	// pick up item or die
 	Player_PerformCollisions();
 
-	convertTimerToString(currentTimer, gameData_string_timer);
+	//convertTimerToString(currentTimer, gameData_string_timer);
 }
 
 // All the chambers are the same, but this makes it easier

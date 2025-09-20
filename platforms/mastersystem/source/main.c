@@ -224,7 +224,7 @@ dl_u8 pickupy;
 const Pickup* pickups;
 dl_u8 playerMask;
 
-void drawPickups()
+void drawPickups(void)
 {
 	// draw pickups
 	int roomIndex = gameData_currentRoom->roomNumber;
@@ -245,6 +245,34 @@ void drawPickups()
 		}
 
 		pickups++;
+	}
+}
+
+void drawDoors(void)
+{
+	// draw doors
+    dl_u8 roomNumber = gameData_currentRoom->roomNumber;
+	const DoorInfoData* doorInfoData = &res_roomResources[roomNumber].doorInfoData;
+	const DoorInfo* doorInfoRunner = doorInfoData->doorInfos;
+
+	const dl_u8* doorStateData = gameData_currentPlayerData->doorStateData;
+	dl_u8 playerMask = gameData_currentPlayerData->playerMask;
+
+	for (dl_u8 loop = 0; loop < doorInfoData->drawInfosCount; loop++)
+	{
+        if ((doorStateData[doorInfoRunner->globalDoorIndex] & playerMask) &&
+			doorInfoRunner->x != 0xff)
+		{
+			dl_u8 xPosition = (dl_u8)(doorInfoRunner->x << 1);
+
+			// adjust the door position, as per the original game.
+			xPosition += (xPosition > 80 ? 14 : -8);
+
+			SMS_addTwoAdjoiningSprites(xPosition, doorInfoRunner->y, 12);
+			SMS_addTwoAdjoiningSprites(xPosition, doorInfoRunner->y + 8, 14);
+		}
+
+		doorInfoRunner++;
 	}
 }
 
@@ -431,7 +459,7 @@ void main(void)
 		//extern unsigned char SpriteNextFree;
 		//SMS_debugPrintf("sprites: %d\n", SpriteNextFree);
 
-		SMS_copySpritestoSAT();
+		UNSAFE_SMS_copySpritestoSAT();
 	}
 }
 
@@ -521,35 +549,8 @@ void drawChamber(void)
 
 	drawPickups();
 
+	drawDoors();
 
-	// draw doors
-    int roomNumber = gameData_currentRoom->roomNumber;
-	const DoorInfoData* doorInfoData = &res_roomResources[roomNumber].doorInfoData;
-	const DoorInfo* doorInfoRunner = doorInfoData->doorInfos;
-
-	for (dl_u8 loop = 0; loop < doorInfoData->drawInfosCount; loop++)
-	{
-        if (playerData->doorStateData[doorInfoRunner->globalDoorIndex] & playerData->playerMask &&
-			doorInfoRunner->x != 0xff)
-		{
-			int xPosition = doorInfoRunner->x;
-			// adjust the door position, as per the original game.
-			if (xPosition > 40) 
-				xPosition += 7;
-			else
-				xPosition -= 4;
-
-//			drawSprite(xPosition << 1,
-//					   doorInfoRunner->y,
-//					   0,
-//					   &doorSprite);
-
-			SMS_addTwoAdjoiningSprites(xPosition << 1, doorInfoRunner->y, 12);
-			SMS_addTwoAdjoiningSprites(xPosition << 1, doorInfoRunner->y + 8, 14);
-		}
-
-		doorInfoRunner++;
-	}
 
 	drawTileText(gameData_string_timer, TIMER_DRAW_LOCATION);
 	drawTileText(playerData->scoreString, SCORE_DRAW_LOCATION);

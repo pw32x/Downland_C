@@ -367,7 +367,7 @@ void GameRunner_ChangedRoomCallback(const dl_u8 roomNumber, dl_s8 transitionType
 
 // unsigned int dst, const void *src, unsigned int size
 // SMS_VRAMmemcpy((tilefrom)*32,(src),(size))
-void load16x8SpriteTiles(const dl_u8* src, dl_u16 tilefrom, dl_u16 size, dl_u8 tileWidth)
+void load16x8SpriteTiles(const dl_u8* src, dl_u16 tilefrom, dl_u8 tileWidth)
 {
 	//SMS_loadTiles(src, tilefrom, size); // 4 tiles x 32 bytes
 
@@ -380,10 +380,8 @@ void load16x8SpriteTiles(const dl_u8* src, dl_u16 tilefrom, dl_u16 size, dl_u8 t
 	}
 }
 
-void load16x16SpriteTiles(const dl_u8* src, dl_u16 tilefrom, dl_u16 size, dl_u8 frames)
+void load16x16SpriteTiles(const dl_u8* src, dl_u16 tilefrom, dl_u8 frames)
 {
-	//SMS_loadTiles(src, tilefrom, size); // 4 tiles x 32 bytes
-
 	for (dl_u8 loop = 0; loop < frames; loop++)
 	{
 		SMS_loadTiles(src, tilefrom, 32); // 4 tiles x 32 bytes
@@ -396,7 +394,7 @@ void load16x16SpriteTiles(const dl_u8* src, dl_u16 tilefrom, dl_u16 size, dl_u8 
 	}
 }
 
-void load24x16SpriteTiles(const dl_u8* src, dl_u16 tilefrom, dl_u16 size, dl_u8 frames)
+void load24x16SpriteTiles(const dl_u8* src, dl_u16 tilefrom, dl_u8 frames)
 {
 	//SMS_loadTiles(src, tilefrom, size); // 4 tiles x 32 bytes
 
@@ -433,20 +431,20 @@ void main(void)
 
 	// load tiles for background
 	SMS_mapROMBank(VDP_ASSETS_BANK);
-	load16x8SpriteTiles(ball4bpp, 256, 128, 4); // 4 tiles x 32 bytes
-	load16x8SpriteTiles(bird4bpp, 256 + 8, 128, 4); // 4 tiles x 32 bytes
-	load16x16SpriteTiles(diamond4bpp, 256 + 16, 128, 1);  // 4 tiles x 32 bytes
-	load16x16SpriteTiles(door4bpp, 256 + 20, 128, 1); // 4 tiles x 32 bytes
+	load16x8SpriteTiles(ball4bpp, 256, 4); // 4 tiles x 32 bytes
+	load16x8SpriteTiles(bird4bpp, 256 + 8, 124); // 4 tiles x 32 bytes
+	load16x16SpriteTiles(diamond4bpp, 256 + 16, 1);  // 4 tiles x 32 bytes
+	load16x16SpriteTiles(door4bpp, 256 + 20, 1); // 4 tiles x 32 bytes
 	SMS_loadTiles(drop4bpp, 256 + 24, 64); // 2 tiles x 32 bytes
-	load16x16SpriteTiles(key4bpp, 256 + 26, 128, 1); // 4 tiles x 32 bytes
-	load16x16SpriteTiles(moneyBag4bpp, 256 + 30, 128, 1); // 4 tiles x 32 bytes
-	load16x16SpriteTiles(player4bpp, 256 + 34, 1280, 10); // 40 tiles x 32 bytes
-	load24x16SpriteTiles(playerSplat4bpp, 256 + 74, 384, 2); // 12 tiles x 32 bytes
+	load16x16SpriteTiles(key4bpp, 256 + 26, 1); // 4 tiles x 32 bytes
+	load16x16SpriteTiles(moneyBag4bpp, 256 + 30, 1); // 4 tiles x 32 bytes
+	load16x16SpriteTiles(player4bpp, 256 + 34, 10); // 40 tiles x 32 bytes
+	load24x16SpriteTiles(playerSplat4bpp, 256 + 74, 2); // 12 tiles x 32 bytes
 
-	load16x8SpriteTiles(playerLives4bpp, 256 + 86, 640, 20); // 20 tiles x 32 bytes
-	load16x16SpriteTiles(playerRegen4bpp, 256 + 126, 1024, 8); // 32 tiles x 32 bytes
-	load16x8SpriteTiles(cursor4bpp, 256 + 158, 32, 1); // 1 tiles x 32 bytes
-	load16x8SpriteTiles(playerLivesRegen4bpp, 256 + 160, 512, 16); // 16 tiles x 32 bytes
+	load16x8SpriteTiles(playerLives4bpp, 256 + 86, 20); // 20 tiles x 32 bytes
+	load16x16SpriteTiles(playerRegen4bpp, 256 + 126, 8); // 32 tiles x 32 bytes
+	load16x8SpriteTiles(cursor4bpp, 256 + 158, 1); // 1 tiles x 32 bytes
+	load16x8SpriteTiles(playerLivesRegen4bpp, 256 + 160, 16); // 16 tiles x 32 bytes
 	
 	g_regenSpriteIndex = 0;
 

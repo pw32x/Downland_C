@@ -80,54 +80,62 @@ void Player_PerformCollisions(void)
 	if (playerData->isDead)
 		return;
 
-	// collide with pickups
-	roomNumber = playerData->currentRoom->roomNumber;
 
-	for (loop = 0; loop < NUM_PICKUPS_PER_ROOM; loop++)
+
+	static dl_u8 tickTock = 0;
+	tickTock = !tickTock;
+
+	if (tickTock)
 	{
-		pickUp = &playerData->gamePickups[roomNumber][loop];
+		// collide with pickups
+		roomNumber = playerData->currentRoom->roomNumber;
 
-		// is pickup active? Pickup state contain state for
-		// both players.
-		if (!(pickUp->state & playerData->playerMask))
-			continue;
-
-		setParams(pickUp->x + 2, pickUp->y, PICKUP_WIDTH, PICKUP_HEIGHT);
-		if (objectCollisionTest())
+		for (loop = 0; loop < NUM_PICKUPS_PER_ROOM; loop++)
 		{
-			pickUp->state = pickUp->state & ~playerData->playerMask;
+			pickUp = &playerData->gamePickups[roomNumber][loop];
 
-			Sound_Play(SOUND_PICKUP, FALSE);
+			// is pickup active? Pickup state contain state for
+			// both players.
+			if (!(pickUp->state & playerData->playerMask))
+				continue;
 
-			switch (pickUp->type)
+			setParams(pickUp->x + 2, pickUp->y, PICKUP_WIDTH, PICKUP_HEIGHT);
+			if (objectCollisionTest())
 			{
-				case PICKUP_TYPE_KEY:
+				pickUp->state = pickUp->state & ~playerData->playerMask;
+
+				Sound_Play(SOUND_PICKUP, FALSE);
+
+				switch (pickUp->type)
 				{
-					playerData->score += PICKUP_KEY_POINTS;
+					case PICKUP_TYPE_KEY:
+					{
+						playerData->score += PICKUP_KEY_POINTS;
 
-					// activate a door
-					// draw a door if it's in the same room
+						// activate a door
+						// draw a door if it's in the same room
 
-					doorIndex = pickUp->doorUnlockIndex;
+						doorIndex = pickUp->doorUnlockIndex;
 
-					playerData->doorStateData[doorIndex] |= playerData->playerMask;
+						playerData->doorStateData[doorIndex] |= playerData->playerMask;
 
-					break;
+						break;
+					}
+					case PICKUP_TYPE_DIAMOND:
+					{
+						playerData->score += PICKUP_DIAMOND_POINTS;
+						break;
+					}
+					case PICKUP_TYPE_MONEYBAG:
+					{
+						playerData->score += PICKUP_MONEYBAG_POINTS;
+						break;
+					}
 				}
-				case PICKUP_TYPE_DIAMOND:
-				{
-					playerData->score += PICKUP_DIAMOND_POINTS;
-					break;
-				}
-				case PICKUP_TYPE_MONEYBAG:
-				{
-					playerData->score += PICKUP_MONEYBAG_POINTS;
-					break;
-				}
+
+				// add a random value between 0 and 0x7f, as per the original game
+				playerData->score += dl_rand() % 0x7f;
 			}
-
-			// add a random value between 0 and 0x7f, as per the original game
-			playerData->score += dl_rand() % 0x7f;
 		}
 	}
 
@@ -137,34 +145,40 @@ void Player_PerformCollisions(void)
 		return;
 	}
 
-	// collide with drops
-	if (dropsManagerCollisionTest(playerData))
+	if (!tickTock)
 	{
-		playerKill(playerData);
-		return;
+		// collide with drops
+		if (dropsManagerCollisionTest(playerData))
+		{
+			playerKill(playerData);
+			return;
+		}
 	}
 
-	// collide with ball
-	setParams(GET_HIGH_BYTE(ballData_x) + 1,
-							GET_HIGH_BYTE(ballData_y),
-							BALL_COLLISION_WIDTH,
-							BALL_SPRITE_ROWS);
-	if (ballData_state == BALL_ACTIVE &&
-		objectCollisionTest())
+	if (tickTock)
 	{
-		playerKill(playerData);
-		return;
-	}
+		// collide with ball
+		setParams(GET_HIGH_BYTE(ballData_x) + 1,
+								GET_HIGH_BYTE(ballData_y),
+								BALL_COLLISION_WIDTH,
+								BALL_SPRITE_ROWS);
+		if (ballData_state == BALL_ACTIVE &&
+			objectCollisionTest())
+		{
+			playerKill(playerData);
+			return;
+		}
 
-	// collide with bird
-	setParams(GET_HIGH_BYTE(birdData_x) + 1,
-							GET_HIGH_BYTE(birdData_y),
-							BIRD_COLLISION_WIDTH,
-							BIRD_SPRITE_ROWS);
-	if (birdData_state == BIRD_ACTIVE &&
-		objectCollisionTest())
-	{
-		playerKill(playerData);
-		return;
+		// collide with bird
+		setParams(GET_HIGH_BYTE(birdData_x) + 1,
+								GET_HIGH_BYTE(birdData_y),
+								BIRD_COLLISION_WIDTH,
+								BIRD_SPRITE_ROWS);
+		if (birdData_state == BIRD_ACTIVE &&
+			objectCollisionTest())
+		{
+			playerKill(playerData);
+			return;
+		}
 	}
 }

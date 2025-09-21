@@ -153,16 +153,26 @@ void DropsManager_Update(dl_u8 gameCompletionCount)
 
 	// only process a max five drops per frame. 
 	// alternating which five.
+
+	dl_u8 createdDrop = FALSE;
+
 	dl_u8 count = 5;
 	while (count--)
 	{
 		if (!dropsRunner->wiggleTimer) // we've hit an inactive drop, we've hit the end of
 			return;					   // the active drops.
 
-		if (dropsRunner->wiggleTimer == 1)
+		if (dropsRunner->wiggleTimer == 1) // drop initialization
 		{
-			initDrop(dropsRunner, 
-					 gameCompletionCount);
+			if (!createdDrop)
+			{
+				initDrop(dropsRunner, gameCompletionCount);
+				createdDrop = TRUE;
+			}
+			else
+			{
+				dropsRunner->speedY = 0;
+			}
 		}
 		else if ((dl_s8)dropsRunner->wiggleTimer < 0)
 		{
@@ -180,8 +190,10 @@ void DropsManager_Update(dl_u8 gameCompletionCount)
 			if ((gameData_cleanBackground[cleanBackgroundLocation + 0xc0] & collisionMask) || // 6 pixels down
 				(gameData_cleanBackground[cleanBackgroundLocation + 0xe0] & collisionMask))   // 7 pixels down
 			{
-				initDrop(dropsRunner, 
-						 gameCompletionCount);
+				//initDrop(dropsRunner, 
+				//		 gameCompletionCount);
+				dropsRunner->wiggleTimer = 1;
+				dropsRunner->speedY = 0;
 			}
 		}
 

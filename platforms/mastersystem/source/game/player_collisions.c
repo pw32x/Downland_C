@@ -43,7 +43,7 @@ BOOL dropsManagerCollisionTest(PlayerData* playerData)
 
 	for (loop = 0; loop < dropData_activeDropsCount; loop++)
 	{
-		if ((dl_s8)dropRunner->wiggleTimer > 0) // see note about wiggle time. 
+		if ((dl_s8)dropRunner->wiggleTimer > 1) // see note about wiggle time. 
 											    // only test collision when it is positive in signed.
 		{
 			setParams(dropRunner->x, 

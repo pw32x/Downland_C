@@ -30,7 +30,7 @@
 #define TITLE_SCREEN_BANK 13
 
 dl_u8 g_regenSpriteIndex;
-#define REGEN_NUM_FRAMES 5
+#define REGEN_NUM_FRAMES 4
 
 extern const dl_u8 getReadyScreen_cleanBackground[6144];
 
@@ -103,7 +103,7 @@ extern unsigned char const player4bpp[1280]; // 40 tiles x 32 bytes
 extern unsigned char const playerSplat4bpp[384];
 extern unsigned char const playerLives4bpp[640]; // 20 tiles x 32 bytes
 extern unsigned char const playerRegen4bpp[1280]; // 40 tiles x 32 bytes
-extern unsigned char const playerLivesRegen4bpp[320]; // 10 tiles x 32 bytes
+extern unsigned char const playerRegen4bpp[1024]; // 40 tiles x 32 bytes
 extern unsigned char const cursor4bpp[32]; // 1 tiles x 32 bytes
 
 dl_u16 tileText[22];
@@ -131,8 +131,14 @@ void chamber_draw(dl_u8 roomNumber)
 	gameData_cleanBackground = (dl_u8*)backgroundData->cleanBackground;
 	SMS_loadTileMap(0, 0, (dl_u8*)backgroundData->tileMap, 32 * 24 * 2);
 
-	drawTileText(res_string_pl1, PLAYERLIVES_TEXT_DRAW_LOCATION);
+	if (!gameData_currentPlayerData->playerNumber)
+		drawTileText(res_string_pl1, PLAYERLIVES_TEXT_DRAW_LOCATION);
+	else
+		drawTileText(res_string_pl2, PLAYERLIVES_TEXT_DRAW_LOCATION);
+
 	drawTileText(res_string_chamber, CHAMBER_TEXT_DRAW_LOCATION);
+
+	gameData_string_roomNumber[0] = roomNumber;
 	drawTileText(gameData_string_roomNumber, CHAMBER_NUMBER_TEXT_DRAW_LOCATION);
 
 	PlayerData* playerData = gameData_playerData;
@@ -192,6 +198,12 @@ void titleScreen_draw(dl_u8 roomNumber)
 	drawTileText(gameData_string_highScore, TITLESCREEN_HIGHSCORE_LOCATION);
 }
 
+void updateScore(void)
+{
+	convertScoreToString(gameData_currentPlayerData->score, gameData_currentPlayerData->scoreString);
+	drawTileText(gameData_currentPlayerData->scoreString, SCORE_DRAW_LOCATION);
+}
+
 // moving the dropsDrawRunner to global memory makes drawDrops twice as fast
 const Drop* dropsDrawRunner;
 
@@ -208,14 +220,14 @@ void drawDrops(void)
         {
 			SMS_addSprite((dropsDrawRunner->x << 1), 
 						  (dropsDrawRunner->y >> 8), 
-						  16);
+						  24);
         }
 
         dropsDrawRunner++;
     }
 }
 
-const dl_u8 pickUpSprites[] = { 8, 22, 18 };
+const dl_u8 pickUpSprites[] = { 16, 30, 26 };
 dl_u8 pickupx;
 dl_u8 pickupy;
 const Pickup* pickups;
@@ -238,7 +250,6 @@ void drawPickups(void)
 			pickupy = pickups->y;
 
 			SMS_addTwoAdjoiningSprites(pickupx, pickupy, tileIndex);
-			SMS_addTwoAdjoiningSprites(pickupx, pickupy + 8, tileIndex + 2);
 		}
 
 		pickups++;
@@ -265,8 +276,7 @@ void drawDoors(void)
 			// adjust the door position, as per the original game.
 			xPosition += (xPosition > 80 ? 14 : -8);
 
-			SMS_addTwoAdjoiningSprites(xPosition, doorInfoRunner->y, 12);
-			SMS_addTwoAdjoiningSprites(xPosition, doorInfoRunner->y + 8, 14);
+			SMS_addTwoAdjoiningSprites(xPosition, doorInfoRunner->y, 20);
 		}
 
 		doorInfoRunner++;
@@ -280,7 +290,7 @@ void drawUIPlayerLives(const PlayerData* playerData)
 	dl_u8 x = PLAYERLIVES_ICON_X << 1;
 	dl_u8 y = PLAYERLIVES_ICON_Y;
 
-	dl_u8 tileIndex = 80 + (playerData->currentSpriteNumber << 1);
+	dl_u8 tileIndex = 86 + (playerData->currentSpriteNumber << 2);
 
 	dl_u8 count = playerData->lives;
 	while (count--)
@@ -294,11 +304,11 @@ void drawUIPlayerLives(const PlayerData* playerData)
 	{
 		if (playerData->facingDirection)
 		{
-			tileIndex = 140 + (g_regenSpriteIndex << 1);
+			tileIndex = 160 + (g_regenSpriteIndex << 2);
 		}
 		else
 		{
-			tileIndex = 140 + ((g_regenSpriteIndex + REGEN_NUM_FRAMES) << 1);
+			tileIndex = 160 + ((g_regenSpriteIndex + REGEN_NUM_FRAMES) << 2);
 		}
 
 		SMS_addTwoAdjoiningSprites(x, y, tileIndex);
@@ -355,11 +365,62 @@ void updateControls(dl_u8 controllerIndex)
 
 void GameRunner_ChangedRoomCallback(const dl_u8 roomNumber, dl_s8 transitionType);
 
+// unsigned int dst, const void *src, unsigned int size
+// SMS_VRAMmemcpy((tilefrom)*32,(src),(size))
+void load16x8SpriteTiles(const dl_u8* src, dl_u16 tilefrom, dl_u16 size, dl_u8 tileWidth)
+{
+	//SMS_loadTiles(src, tilefrom, size); // 4 tiles x 32 bytes
+
+	for (dl_u8 loop = 0; loop < tileWidth; loop++)
+	{
+		SMS_loadTiles(src, tilefrom, 32); // 4 tiles x 32 bytes
+
+		src += 32;
+		tilefrom += 2;
+	}
+}
+
+void load16x16SpriteTiles(const dl_u8* src, dl_u16 tilefrom, dl_u16 size, dl_u8 frames)
+{
+	//SMS_loadTiles(src, tilefrom, size); // 4 tiles x 32 bytes
+
+	for (dl_u8 loop = 0; loop < frames; loop++)
+	{
+		SMS_loadTiles(src, tilefrom, 32); // 4 tiles x 32 bytes
+		SMS_loadTiles(src + 64, tilefrom + 1, 32); // 4 tiles x 32 bytes
+		SMS_loadTiles(src + 32, tilefrom + 2, 32); // 4 tiles x 32 bytes
+		SMS_loadTiles(src + 96, tilefrom + 3, 32); // 4 tiles x 32 bytes
+
+		src += (32 * 4);
+		tilefrom += 4;
+	}
+}
+
+void load24x16SpriteTiles(const dl_u8* src, dl_u16 tilefrom, dl_u16 size, dl_u8 frames)
+{
+	//SMS_loadTiles(src, tilefrom, size); // 4 tiles x 32 bytes
+
+	for (dl_u8 loop = 0; loop < frames; loop++)
+	{
+		SMS_loadTiles(src, tilefrom, 32); // 4 tiles x 32 bytes
+		SMS_loadTiles(src + 96, tilefrom + 1, 32); // 4 tiles x 32 bytes
+
+		SMS_loadTiles(src + 32, tilefrom + 2, 32); // 4 tiles x 32 bytes
+		SMS_loadTiles(src + 128, tilefrom + 3, 32); // 4 tiles x 32 bytes
+
+		SMS_loadTiles(src + 64, tilefrom + 4, 32); // 4 tiles x 32 bytes
+		SMS_loadTiles(src + 160, tilefrom + 5, 32); // 4 tiles x 32 bytes
+
+		src += (32 * 6);
+		tilefrom += 6;
+	}
+}
+
 void main(void)
 {
 	/* Clear VRAM */
 	SMS_VRAMmemsetW(0, 0x0000, 16384);
-	//SMS_setSpriteMode(SPRITEMODE_TALL);
+	SMS_setSpriteMode(SPRITEMODE_TALL);
 
 	/* Turn on the display */
 	SMS_displayOn();
@@ -372,29 +433,22 @@ void main(void)
 
 	// load tiles for background
 	SMS_mapROMBank(VDP_ASSETS_BANK);
-	SMS_loadTiles(ball4bpp, 256, 128); // 4 tiles x 32 bytes
-	SMS_loadTiles(bird4bpp, 256 + 4, 128); // 4 tiles x 32 bytes
-	SMS_loadTiles(diamond4bpp, 256 + 8, 128);  // 4 tiles x 32 bytes
-	SMS_loadTiles(door4bpp, 256 + 12, 128); // 4 tiles x 32 bytes
-	SMS_loadTiles(drop4bpp, 256 + 16, 64); // 2 tiles x 32 bytes
-	SMS_loadTiles(key4bpp, 256 + 18, 128); // 4 tiles x 32 bytes
-	SMS_loadTiles(moneyBag4bpp, 256 + 22, 128); // 4 tiles x 32 bytes
-	SMS_loadTiles(player4bpp, 256 + 28, 1280); // 40 tiles x 32 bytes
-	SMS_loadTiles(playerSplat4bpp, 256 + 68, 384); // 12 tiles x 32 bytes
-	SMS_loadTiles(playerLives4bpp, 256 + 80, 640); // 20 tiles x 32 bytes
-	SMS_loadTiles(playerRegen4bpp, 256 + 100, 1280); // 40 tiles x 32 bytes
-	SMS_loadTiles(playerLivesRegen4bpp, 256 + 140, 640); // 20 tiles x 32 bytes
-	SMS_loadTiles(cursor4bpp, 256 + 160, 32); // 1 tiles x 32 bytes
+	load16x8SpriteTiles(ball4bpp, 256, 128, 4); // 4 tiles x 32 bytes
+	load16x8SpriteTiles(bird4bpp, 256 + 8, 128, 4); // 4 tiles x 32 bytes
+	load16x16SpriteTiles(diamond4bpp, 256 + 16, 128, 1);  // 4 tiles x 32 bytes
+	load16x16SpriteTiles(door4bpp, 256 + 20, 128, 1); // 4 tiles x 32 bytes
+	SMS_loadTiles(drop4bpp, 256 + 24, 64); // 2 tiles x 32 bytes
+	load16x16SpriteTiles(key4bpp, 256 + 26, 128, 1); // 4 tiles x 32 bytes
+	load16x16SpriteTiles(moneyBag4bpp, 256 + 30, 128, 1); // 4 tiles x 32 bytes
+	load16x16SpriteTiles(player4bpp, 256 + 34, 1280, 10); // 40 tiles x 32 bytes
+	load24x16SpriteTiles(playerSplat4bpp, 256 + 74, 384, 2); // 12 tiles x 32 bytes
+
+	load16x8SpriteTiles(playerLives4bpp, 256 + 86, 640, 20); // 20 tiles x 32 bytes
+	load16x16SpriteTiles(playerRegen4bpp, 256 + 126, 1024, 8); // 32 tiles x 32 bytes
+	load16x8SpriteTiles(cursor4bpp, 256 + 158, 32, 1); // 1 tiles x 32 bytes
+	load16x8SpriteTiles(playerLivesRegen4bpp, 256 + 160, 512, 16); // 16 tiles x 32 bytes
 	
-
 	g_regenSpriteIndex = 0;
-
-
-
-
-	//g_pickUpSprites[0] = &diamondSprite;
-	//g_pickUpSprites[1] = &moneyBagSprite;
-	//g_pickUpSprites[2] = &keySprite
 
 	SMS_loadTiles(tileSet4bpp, 0, 6240);
 	SMS_loadTiles(characterFont4bpp, 195, 1248);
@@ -504,10 +558,9 @@ void drawChamber(void)
 	{
 	case PLAYER_STATE_SPLAT: 
 
-		tileIndex = 68 + (playerData->splatFrameNumber * 6);
+		tileIndex = 74 + (playerData->splatFrameNumber * 6);
 
 		SMS_addThreeAdjoiningSprites(playerX, playerY + 7, tileIndex);
-		SMS_addThreeAdjoiningSprites(playerX, playerY + 15, tileIndex + 3);
 
 		break;
 
@@ -522,24 +575,21 @@ void drawChamber(void)
 
 		if (playerData->facingDirection)
 		{
-			tileIndex = 100 + (g_regenSpriteIndex << 2);
+			tileIndex = 126 + (g_regenSpriteIndex << 2);
 		}
 		else
 		{
-			tileIndex = 100 + ((g_regenSpriteIndex + REGEN_NUM_FRAMES) << 2);
+			tileIndex = 126 + ((g_regenSpriteIndex + REGEN_NUM_FRAMES) << 2);
 		}
 
-			
 		SMS_addTwoAdjoiningSprites(playerX, playerY, tileIndex);
-		SMS_addTwoAdjoiningSprites(playerX, playerY + 8, tileIndex + 2);
 
 		break;
 
 	default: 
-		g_playerTileIndex = 28 + (playerData->currentSpriteNumber << 2);
+		g_playerTileIndex = 34 + (playerData->currentSpriteNumber << 2);
 
 		SMS_addTwoAdjoiningSprites(playerX, playerY, g_playerTileIndex);
-		SMS_addTwoAdjoiningSprites(playerX, playerY + 8, g_playerTileIndex + 2);
 	}
 
 	drawDoors();
@@ -574,7 +624,7 @@ void drawTitleScreen(void)
 
 	dl_u8 x = gameData_numPlayers == 1 ? 32 : 128;
 
-	SMS_addSprite(x, 123, 160);
+	SMS_addSprite(x, 123, 158);
 }
 
 void drawTransition(void)

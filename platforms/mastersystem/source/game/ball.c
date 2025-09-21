@@ -170,6 +170,6 @@ void Ball_Draw(void)
 	{
 		SMS_addTwoAdjoiningSprites((ballData_x >> 8) << 1, 
 									ballData_y >> 8, 
-									2 * ((dl_s8)ballData_fallStateCounter < 0));
+									((dl_s8)ballData_fallStateCounter < 0) << 2);
 	}
 }

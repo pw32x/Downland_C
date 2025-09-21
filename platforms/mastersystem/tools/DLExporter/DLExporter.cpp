@@ -606,7 +606,7 @@ void saveCursor()
     saveSpritePlanar(cursor8bpp, 1, 1, "cursor4bpp");
 }
 
-#define NUM_REGEN_FRAMES 5
+#define NUM_REGEN_FRAMES 4
 
 dl_u8* saveRegenSprite(const dl_u8* playerSprite)
 {
@@ -683,7 +683,7 @@ dl_u8* saveRegenSprite(const dl_u8* playerSprite)
 
 void saveRegenLivesSprite(dl_u8* regenSprite)
 {
-    const int numFrames = NUM_REGEN_FRAMES * 2;
+    const int numFrames = NUM_REGEN_FRAMES;
     const int regenWidth = 16;
     const int regenHeight = 16;
     const int iconImageHeight = 8;

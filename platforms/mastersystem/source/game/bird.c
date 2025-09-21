@@ -80,7 +80,7 @@ void Bird_Update(dl_u16 currentRoomTimer)
 	birdData_x += birdData_speedx;
 }
 
-#define BIRD_TILE_INDEX 4
+#define BIRD_TILE_INDEX 8
 
 void Bird_Draw(dl_u16 currentTimer)
 {
@@ -89,6 +89,6 @@ void Bird_Draw(dl_u16 currentTimer)
 	{
 		SMS_addTwoAdjoiningSprites((birdData_x >> 8) << 1,
 									birdData_y >> 8,
-									BIRD_TILE_INDEX + (birdData_animationFrame << 1));
+									BIRD_TILE_INDEX + (birdData_animationFrame << 2));
 	}
 }

@@ -64,6 +64,8 @@ BOOL dropsManagerCollisionTest(PlayerData* playerData)
 	return FALSE;
 }
 
+void updateScore(void);
+
 void Player_PerformCollisions(void)
 {
 	dl_u8 roomNumber;
@@ -135,6 +137,8 @@ void Player_PerformCollisions(void)
 
 				// add a random value between 0 and 0x7f, as per the original game
 				playerData->score += dl_rand() % 0x7f;
+
+				updateScore();
 			}
 		}
 	}

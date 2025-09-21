@@ -14,6 +14,5 @@ void Game_WipeTransitionToRoom(dl_u8 roomNumber);
 typedef void (*Game_ChangedRoomCallbackType)(dl_u8 roomNumber, dl_s8 transitionType);
 
 extern Game_ChangedRoomCallbackType Game_ChangedRoomCallback;
-extern Game_ChangedRoomCallbackType Game_TransitionDone;
 
 #endif

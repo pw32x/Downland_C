@@ -759,8 +759,5 @@ void wipe_transition_update(Room* room)
 		transitionRoom->draw(gameData_transitionRoomNumber);
 
 		Game_EnterRoom(gameData_transitionRoomNumber);
-
-		if (Game_TransitionDone)
-			Game_TransitionDone(gameData_transitionRoomNumber, WIPE_TRANSITION_ROOM_INDEX);
 	}
 }

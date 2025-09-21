@@ -55,7 +55,7 @@ void titleScreen_update(Room* room)
 	}
 }
 
-Room titleScreenRoom =
+const Room titleScreenRoom =
 {
 	TITLESCREEN_ROOM_INDEX,
 	(InitRoomFunctionType)titleScreen_init,

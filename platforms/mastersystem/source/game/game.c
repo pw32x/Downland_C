@@ -6,7 +6,6 @@
 #include "joystick_data.h"
 
 Game_ChangedRoomCallbackType Game_ChangedRoomCallback = NULL;
-Game_ChangedRoomCallbackType Game_TransitionDone = NULL;
 
 void Game_Init(void)
 {

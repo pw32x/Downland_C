@@ -47,7 +47,7 @@ void get_ready_room_update(Room* room)
 	}
 }
 
-Room getReadyRoom =
+const Room getReadyRoom =
 {
 	GET_READY_ROOM_INDEX,
 	(InitRoomFunctionType)get_ready_room_init,

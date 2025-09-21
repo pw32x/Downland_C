@@ -180,7 +180,7 @@ void chamber_update(Room* room)
 // All the chambers are the same, but this makes it easier
 // to index them in g_rooms like any other screen.
 
-Room chamber0 =
+const Room chamber0 =
 {
 	0,
 	(InitRoomFunctionType)chamber_init,
@@ -188,7 +188,7 @@ Room chamber0 =
 	(UpdateRoomFunctionType)chamber_update
 };
 
-Room chamber1 =
+const Room chamber1 =
 {
 	1,
 	(InitRoomFunctionType)chamber_init,
@@ -196,7 +196,7 @@ Room chamber1 =
 	(UpdateRoomFunctionType)chamber_update
 };
 
-Room chamber2 =
+const Room chamber2 =
 {
 	2,
 	(InitRoomFunctionType)chamber_init,
@@ -204,7 +204,7 @@ Room chamber2 =
 	(UpdateRoomFunctionType)chamber_update
 };
 
-Room chamber3 =
+const Room chamber3 =
 {
 	3,
 	(InitRoomFunctionType)chamber_init,
@@ -212,7 +212,7 @@ Room chamber3 =
 	(UpdateRoomFunctionType)chamber_update
 };
 
-Room chamber4 =
+const Room chamber4 =
 {
 	4,
 	(InitRoomFunctionType)chamber_init,
@@ -220,7 +220,7 @@ Room chamber4 =
 	(UpdateRoomFunctionType)chamber_update
 };
 
-Room chamber5 =
+const Room chamber5 =
 {
 	5,
 	(InitRoomFunctionType)chamber_init,
@@ -228,7 +228,7 @@ Room chamber5 =
 	(UpdateRoomFunctionType)chamber_update
 };
 
-Room chamber6 =
+const Room chamber6 =
 {
 	6,
 	(InitRoomFunctionType)chamber_init,
@@ -236,7 +236,7 @@ Room chamber6 =
 	(UpdateRoomFunctionType)chamber_update
 };
 
-Room chamber7 =
+const Room chamber7 =
 {
 	7,
 	(InitRoomFunctionType)chamber_init,
@@ -244,7 +244,7 @@ Room chamber7 =
 	(UpdateRoomFunctionType)chamber_update
 };
 
-Room chamber8 =
+const Room chamber8 =
 {
 	8,
 	(InitRoomFunctionType)chamber_init,
@@ -252,7 +252,7 @@ Room chamber8 =
 	(UpdateRoomFunctionType)chamber_update
 };
 
-Room chamber9 =
+const Room chamber9 =
 {
 	9,
 	(InitRoomFunctionType)chamber_init,

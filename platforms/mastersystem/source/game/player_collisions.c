@@ -36,7 +36,7 @@ object_y = y; \
 object_width = width; \
 object_height = height
 
-BOOL dropsManagerCollisionTest(PlayerData* playerData)
+BOOL dropsManagerCollisionTest()
 {
 	const Drop* dropRunner = dropData_drops;
 	dl_u8 loop;
@@ -152,7 +152,7 @@ void Player_PerformCollisions(void)
 	if (!tickTock)
 	{
 		// collide with drops
-		if (dropsManagerCollisionTest(playerData))
+		if (dropsManagerCollisionTest())
 		{
 			playerKill(playerData);
 			return;

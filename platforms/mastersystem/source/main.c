@@ -320,38 +320,39 @@ extern volatile unsigned int PreviousKeysStatus;
 
 void updateControls(dl_u8 controllerIndex)
 {
-	UNUSED(controllerIndex); // support 2 player
-
-	//dl_u16 state = JOY_readJoypad(controllerIndex);
+    dl_u8 leftDown;
+    dl_u8 rightDown;
+    dl_u8 upDown;
+    dl_u8 downDown;
+    dl_u8 jumpDown;
 
     // Check D-Pad
-    dl_u8 leftDown = (KeysStatus & PORT_A_KEY_LEFT) != 0;
-    dl_u8 rightDown = (KeysStatus & PORT_A_KEY_RIGHT) != 0;
-    dl_u8 upDown = (KeysStatus & PORT_A_KEY_UP) != 0;
-    dl_u8 downDown = (KeysStatus & PORT_A_KEY_DOWN) != 0;
-    dl_u8 jumpDown = (KeysStatus & PORT_A_KEY_1) != 0;
-    //dl_u8 startDown = FALSE;//(KeysStatus & PORT_A_KEY_2) != 0;
+	if (!controllerIndex)
+	{
+		leftDown = (KeysStatus & PORT_A_KEY_LEFT) != 0;
+		rightDown = (KeysStatus & PORT_A_KEY_RIGHT) != 0;
+		upDown = (KeysStatus & PORT_A_KEY_UP) != 0;
+		downDown = (KeysStatus & PORT_A_KEY_DOWN) != 0;
+		jumpDown = (KeysStatus & PORT_A_KEY_1) != 0;
+	}
+	else
+	{
+		leftDown = (KeysStatus & PORT_B_KEY_LEFT) != 0;
+		rightDown = (KeysStatus & PORT_B_KEY_RIGHT) != 0;
+		upDown = (KeysStatus & PORT_B_KEY_UP) != 0;
+		downDown = (KeysStatus & PORT_B_KEY_DOWN) != 0;
+		jumpDown = (KeysStatus & PORT_B_KEY_1) != 0;
+	}
 
     joystickState_leftPressed = (!joystickState_leftDown) & leftDown;
     joystickState_rightPressed = (!joystickState_rightDown) & rightDown;
-    //joystickState_upPressed = (!joystickState_upDown) & upDown;
-    //joystickState_downPressed =  (!joystickState_downDown) & downDown;
     joystickState_jumpPressed =  (!joystickState_jumpDown) & jumpDown;
-    //joystickState_startPressed = (!joystickState_startDown) & startDown;
-
-    //joystickState_leftReleased = joystickState_leftDown & (!leftDown);
-    //joystickState_rightReleased = joystickState_rightDown & (!rightDown);
-    //joystickState_upReleased = joystickState_upDown & (!upDown);
-    //joystickState_downReleased =  joystickState_downDown & (!downDown);
-    //joystickState_jumpReleased =  joystickState_jumpDown & (!jumpDown);
-    //joystickState_startReleased = joystickState_startPressed & (!startDown);
 
     joystickState_leftDown = leftDown;
     joystickState_rightDown = rightDown;
     joystickState_upDown = upDown;
     joystickState_downDown = downDown;
     joystickState_jumpDown = jumpDown;
-    //joystickState_startDown = startDown;
 
 #ifdef DEV_MODE
     dl_u8 debugStateDown = (KeysStatus & PORT_A_KEY_2) != 0;

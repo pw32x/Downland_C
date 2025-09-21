@@ -36,7 +36,7 @@ object_y = y; \
 object_width = width; \
 object_height = height
 
-BOOL dropsManagerCollisionTest()
+BOOL dropsManagerCollisionTest(void)
 {
 	const Drop* dropRunner = dropData_drops;
 	dl_u8 loop;

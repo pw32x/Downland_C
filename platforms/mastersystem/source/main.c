@@ -102,7 +102,7 @@ extern unsigned char const moneyBag4bpp[128]; // 4 tiles x 32 bytes
 extern unsigned char const player4bpp[1280]; // 40 tiles x 32 bytes
 extern unsigned char const playerSplat4bpp[384];
 extern unsigned char const playerLives4bpp[640]; // 20 tiles x 32 bytes
-extern unsigned char const playerRegen4bpp[1280]; // 40 tiles x 32 bytes
+extern unsigned char const playerLivesRegen4bpp[256]; // 10 tiles x 32 bytes
 extern unsigned char const playerRegen4bpp[1024]; // 40 tiles x 32 bytes
 extern unsigned char const cursor4bpp[32]; // 1 tiles x 32 bytes
 

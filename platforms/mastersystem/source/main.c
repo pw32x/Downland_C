@@ -14,19 +14,23 @@
 #include "drops_manager.h"
 #include "resources.h"
 
-
-#define CHAMBER_BANK_START 2
-#define CHAMBER0_BANK 2
-#define CHAMBER1_BANK 3
-#define CHAMBER2_BANK 4
-#define CHAMBER3_BANK 5
-#define CHAMBER4_BANK 6
-#define CHAMBER5_BANK 7
-#define CHAMBER6_BANK 8
-#define CHAMBER7_BANK 9
-#define CHAMBER8_BANK 10
-#define CHAMBER9_BANK 11
-#define TITLE_SCREEN_BANK 12
+const dl_u8 roomToBankIndex[] = 
+{
+    2, // chambers 0 to 9
+    2,
+    3,
+    3,
+    4,
+    4,
+    5,
+    5,
+    6,
+    6,
+    7,  // title screen
+	2,  // transition screen. it doesn't matter what the bank is.
+	2,  // wipe transition screen. it doesn't matter what the bank is.
+	7   // get ready screen
+};
 
 dl_u8 g_regenSpriteIndex;
 #define REGEN_NUM_FRAMES 4
@@ -646,10 +650,7 @@ void transition_init(const Room* targetRoom)
 	SMS_copySpritestoSAT();
 	SMS_VRAMmemset(XYtoADDR((0),(0)), 0, 32 * 24 * 2);
 
-	if (gameData_transitionRoomNumber != GET_READY_ROOM_INDEX)
-		SMS_mapROMBank(CHAMBER_BANK_START + gameData_transitionRoomNumber);
-	else 
-		SMS_mapROMBank(CHAMBER_BANK_START + TITLESCREEN_ROOM_INDEX);
+	SMS_mapROMBank(roomToBankIndex[gameData_transitionRoomNumber]);
 
 	////SMS_debugPrintf("black palette\n");
 	//SMS_loadBGPalette(blackPalette);
@@ -690,10 +691,7 @@ void wipe_transition_init(const Room* targetRoom)
 	SMS_copySpritestoSAT();
 	SMS_VRAMmemset(XYtoADDR((0),(0)), 0, 32 * 24 * 2);
 
-	if (gameData_transitionRoomNumber != GET_READY_ROOM_INDEX)
-		SMS_mapROMBank(CHAMBER_BANK_START + gameData_transitionRoomNumber);
-	else 
-		SMS_mapROMBank(CHAMBER_BANK_START + TITLESCREEN_ROOM_INDEX);
+	SMS_mapROMBank(roomToBankIndex[gameData_transitionRoomNumber]);
 
 	// setup screen transition
 	gameData_transitionInitialDelay = INITIAL_TRANSITION_DELAY;

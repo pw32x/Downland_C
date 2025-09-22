@@ -50,17 +50,12 @@ void dl_memcpy(void* destination, const void* source, dl_u16 count)
 const char* bankFolderNames[] = 
 {
     "sprites",
-    "bank3_chamber0",
-    "bank4_chamber1",
-    "bank5_chamber2",
-    "bank6_chamber3",
-    "bank7_chamber4",
-    "bank8_chamber5",
-    "bank9_chamber6",
-    "bank10_chamber7",
-    "bank11_chamber8",
-    "bank12_chamber9",
-    "bank13_titlescreen",
+    "bank2",
+    "bank3",
+    "bank4",
+    "bank5",
+    "bank6",
+    "bank7",
 };
 
 int bankFolderNameCount = sizeof(bankFolderNames) / sizeof(bankFolderNames[0]);
@@ -70,19 +65,19 @@ int bankFolderNameCount = sizeof(bankFolderNames) / sizeof(bankFolderNames[0]);
 const dl_u8 roomToBankFolderNameIndex[] = 
 {
     1, // chambers 0 to 9
+    1,
+    2,
     2,
     3,
+    3,
+    4,
     4,
     5,
-    6,
-    7,
-    8,
-    9,
-    10,
-    11, // title screen
+    5,
+    6,  // title screen
     12, // transition
     1,  // wipe transition
-    11
+    6   // get ready screen
 };
 
 #define TILE_WIDTH 8
@@ -1432,7 +1427,7 @@ void saveResourcesSource(Resources& resources)
         oss << "extern const dl_u8 " << roomNames[loop] << "_cleanBackground[" << FRAMEBUFFER_PITCH * FRAMEBUFFER_HEIGHT << "];\n";
         oss << "extern const dl_u16 " << roomNames[loop] << "_tileMap[32 * 24];\n";
 
-        oss << "SMSBackgroundData " << roomNames[loop] << "_customBackgroundData = "
+        oss << "const SMSBackgroundData " << roomNames[loop] << "_customBackgroundData = "
             << "{ " 
             << roomNames[loop] << "_cleanBackground"
             << ", "

@@ -49,7 +49,7 @@ void dl_memcpy(void* destination, const void* source, dl_u16 count)
 
 const char* bankFolderNames[] = 
 {
-    "bank2_vdp",
+    "sprites",
     "bank3_chamber0",
     "bank4_chamber1",
     "bank5_chamber2",
@@ -65,23 +65,11 @@ const char* bankFolderNames[] =
 
 int bankFolderNameCount = sizeof(bankFolderNames) / sizeof(bankFolderNames[0]);
 
-#define BANK2_VDP           0
-#define BANK3_CHAMBER0      1
-#define BANK4_CHAMBER1      2
-#define BANK5_CHAMBER2      3
-#define BANK6_CHAMBER3      4
-#define BANK7_CHAMBER4      5
-#define BANK8_CHAMBER5      6
-#define BANK9_CHAMBER6      7
-#define BANK10_CHAMBER7     8
-#define BANK11_CHAMBER8     9
-#define BANK12_CHAMBER9     10
-#define BANK13_CHAMBER10    11  
-#define BANK14_TITLESCREEN  12
+#define SPRITES_FOLDER_INDEX  0
 
-dl_u8 roomToBank[] = 
+const dl_u8 roomToBankFolderNameIndex[] = 
 {
-    1,
+    1, // chambers 0 to 9
     2,
     3,
     4,
@@ -91,9 +79,9 @@ dl_u8 roomToBank[] =
     8,
     9,
     10,
-    11,
-    12,
-    1,
+    11, // title screen
+    12, // transition
+    1,  // wipe transition
     11
 };
 
@@ -476,7 +464,7 @@ void saveTileMapSource(const std::vector<TileMap>& tileMaps)
         oss << "\n";
 
         std::string bankFolder = g_destinationPath;
-        bankFolder += bankFolderNames[roomToBank[counter]];
+        bankFolder += bankFolderNames[roomToBankFolderNameIndex[counter]];
         bankFolder += "\\";
 
         std::ofstream outFile(bankFolder + roomNames[counter] + "_tileMap.c");
@@ -555,7 +543,7 @@ void saveSpritePlanar(const dl_u8* spriteData, dl_u8 tileWidth, dl_u8 tileHeight
 	oss << "};\n\n";
 
     std::string bankFolder = g_destinationPath;
-    bankFolder += bankFolderNames[BANK2_VDP];
+    bankFolder += bankFolderNames[SPRITES_FOLDER_INDEX];
     bankFolder += "\\";
 
     std::ofstream outFile(bankFolder + name + ".c");
@@ -929,7 +917,7 @@ void saveCleanBackground(const dl_u8* cleanBackground, dl_u8 backgroundIndex)
     }
       
     std::string bankFolder = g_destinationPath;
-    bankFolder += bankFolderNames[roomToBank[backgroundIndex]];
+    bankFolder += bankFolderNames[roomToBankFolderNameIndex[backgroundIndex]];
     bankFolder += "\\";
 
     std::ofstream outFile(bankFolder + cleanBackgroundName + ".c");
@@ -1149,7 +1137,7 @@ void saveDropSpawns(const Resources& resources)
         oss << "};\n";
 
         std::string bankFolder = g_destinationPath;
-        bankFolder += bankFolderNames[roomToBank[loop]];
+        bankFolder += bankFolderNames[roomToBankFolderNameIndex[loop]];
         bankFolder += "\\";
 
         std::ofstream outFile(bankFolder + dropSpawnPositionsName + ".c");
@@ -1241,7 +1229,7 @@ void saveTileSet(std::vector<Tile>& tileSet)
 	oss << "};\n\n";
 
     std::string bankFolder = g_destinationPath;
-    bankFolder += bankFolderNames[BANK2_VDP];
+    bankFolder += bankFolderNames[SPRITES_FOLDER_INDEX];
     bankFolder += "\\";
 
     std::ofstream outFile(bankFolder + outputTileDataName + ".c");

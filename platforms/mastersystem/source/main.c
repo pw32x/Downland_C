@@ -15,19 +15,18 @@
 #include "resources.h"
 
 
-#define VDP_ASSETS_BANK 2
-#define CHAMBER_BANK_START 3
-#define CHAMBER0_BANK 3
-#define CHAMBER1_BANK 4
-#define CHAMBER2_BANK 5
-#define CHAMBER3_BANK 6
-#define CHAMBER4_BANK 7
-#define CHAMBER5_BANK 8
-#define CHAMBER6_BANK 9
-#define CHAMBER7_BANK 10
-#define CHAMBER8_BANK 11
-#define CHAMBER9_BANK 12
-#define TITLE_SCREEN_BANK 13
+#define CHAMBER_BANK_START 2
+#define CHAMBER0_BANK 2
+#define CHAMBER1_BANK 3
+#define CHAMBER2_BANK 4
+#define CHAMBER3_BANK 5
+#define CHAMBER4_BANK 6
+#define CHAMBER5_BANK 7
+#define CHAMBER6_BANK 8
+#define CHAMBER7_BANK 9
+#define CHAMBER8_BANK 10
+#define CHAMBER9_BANK 11
+#define TITLE_SCREEN_BANK 12
 
 dl_u8 g_regenSpriteIndex;
 #define REGEN_NUM_FRAMES 4
@@ -431,7 +430,6 @@ void main(void)
 	SMS_copySpritestoSAT();
 
 	// load tiles for background
-	SMS_mapROMBank(VDP_ASSETS_BANK);
 	load16x8SpriteTiles(ball4bpp, 256, 4); // 4 tiles x 32 bytes
 	load16x8SpriteTiles(bird4bpp, 256 + 8, 124); // 4 tiles x 32 bytes
 	load16x16SpriteTiles(diamond4bpp, 256 + 16, 1);  // 4 tiles x 32 bytes

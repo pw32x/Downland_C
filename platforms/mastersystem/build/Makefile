@@ -8,13 +8,16 @@ DEVKITSMS_BASE=../../../../../SMSDev/devkitSMS-master
 CC=sdcc
 IHX2SMS=$(DEVKITSMS_BASE)/ihx2sms/Linux/ihx2sms
 SMSLIB_BASE=$(DEVKITSMS_BASE)/SMSlib
+PSGLIB_BASE=$(DEVKITSMS_BASE)/PSGlib
 SMSLIB_INCDIR=$(SMSLIB_BASE)/src
+PSGLIB_INCDIR=$(PSGLIB_BASE)/src
 PEEP_RULES=$(SMSLIB_BASE)/src/peep-rules.txt
 CRT0=$(DEVKITSMS_BASE)/crt0/crt0_sms.rel
 SMSLIB_LIB=$(SMSLIB_BASE)/SMSlib.lib          # Use distributed lib
+PSGLIB_LIB=$(PSGLIB_BASE)/PSGlib.lib          # Use distributed lib
 #SMSLIB_LIB=$(SMSLIB_BASE)/src/SMSlib.lib      # Use locally compiled lib
 
-CFLAGS=-mz80 -I$(SMSLIB_INCDIR) -I$(GENERATED_DIR) -I$(SOURCE_DIR) -I$(SOURCE_DIR)/game -I$(SOURCE_DIR)/game/rooms --peep-file $(PEEP_RULES) \
+CFLAGS=-mz80 -I$(SMSLIB_INCDIR) -I$(PSGLIB_INCDIR) -I$(GENERATED_DIR) -I$(SOURCE_DIR) -I$(SOURCE_DIR)/game -I$(SOURCE_DIR)/game/rooms --peep-file $(PEEP_RULES) \
 		--opt-code-speed --peep-asm \
 		 -DCUSTOM_BACKGROUND_DRAWING -DCUSTOM_TRANSITIONS
 
@@ -133,7 +136,7 @@ $(OUTPUT_DIR)/$(PROGNAME).ihx: $(OBJS)
 	$(CC) -o $@ $(LDFLAGS) \
 	-Wl-b_BANK2=0x8000 -Wl-b_BANK3=0x8000 -Wl-b_BANK4=0x8000 \
 	-Wl-b_BANK5=0x8000 -Wl-b_BANK6=0x8000 -Wl-b_BANK7=0x8000 \
-	$(CRT0) $(SMSLIB_LIB) $^
+	$(CRT0) $(SMSLIB_LIB) $(PSGLIB_LIB) $^
 
 $(OUTPUT_DIR)/$(PROGNAME).sms: $(OUTPUT_DIR)/$(PROGNAME).ihx
 	$(IHX2SMS) $< $@

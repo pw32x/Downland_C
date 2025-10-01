@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "SMSlib.h"
+#include <PSGLib.h>
 
 #include "base_types.h"
 #include "game_data.h"
@@ -13,6 +14,8 @@
 #include "bird.h"
 #include "drops_manager.h"
 #include "resources.h"
+
+#include "sounds.h"
 
 const dl_u8 roomToBankIndex[] = 
 {
@@ -61,10 +64,38 @@ void dl_memset(void* source, dl_u8 value, dl_u16 count)
 	}
 }
 
+const dl_u8* sounds[SOUND_NUM_SOUNDS] = 
+{
+	jump_psg, // SOUND_JUMP				
+	land_psg, // SOUND_LAND				
+	NULL, // SOUND_SCREEN_TRANSITION	
+	NULL, // SOUND_SPLAT				
+	pickup_psg, // SOUND_PICKUP			
+	run_psg, // SOUND_RUN				
+	NULL, // SOUND_CLIMB_UP			
+	NULL, // SOUND_CLIMB_DOWN		
+};
+
+const dl_u8 channels[SOUND_NUM_SOUNDS] = 
+{
+	SFX_CHANNEL2,
+	SFX_CHANNELS2AND3,
+	SFX_CHANNEL2,
+	SFX_CHANNEL2,
+	SFX_CHANNEL2,
+	SFX_CHANNELS2AND3,
+	SFX_CHANNEL2,
+	SFX_CHANNEL2,
+};
+
+
+
 void Sound_Play(dl_u8 soundIndex, dl_u8 loop)
 {
-	(void)soundIndex;
-	(void)loop;
+	if (sounds[soundIndex] == NULL)
+		return;
+
+	PSGSFXPlay(sounds[soundIndex], channels[soundIndex]);
 }
 
 void Sound_Stop(dl_u8 soundIndex)
@@ -418,6 +449,12 @@ void load24x16SpriteTiles(const dl_u8* src, dl_u16 tilefrom, dl_u8 frames)
 	}
 }
 
+void PSGUpdate(void)
+{
+//	PSGFrame();
+	PSGSFXFrame();
+}
+
 void main(void)
 {
 	/* Clear VRAM */
@@ -475,6 +512,8 @@ void main(void)
     Game_Init();
 
 	dl_u8 controllerIndex = 0;
+
+	SMS_setFrameInterruptHandler(PSGUpdate);
 
 	for(;;) 
 	{ 

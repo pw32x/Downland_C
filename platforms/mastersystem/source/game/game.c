@@ -45,7 +45,7 @@ void Game_Init(void)
 	gameData_currentPlayerData = &gameData_playerData[PLAYER_ONE];
 	gameData_otherPlayerData = NULL;
 	Player_GameInit(gameData_currentPlayerData);
-	Game_TransitionToRoom(3 /*roomNumber*/);
+	Game_TransitionToRoom(0);
 #endif
 }
 

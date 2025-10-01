@@ -123,6 +123,7 @@
   <ItemDefinitionGroup>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\SMSDev\devkitSMS-master\PSGlib\src\PSGlib.c" />
     <ClCompile Include="..\generated\bank2_vdp\ball4bpp.c" />
     <ClCompile Include="..\generated\bank2_vdp\bird4bpp.c" />
     <ClCompile Include="..\generated\bank2_vdp\characterFont4bpp.c" />
@@ -141,6 +142,7 @@
     <ClCompile Include="..\generated\bank3_chamber0\chamber0_cleanBackground.c" />
     <ClCompile Include="..\generated\bank3_chamber0\chamber0_tileMap.c" />
     <ClCompile Include="..\generated\resources.c" />
+    <ClCompile Include="..\generated\sounds.c" />
     <ClCompile Include="..\source\game\ball.c" />
     <ClCompile Include="..\source\game\bird.c" />
     <ClCompile Include="..\source\game\checksum_utils.c" />
@@ -161,8 +163,10 @@
     <ClCompile Include="..\source\main.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\SMSDev\devkitSMS-master\PSGlib\src\PSGlib.h" />
     <ClInclude Include="..\..\..\..\..\..\SMSDev\devkitSMS-master\SMSlib\src\SMSlib.h" />
     <ClInclude Include="..\generated\resources.h" />
+    <ClInclude Include="..\generated\sounds.h" />
     <ClInclude Include="..\source\custom_background_types.h" />
     <ClInclude Include="..\source\game\background_types.h" />
     <ClInclude Include="..\source\game\ball.h" />

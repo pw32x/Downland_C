@@ -139,8 +139,8 @@
     <ClCompile Include="..\..\..\..\..\..\SMSDev\devkitSMS-master\PSGlib\src\PSGlib.c">
       <Filter>SMSLib</Filter>
     </ClCompile>
-    <ClCompile Include="..\generated\sounds.c">
-      <Filter>Source Files\generated</Filter>
+    <ClCompile Include="..\source\sounds.c">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -231,8 +231,8 @@
     <ClInclude Include="..\..\..\..\..\..\SMSDev\devkitSMS-master\PSGlib\src\PSGlib.h">
       <Filter>SMSLib</Filter>
     </ClInclude>
-    <ClInclude Include="..\generated\sounds.h">
-      <Filter>Source Files\generated</Filter>
+    <ClInclude Include="..\source\sounds.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

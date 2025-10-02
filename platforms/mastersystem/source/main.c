@@ -68,12 +68,12 @@ const dl_u8* sounds[SOUND_NUM_SOUNDS] =
 {
 	jump_psg, // SOUND_JUMP				
 	land_psg, // SOUND_LAND				
-	NULL, // SOUND_SCREEN_TRANSITION	
-	NULL, // SOUND_SPLAT				
+	transition_psg, // SOUND_SCREEN_TRANSITION	
+	splat_psg, // SOUND_SPLAT				
 	pickup_psg, // SOUND_PICKUP			
 	run_psg, // SOUND_RUN				
-	NULL, // SOUND_CLIMB_UP			
-	NULL, // SOUND_CLIMB_DOWN		
+	climb_up_psg, // SOUND_CLIMB_UP			
+	climb_down_psg, // SOUND_CLIMB_DOWN		
 };
 
 const dl_u8 channels[SOUND_NUM_SOUNDS] = 
@@ -81,26 +81,34 @@ const dl_u8 channels[SOUND_NUM_SOUNDS] =
 	SFX_CHANNEL2,
 	SFX_CHANNELS2AND3,
 	SFX_CHANNEL2,
-	SFX_CHANNEL2,
-	SFX_CHANNEL2,
 	SFX_CHANNELS2AND3,
 	SFX_CHANNEL2,
-	SFX_CHANNEL2,
+	SFX_CHANNELS2AND3,
+	SFX_CHANNELS2AND3,
+	SFX_CHANNELS2AND3,
 };
 
-
+dl_u8 lastLoopSoundIndex = -1;
 
 void Sound_Play(dl_u8 soundIndex, dl_u8 loop)
 {
-	if (sounds[soundIndex] == NULL)
+	if (loop && lastLoopSoundIndex == soundIndex)
 		return;
 
-	PSGSFXPlay(sounds[soundIndex], channels[soundIndex]);
+	if (loop)
+		PSGSFXPlayLoop(sounds[soundIndex], channels[soundIndex]);
+	else
+		PSGSFXPlay(sounds[soundIndex], channels[soundIndex]);
+
+	lastLoopSoundIndex = soundIndex;
 }
 
 void Sound_Stop(dl_u8 soundIndex)
 {
 	(void)soundIndex;
+
+	lastLoopSoundIndex = -1;
+	PSGSFXStop();
 }
 
 void Sound_StopAll(void)

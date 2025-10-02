@@ -9,12 +9,12 @@ java -jar PSGTool\PSGTool.jar jump.vgm psg\jump.psg 2
 java -jar PSGTool\PSGTool.jar transition.vgm psg\transition.psg 2
 
 
-del ..\generated\sounds.c
-del ..\generated\sounds.h 
+del ..\source\sounds.c
+del ..\source\sounds.h 
 
-pushd ..\generated
+pushd ..\source
 ..\..\..\..\..\..\SMSDev\devkitSMS-master\assets2banks\Windows\assets2banks.exe ..\sounds\psg
 popd
 
-rename ..\generated\bank2.h sounds.h
-rename ..\generated\bank2.c sounds.c
+rename ..\source\bank2.h sounds.h
+rename ..\source\bank2.c sounds.c

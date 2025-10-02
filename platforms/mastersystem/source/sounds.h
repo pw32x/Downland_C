@@ -1,6 +1,9 @@
 extern const unsigned char	transition_psg[90];
 #define				transition_psg_size 90
 #define				transition_psg_bank 2
+extern const unsigned char	jump_psg[83];
+#define				jump_psg_size 83
+#define				jump_psg_bank 2
 extern const unsigned char	climb_up_psg[37];
 #define				climb_up_psg_size 37
 #define				climb_up_psg_bank 2
@@ -19,6 +22,3 @@ extern const unsigned char	land_psg[23];
 extern const unsigned char	pickup_psg[10];
 #define				pickup_psg_size 10
 #define				pickup_psg_bank 2
-extern const unsigned char	jump_psg[5];
-#define				jump_psg_size 5
-#define				jump_psg_bank 2

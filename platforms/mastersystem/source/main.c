@@ -389,7 +389,7 @@ void updateControls(dl_u8 controllerIndex)
 		rightDown = (KeysStatus & PORT_A_KEY_RIGHT) != 0;
 		upDown = (KeysStatus & PORT_A_KEY_UP) != 0;
 		downDown = (KeysStatus & PORT_A_KEY_DOWN) != 0;
-		jumpDown = (KeysStatus & PORT_A_KEY_1) != 0;
+		jumpDown = ((KeysStatus & PORT_A_KEY_1) != 0) || ((KeysStatus & PORT_A_KEY_2) != 0);
 	}
 	else
 	{
@@ -397,7 +397,7 @@ void updateControls(dl_u8 controllerIndex)
 		rightDown = (KeysStatus & PORT_B_KEY_RIGHT) != 0;
 		upDown = (KeysStatus & PORT_B_KEY_UP) != 0;
 		downDown = (KeysStatus & PORT_B_KEY_DOWN) != 0;
-		jumpDown = (KeysStatus & PORT_B_KEY_1) != 0;
+		jumpDown = ((KeysStatus & PORT_B_KEY_1) != 0) || ((KeysStatus & PORT_B_KEY_2) != 0);
 	}
 
     joystickState_leftPressed = (!joystickState_leftDown) & leftDown;

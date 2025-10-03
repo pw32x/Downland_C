@@ -1,9 +1,9 @@
 #ifndef BASE_DEFINES_INCLUDE_H
 #define BASE_DEFINES_INCLUDE_H
 
-#define DEV_MODE
+//#define DEV_MODE
 //#define SHOW_DEBUG_TEXT
-//#define START_AT_TITLESCREEN
+#define START_AT_TITLESCREEN
 //#define DISABLE_ENEMIES
 
 #if defined(DL_PLATFORM_3DO)

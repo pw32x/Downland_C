@@ -1,9 +1,3 @@
-to build
-
-sdcc compiler
-devkitsms
-
-
 # Downland_C: Sega Master System
 
 ## INTRODUCTION

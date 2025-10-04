@@ -1,9 +1,3 @@
-to build
-
-sdcc compiler
-devkitsms
-
-
 # Downland_C: Sega Master System
 
 ## INTRODUCTION
@@ -34,6 +28,9 @@ Building
    
 
 ## RUNNING THE GAME
+
+Only tested in emulator.
+
 
 On hardware you'll need: 
 - an NTSC Sega Master System or Genesis/Mega Drive (PAL might work but will run slower, naturally)

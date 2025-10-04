@@ -111,7 +111,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <NMakeOutput>..\out\Downland.sg</NMakeOutput>
-    <NMakePreprocessorDefinitions>DISABLE_FRAMEBUFFER;CUSTOM_TRANSITIONS;CUSTOM_BACKGROUND_DRAWING;DISABLE_DOOR_DRAWING;DISABLE_RESOURCE_LOADER;WIN32;NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+    <NMakePreprocessorDefinitions>CUSTOM_BACKGROUND_DRAWING;DISABLE_DOOR_DRAWING;DISABLE_RESOURCE_LOADER;WIN32;NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
     <NMakeBuildCommandLine>..\build\build.bat</NMakeBuildCommandLine>
     <NMakeReBuildCommandLine>..\build\rebuild.bat</NMakeReBuildCommandLine>
     <NMakeCleanCommandLine>..\build\clean.bat</NMakeCleanCommandLine>
@@ -125,17 +125,80 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\..\..\..\SMSDev\devkitSMS-master\PSGlib\src\PSGlib.c" />
     <ClCompile Include="..\..\..\..\..\..\SMSDev\devkitSMS-master\SGlib\src\SGlib.c" />
+    <ClCompile Include="..\generated\bank2_vdp\ball4bpp.c" />
+    <ClCompile Include="..\generated\bank2_vdp\bird4bpp.c" />
+    <ClCompile Include="..\generated\bank2_vdp\characterFont4bpp.c" />
+    <ClCompile Include="..\generated\bank2_vdp\cursor4bpp.c" />
+    <ClCompile Include="..\generated\bank2_vdp\diamond4bpp.c" />
+    <ClCompile Include="..\generated\bank2_vdp\door4bpp.c" />
+    <ClCompile Include="..\generated\bank2_vdp\drop4bpp.c" />
+    <ClCompile Include="..\generated\bank2_vdp\key4bpp.c" />
+    <ClCompile Include="..\generated\bank2_vdp\moneyBag4bpp.c" />
+    <ClCompile Include="..\generated\bank2_vdp\player4bpp.c" />
+    <ClCompile Include="..\generated\bank2_vdp\playerLives4bpp.c" />
+    <ClCompile Include="..\generated\bank2_vdp\playerLivesRegen4bpp.c" />
+    <ClCompile Include="..\generated\bank2_vdp\playerRegen4bpp.c" />
+    <ClCompile Include="..\generated\bank2_vdp\playerSplat4bpp.c" />
+    <ClCompile Include="..\generated\bank2_vdp\tileSet4bpp.c" />
+    <ClCompile Include="..\generated\bank3_chamber0\chamber0_cleanBackground.c" />
+    <ClCompile Include="..\generated\bank3_chamber0\chamber0_tileMap.c" />
+    <ClCompile Include="..\generated\resources.c" />
+    <ClCompile Include="..\source\game\ball.c" />
+    <ClCompile Include="..\source\game\bird.c" />
+    <ClCompile Include="..\source\game\checksum_utils.c" />
+    <ClCompile Include="..\source\game\dl_rand.c" />
+    <ClCompile Include="..\source\game\drops_manager.c" />
+    <ClCompile Include="..\source\game\game.c" />
+    <ClCompile Include="..\source\game\game_data.c" />
+    <ClCompile Include="..\source\game\joystick_data.c" />
+    <ClCompile Include="..\source\game\physics_utils.c" />
+    <ClCompile Include="..\source\game\player.c" />
+    <ClCompile Include="..\source\game\player_collisions.c" />
+    <ClCompile Include="..\source\game\rooms\chambers.c" />
+    <ClCompile Include="..\source\game\rooms\getready.c" />
+    <ClCompile Include="..\source\game\rooms\rooms.c" />
+    <ClCompile Include="..\source\game\rooms\titlescreen.c" />
+    <ClCompile Include="..\source\game\rooms\transitions.c" />
+    <ClCompile Include="..\source\game\string_utils.c" />
     <ClCompile Include="..\source\main.c" />
     <ClCompile Include="..\source\sounds.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\..\SMSDev\devkitSMS-master\PSGlib\src\PSGlib.h" />
     <ClInclude Include="..\..\..\..\..\..\SMSDev\devkitSMS-master\SGlib\src\SGlib.h" />
+    <ClInclude Include="..\generated\resources.h" />
+    <ClInclude Include="..\source\custom_background_types.h" />
+    <ClInclude Include="..\source\game\background_types.h" />
+    <ClInclude Include="..\source\game\ball.h" />
+    <ClInclude Include="..\source\game\base_defines.h" />
+    <ClInclude Include="..\source\game\base_types.h" />
+    <ClInclude Include="..\source\game\bird.h" />
+    <ClInclude Include="..\source\game\checksum_utils.h" />
+    <ClInclude Include="..\source\game\dl_platform.h" />
+    <ClInclude Include="..\source\game\dl_rand.h" />
+    <ClInclude Include="..\source\game\dl_sound.h" />
+    <ClInclude Include="..\source\game\door_types.h" />
+    <ClInclude Include="..\source\game\drops_manager.h" />
+    <ClInclude Include="..\source\game\drops_types.h" />
+    <ClInclude Include="..\source\game\game.h" />
+    <ClInclude Include="..\source\game\game_data.h" />
+    <ClInclude Include="..\source\game\joystick_data.h" />
+    <ClInclude Include="..\source\game\physics_utils.h" />
+    <ClInclude Include="..\source\game\pickup_types.h" />
+    <ClInclude Include="..\source\game\player.h" />
+    <ClInclude Include="..\source\game\player_types.h" />
+    <ClInclude Include="..\source\game\resource_types.h" />
+    <ClInclude Include="..\source\game\rooms\chambers.h" />
+    <ClInclude Include="..\source\game\rooms\rooms.h" />
+    <ClInclude Include="..\source\game\rooms\room_types.h" />
+    <ClInclude Include="..\source\game\rooms\titlescreen.h" />
+    <ClInclude Include="..\source\game\string_utils.h" />
     <ClInclude Include="..\source\sounds.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\build\build.bat" />
     <None Include="..\build\clean.bat" />
+    <None Include="..\build\deploy.bat" />
     <None Include="..\build\Makefile" />
     <None Include="..\build\rebuild.bat" />
     <None Include="..\out\Downland.map" />

@@ -14,30 +14,228 @@
     <Filter Include="Source Files\generated">
       <UniqueIdentifier>{7bd6f1d1-ba38-482c-86e2-a3a602adcd5c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\game">
+      <UniqueIdentifier>{1873331b-47a3-4fe6-b40a-50b68907e5c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\game\rooms">
+      <UniqueIdentifier>{e425e5c3-783b-4949-bb20-294c751db6c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\generated\bank_vdp">
+      <UniqueIdentifier>{9db4e271-d493-47bb-8387-6929b6abed1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\generated\bank2_chamber0">
+      <UniqueIdentifier>{ec4f3279-14f7-411d-b95d-86abbb8713f9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\source\main.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\SMSDev\devkitSMS-master\PSGlib\src\PSGlib.c">
-      <Filter>SMSLib</Filter>
+    <ClCompile Include="..\source\game\ball.c">
+      <Filter>Source Files\game</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\SMSDev\devkitSMS-master\SGlib\src\SGlib.c">
+    <ClCompile Include="..\source\game\bird.c">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\game\checksum_utils.c">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\game\dl_rand.c">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\game\drops_manager.c">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\game\game.c">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\game\physics_utils.c">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\game\player.c">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\game\string_utils.c">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\game\rooms\chambers.c">
+      <Filter>Source Files\game\rooms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\game\rooms\getready.c">
+      <Filter>Source Files\game\rooms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\game\rooms\rooms.c">
+      <Filter>Source Files\game\rooms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\game\rooms\titlescreen.c">
+      <Filter>Source Files\game\rooms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\game\rooms\transitions.c">
+      <Filter>Source Files\game\rooms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\bank3_chamber0\chamber0_tileMap.c">
+      <Filter>Source Files\generated\bank2_chamber0</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\bank3_chamber0\chamber0_cleanBackground.c">
+      <Filter>Source Files\generated\bank2_chamber0</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\bank2_vdp\ball4bpp.c">
+      <Filter>Source Files\generated\bank_vdp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\bank2_vdp\bird4bpp.c">
+      <Filter>Source Files\generated\bank_vdp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\bank2_vdp\characterFont4bpp.c">
+      <Filter>Source Files\generated\bank_vdp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\bank2_vdp\diamond4bpp.c">
+      <Filter>Source Files\generated\bank_vdp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\bank2_vdp\door4bpp.c">
+      <Filter>Source Files\generated\bank_vdp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\bank2_vdp\drop4bpp.c">
+      <Filter>Source Files\generated\bank_vdp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\bank2_vdp\key4bpp.c">
+      <Filter>Source Files\generated\bank_vdp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\bank2_vdp\moneyBag4bpp.c">
+      <Filter>Source Files\generated\bank_vdp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\bank2_vdp\player4bpp.c">
+      <Filter>Source Files\generated\bank_vdp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\bank2_vdp\tileSet4bpp.c">
+      <Filter>Source Files\generated\bank_vdp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\resources.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\bank2_vdp\playerSplat4bpp.c">
+      <Filter>Source Files\generated\bank_vdp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\bank2_vdp\playerLives4bpp.c">
+      <Filter>Source Files\generated\bank_vdp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\bank2_vdp\playerRegen4bpp.c">
+      <Filter>Source Files\generated\bank_vdp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\bank2_vdp\playerLivesRegen4bpp.c">
+      <Filter>Source Files\generated\bank_vdp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\bank2_vdp\cursor4bpp.c">
+      <Filter>Source Files\generated\bank_vdp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\game\game_data.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\game\joystick_data.c">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\game\player_collisions.c">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\SMSDev\devkitSMS-master\PSGlib\src\PSGlib.c">
       <Filter>SMSLib</Filter>
     </ClCompile>
     <ClCompile Include="..\source\sounds.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\SMSDev\devkitSMS-master\SGlib\src\SGlib.c">
+      <Filter>SMSLib</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\..\SMSDev\devkitSMS-master\PSGlib\src\PSGlib.h">
-      <Filter>SMSLib</Filter>
+    <ClInclude Include="..\source\game\background_types.h">
+      <Filter>Source Files\game</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\SMSDev\devkitSMS-master\SGlib\src\SGlib.h">
+    <ClInclude Include="..\source\game\ball.h">
+      <Filter>Source Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game\base_defines.h">
+      <Filter>Source Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game\base_types.h">
+      <Filter>Source Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game\bird.h">
+      <Filter>Source Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game\checksum_utils.h">
+      <Filter>Source Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game\dl_platform.h">
+      <Filter>Source Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game\dl_rand.h">
+      <Filter>Source Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game\dl_sound.h">
+      <Filter>Source Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game\door_types.h">
+      <Filter>Source Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game\drops_manager.h">
+      <Filter>Source Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game\drops_types.h">
+      <Filter>Source Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game\game.h">
+      <Filter>Source Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game\game_data.h">
+      <Filter>Source Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game\joystick_data.h">
+      <Filter>Source Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game\physics_utils.h">
+      <Filter>Source Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game\pickup_types.h">
+      <Filter>Source Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game\player.h">
+      <Filter>Source Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game\player_types.h">
+      <Filter>Source Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game\resource_types.h">
+      <Filter>Source Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game\string_utils.h">
+      <Filter>Source Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game\rooms\chambers.h">
+      <Filter>Source Files\game\rooms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game\rooms\room_types.h">
+      <Filter>Source Files\game\rooms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game\rooms\rooms.h">
+      <Filter>Source Files\game\rooms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\game\rooms\titlescreen.h">
+      <Filter>Source Files\game\rooms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\custom_background_types.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generated\resources.h">
+      <Filter>Source Files\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\SMSDev\devkitSMS-master\PSGlib\src\PSGlib.h">
       <Filter>SMSLib</Filter>
     </ClInclude>
     <ClInclude Include="..\source\sounds.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\SMSDev\devkitSMS-master\SGlib\src\SGlib.h">
+      <Filter>SMSLib</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -51,6 +249,9 @@
       <Filter>build</Filter>
     </None>
     <None Include="..\build\clean.bat">
+      <Filter>build</Filter>
+    </None>
+    <None Include="..\build\deploy.bat">
       <Filter>build</Filter>
     </None>
     <None Include="..\out\Downland.map">

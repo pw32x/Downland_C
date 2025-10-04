@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="SMSLib">
+      <UniqueIdentifier>{c9ef1464-5305-434c-8b8a-e75277b516a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="build">
+      <UniqueIdentifier>{b98ae0a7-68ac-4820-8058-322c408645d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\generated">
+      <UniqueIdentifier>{7bd6f1d1-ba38-482c-86e2-a3a602adcd5c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\source\main.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\SMSDev\devkitSMS-master\PSGlib\src\PSGlib.c">
+      <Filter>SMSLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\SMSDev\devkitSMS-master\SGlib\src\SGlib.c">
+      <Filter>SMSLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\sounds.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\SMSDev\devkitSMS-master\PSGlib\src\PSGlib.h">
+      <Filter>SMSLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\SMSDev\devkitSMS-master\SGlib\src\SGlib.h">
+      <Filter>SMSLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\sounds.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\build\Makefile">
+      <Filter>build</Filter>
+    </None>
+    <None Include="..\build\rebuild.bat">
+      <Filter>build</Filter>
+    </None>
+    <None Include="..\build\build.bat">
+      <Filter>build</Filter>
+    </None>
+    <None Include="..\build\clean.bat">
+      <Filter>build</Filter>
+    </None>
+    <None Include="..\out\Downland.map">
+      <Filter>build</Filter>
+    </None>
+  </ItemGroup>
+</Project>

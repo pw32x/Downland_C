@@ -457,3 +457,5 @@ platforms/genesis/res/transitionTileset.png
 /platforms/mastersystem/generated
 platforms/mastersystem/downland.rom
 platforms/mastersystem/source_backup.zip
+/platforms/sg1000/out
+platforms/sg1000/downland.rom

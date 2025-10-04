@@ -1,3 +1,0 @@
-https://github.com/pw32x/gg2c
-
-gg2c_location\gg2c.exe ninja_girl.gal ..\source\ -sms

@@ -10,9 +10,6 @@
 #include <string_view>
 #include <bitset>
 
-#include "lodepng.h"
-
-
 
 #ifdef _WIN64
 std::string g_destinationPath = "generated\\";
@@ -83,6 +80,7 @@ const dl_u8 roomToBankFolderNameIndex[] =
 #define TILE_WIDTH 8
 #define TILE_HEIGHT 8
 #define TILE_SIZE (TILE_WIDTH * TILE_HEIGHT)
+#define EXPORT_TILE_SIZE 8
 
 using Tile = std::array<dl_u8, TILE_SIZE>;
 using TileSet = std::vector<Tile>;
@@ -311,99 +309,6 @@ void buildTileMap(const dl_u8* background, TileMap& tileMap, TileSet& tileSet)
     }
 }
 
-void save_png_8bpp(const dl_u8* background,
-                   unsigned width, 
-                   unsigned height,
-                   const std::string& filename)
-{
-    LodePNGState state;
-    lodepng_state_init(&state);
-
-    state.encoder.auto_convert = 0;
-
-    // Set to indexed color
-    state.info_raw.colortype = LCT_PALETTE;
-    state.info_raw.bitdepth = 8;
-    state.info_png.color.colortype = LCT_PALETTE;
-    state.info_png.color.bitdepth = 8;
-
-    lodepng_palette_add(&state.info_png.color,   0,   0,   0, 255); // index 0: black
-    lodepng_palette_add(&state.info_png.color,   0,   0, 255, 255); // index 1: blue
-    lodepng_palette_add(&state.info_png.color, 255, 165,   0, 255); // index 2: orange
-    lodepng_palette_add(&state.info_png.color, 255, 255, 255, 255); // index 3: white
-
-    lodepng_palette_add(&state.info_raw,   0,   0,   0, 255); // index 0: black
-    lodepng_palette_add(&state.info_raw,   0,   0, 255, 255); // index 1: blue
-    lodepng_palette_add(&state.info_raw, 255, 165,   0, 255); // index 2: orange
-    lodepng_palette_add(&state.info_raw, 255, 255, 255, 255); // index 3: white
-
-    // Encode
-    dl_u8* png;
-    size_t pngSize;
-    unsigned error = lodepng_encode(&png, &pngSize, background, width, height, &state);
-
-    if(error)
-    {
-        throw std::exception("lodepng_encode failed.");
-    }
-
-    // Save to file
-    error = lodepng_save_file(png, pngSize, filename.c_str());
-
-    if (error) 
-    {
-        throw std::exception("lodepng_save_file failed.");
-    }
-
-    lodepng_state_cleanup(&state);
-}
-
-void saveTileSetToPng(const TileSet& tileSet)
-{
-    dl_u8* tileSetBitmap = new dl_u8[tileSet.size() * TILE_SIZE];
-
-    dl_u16 counter = 0;
-    for (auto& tile : tileSet)
-    {
-        memcpy(tileSetBitmap + (counter * TILE_SIZE), tileSet[counter].data(), TILE_SIZE);
-        counter++;
-    }
-
-    save_png_8bpp(tileSetBitmap, 
-                  TILE_WIDTH,
-                  TILE_HEIGHT * static_cast<dl_u16>(tileSet.size()),
-                  g_destinationPath + "backgroundTileset.png");
-
-
-    delete [] tileSetBitmap;
-}
-
-
-
-void saveResFile()
-{
-    std::ostringstream oss;
-
-    oss << "TILESET characterFontTileset \"characterFontTileset.png\" BEST NONE\n";
-    oss << "TILESET dropTileset \"dropTileset.png\" BEST NONE\n";
-    oss << "SPRITE playerTileset \"playerTileset.png\" 2 2 NONE 0\n";
-    oss << "SPRITE regenTileset \"regenTileset.png\" 2 2 NONE 0\n";
-    oss << "TILESET ballTileset \"ballTileset.png\" BEST NONE\n";
-    oss << "TILESET birdTileset \"birdTileset.png\" BEST NONE\n";
-    oss << "SPRITE keyTileset \"keyTileset.png\" 2 2 NONE 0\n";
-    oss << "SPRITE diamondTileset \"diamondTileset.png\" 2 2 NONE 0\n";
-    oss << "SPRITE moneyBagTileset \"moneyBagTileset.png\" 2 2 NONE 0\n";
-    oss << "SPRITE doorTileset \"doorTileset.png\" 2 2 NONE 0\n";
-    oss << "SPRITE cursorTileset \"cursorTileset.png\" 1 1 NONE 0\n";
-    oss << "SPRITE playerSplatTileset \"playerSplatTileset.png\" 3 2 NONE 0 NONE NONE\n";
-    oss << "SPRITE playerLivesTileset \"playerLivesTileset.png\" 2 1 NONE 0 NONE NONE\n";
-    oss << "SPRITE playerLivesRegenTileset \"playerLivesRegenTileset.png\" 2 1 NONE 0 NONE NONE\n";
-    oss << "TILESET backgroundTileset \"backgroundTileset.png\" BEST NONE\n";
-    oss << "TILESET transitionTileset \"transitionTileset.png\" BEST NONE\n";
-
-    std::ofstream outFile(g_destinationPath + "tileset.res");
-    outFile << oss.str();
-}
 
 std::string roomNames[] = 
 {
@@ -433,7 +338,7 @@ void saveTileMapSource(const std::vector<TileMap>& tileMaps)
         oss << "#include \"base_types.h\"\n";
         oss << "\n";
 
-        oss << "const dl_u16 " << roomNames[counter] << "_tileMap[32 * 24] = \n";
+        oss << "const dl_u8 " << roomNames[counter] << "_tileMap[32 * 24] = \n";
         oss << "{\n";
 
         for (int loopy = 0; loopy < TILE_MAP_HEIGHT; loopy++)
@@ -443,6 +348,9 @@ void saveTileMapSource(const std::vector<TileMap>& tileMaps)
             for (int loopx = 0; loopx < TILE_MAP_WIDTH; loopx++)
             {
                 dl_u16 tileIndex = tileMap[loopx + (loopy * TILE_MAP_WIDTH)];
+
+                if (tileIndex < 10)
+                    oss << " ";
 
                 if (tileIndex > 255)
                 {
@@ -507,7 +415,7 @@ void saveSpritePlanar(const dl_u8* spriteData, dl_u8 tileWidth, dl_u8 tileHeight
 
 	int tileIndex = 0;
 	int totalTiles = 0;
-	oss << "unsigned char const " << name << "[" << numTiles * 32 << "] = // " << numTiles << " tiles x " << "32 bytes" << "\n";
+	oss << "unsigned char const " << name << "[" << numTiles * EXPORT_TILE_SIZE << "] = // " << numTiles << " tiles x " << EXPORT_TILE_SIZE << " bytes" << "\n";
 	oss << "{\n";
 
 	int spriteCount = 0;
@@ -574,7 +482,7 @@ void saveCharacterFont(const dl_u8* characterFont)
         destinationFontRunner += CHARACTER_FONT_WIDTH * DESTINATION_FONT_HEIGHT; // destination height
     }
 
-    saveSpritePlanar(destinationFont, 1, CHARACTER_FONT_COUNT, "characterFont4bpp");
+    saveSpritePlanar(destinationFont, 1, CHARACTER_FONT_COUNT, "characterFont1bpp");
 
 
     delete [] destinationFont;
@@ -586,7 +494,7 @@ void saveCursor()
     memset(cursor8bpp, 0, 8*8);
     memset(cursor8bpp, 3, 8);
 
-    saveSpritePlanar(cursor8bpp, 1, 1, "cursor4bpp");
+    saveSpritePlanar(cursor8bpp, 1, 1, "cursor1bpp");
 }
 
 #define NUM_REGEN_FRAMES 4
@@ -657,7 +565,7 @@ dl_u8* saveRegenSprite(const dl_u8* playerSprite)
     //              destinationHeight * (numFrames * 2),
     //              g_destinationPath + "regenTileset.png");
 
-    saveSpritePlanar(sprite8bpp, destinationWidth / 8, (destinationHeight / 8) * numFrames * 2, "playerRegen4bpp");
+    saveSpritePlanar(sprite8bpp, destinationWidth / 8, (destinationHeight / 8) * numFrames * 2, "playerRegen1bpp");
 
     delete [] regenBuffer;
 
@@ -692,7 +600,7 @@ void saveRegenLivesSprite(dl_u8* regenSprite)
 //                  iconImageHeight * numFrames,
 //                  g_destinationPath + "playerLivesRegenTileset.png");
 
-    saveSpritePlanar(regenIconBuffer, regenWidth / 8, (iconImageHeight / 8) * numFrames, "playerLivesRegen4bpp");
+    saveSpritePlanar(regenIconBuffer, regenWidth / 8, (iconImageHeight / 8) * numFrames, "playerLivesRegen1bpp");
 
     delete [] regenIconBuffer;
 }
@@ -729,7 +637,7 @@ void saveSplatSprite(const dl_u8* splatSprite)
     // clear the top five rows
     memset(secondFrame, 0, 24 * 5);
 
-    saveSpritePlanar(sprite8bpp, destinationWidth / 8, (destinationHeight / 8) * numFrames, "playerSplat4bpp");
+    saveSpritePlanar(sprite8bpp, destinationWidth / 8, (destinationHeight / 8) * numFrames, "playerSplat1bpp");
 
     delete [] sprite8bpp;
 }
@@ -765,11 +673,6 @@ void saveSprite4bpp(const dl_u8* sprite,
         sprite += spriteFrameSizeInBytes;
         sprite8bppRunner += destinationFrameSize; 
     }
-
-//    save_png_8bpp(sprite8bpp, 
-//                  destinationWidth,
-//                  destinationHeight * numFrames,
-//                  g_destinationPath + name + ".png");
 
     saveSpritePlanar(sprite8bpp, destinationWidth / 8, (destinationHeight / 8) * numFrames, name.c_str());
 
@@ -812,54 +715,6 @@ void saveSprite4bppClipped(const dl_u8* sprite,
     saveSpritePlanar(sprite8bpp, destinationWidth / 8, (destinationHeight / 8) * numFrames, name.c_str());
 
     delete [] sprite8bpp;
-}
-
-void saveTransitionTileset()
-{
-    const dl_u8 transparentColor = 0;
-    const dl_u8 lineColor = 1;
-    const dl_u8 opaqueColor = 4;
-
-    const dl_u8 numAnimatedFrames = 8;
-    const dl_u8 numTotalTiles = numAnimatedFrames + 1; // 8 animated frames and 1 black frame
-    const dl_u16 bufferSize = TILE_SIZE * numTotalTiles;
-
-    dl_u8 tilesetBuffer[bufferSize];
-    memset(tilesetBuffer, opaqueColor, bufferSize);
-
-    dl_u8* tilesetBufferRunner = tilesetBuffer;
-
-    // first tile is completely black
-    memset(tilesetBuffer, opaqueColor, TILE_SIZE);
-
-    tilesetBufferRunner += TILE_SIZE;
-
-    // next 8 tiles are animated with the transition line
-    for (int loop = 0; loop < numAnimatedFrames; loop++)
-    {
-        for (int row = 0; row < TILE_HEIGHT; row++)
-        {
-            if (row < loop)
-            {
-                memset(tilesetBufferRunner, transparentColor, TILE_WIDTH);
-            }
-            else if (row > loop)
-            {
-                memset(tilesetBufferRunner, opaqueColor, TILE_WIDTH);
-            }
-            else if (row == loop)
-            {
-                memset(tilesetBufferRunner, lineColor, TILE_WIDTH);
-            }
-            
-            tilesetBufferRunner += TILE_WIDTH; // next row
-        }
-    }
-
-    save_png_8bpp(tilesetBuffer, 
-                  TILE_WIDTH,
-                  TILE_HEIGHT * numTotalTiles,
-                  g_destinationPath + "transitionTileset.png");
 }
 
 void saveCleanBackground(const dl_u8* cleanBackground, dl_u8 backgroundIndex)
@@ -948,253 +803,34 @@ void saveString(const dl_u8* string, const char* name, std::ostringstream& oss)
     oss << " };\n";
 }
 
-void saveStrings(const Resources& resources)
+// byte 1     byte 2     byte 3     byte 4    : 32 bits
+// 1111 1111  1111 1111  1111 1111  1111 1111  
+// col0 col1  col2 col3  col4 col5  col6 col7
+// bit0 bit1  bit2 bit3  bit4 bit5  bit6 bit7
+// 01234567 // tile row
+
+void OutputTile1bpp(std::ostringstream& oss, const dl_u8* tileData)
 {
-    std::ostringstream oss;
+    oss << "    ";
 
-    oss << "#include \"base_types.h\"\n";
-    oss << "\n";
+    dl_u32* tileDataRunner = (dl_u32*)tileData;
 
-    saveString(resources.text_downland, "downland", oss);
-    saveString(resources.text_writtenBy, "writtenBy", oss);
-    saveString(resources.text_michaelAichlmayer, "michaelAichlmayer", oss);
-    saveString(resources.text_copyright1983, "copyright1983", oss);
-    saveString(resources.text_spectralAssociates, "spectralAssociates", oss);
-    saveString(resources.text_licensedTo, "licensedTo", oss);
-    saveString(resources.text_tandyCorporation, "tandyCorporation", oss);
-    saveString(resources.text_allRightsReserved, "allRightsReserved", oss);
-    saveString(resources.text_onePlayer, "onePlayer", oss);
-    saveString(resources.text_twoPlayer, "twoPlayer", oss);
-    saveString(resources.text_highScore, "highScore", oss);
-    saveString(resources.text_playerOne, "playerOne", oss);
-    saveString(resources.text_playerTwo, "playerTwo", oss);
-    saveString(resources.text_pl1, "pl1", oss);
-    saveString(resources.text_pl2, "pl2", oss);
-    saveString(resources.text_getReadyPlayerOne, "getReadyPlayerOne", oss);
-    saveString(resources.text_getReadyPlayerTwo, "getReadyPlayerTwo", oss);
-    saveString(resources.text_chamber, "chamber", oss);
-            
-    std::ofstream outFile(g_destinationPath + "strings.c");
-    outFile << oss.str();
-}
-
-void saveSprite(const dl_u8* sprite, dl_u8 width, dl_u8 rowCount, dl_u8 spriteCount, const char* name)
-{
-    const dl_u8 destinationBytesPerRow = width / 8;
-
-    dl_u16 bufferSize = spriteCount * rowCount * destinationBytesPerRow;
-
-    std::ostringstream oss;
-
-    oss << "#include \"base_types.h\"\n";
-    oss << "\n";
-
-    oss << "const dl_u8 " << name << "[" << bufferSize << "] = ";
-    oss << "// " << (dl_u16)width << " x " << (dl_u16)rowCount;
-    oss << "\n";
-    oss << "{\n";
-
-    dl_u8 rowCounter = 0;
-
-    for (int loop = 0; loop < bufferSize; loop += destinationBytesPerRow)
+    for (int row = 0; row < TILE_HEIGHT; row++)
     {
-        if (rowCounter % rowCount == 0)
-        {
-            if (rowCounter)
-                oss << "\n";
+        dl_u8 destPixel = 0;
 
-            dl_u16 spriteIndex = (rowCounter / rowCount);
-            oss << "    // sprite " << (dl_u16)spriteIndex << "\n";
+        for (int column = 0; column < TILE_WIDTH; column++)
+        {
+            destPixel |= (tileData[column + (row * TILE_WIDTH)] ? 1 : 0) << (7 - column);
         }
 
-        oss << "    ";
+        oss << WriteByteAsHex(destPixel) << ", ";
 
-        for (int innerLoop = 0; innerLoop < destinationBytesPerRow; innerLoop++)
-        {
-            oss << "0x" << std::hex << std::uppercase << std::setw(2) << std::setfill('0')
-                << (dl_u16)sprite[innerLoop]
-                << ", ";
-        }
-
-        oss << "\t // ";
-        for (int innerLoop = 0; innerLoop < destinationBytesPerRow; innerLoop++)
-        {
-            oss << std::bitset<8>(sprite[innerLoop]) << " ";
-        }
-        oss << "\n";
-
-        sprite += destinationBytesPerRow;
-        rowCounter++;
+        tileDataRunner++;
     }
 
-    oss << "};\n";
     oss << "\n";
-
-    std::ofstream outFile(g_destinationPath + name + ".c");
-    outFile << oss.str();
 }
-
-void saveGeneralData(const Resources& resources)
-{
-    std::ostringstream oss;
-
-    oss << "#include \"base_types.h\"\n";
-    oss << "#include \"pickup_types.h\"\n";
-    oss << "#include \"door_types.h\"\n";
-    oss << "\n";
-
-    //// pickups
-    //oss << "// pick ups\n";
-    //oss << "extern const dl_u8 diamondSprite[20];\n";
-    //oss << "extern const dl_u8 moneyBagSprite[20];\n";
-    //oss << "extern const dl_u8 keySprite[20];\n";
-    //oss << "\n";
-    //oss << "const dl_u8* pickupSprites[3] = { diamondSprite, moneyBagSprite, keySprite };\n";
-    //oss << "\n";
-
-
-
-    /*
-    // door info data positions
-    oss << "// door info data positions\n";
-
-    for (int loop = 0; loop < NUM_ROOMS; loop++)
-    {
-        const DoorInfoData& doorInfoData = resources.roomResources[loop].doorInfoData;
-
-        oss << "const DoorInfo doorInfo" << (dl_u16)loop << "_array[" << (dl_u16)doorInfoData.drawInfosCount << "] = \n";
-        oss << "{ \n";
-        for (int innerLoop = 0; innerLoop < doorInfoData.drawInfosCount; innerLoop++)
-        {
-            const DoorInfo& doorInfo = doorInfoData.doorInfos[innerLoop];
-
-            oss << "    { ";
-            oss << (dl_u16)doorInfo.y << ", ";
-            oss << (dl_u16)doorInfo.x << ", ";
-            oss << (dl_u16)doorInfo.yLocationInNextRoom << ", ";
-            oss << (dl_u16)doorInfo.xLocationInNextRoom << ", ";
-            oss << (dl_u16)doorInfo.nextRoomNumber << ", ";
-            oss << (dl_u16)doorInfo.globalDoorIndex << " },\n";
-        }
-        oss << "};\n";
-        oss << "\n";
-
-
-        oss << "const DoorInfoData doorInfoData" << loop << " = \n";
-        oss << "{\n";
-        oss << "    " << (dl_u16)doorInfoData.drawInfosCount << ",\n";
-        oss << "    doorInfo" << (dl_u16)loop << "_array,\n";
-        oss << "};\n";
-        oss << "\n";
-        oss << "\n";
-    }
-    */
-
-    std::ofstream outFile(g_destinationPath + "general.c");
-    outFile << oss.str();   
-}
-
-void saveDropSpawns(const Resources& resources)
-{
-    //resources.roomResources[0].dropSpawnPositions);
-
-    for (int loop = 0; loop < NUM_ROOMS_PLUS_TITLESCREN; loop++)
-    {
-        std::ostringstream oss;
-
-        std::string dropSpawnPositionsName = roomNames[loop];
-        dropSpawnPositionsName += "_dropSpawnPositions";
-
-        oss << "#include \"base_types.h\"\n";
-        oss << "#include \"drops_types.h\"\n";
-        oss << "\n";
-
-        const DropSpawnPositions& dropSpawnPositions = resources.roomResources[loop].dropSpawnPositions;
-
-        oss << "const DropSpawnArea " << dropSpawnPositionsName << "_array[" << (dl_u16)dropSpawnPositions.spawnAreasCount << "] = \n";  
-        oss << "{\n";
-        for (int innerLoop = 0; innerLoop < dropSpawnPositions.spawnAreasCount; innerLoop++)
-        {
-            oss << "    { ";
-            oss << (dl_u16)dropSpawnPositions.dropSpawnAreas[innerLoop].dropSpawnPointsCount << ", ";
-            oss << (dl_u16)dropSpawnPositions.dropSpawnAreas[innerLoop].x << ", ";
-            oss << (dl_u16)dropSpawnPositions.dropSpawnAreas[innerLoop].y;
-            oss << " }, \n";
-        }
-        oss << "};\n";
-
-        oss << "\n";
-
-        oss << "const DropSpawnPositions " << dropSpawnPositionsName << " = \n";
-        oss << "{\n";
-        oss << "    " << (dl_u16)dropSpawnPositions.spawnAreasCount << ", \n";
-        oss << "    " << dropSpawnPositionsName << "_array, \n"; 
-        oss << "};\n";
-
-        std::string bankFolder = g_destinationPath;
-        bankFolder += bankFolderNames[roomToBankFolderNameIndex[loop]];
-        bankFolder += "\\";
-
-        std::ofstream outFile(bankFolder + dropSpawnPositionsName + ".c");
-        outFile << oss.str();        
-    }
-}
-
-void saveBitshiftedSprite(const dl_u8* bitShiftedSprite, dl_u8 spriteCount, dl_u8 rowCount, const char* name)
-{
-    dl_u8 destinationBytesPerRow = 3; // 24 pixels
-#define NUM_BIT_SHIFTS 4
-
-	dl_u16 bufferSize = spriteCount * rowCount * destinationBytesPerRow * NUM_BIT_SHIFTS;
-
-    std::ostringstream oss;
-
-    oss << "#include \"base_types.h\"\n";
-    oss << "\n";
-
-    oss << "const dl_u8 " << name << "[" << bufferSize << "] = \n";
-    oss << "{\n";
-
-    dl_u8 rowCounter = 0;
-
-    for (int loop = 0; loop < bufferSize; loop += destinationBytesPerRow)
-    {
-        if (rowCounter % rowCount == 0)
-        {
-            if (rowCounter)
-                oss << "\n";
-
-            dl_u16 spriteIndex = (rowCounter / rowCount) >> 2;
-            dl_u16 bitShift = (rowCounter / rowCount) % 4;
-            oss << "    // sprite " << (dl_u16)spriteIndex << " (bit shift " << bitShift << ")\n";
-        }
-
-        oss << "    " 
-            << "0x" << std::hex << std::uppercase << std::setw(2) << std::setfill('0')
-            << (dl_u16)bitShiftedSprite[0]
-            << ", " 
-            << "0x" << std::hex << std::uppercase << std::setw(2) << std::setfill('0')
-            << (dl_u16)bitShiftedSprite[1]
-            << ", " 
-            << "0x" << std::hex << std::uppercase << std::setw(2) << std::setfill('0')
-            << (dl_u16)bitShiftedSprite[2]
-            << ",\t // "
-            << std::bitset<8>(bitShiftedSprite[0]) << " "
-            << std::bitset<8>(bitShiftedSprite[1]) << " "
-            << std::bitset<8>(bitShiftedSprite[2]) << " "
-            << "\n";
-
-        bitShiftedSprite += destinationBytesPerRow;
-        rowCounter++;
-    }
-
-    oss << "};\n";
-    oss << "\n";
-            
-    std::ofstream outFile(g_destinationPath + name + ".c");
-    outFile << oss.str();
-}
-
 
 void saveTileSet(std::vector<Tile>& tileSet)
 {
@@ -1203,11 +839,11 @@ void saveTileSet(std::vector<Tile>& tileSet)
     oss << "#include \"base_types.h\"\n";
     oss << "\n";
 
-	std::string outputTileDataName = "tileSet4bpp";
+	std::string outputTileDataName = "tileSet1bpp";
 
 	int tileIndex = 0;
 	int totalTiles = 0;
-	oss << "unsigned char const " << outputTileDataName << "[" << tileSet.size() * 32 << "] = // " << tileSet.size() << " tiles x " << "32 bytes" << "\n";
+	oss << "unsigned char const " << outputTileDataName << "[" << tileSet.size() * EXPORT_TILE_SIZE << "] = // " << tileSet.size() << " tiles x " << EXPORT_TILE_SIZE << " bytes" << "\n";
 	oss << "{\n";
 
 	int tileCount = 0;
@@ -1217,7 +853,7 @@ void saveTileSet(std::vector<Tile>& tileSet)
 		oss << "    // tile: " << tileCount << "\n";
 		tileCount++;
 
-		OutputTilePlanar(oss, tile.data());
+		OutputTile1bpp(oss, tile.data());
         oss << "\n";
 	}
 
@@ -1288,49 +924,6 @@ void saveResourcesSource(Resources& resources)
     oss << "#include \"resource_types.h\"\n";
     oss << "#include \"custom_background_types.h\"\n";
     oss << "\n";
-
-
-    //oss << "extern const dl_u8 characterFont[273];\n";
-    //oss << "\n";
-    //oss << "extern const dl_u8 string_downland[14];\n";
-    //oss << "extern const dl_u8 string_writtenBy[12];\n";
-    //oss << "extern const dl_u8 string_michaelAichlmayer[18];\n";
-    //oss << "extern const dl_u8 string_copyright1983[15];\n";
-    //oss << "extern const dl_u8 string_spectralAssociates[20];\n";
-    //oss << "extern const dl_u8 string_licensedTo[13];\n";
-    //oss << "extern const dl_u8 string_tandyCorporation[18] ;\n";
-    //oss << "extern const dl_u8 string_allRightsReserved[20];\n";
-    //oss << "extern const dl_u8 string_onePlayer[11];\n";
-    //oss << "extern const dl_u8 string_twoPlayer[11];\n";
-    //oss << "extern const dl_u8 string_highScore[11];\n";
-    //oss << "extern const dl_u8 string_playerOne[11];\n";
-    //oss << "extern const dl_u8 string_playerTwo[11];\n";
-    //oss << "extern const dl_u8 string_pl1[4];\n";
-    //oss << "extern const dl_u8 string_pl2[4];\n";
-    //oss << "extern const dl_u8 string_getReadyPlayerOne[21];\n";
-    //oss << "extern const dl_u8 string_getReadyPlayerTwo[21];\n";
-    //oss << "extern const dl_u8 string_chamber[8];\n";
-    //oss << "\n";
-    //oss << "extern const dl_u8 bitShiftedSprite_player[1920];\n";
-    //oss << "extern const dl_u8 bitShiftedSprite_ball[192];\n";
-    //oss << "extern const dl_u8 bitShiftedSprite_bird[144];\n";
-    //oss << "extern const dl_u8 bitShiftedSprite_door[192];\n";
-    //oss << "extern const dl_u8 bitShiftedSprite_playerCollisionMasks[600];\n";
-    //oss << "extern const dl_u8 bitShiftedSprite_playerSplat[108];\n";
-    //oss << "\n";
-    //oss << "extern const dl_u8 diamondSprite[20];\n";
-    //oss << "extern const dl_u8 moneyBagSprite[20];\n";
-    //oss << "extern const dl_u8 keySprite[20];\n";
-    //oss << "\n";
-    //oss << "extern const dl_u8 dropSprite[48];\n";
-    //oss << "\n";
-    //oss << "extern const PickupPosition roomPickupPositions[50];\n";
-    //oss << "extern const dl_u8 keyPickUpDoorIndexes[20];\n";
-    //oss << "extern const dl_u8 keyPickUpDoorIndexesHardMode[20];\n";
-    //oss << "extern const dl_u8 offsetsToDoorsAlreadyActivated[16];\n";
-    //oss << "extern const dl_u8 roomsWithBouncingBall[10];\n";
-    //oss << "\n";
-    //oss << "\n";
 
     saveString(resources.text_downland, "downland", oss);
     saveString(resources.text_writtenBy, "writtenBy", oss);
@@ -1425,7 +1018,7 @@ void saveResourcesSource(Resources& resources)
     for (int loop = 0; loop < NUM_ROOMS_PLUS_TITLESCREN; loop++)
     {
         oss << "extern const dl_u8 " << roomNames[loop] << "_cleanBackground[" << FRAMEBUFFER_PITCH * FRAMEBUFFER_HEIGHT << "];\n";
-        oss << "extern const dl_u16 " << roomNames[loop] << "_tileMap[32 * 24];\n";
+        oss << "extern const dl_u8 " << roomNames[loop] << "_tileMap[32 * 24];\n";
 
         oss << "const SMSBackgroundData " << roomNames[loop] << "_customBackgroundData = "
             << "{ " 
@@ -1484,57 +1077,6 @@ void saveResourcesSource(Resources& resources)
         oss << "};\n";
         oss << "\n";
     }
-
-	//oss << "const Resources resources = \n";
-	//oss << "{\n";
-    //oss << "    characterFont,\n";
-    //oss << "\n";
-
-    //oss << "    // strings\n";
-    //oss << "    string_downland,\n";
-    //oss << "    string_writtenBy,\n";
-    //oss << "    string_michaelAichlmayer,\n";
-    //oss << "    string_copyright1983,\n";
-    //oss << "    string_spectralAssociates,\n";
-    //oss << "    string_licensedTo,\n";
-    //oss << "    string_tandyCorporation,\n";
-    //oss << "    string_allRightsReserved,\n";
-    //oss << "    string_onePlayer,\n";
-    //oss << "    string_twoPlayer,\n";
-    //oss << "    string_highScore,\n";
-    //oss << "    string_playerOne,\n";
-    //oss << "    string_playerTwo,\n";
-    //oss << "    string_pl1,\n";
-    //oss << "    string_pl2,\n";
-    //oss << "    string_getReadyPlayerOne,\n";
-    //oss << "    string_getReadyPlayerTwo,\n";
-    //oss << "    string_chamber,\n";
-    //oss << "\n";
-
-    //oss << "    // sprites\n";
-    //oss << "    NULL, // sprites_player\n";
-    //oss << "    NULL, // collisionmasks_player,\n";
-    //oss << "    NULL, // sprites_bouncyBall,\n";
-    //oss << "    NULL, // sprites_bird,\n";
-    //oss << "    moneyBagSprite,\n";
-    //oss << "    diamondSprite,\n";
-    //oss << "    keySprite,\n";
-    //oss << "    NULL, // sprite_playerSplat,\n";
-    //oss << "    NULL, // sprite_door,\n";
-    //oss << "    dropSprite,\n";
-    //oss << "\n";
-
-    //oss << "    // bit shifted sprites\n";
-    //oss << "    bitShiftedSprite_player,\n";
-    //oss << "    bitShiftedSprite_playerCollisionMasks,\n";
-    //oss << "    bitShiftedSprite_ball,\n";
-    //oss << "    bitShiftedSprite_bird,\n";
-    //oss << "    bitShiftedSprite_playerSplat,\n";
-    //oss << "    bitShiftedSprite_door,\n";
-    //oss << "\n";
-    //
-    //oss << "    { diamondSprite, moneyBagSprite, keySprite },\n";
-    //oss << "\n";
 
     oss << "const RoomResources res_roomResources[NUM_ROOMS_PLUS_TITLESCREN] = \n";
     oss << "{\n";
@@ -1680,34 +1222,17 @@ int main()
 
     saveCleanBackground(background, GET_READY_ROOM_INDEX);
 
-    //saveStrings(resources);
-
-    //saveBitshiftedSprite(resources.bitShiftedCollisionmasks_player, PLAYER_SPRITE_COUNT, PLAYER_COLLISION_MASK_ROWS, "bitShiftedSprite_playerCollisionMasks");
-    //saveBitshiftedSprite(resources.bitShiftedSprites_bouncyBall, BALL_SPRITE_COUNT, BALL_SPRITE_ROWS, "bitShiftedSprite_ball");
-    //saveBitshiftedSprite(resources.bitShiftedSprites_bird, BIRD_SPRITE_COUNT, BIRD_SPRITE_ROWS, "bitShiftedSprite_bird");
-    //saveBitshiftedSprite(resources.bitShiftedSprites_playerSplat, PLAYER_SPLAT_SPRITE_COUNT, PLAYER_SPLAT_SPRITE_ROWS, "bitShiftedSprite_playerSplat");
-    //saveBitshiftedSprite(resources.bitShiftedSprites_door, DOOR_SPRITE_COUNT, DOOR_SPRITE_ROWS, "bitShiftedSprite_door");
-    //saveBitshiftedSprite(resources.bitShiftedSprites_player, PLAYER_SPRITE_COUNT, PLAYER_SPRITE_ROWS, "bitShiftedSprite_player");
-    //saveSprite(resources.sprite_diamond, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, "diamondSprite");
-    //saveSprite(resources.sprite_moneyBag, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, "moneyBagSprite");
-    //saveSprite(resources.sprite_key, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, "keySprite");
-    //saveSprite(resources.sprites_drops, DROP_SPRITE_WIDTH, DROP_SPRITE_ROWS, 4, "dropSprite");
-    //saveSprite(resources.characterFont, CHARACTER_FONT_WIDTH, CHARACTER_FONT_HEIGHT, CHARACTER_FONT_COUNT, "characterFont");
-
-    //saveDropSpawns(resources);
-    //saveGeneralData(resources);
-
     saveCharacterFont(resources.characterFont);
 
-    saveSprite4bpp(resources.sprites_drops, DROP_SPRITE_WIDTH, DROP_SPRITE_ROWS, DROP_SPRITE_COUNT, "drop4bpp");   
+    saveSprite4bpp(resources.sprites_drops, DROP_SPRITE_WIDTH, DROP_SPRITE_ROWS, DROP_SPRITE_COUNT, "drop1bpp");   
 
-	saveSprite4bpp(resources.sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYER_SPRITE_COUNT, "player4bpp");
-	saveSprite4bpp(resources.sprites_bouncyBall, BALL_SPRITE_WIDTH, BALL_SPRITE_ROWS, BALL_SPRITE_COUNT, "ball4bpp");
-	saveSprite4bpp(resources.sprites_bird, BIRD_SPRITE_WIDTH, BIRD_SPRITE_ROWS, BIRD_SPRITE_COUNT, "bird4bpp");
-	saveSprite4bpp(resources.sprite_key, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, "key4bpp");
-	saveSprite4bpp(resources.sprite_diamond, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, "diamond4bpp");
-	saveSprite4bpp(resources.sprite_moneyBag, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, "moneyBag4bpp");
-	saveSprite4bpp(resources.sprite_door, DOOR_SPRITE_WIDTH, DOOR_SPRITE_ROWS, 1, "door4bpp");
+	saveSprite4bpp(resources.sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYER_SPRITE_COUNT, "player1bpp");
+	saveSprite4bpp(resources.sprites_bouncyBall, BALL_SPRITE_WIDTH, BALL_SPRITE_ROWS, BALL_SPRITE_COUNT, "ball1bpp");
+	saveSprite4bpp(resources.sprites_bird, BIRD_SPRITE_WIDTH, BIRD_SPRITE_ROWS, BIRD_SPRITE_COUNT, "bird1bpp");
+	saveSprite4bpp(resources.sprite_key, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, "key1bpp");
+	saveSprite4bpp(resources.sprite_diamond, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, "diamond1bpp");
+	saveSprite4bpp(resources.sprite_moneyBag, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, "moneyBag1bpp");
+	saveSprite4bpp(resources.sprite_door, DOOR_SPRITE_WIDTH, DOOR_SPRITE_ROWS, 1, "door1bpp");
 
 
     saveCursor();
@@ -1720,12 +1245,7 @@ int main()
 
 
     saveSplatSprite(resources.sprite_playerSplat);
-    saveSprite4bppClipped(resources.sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYERICON_NUM_SPRITE_ROWS, PLAYER_SPRITE_COUNT, "playerLives4bpp");
-
-    /*
-    saveTransitionTileset();
-    saveTileSetToPng(tileSet);
-    */
+    saveSprite4bppClipped(resources.sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYERICON_NUM_SPRITE_ROWS, PLAYER_SPRITE_COUNT, "playerLives1bpp");
 
     saveTileSet(tileSet);
 
@@ -1733,10 +1253,6 @@ int main()
 
     saveResourcesHeader(resources);
     saveResourcesSource(resources);
-
-    //saveTileMapHeader();
-
-    //saveResFile();
 
     std::cout << "**** DLExporter Master System END\n";
 }

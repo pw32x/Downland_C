@@ -6,7 +6,7 @@
 typedef struct
 {
 	const dl_u8* cleanBackground;
-	const dl_u16* tileMap;
+	const dl_u8* tileMap;
 } SMSBackgroundData;
 
 #endif

@@ -1,6 +1,6 @@
 
 #include <stdio.h>
-#include "SGlib.h"
+#include <SGlib.h>
 #include <PSGLib.h>
 
 #include "base_types.h"
@@ -17,6 +17,9 @@
 #include "resources.h"
 
 #include "sounds.h"
+
+/* function to print messages to the debug console of emulators */
+void SMS_debugPrintf(const unsigned char *format, ...) __naked __preserves_regs(a,b,c,iyh,iyl);
 
 const dl_u8 roomToBankIndex[] = 
 {
@@ -144,10 +147,8 @@ const dl_u8 blackPalette[] =
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
-extern unsigned char const tileSet4bpp[6240];
+extern unsigned char const tileSet1bpp[1560];
 extern unsigned char const characterFont4bpp[1248];
-extern const dl_u16 chamber0_tileMap[];
-extern const dl_u16 chamber1_tileMap[];
 
 extern unsigned char const ball4bpp[128]; // 4 tiles x 32 bytes
 extern unsigned char const bird4bpp[128]; // 4 tiles x 32 bytes
@@ -163,13 +164,15 @@ extern unsigned char const playerLivesRegen4bpp[256]; // 10 tiles x 32 bytes
 extern unsigned char const playerRegen4bpp[1024]; // 40 tiles x 32 bytes
 extern unsigned char const cursor4bpp[32]; // 1 tiles x 32 bytes
 
+#define DROPS_TILE_INDEX 0
+
 dl_u16 tileText[22];
 
 void drawTileText(const dl_u8* text, dl_u16 xyLocation)
 {
     dl_u16 tilex = (xyLocation & 31);
     dl_u16 tiley = (xyLocation >> 8);
-	dl_u16* tileTextRunner = tileText;
+	dl_u8* tileTextRunner = tileText;
 
     // for each character
     while (*text != 0xff)
@@ -179,14 +182,14 @@ void drawTileText(const dl_u8* text, dl_u16 xyLocation)
 		text++;
     }
 
-	SG_loadTileMap(tilex, tiley, tileText, (tileTextRunner - tileText) << 1);
+	SG_loadTileMap(tilex, tiley, tileText, (tileTextRunner - tileText));
 }
 
 void chamber_draw(dl_u8 roomNumber)
 {
 	const SMSBackgroundData* backgroundData = (const SMSBackgroundData*)res_roomResources[roomNumber].backgroundDrawData;
 	gameData_cleanBackground = (dl_u8*)backgroundData->cleanBackground;
-	SG_loadTileMap(0, 0, (dl_u8*)backgroundData->tileMap, 32 * 24 * 2);
+	SG_loadTileMap(0, 0, backgroundData->tileMap, 32 * 24);
 
 	if (!gameData_currentPlayerData->playerNumber)
 		drawTileText(res_string_pl1, PLAYERLIVES_TEXT_DRAW_LOCATION);
@@ -212,7 +215,7 @@ void get_ready_room_draw(dl_u8 roomNumber)
 
 	const SMSBackgroundData* backgroundData = (const SMSBackgroundData*)res_roomResources[TITLESCREEN_ROOM_INDEX].backgroundDrawData;
 	gameData_cleanBackground = (dl_u8*)getReadyScreen_cleanBackground;
-	SG_loadTileMap(0, 0, (dl_u8*)backgroundData->tileMap, 32 * 24 * 2);
+	SG_loadTileMap(0, 0, backgroundData->tileMap, 32 * 24);
 
 	// get ready text
 	const dl_u8* getReadyString = gameData_currentPlayerData->playerNumber == PLAYER_ONE ? res_string_getReadyPlayerOne : res_string_getReadyPlayerTwo;
@@ -223,7 +226,7 @@ void titleScreen_draw(dl_u8 roomNumber)
 {
 	const SMSBackgroundData* backgroundData = (const SMSBackgroundData*)res_roomResources[roomNumber].backgroundDrawData;
 	gameData_cleanBackground = (dl_u8*)backgroundData->cleanBackground;
-	SG_loadTileMap(0, 0, (dl_u8*)backgroundData->tileMap, 32 * 24 * 2);
+	SG_loadTileMap(0, 0, backgroundData->tileMap, 32 * 24);
 
 	drawTileText(res_string_downland, 0x03c9 + 64); // 0x07c9 original coco mem location
 	drawTileText(res_string_writtenBy, 0x050a); // 0x090A original coco mem location
@@ -275,7 +278,7 @@ void drawDrops(void)
         if ((dl_s8)dropsDrawRunner->wiggleTimer < 0 || // wiggling
             dropsDrawRunner->wiggleTimer > 1)   // falling
         {
-			SG_addSprite((dropsDrawRunner->x << 1),  (dropsDrawRunner->y >> 8), 24, 0);
+			SG_addSprite((dropsDrawRunner->x << 1),  (dropsDrawRunner->y >> 8), DROPS_TILE_INDEX, 0x0f);
         }
 
         dropsDrawRunner++;
@@ -476,15 +479,50 @@ void PSGUpdate(void)
 	PSGSFXFrame();
 }
 
+const dl_u8 tile[] = 
+{
+	0xff, // 11111111
+	0x87, // 10000111
+	0x87, // 10000111
+	0x99, // 10011001
+	0x99, // 10011001
+	0x81, // 10000001
+	0x81, // 10000001
+	0xff, // 11111111
+};
+
+const dl_u8 tileColors[] = 
+{
+	0x50, 0x50, 0x50, 0x50, 0x50, 0x50, 0x50, 0x50
+};
+
+dl_u8 spriteData[] =
+{
+	0x3c,
+	0x42,
+	0xa5,
+	0xa5,
+	0x81,
+	0xa5,
+	0x5A,
+	0x3c,
+};
+
+void setTileColors(dl_u16 tileIndex)
+{
+	for (dl_u16 loop = 0; loop < 256; loop++)
+		SG_loadTileColours(tileColors, loop + tileIndex, sizeof(tileColors));
+}
+
 void main(void)
 {
 	// Clear VRAM 
 	SG_VRAMmemsetW(0, 0x0000, 16384);
-	//SG_setSpriteMode(SPRITEMODE_TALL);
+	SG_setSpriteMode(SG_SPRITEMODE_LARGE);
 
 	// Turn on the display
 	SG_displayOn();
-	SG_setBackdropColor(SG_COLOR_LIGHT_BLUE);
+	SG_setBackdropColor(SG_COLOR_BLACK);
 	//SG_loadBGPalette(blackPalette);
 	//SG_loadSpritePalette(blackPalette);
 	SG_waitForVBlank ();
@@ -492,26 +530,48 @@ void main(void)
 	SG_initSprites();
 	SG_copySpritestoSAT();
 
-	// load tiles for background
-	load16x8SpriteTiles(ball4bpp, 256, 4); // 4 tiles x 32 bytes
-	load16x8SpriteTiles(bird4bpp, 256 + 8, 124); // 4 tiles x 32 bytes
-	load16x16SpriteTiles(diamond4bpp, 256 + 16, 1);  // 4 tiles x 32 bytes
-	load16x16SpriteTiles(door4bpp, 256 + 20, 1); // 4 tiles x 32 bytes
-	SG_loadTilePatterns(drop4bpp, 256 + 24, 64); // 2 tiles x 32 bytes
-	load16x16SpriteTiles(key4bpp, 256 + 26, 1); // 4 tiles x 32 bytes
-	load16x16SpriteTiles(moneyBag4bpp, 256 + 30, 1); // 4 tiles x 32 bytes
-	load16x16SpriteTiles(player4bpp, 256 + 34, 10); // 40 tiles x 32 bytes
-	load24x16SpriteTiles(playerSplat4bpp, 256 + 74, 2); // 12 tiles x 32 bytes
 
-	load16x8SpriteTiles(playerLives4bpp, 256 + 86, 20); // 20 tiles x 32 bytes
-	load16x16SpriteTiles(playerRegen4bpp, 256 + 126, 8); // 32 tiles x 32 bytes
-	load16x8SpriteTiles(cursor4bpp, 256 + 158, 1); // 1 tiles x 32 bytes
-	load16x8SpriteTiles(playerLivesRegen4bpp, 256 + 160, 16); // 16 tiles x 32 bytes
+
+	//SG_loadTilePatterns(tile, 0, sizeof(tile));
+	//SG_loadTilePatterns(tile, 0 + 256, sizeof(tile));
+	//SG_loadTilePatterns(tile, 0 + 512, sizeof(tile));
+
+	setTileColors(0);
+	setTileColors(256);
+	setTileColors(512);
+
+	SG_loadSpritePatterns(spriteData, 0, sizeof(spriteData));
+	SG_loadSpritePatterns(spriteData, 1, sizeof(spriteData));
+	SG_loadSpritePatterns(spriteData, 2, sizeof(spriteData));
+	SG_loadSpritePatterns(spriteData, 3, sizeof(spriteData));
+
+	/*
+	// load tiles for background
+	load16x8SpriteTiles(ball4bpp, 0, 4); // 4 tiles x 32 bytes
+	load16x8SpriteTiles(bird4bpp, 8, 124); // 4 tiles x 32 bytes
+	load16x16SpriteTiles(diamond4bpp, 16, 1);  // 4 tiles x 32 bytes
+	load16x16SpriteTiles(door4bpp, 20, 1); // 4 tiles x 32 bytes
+	SG_loadTilePatterns(drop4bpp, 24, 64); // 2 tiles x 32 bytes
+	load16x16SpriteTiles(key4bpp, 26, 1); // 4 tiles x 32 bytes
+	load16x16SpriteTiles(moneyBag4bpp, 30, 1); // 4 tiles x 32 bytes
+	load16x16SpriteTiles(player4bpp, 34, 10); // 40 tiles x 32 bytes
+	load24x16SpriteTiles(playerSplat4bpp, 74, 2); // 12 tiles x 32 bytes
+
+	load16x8SpriteTiles(playerLives4bpp, 86, 20); // 20 tiles x 32 bytes
+	load16x16SpriteTiles(playerRegen4bpp, 126, 8); // 32 tiles x 32 bytes
+	load16x8SpriteTiles(cursor4bpp, 158, 1); // 1 tiles x 32 bytes
+	load16x8SpriteTiles(playerLivesRegen4bpp, 160, 16); // 16 tiles x 32 bytes
 	
 	g_regenSpriteIndex = 0;
+	*/
 
-	SG_loadTilePatterns(tileSet4bpp, 0, 6240);
-	SG_loadTilePatterns(characterFont4bpp, 195, 1248);
+	// load the tileset in three different areas of vram
+	SG_loadTilePatterns(tileSet1bpp, 0, sizeof(tileSet1bpp));
+	SG_loadTilePatterns(tileSet1bpp, 256, sizeof(tileSet1bpp));
+	SG_loadTilePatterns(tileSet1bpp, 512, sizeof(tileSet1bpp));
+
+	//SG_loadTilePatterns(characterFont4bpp, 195, 1248);
+	
 
 	// room draw setup
     m_drawRoomFunctions[0] = drawChamber;
@@ -537,8 +597,13 @@ void main(void)
 
 	SG_setFrameInterruptHandler(PSGUpdate);
 
+	dl_u8 counter=0;
+
 	for(;;) 
 	{ 
+		//SG_setBackdropColor(counter & 0xf);
+		counter++;
+
         if (gameData_currentPlayerData != NULL)
         {
             controllerIndex = gameData_currentPlayerData->playerNumber;
@@ -549,6 +614,12 @@ void main(void)
 		// Game Loop
 		SG_initSprites();
 
+		//SG_addSprite(32, 32, 0, 0x7);
+		//SG_addSprite(64, 32, 0, 0x2);
+		//SG_addSprite(96, 32, 0, 0x3);
+		//SG_addSprite(128,32, 0, 0x4);
+		//SG_addSprite(160,48, 0, 0x5);
+
 		if (!gameData_paused)
 		{
 			Game_Update();
@@ -556,6 +627,9 @@ void main(void)
 
 		m_drawRoomFunctions[gameData_currentRoom->roomNumber]();
 
+		//SMS_debugPrintf("Test\n");
+
+		//SG_setBackdropColor(SG_COLOR_BLACK);
 		// VBLANK
 		SG_waitForVBlank ();
 
@@ -669,6 +743,7 @@ void drawChamber(void)
 
 void drawTitleScreen(void)
 {
+
 	drawDrops();
 
 	dl_u8 x = gameData_numPlayers == 1 ? 32 : 128;

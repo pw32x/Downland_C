@@ -110,8 +110,8 @@
     <NMakePreprocessorDefinitions>_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <NMakeOutput>..\out\Downland.sg</NMakeOutput>
-    <NMakePreprocessorDefinitions>CUSTOM_BACKGROUND_DRAWING;DISABLE_DOOR_DRAWING;DISABLE_RESOURCE_LOADER;WIN32;NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+    <NMakeOutput>..\out\Downland_sg.sms</NMakeOutput>
+    <NMakePreprocessorDefinitions>WIN32;NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
     <NMakeBuildCommandLine>..\build\build.bat</NMakeBuildCommandLine>
     <NMakeReBuildCommandLine>..\build\rebuild.bat</NMakeReBuildCommandLine>
     <NMakeCleanCommandLine>..\build\clean.bat</NMakeCleanCommandLine>
@@ -125,24 +125,24 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\..\..\..\SMSDev\devkitSMS-master\PSGlib\src\PSGlib.c" />
     <ClCompile Include="..\..\..\..\..\..\SMSDev\devkitSMS-master\SGlib\src\SGlib.c" />
-    <ClCompile Include="..\generated\bank2_vdp\ball4bpp.c" />
-    <ClCompile Include="..\generated\bank2_vdp\bird4bpp.c" />
-    <ClCompile Include="..\generated\bank2_vdp\characterFont4bpp.c" />
-    <ClCompile Include="..\generated\bank2_vdp\cursor4bpp.c" />
-    <ClCompile Include="..\generated\bank2_vdp\diamond4bpp.c" />
-    <ClCompile Include="..\generated\bank2_vdp\door4bpp.c" />
-    <ClCompile Include="..\generated\bank2_vdp\drop4bpp.c" />
-    <ClCompile Include="..\generated\bank2_vdp\key4bpp.c" />
-    <ClCompile Include="..\generated\bank2_vdp\moneyBag4bpp.c" />
-    <ClCompile Include="..\generated\bank2_vdp\player4bpp.c" />
-    <ClCompile Include="..\generated\bank2_vdp\playerLives4bpp.c" />
-    <ClCompile Include="..\generated\bank2_vdp\playerLivesRegen4bpp.c" />
-    <ClCompile Include="..\generated\bank2_vdp\playerRegen4bpp.c" />
-    <ClCompile Include="..\generated\bank2_vdp\playerSplat4bpp.c" />
-    <ClCompile Include="..\generated\bank2_vdp\tileSet4bpp.c" />
-    <ClCompile Include="..\generated\bank3_chamber0\chamber0_cleanBackground.c" />
-    <ClCompile Include="..\generated\bank3_chamber0\chamber0_tileMap.c" />
+    <ClCompile Include="..\generated\bank2\chamber0_cleanBackground.c" />
+    <ClCompile Include="..\generated\bank2\chamber0_tileMap.c" />
     <ClCompile Include="..\generated\resources.c" />
+    <ClCompile Include="..\generated\sprites\ball1bpp.c" />
+    <ClCompile Include="..\generated\sprites\bird1bpp.c" />
+    <ClCompile Include="..\generated\sprites\characterFont1bpp.c" />
+    <ClCompile Include="..\generated\sprites\cursor1bpp.c" />
+    <ClCompile Include="..\generated\sprites\diamond1bpp.c" />
+    <ClCompile Include="..\generated\sprites\door1bpp.c" />
+    <ClCompile Include="..\generated\sprites\drop1bpp.c" />
+    <ClCompile Include="..\generated\sprites\key1bpp.c" />
+    <ClCompile Include="..\generated\sprites\moneyBag1bpp.c" />
+    <ClCompile Include="..\generated\sprites\player1bpp.c" />
+    <ClCompile Include="..\generated\sprites\playerLives1bpp.c" />
+    <ClCompile Include="..\generated\sprites\playerLivesRegen1bpp.c" />
+    <ClCompile Include="..\generated\sprites\playerRegen1bpp.c" />
+    <ClCompile Include="..\generated\sprites\playerSplat1bpp.c" />
+    <ClCompile Include="..\generated\sprites\tileSet1bpp.c" />
     <ClCompile Include="..\source\game\ball.c" />
     <ClCompile Include="..\source\game\bird.c" />
     <ClCompile Include="..\source\game\checksum_utils.c" />
@@ -161,6 +161,7 @@
     <ClCompile Include="..\source\game\rooms\transitions.c" />
     <ClCompile Include="..\source\game\string_utils.c" />
     <ClCompile Include="..\source\main.c" />
+    <ClCompile Include="..\source\SMSlib_debug.c" />
     <ClCompile Include="..\source\sounds.c" />
   </ItemGroup>
   <ItemGroup>

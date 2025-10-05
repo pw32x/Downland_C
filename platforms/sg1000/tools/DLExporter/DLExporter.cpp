@@ -455,37 +455,40 @@ void saveSpritePlanar(const dl_u8* spriteData, dl_u8 tileWidth, dl_u8 tileHeight
 
 void saveCharacterFont(const dl_u8* characterFont)
 {
-#define DESTINATION_FONT_HEIGHT 8
+    std::ostringstream oss;
 
-    dl_u16 fontBufferSize = CHARACTER_FONT_WIDTH * DESTINATION_FONT_HEIGHT * CHARACTER_FONT_COUNT;
-    dl_u8* destinationFont = new dl_u8[fontBufferSize];
-    memset(destinationFont, 0, fontBufferSize);
+    oss << "#include \"base_types.h\"\n";
+    oss << "\n";
 
-    dl_u8* destinationFontRunner = destinationFont;
+	int tileIndex = 0;
+	int totalTiles = 0;
+	oss << "unsigned char const characterFont1bpp[" << CHARACTER_FONT_COUNT * EXPORT_TILE_SIZE << "] = // " << CHARACTER_FONT_COUNT << " tiles x " << EXPORT_TILE_SIZE << " bytes" << "\n";
+	oss << "{\n";
 
     for (int characterLoop = 0; characterLoop < CHARACTER_FONT_COUNT; characterLoop++)
     {
+        oss << "    ";
+
         for (int loopy = 0; loopy < CHARACTER_FONT_HEIGHT; loopy++)
         {
-            dl_u8 characterRow = characterFont[loopy];
-
-            for (int loopx = 0; loopx < CHARACTER_FONT_WIDTH; loopx++)
-            {
-                dl_u8 value = characterRow & 1;
-                characterRow >>= 1; // next bit
-                destinationFontRunner[((CHARACTER_FONT_WIDTH - 1) - loopx) + (loopy * CHARACTER_FONT_WIDTH)] = value;
-            }
+            oss << WriteByteAsHex(characterFont[loopy]) << ", ";
         }
 
-        characterFont += CHARACTER_FONT_HEIGHT; // move to next character
+        oss << "0x0, ";
 
-        destinationFontRunner += CHARACTER_FONT_WIDTH * DESTINATION_FONT_HEIGHT; // destination height
+        oss << "\n";
+
+        characterFont += CHARACTER_FONT_HEIGHT; // move to next character
     }
 
-    saveSpritePlanar(destinationFont, 1, CHARACTER_FONT_COUNT, "characterFont1bpp");
+	oss << "};\n\n";
 
+    std::string bankFolder = g_destinationPath;
+    bankFolder += bankFolderNames[SPRITES_FOLDER_INDEX];
+    bankFolder += "\\";
 
-    delete [] destinationFont;
+    std::ofstream outFile(bankFolder + "characterFont1bpp.c");
+    outFile << oss.str();
 }
 
 void saveCursor()

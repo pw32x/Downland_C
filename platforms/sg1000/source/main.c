@@ -148,7 +148,7 @@ const dl_u8 blackPalette[] =
 };
 
 extern unsigned char const tileSet1bpp[1560];
-extern unsigned char const characterFont4bpp[1248];
+extern unsigned char const characterFont1bpp[312];
 
 extern unsigned char const ball4bpp[128]; // 4 tiles x 32 bytes
 extern unsigned char const bird4bpp[128]; // 4 tiles x 32 bytes
@@ -508,6 +508,13 @@ dl_u8 spriteData[] =
 	0x3c,
 };
 
+void loadTilePatterns(dl_u8* tiles, dl_u16 tileIndex, dl_u16 size)
+{
+	SG_loadTilePatterns(tiles, tileIndex, size);
+	SG_loadTilePatterns(tiles, tileIndex + 256, size);
+	SG_loadTilePatterns(tiles, tileIndex + 512, size);
+}
+
 void setTileColors(dl_u16 tileIndex)
 {
 	for (dl_u16 loop = 0; loop < 256; loop++)
@@ -566,12 +573,9 @@ void main(void)
 	*/
 
 	// load the tileset in three different areas of vram
-	SG_loadTilePatterns(tileSet1bpp, 0, sizeof(tileSet1bpp));
-	SG_loadTilePatterns(tileSet1bpp, 256, sizeof(tileSet1bpp));
-	SG_loadTilePatterns(tileSet1bpp, 512, sizeof(tileSet1bpp));
 
-	//SG_loadTilePatterns(characterFont4bpp, 195, 1248);
-	
+	loadTilePatterns(tileSet1bpp, 0, sizeof(tileSet1bpp));
+	loadTilePatterns(characterFont1bpp, 195, sizeof(characterFont1bpp));
 
 	// room draw setup
     m_drawRoomFunctions[0] = drawChamber;

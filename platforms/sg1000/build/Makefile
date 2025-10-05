@@ -1,6 +1,6 @@
 #change to your preferred name
 #pass the PROGNAME name as a parameter to set a new rom name. "make PROGNAME=my_new_name"
-PROGNAME?=Downland
+PROGNAME?=Downland_sg
 
 #change to your devkitSMS folder
 DEVKITSMS_BASE=../../../../../SMSDev/devkitSMS-master
@@ -81,7 +81,7 @@ OBJS = $(SOURCE_OBJS) $(GENERATED_OBJS) $(GAME_OBJS) $(ROOMS_OBJS) \
        $(GENERATED_BANK5_OBJS) $(GENERATED_BANK6_OBJS) $(GENERATED_BANK7_OBJS) \
        $(GENERATED_SPRITES_OBJS)
 
-all: directories $(OUTPUT_DIR)/$(PROGNAME).sg
+all: directories $(OUTPUT_DIR)/$(PROGNAME).sms
 
 directories:
 	mkdir -p $(SOURCE_OUTPUT_DIR)
@@ -136,7 +136,7 @@ $(OUTPUT_DIR)/$(PROGNAME).ihx: $(OBJS)
 	-Wl-b_BANK5=0x8000 -Wl-b_BANK6=0x8000 -Wl-b_BANK7=0x8000 \
 	$(CRT0) $(SGLIB_LIB) $(PSGLIB_LIB) $^
 
-$(OUTPUT_DIR)/$(PROGNAME).sg: $(OUTPUT_DIR)/$(PROGNAME).ihx
+$(OUTPUT_DIR)/$(PROGNAME).sms: $(OUTPUT_DIR)/$(PROGNAME).ihx
 	$(IHX2SMS) $< $@
 
 clean:
@@ -188,7 +188,7 @@ clean:
 	rm -f $(OUTPUT_DIR)/*.noi 
 	rm -f $(OUTPUT_DIR)/*.lk 
 	rm -f $(OUTPUT_DIR)/*.map 
-	rm -f $(OUTPUT_DIR)/*.sg
+	rm -f $(OUTPUT_DIR)/*.sms
 	rm -f $(OUTPUT_DIR)/*.gg
 
 # When a linking error occurs, sdcc returns an error and make fails. However

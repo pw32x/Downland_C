@@ -14,7 +14,7 @@
 
 #define NUM_PLAYERS 1
 #define PLAYER_ONE	0
-#define PLAYER_TWO	1
+#define PLAYER_TWO	0
 
 // contains the global state of the game
 

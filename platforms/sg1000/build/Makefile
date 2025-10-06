@@ -1,5 +1,6 @@
 #change to your preferred name
 #pass the PROGNAME name as a parameter to set a new rom name. "make PROGNAME=my_new_name"
+#the file extension is .sms to enable banking support for SG-1000 roms in emulators like Emulicious
 PROGNAME?=Downland_sg
 
 #change to your devkitSMS folder

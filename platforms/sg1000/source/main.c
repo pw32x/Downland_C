@@ -491,7 +491,7 @@ const dl_u8 tile[] =
 	0xff, // 11111111
 };
 
-const dl_u8 tileColors[] = 
+const dl_u8 blueTileColors[] = 
 {
 	0x50, 0x50, 0x50, 0x50, 0x50, 0x50, 0x50, 0x50
 };
@@ -515,10 +515,80 @@ void loadTilePatterns(dl_u8* tiles, dl_u16 tileIndex, dl_u16 size)
 	SG_loadTilePatterns(tiles, tileIndex + 512, size);
 }
 
-void setTileColors(dl_u16 tileIndex)
+void setAllTileColors(dl_u8* tileColors)
 {
 	for (dl_u16 loop = 0; loop < 256; loop++)
-		SG_loadTileColours(tileColors, loop + tileIndex, sizeof(tileColors));
+	{
+		SG_loadTileColours(tileColors, loop, 8);
+		SG_loadTileColours(tileColors, loop + 256, 8);
+		SG_loadTileColours(tileColors, loop + 512, 8);
+	}
+}
+
+void setTileColor(dl_u8* tileColors, dl_u16 tileIndex)
+{
+	SG_loadTileColours(tileColors, tileIndex, 8);
+	SG_loadTileColours(tileColors, tileIndex + 256, 8);
+	SG_loadTileColours(tileColors, tileIndex + 512, 8);
+}
+
+void setupTileColors()
+{
+
+	setAllTileColors(blueTileColors);
+
+	dl_u8 whiteTileColors[] = 
+	{
+		0xf0, 0xf0, 0xf0, 0xf0, 0xf0, 0xf0, 0xf0, 0xf0
+	};
+
+	setTileColor(whiteTileColors, 13);
+	setTileColor(whiteTileColors, 14);
+	setTileColor(whiteTileColors, 38);
+	setTileColor(whiteTileColors, 63);
+	setTileColor(whiteTileColors, 67);
+	setTileColor(whiteTileColors, 75);
+	setTileColor(whiteTileColors, 172);
+	setTileColor(whiteTileColors, 173);
+	setTileColor(whiteTileColors, 174);
+	setTileColor(whiteTileColors, 183);
+
+	whiteTileColors[0] = 0x50;
+	setTileColor(whiteTileColors, 139);
+	setTileColor(whiteTileColors, 158);
+
+	whiteTileColors[1] = 0x50;
+	setTileColor(whiteTileColors, 133);
+
+	whiteTileColors[2] = 0x50;
+	setTileColor(whiteTileColors, 34);
+	setTileColor(whiteTileColors, 135);
+	setTileColor(whiteTileColors, 136);
+	setTileColor(whiteTileColors, 137);
+	setTileColor(whiteTileColors, 138);
+	
+	whiteTileColors[3] = 0x50;
+	whiteTileColors[4] = 0x50;
+	setTileColor(whiteTileColors, 72);
+	setTileColor(whiteTileColors, 170);
+
+	whiteTileColors[5] = 0x50;
+	setTileColor(whiteTileColors, 5);
+	setTileColor(whiteTileColors, 171);
+
+	whiteTileColors[6] = 0x50;
+	setTileColor(whiteTileColors, 186);
+	setTileColor(whiteTileColors, 129);
+	setTileColor(whiteTileColors, 131);
+	setTileColor(whiteTileColors, 132);
+
+	whiteTileColors[7] = 0x50;
+	whiteTileColors[1] = 0xf0;
+	setTileColor(whiteTileColors, 134);
+
+	whiteTileColors[1] = 0x50;
+	whiteTileColors[5] = 0xf0;
+	setTileColor(whiteTileColors, 128);
 }
 
 void main(void)
@@ -538,14 +608,7 @@ void main(void)
 	SG_copySpritestoSAT();
 
 
-
-	//SG_loadTilePatterns(tile, 0, sizeof(tile));
-	//SG_loadTilePatterns(tile, 0 + 256, sizeof(tile));
-	//SG_loadTilePatterns(tile, 0 + 512, sizeof(tile));
-
-	setTileColors(0);
-	setTileColors(256);
-	setTileColors(512);
+	setupTileColors();
 
 	SG_loadSpritePatterns(spriteData, 0, sizeof(spriteData));
 	SG_loadSpritePatterns(spriteData, 1, sizeof(spriteData));

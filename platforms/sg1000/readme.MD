@@ -23,6 +23,7 @@ Building
 - update DEVKITSMS_BASE in the Makefile to your devkitSMS installation
 - ensure SDCC is in your path
 - build and run the DLExporter solution which will generate assets in the \generated folder
+- run the convertToC.bat in the \res folder
 - run build.bat in the build folder or use the provided Visual Studio solution.
 - the Downland.sms file will be in the out folder 
    

@@ -491,13 +491,119 @@ void saveCharacterFont(const dl_u8* characterFont)
     outFile << oss.str();
 }
 
+// this function is broken and barely works.
+void saveSprite1bpp(const dl_u8* sprite, 
+                  dl_u8 width, 
+                  dl_u8 height, 
+                  dl_u8 numFrames, 
+                  const std::string& name)
+{
+    dl_u8 spriteFrameSizeInBytes = (width / 8) * height;
+
+    dl_u8 destinationWidth = ((width + 7) / 8) * 8;
+    dl_u8 destinationHeight = ((height + 7) / 8) * 8;
+
+    dl_u8 tileWidth = (destinationWidth / 8);
+    dl_u8 tileHeight = (destinationHeight / 8);
+
+    std::ostringstream oss;
+
+    oss << "#include \"base_types.h\"\n";
+    oss << "\n";
+
+    dl_u16 numTiles = tileWidth * tileHeight * numFrames;
+
+	int tileIndex = 0;
+	int totalTiles = 0;
+	oss << "unsigned char const " << name << "[" << numTiles * EXPORT_TILE_SIZE << "] = // " << numTiles << " tiles x " << EXPORT_TILE_SIZE << " bytes" << "\n";
+	oss << "{\n";
+
+    for (int frameLoop = 0; frameLoop < numFrames; frameLoop++)
+    {
+        oss << "    // frame: " << frameLoop << "\n";
+
+        dl_u8 remainingHeight = height;
+
+        for (int tiley = 0; tiley < tileHeight; tiley++)
+        {
+            dl_u8 heightToUse = remainingHeight >= TILE_HEIGHT ? TILE_HEIGHT : remainingHeight;
+
+            for (int tilex = 0; tilex < tileWidth; tilex++)
+            {
+                const dl_u8* spriteRunner = sprite + ((frameLoop * spriteFrameSizeInBytes) + ((tilex * TILE_WIDTH) + ((tiley * TILE_HEIGHT) * tileWidth)));
+
+                dl_u8* destinationSprite = new dl_u8[8];
+                memset(destinationSprite, 0, sizeof(destinationSprite));
+
+                for (int row = 0; row < heightToUse; row++)
+                {
+                    destinationSprite[row] = *spriteRunner;
+                    spriteRunner += tileWidth;
+                }
+
+                for (int row = 0; row < TILE_HEIGHT; row++)
+                {
+                    oss << "    " << WriteByteAsHex(destinationSprite[row]) << ", // " <<  std::bitset<8>(destinationSprite[row]) << "\n";
+                }       
+
+                oss << "\n";
+            }
+
+            remainingHeight -= TILE_HEIGHT;
+        }
+
+        oss << "\n";
+    }
+
+	oss << "};\n\n";
+
+    std::string bankFolder = g_destinationPath;
+    bankFolder += bankFolderNames[SPRITES_FOLDER_INDEX];
+    bankFolder += "\\";
+
+    std::ofstream outFile(bankFolder + name + ".c");
+    outFile << oss.str();
+}
+
+
+void saveDrop(const dl_u8* dropSprite, 
+              const std::string& name)
+{
+    std::ostringstream oss;
+
+    oss << "#include \"base_types.h\"\n";
+    oss << "\n";
+
+	int tileIndex = 0;
+	int totalTiles = 0;
+	oss << "unsigned char const drop1bpp[" << EXPORT_TILE_SIZE << "] = // " << "1 tile x " << EXPORT_TILE_SIZE << " bytes" << "\n";
+	oss << "{\n";
+
+    for (int loopy = 0; loopy < DROP_SPRITE_ROWS; loopy++)
+    {
+        oss << "    " << WriteByteAsHex(dropSprite[loopy * 2]) << ", \n";
+    }
+
+    oss << "    0x00, \n";
+    oss << "    0x00, \n";
+
+	oss << "};\n\n";
+
+    std::string bankFolder = g_destinationPath;
+    bankFolder += bankFolderNames[SPRITES_FOLDER_INDEX];
+    bankFolder += "\\";
+
+    std::ofstream outFile(bankFolder + name + ".c");
+    outFile << oss.str();
+}
+
 void saveCursor()
 {
-    dl_u8 cursor8bpp[8 * 8];
-    memset(cursor8bpp, 0, 8*8);
-    memset(cursor8bpp, 3, 8);
+    dl_u8 cursor1bpp[8];
+    memset(cursor1bpp, 0, sizeof(cursor1bpp));
+    cursor1bpp[0] = 0xff;
 
-    saveSpritePlanar(cursor8bpp, 1, 1, "cursor1bpp");
+    saveSprite1bpp(cursor1bpp, 8, 8, 1, "cursor1bpp");
 }
 
 #define NUM_REGEN_FRAMES 4
@@ -645,45 +751,34 @@ void saveSplatSprite(const dl_u8* splatSprite)
     delete [] sprite8bpp;
 }
 
-
-void saveSprite4bpp(const dl_u8* sprite, 
-                  dl_u8 width, 
-                  dl_u8 height, 
-                  dl_u8 numFrames, 
-                  const std::string& name)
+/*
+void OutputTile1bpp(std::ostringstream& oss, const dl_u8* tileData)
 {
-    dl_u8 spriteFrameSizeInBytes = (width / 8) * height;
+    oss << "    ";
 
-    dl_u8 destinationWidth = ((width + 7) / 8) * 8;
-    dl_u8 destinationHeight = ((height + 7) / 8) * 8;
-    dl_u16 destinationFrameSize = destinationWidth * destinationHeight;
+    dl_u32* tileDataRunner = (dl_u32*)tileData;
 
-    dl_u16 bufferSize = destinationWidth * destinationHeight * numFrames;
-    dl_u8* sprite8bpp = new dl_u8[bufferSize];
-    memset(sprite8bpp, 0, bufferSize);
-    dl_u8* sprite8bppRunner = sprite8bpp;
-
-
-    for (int frameLoop = 0; frameLoop < numFrames; frameLoop++)
+    for (int row = 0; row < TILE_HEIGHT; row++)
     {
-        convert1bppImageTo8bppCrtEffectImage(sprite,
-                                             sprite8bppRunner,
-                                             width,
-                                             height,
-                                             CrtColor::CrtColor_Blue);
+        dl_u8 destPixel = 0;
 
-        // move to next frame
-        sprite += spriteFrameSizeInBytes;
-        sprite8bppRunner += destinationFrameSize; 
+        for (int column = 0; column < TILE_WIDTH; column++)
+        {
+            destPixel |= (tileData[column + (row * TILE_WIDTH)] ? 1 : 0) << (7 - column);
+        }
+
+        oss << WriteByteAsHex(destPixel) << ", ";
+
+        tileDataRunner++;
     }
 
-    saveSpritePlanar(sprite8bpp, destinationWidth / 8, (destinationHeight / 8) * numFrames, name.c_str());
-
-    delete [] sprite8bpp;
+    oss << "\n";
 }
+*/
 
+/*
 
-void saveSprite4bppClipped(const dl_u8* sprite, 
+void saveSprite1bppClipped(const dl_u8* sprite, 
                          dl_u8 width, 
                          dl_u8 height, 
                          dl_u8 clipHeight,
@@ -719,6 +814,7 @@ void saveSprite4bppClipped(const dl_u8* sprite,
 
     delete [] sprite8bpp;
 }
+*/
 
 void saveCleanBackground(const dl_u8* cleanBackground, dl_u8 backgroundIndex)
 {
@@ -1227,19 +1323,19 @@ int main()
 
     saveCharacterFont(resources.characterFont);
 
-    saveSprite4bpp(resources.sprites_drops, DROP_SPRITE_WIDTH, DROP_SPRITE_ROWS, DROP_SPRITE_COUNT, "drop1bpp");   
 
-	saveSprite4bpp(resources.sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYER_SPRITE_COUNT, "player1bpp");
-	saveSprite4bpp(resources.sprites_bouncyBall, BALL_SPRITE_WIDTH, BALL_SPRITE_ROWS, BALL_SPRITE_COUNT, "ball1bpp");
-	saveSprite4bpp(resources.sprites_bird, BIRD_SPRITE_WIDTH, BIRD_SPRITE_ROWS, BIRD_SPRITE_COUNT, "bird1bpp");
-	saveSprite4bpp(resources.sprite_key, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, "key1bpp");
-	saveSprite4bpp(resources.sprite_diamond, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, "diamond1bpp");
-	saveSprite4bpp(resources.sprite_moneyBag, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, "moneyBag1bpp");
-	saveSprite4bpp(resources.sprite_door, DOOR_SPRITE_WIDTH, DOOR_SPRITE_ROWS, 1, "door1bpp");
-
-
+    saveDrop(resources.sprites_drops, "drop1bpp");   
+    /*
+	saveSprite1bpp(resources.sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYER_SPRITE_COUNT, "player1bpp");
+	saveSprite1bpp(resources.sprites_bouncyBall, BALL_SPRITE_WIDTH, BALL_SPRITE_ROWS, BALL_SPRITE_COUNT, "ball1bpp");
+	saveSprite1bpp(resources.sprites_bird, BIRD_SPRITE_WIDTH, BIRD_SPRITE_ROWS, BIRD_SPRITE_COUNT, "bird1bpp");
+	saveSprite1bpp(resources.sprite_key, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, "key1bpp");
+	saveSprite1bpp(resources.sprite_diamond, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, "diamond1bpp");
+	saveSprite1bpp(resources.sprite_moneyBag, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1, "moneyBag1bpp");
+	saveSprite1bpp(resources.sprite_door, DOOR_SPRITE_WIDTH, DOOR_SPRITE_ROWS, 1, "door1bpp");
+    */
     saveCursor();
-
+    /*
     dl_u8* regenSprite = saveRegenSprite(resources.sprites_player);
 
     saveRegenLivesSprite(regenSprite);
@@ -1248,7 +1344,8 @@ int main()
 
 
     saveSplatSprite(resources.sprite_playerSplat);
-    saveSprite4bppClipped(resources.sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYERICON_NUM_SPRITE_ROWS, PLAYER_SPRITE_COUNT, "playerLives1bpp");
+    saveSprite1bppClipped(resources.sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYERICON_NUM_SPRITE_ROWS, PLAYER_SPRITE_COUNT, "playerLives1bpp");
+    */
 
     saveTileSet(tileSet);
 

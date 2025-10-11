@@ -15,7 +15,7 @@ SGLIB_INCDIR=$(SGLIB_BASE)/src
 PSGLIB_INCDIR=$(PSGLIB_BASE)/src
 PEEP_RULES=$(SMSLIB_BASE)/src/peep-rules.txt
 CRT0=$(DEVKITSMS_BASE)/crt0/crt0_sg.rel
-SGLIB_LIB=$(SGLIB_BASE)/SGLib.rel          # Use distributed lib
+SGLIB_LIB=$(SGLIB_BASE)/SGLib.lib          # Use distributed lib
 PSGLIB_LIB=$(PSGLIB_BASE)/PSGlib.lib          # Use distributed lib
 
 CFLAGS=-mz80 -I$(SGLIB_INCDIR) -I$(PSGLIB_INCDIR) -I$(GENERATED_DIR) -I$(SOURCE_DIR) -I$(SOURCE_DIR)/game -I$(SOURCE_DIR)/game/rooms --peep-file $(PEEP_RULES) --opt-code-speed --peep-asm

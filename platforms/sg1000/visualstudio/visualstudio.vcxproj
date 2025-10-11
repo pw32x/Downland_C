@@ -168,6 +168,7 @@
     <ClInclude Include="..\..\..\..\..\..\SMSDev\devkitSMS-master\PSGlib\src\PSGlib.h" />
     <ClInclude Include="..\..\..\..\..\..\SMSDev\devkitSMS-master\SGlib\src\SGlib.h" />
     <ClInclude Include="..\generated\resources.h" />
+    <ClInclude Include="..\generated\sprites\sprites.h" />
     <ClInclude Include="..\source\custom_background_types.h" />
     <ClInclude Include="..\source\game\background_types.h" />
     <ClInclude Include="..\source\game\ball.h" />

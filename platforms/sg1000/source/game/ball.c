@@ -2,6 +2,7 @@
 #include "physics_utils.h"
 #include "dl_platform.h"
 #include "resources.h"
+#include "sglib.h"
 
 dl_u8 ballData_enabled;
 dl_u8 ballData_state;	// 0 - inactive
@@ -168,6 +169,13 @@ void Ball_Draw(void)
 {
 	if (ballData_enabled)
 	{
+		//SG_addSprite((dropsDrawRunner->x << 1),  (dropsDrawRunner->y >> 8), DROPS_TILE_INDEX, 0x0f);
+
+		SG_addSprite((ballData_x >> 8) << 1, 
+					 (ballData_y >> 8) - 1, 
+					 ((dl_s8)ballData_fallStateCounter < 0) << 2,
+					 SG_COLOR_LIGHT_BLUE);
+
 		//SMS_addTwoAdjoiningSprites((ballData_x >> 8) << 1, 
 		//							ballData_y >> 8, 
 		//							((dl_s8)ballData_fallStateCounter < 0) << 2);

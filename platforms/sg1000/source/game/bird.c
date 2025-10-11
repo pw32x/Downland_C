@@ -1,6 +1,7 @@
 #include "bird.h"
 #include "dl_rand.h"
 #include "dl_platform.h"
+#include "sglib.h"
 
 dl_u8 birdData_state;	// 0 - inactive
 						// 1 - active
@@ -87,6 +88,11 @@ void Bird_Draw(dl_u16 currentTimer)
 	// draw bird
 	if (birdData_state && currentTimer == 0)
 	{
+		SG_addSprite((birdData_x >> 8) << 1,
+					 (birdData_y >> 8) - 1,
+					 BIRD_TILE_INDEX + (birdData_animationFrame << 2),
+					 SG_COLOR_WHITE);
+
 		//SMS_addTwoAdjoiningSprites((birdData_x >> 8) << 1,
 		//							birdData_y >> 8,
 		//							BIRD_TILE_INDEX + (birdData_animationFrame << 2));

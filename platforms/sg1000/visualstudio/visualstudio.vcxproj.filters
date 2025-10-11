@@ -103,25 +103,10 @@
     <ClCompile Include="..\source\SMSlib_debug.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\generated\sprites\ball1bpp.c">
-      <Filter>Source Files\generated\sprites</Filter>
-    </ClCompile>
-    <ClCompile Include="..\generated\sprites\bird1bpp.c">
-      <Filter>Source Files\generated\sprites</Filter>
-    </ClCompile>
     <ClCompile Include="..\generated\sprites\characterFont1bpp.c">
       <Filter>Source Files\generated\sprites</Filter>
     </ClCompile>
-    <ClCompile Include="..\generated\sprites\cursor1bpp.c">
-      <Filter>Source Files\generated\sprites</Filter>
-    </ClCompile>
-    <ClCompile Include="..\generated\sprites\diamond1bpp.c">
-      <Filter>Source Files\generated\sprites</Filter>
-    </ClCompile>
-    <ClCompile Include="..\generated\sprites\door1bpp.c">
-      <Filter>Source Files\generated\sprites</Filter>
-    </ClCompile>
-    <ClCompile Include="..\generated\sprites\drop1bpp.c">
+    <ClCompile Include="..\generated\sprites\tileSet1bpp.c">
       <Filter>Source Files\generated\sprites</Filter>
     </ClCompile>
     <ClCompile Include="..\generated\sprites\key1bpp.c">
@@ -139,13 +124,28 @@
     <ClCompile Include="..\generated\sprites\playerLivesRegen1bpp.c">
       <Filter>Source Files\generated\sprites</Filter>
     </ClCompile>
-    <ClCompile Include="..\generated\sprites\playerRegen1bpp.c">
-      <Filter>Source Files\generated\sprites</Filter>
-    </ClCompile>
     <ClCompile Include="..\generated\sprites\playerSplat1bpp.c">
       <Filter>Source Files\generated\sprites</Filter>
     </ClCompile>
-    <ClCompile Include="..\generated\sprites\tileSet1bpp.c">
+    <ClCompile Include="..\generated\sprites\ball1bpp.c">
+      <Filter>Source Files\generated\sprites</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\sprites\bird1bpp.c">
+      <Filter>Source Files\generated\sprites</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\sprites\diamond1bpp.c">
+      <Filter>Source Files\generated\sprites</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\sprites\door1bpp.c">
+      <Filter>Source Files\generated\sprites</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\sprites\drop1bpp.c">
+      <Filter>Source Files\generated\sprites</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\sprites\cursor1bpp.c">
+      <Filter>Source Files\generated\sprites</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\sprites\playerRegen1bpp.c">
       <Filter>Source Files\generated\sprites</Filter>
     </ClCompile>
   </ItemGroup>
@@ -239,6 +239,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\SMSDev\devkitSMS-master\SGlib\src\SGlib.h">
       <Filter>SMSLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generated\sprites\sprites.h">
+      <Filter>Source Files\generated\sprites</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

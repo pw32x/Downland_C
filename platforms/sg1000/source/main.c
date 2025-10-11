@@ -699,7 +699,7 @@ void drawChamber(void)
 		if (!gameData_paused)
 		{
 			g_regenSpriteIndex++;
-			if (g_regenSpriteIndex == REGEN_NUM_FRAMES - 1)
+			if (g_regenSpriteIndex == REGEN_NUM_FRAMES)
 				g_regenSpriteIndex = 0;
 		}
 

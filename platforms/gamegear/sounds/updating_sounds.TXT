@@ -1,0 +1,11 @@
+to tweak a sound effect:
+- open the sound in deflemask
+- tweak the sound
+- save
+- save as VGM to the same folder
+- run vgm2c.bat
+- the sounds.h/.c files will be updated
+
+
+to add/remove/change a sound effect:
+- update the PSGTool section of the vgm2c.bat file

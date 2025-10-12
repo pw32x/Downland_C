@@ -1,0 +1,1 @@
+mega-usb.exe ..\out\downland.sms

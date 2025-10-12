@@ -18,7 +18,7 @@ CRT0=$(DEVKITSMS_BASE)/crt0/crt0_sg.rel
 SGLIB_LIB=$(SGLIB_BASE)/SGLib.lib          # Use distributed lib
 PSGLIB_LIB=$(PSGLIB_BASE)/PSGlib.lib          # Use distributed lib
 
-CFLAGS=-mz80 -I$(SGLIB_INCDIR) -I$(PSGLIB_INCDIR) -I$(GENERATED_DIR) -I$(SOURCE_DIR) -I$(SOURCE_DIR)/game -I$(SOURCE_DIR)/game/rooms --peep-file $(PEEP_RULES) --opt-code-speed --peep-asm
+CFLAGS=-mz80 -I$(SGLIB_INCDIR) -I$(PSGLIB_INCDIR) -I$(GENERATED_DIR) -I$(SOURCE_DIR) -I$(GAME_SRC_DIR) -I$(GAME_ROOMS_SRC_DIR) --peep-file $(PEEP_RULES) --opt-code-speed --peep-asm
 
 #--opt-code-speed --peep-asm --fomit-frame-pointer --max-allocs-per-node 200000
 
@@ -26,6 +26,11 @@ LDFLAGS=-mz80 --no-std-crt0 --data-loc 0xC000
 
 SOURCE_DIR = source
 GENERATED_DIR = generated
+
+# New source locations for game code
+GAME_SRC_DIR   = ../../game_8bit
+GAME_ROOMS_SRC_DIR = ../../game_8bit/rooms
+
 GENERATED_BANK2_DIR = generated/bank2
 GENERATED_BANK3_DIR = generated/bank3
 GENERATED_BANK4_DIR = generated/bank4
@@ -33,9 +38,6 @@ GENERATED_BANK5_DIR = generated/bank5
 GENERATED_BANK6_DIR = generated/bank6
 GENERATED_BANK7_DIR = generated/bank7
 GENERATED_SPRITES_DIR = generated/sprites
-
-GAME_DIR   = $(SOURCE_DIR)/game
-ROOMS_DIR  = $(SOURCE_DIR)/game/rooms
 
 OUTPUT_DIR = out
 
@@ -61,8 +63,8 @@ GENERATED_BANK5_CS  = $(wildcard $(GENERATED_BANK5_DIR)/*.c)
 GENERATED_BANK6_CS  = $(wildcard $(GENERATED_BANK6_DIR)/*.c)
 GENERATED_BANK7_CS  = $(wildcard $(GENERATED_BANK7_DIR)/*.c)
 GENERATED_SPRITES_CS  = $(wildcard $(GENERATED_SPRITES_DIR)/*.c)
-GAME_CS				= $(wildcard $(GAME_DIR)/*.c)
-ROOMS_CS			= $(wildcard $(ROOMS_DIR)/*.c)
+GAME_CS				= $(wildcard $(GAME_SRC_DIR)/*.c)
+ROOMS_CS			= $(wildcard $(GAME_ROOMS_SRC_DIR)/*.c)
 
 # map sources to objects
 SOURCE_OBJS				= $(patsubst $(SOURCE_DIR)/%.c,$(SOURCE_OUTPUT_DIR)/%.rel,$(CS))
@@ -74,8 +76,8 @@ GENERATED_BANK5_OBJS	= $(patsubst $(GENERATED_BANK5_DIR)/%.c,$(GENERATED_BANK5_O
 GENERATED_BANK6_OBJS	= $(patsubst $(GENERATED_BANK6_DIR)/%.c,$(GENERATED_BANK6_OUTPUT_DIR)/%.rel,$(GENERATED_BANK6_CS))
 GENERATED_BANK7_OBJS	= $(patsubst $(GENERATED_BANK7_DIR)/%.c,$(GENERATED_BANK7_OUTPUT_DIR)/%.rel,$(GENERATED_BANK7_CS))
 GENERATED_SPRITES_OBJS	= $(patsubst $(GENERATED_SPRITES_DIR)/%.c,$(GENERATED_SPRITES_OUTPUT_DIR)/%.rel,$(GENERATED_SPRITES_CS))
-GAME_OBJS				= $(patsubst $(GAME_DIR)/%.c,$(GAME_OUTPUT_DIR)/%.rel,$(GAME_CS))
-ROOMS_OBJS				= $(patsubst $(ROOMS_DIR)/%.c,$(ROOMS_OUTPUT_DIR)/%.rel,$(ROOMS_CS))
+GAME_OBJS				= $(patsubst $(GAME_SRC_DIR)/%.c,$(GAME_OUTPUT_DIR)/%.rel,$(GAME_CS))
+ROOMS_OBJS				= $(patsubst $(GAME_ROOMS_SRC_DIR)/%.c,$(ROOMS_OUTPUT_DIR)/%.rel,$(ROOMS_CS))
 
 OBJS = $(SOURCE_OBJS) $(GENERATED_OBJS) $(GAME_OBJS) $(ROOMS_OBJS) \
        $(GENERATED_BANK2_OBJS) $(GENERATED_BANK3_OBJS) $(GENERATED_BANK4_OBJS) \
@@ -125,10 +127,10 @@ $(GENERATED_BANK7_OUTPUT_DIR)/%.rel: $(GENERATED_BANK7_DIR)/%.c
 $(GENERATED_SPRITES_OUTPUT_DIR)/%.rel: $(GENERATED_SPRITES_DIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@ 
 
-$(GAME_OUTPUT_DIR)/%.rel: $(GAME_DIR)/%.c
+$(GAME_OUTPUT_DIR)/%.rel: $(GAME_SRC_DIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(ROOMS_OUTPUT_DIR)/%.rel: $(ROOMS_DIR)/%.c
+$(ROOMS_OUTPUT_DIR)/%.rel: $(GAME_ROOMS_SRC_DIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(OUTPUT_DIR)/$(PROGNAME).ihx: $(OBJS)

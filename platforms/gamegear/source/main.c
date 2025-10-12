@@ -155,12 +155,27 @@ void Bird_Draw(dl_u16 currentTimer)
 #define TRUE 1
 #define FALSE 0
 
-const dl_u8 downlandPalette[] = 
+const dl_u16 downlandPalette[] = 
 {
-	0x00, 0x30, 0x0b, 0x3f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+	0x00, 
+	RGB(0, 0, 15), 
+	RGB(15, 7, 0), 
+	RGB(15, 15, 15), 
+	0x00, 
+	0x00, 
+	0x00, 
+	0x00, 
+	0x00, 
+	0x00, 
+	0x00, 
+	0x00, 
+	0x00, 
+	0x00, 
+	0x00, 
+	0x00
 };
 
-const dl_u8 blackPalette[] = 
+const dl_u16 blackPalette[] = 
 {
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
@@ -507,8 +522,8 @@ void main(void)
 
 	/* Turn on the display */
 	SMS_displayOn();
-	SMS_loadBGPalette(blackPalette);
-	SMS_loadSpritePalette(blackPalette);
+	GG_loadBGPalette(blackPalette);
+	GG_loadSpritePalette(blackPalette);
 	SMS_waitForVBlank ();
 
 	SMS_initSprites();
@@ -613,8 +628,8 @@ void GameRunner_ChangedRoomCallback(const dl_u8 roomNumber, dl_s8 transitionType
 	if (transitionType < 0)
 	{
 		//SMS_debugPrintf("downland palette 2\n");
-		SMS_loadBGPalette(downlandPalette);
-		SMS_loadSpritePalette(downlandPalette);
+		GG_loadBGPalette(downlandPalette);
+		GG_loadSpritePalette(downlandPalette);
 	}
 }
 
@@ -736,8 +751,8 @@ void transition_init(const Room* targetRoom)
 	SMS_mapROMBank(roomToBankIndex[gameData_transitionRoomNumber]);
 
 	////SMS_debugPrintf("black palette\n");
-	//SMS_loadBGPalette(blackPalette);
-	//SMS_loadSpritePalette(blackPalette);
+	//GG_loadBGPalette(blackPalette);
+	//GG_loadSpritePalette(blackPalette);
 
 	// init the clean background with the target room. 
 	// it'll be revealed at the end of the transition.

@@ -1,4 +1,4 @@
-# Downland_C: Sega Master System
+# Downland_C: SG-1000
 
 ## INTRODUCTION
 
@@ -30,16 +30,11 @@ Building
 
 ## RUNNING THE GAME
 
-Only tested in emulator.
+Since I have no SG-1000, I've only been able to test in emulator. The game uses banking to store the static room collision geometry in rom. If a physical cart is made, it'll have to support banking. 
 
-
-On hardware you'll need: 
-- an NTSC Sega Master System or Genesis/Mega Drive (PAL might work but will run slower, naturally)
-- a flashcard with the Downland.sms file
-
-Otherwise
+Emultor
 - an emulator (there are very many. I use Emulicious https://emulicious.net/)
-- the built downland.sms as a file 
+- the built downland_sg.sms as a file 
 - load the rom in the emulator and enjoy
 
 ## CONTROLS

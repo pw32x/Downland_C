@@ -38,6 +38,18 @@ const dl_u8 roomToBankIndex[] =
 dl_u8 g_regenSpriteIndex;
 #define REGEN_NUM_FRAMES 4
 
+#define SCROLL_MIN_X -48
+#define SCROLL_MAX_X 48
+
+#define SCROLL_MIN_Y -24
+#define SCROLL_MAX_Y 24
+
+dl_s16 g_scrollY;
+dl_s16 g_scrollX;
+
+dl_u16 g_oldPlayerX = 0;
+dl_u16 g_oldPlayerY = 0;
+
 extern const dl_u8 getReadyScreen_cleanBackground[6144];
 
 //dl_u8 tileMapBuffer[32 * 16];
@@ -135,8 +147,8 @@ void Ball_Draw(void)
 {
 	if (ballData_enabled)
 	{
-		SMS_addTwoAdjoiningSprites((ballData_x >> 8) << 1, 
-									ballData_y >> 8, 
+		SMS_addTwoAdjoiningSprites((ballData_x >> 7) - g_scrollX, 
+									(ballData_y >> 8) - g_scrollY, 
 									((dl_s8)ballData_fallStateCounter < 0) << 2);
 	}
 }
@@ -148,8 +160,8 @@ void Bird_Draw(dl_u16 currentTimer)
 	// draw bird
 	if (birdData_state && currentTimer == 0)
 	{
-		SMS_addTwoAdjoiningSprites((birdData_x >> 8) << 1,
-									birdData_y >> 8,
+		SMS_addTwoAdjoiningSprites((birdData_x >> 7) - g_scrollX,
+									(birdData_y >> 8) - g_scrollY,
 									BIRD_TILE_INDEX + (birdData_animationFrame << 2));
 	}
 }
@@ -313,8 +325,8 @@ void drawDrops(void)
         if ((dl_s8)dropsDrawRunner->wiggleTimer < 0 || // wiggling
             dropsDrawRunner->wiggleTimer > 1)   // falling
         {
-			SMS_addSprite((dropsDrawRunner->x << 1), 
-						  (dropsDrawRunner->y >> 8), 
+			SMS_addSprite((dropsDrawRunner->x << 1) - g_scrollX, 
+						  (dropsDrawRunner->y >> 8) - g_scrollY, 
 						  24);
         }
 
@@ -344,7 +356,7 @@ void drawPickups(void)
 			pickupx = (pickups->x) << 1;
 			pickupy = pickups->y;
 
-			SMS_addTwoAdjoiningSprites(pickupx, pickupy, tileIndex);
+			SMS_addTwoAdjoiningSprites(pickupx - g_scrollX, pickupy - g_scrollY, tileIndex);
 		}
 
 		pickups++;
@@ -371,7 +383,7 @@ void drawDoors(void)
 			// adjust the door position, as per the original game.
 			xPosition += (xPosition > 80 ? 14 : -8);
 
-			SMS_addTwoAdjoiningSprites(xPosition, doorInfoRunner->y, 20);
+			SMS_addTwoAdjoiningSprites(xPosition - g_scrollX, doorInfoRunner->y - g_scrollY, 20);
 		}
 
 		doorInfoRunner++;
@@ -390,7 +402,7 @@ void drawUIPlayerLives(const PlayerData* playerData)
 	dl_u8 count = playerData->lives;
 	while (count--)
 	{
-		SMS_addTwoAdjoiningSprites(x, y, tileIndex);
+		SMS_addTwoAdjoiningSprites(x - g_scrollX, y - g_scrollY, tileIndex);
 
 		x += (PLAYERLIVES_ICON_SPACING << 1);
     }
@@ -406,7 +418,7 @@ void drawUIPlayerLives(const PlayerData* playerData)
 			tileIndex = 160 + ((g_regenSpriteIndex + REGEN_NUM_FRAMES) << 2);
 		}
 
-		SMS_addTwoAdjoiningSprites(x, y, tileIndex);
+		SMS_addTwoAdjoiningSprites(x - g_scrollX, y - g_scrollY, tileIndex);
     }
 }
 
@@ -608,6 +620,12 @@ void main(void)
 
 		m_drawRoomFunctions[gameData_currentRoom->roomNumber]();
 
+		SMS_setBGScrollX(-g_scrollX);
+
+		dl_u8 effectiveScrolly = g_scrollY < 0 ? 224 + g_scrollY : g_scrollY;
+		SMS_setBGScrollY(effectiveScrolly);
+	
+
 		// VBLANK
 		SMS_waitForVBlank ();
 
@@ -621,6 +639,9 @@ void main(void)
 
 void GameRunner_ChangedRoomCallback(const dl_u8 roomNumber, dl_s8 transitionType)
 {
+	g_oldPlayerX = 0xffff;
+	g_oldPlayerY = 0xffff;
+
 	UNUSED(roomNumber);
 
 	//SMS_debugPrintf("GameRunner_ChangedRoomCallback\n");
@@ -641,6 +662,58 @@ void GameRunner_ChangedRoomCallback(const dl_u8 roomNumber, dl_s8 transitionType
 SMS_EMBED_SEGA_ROM_HEADER(9999,0);
 SMS_EMBED_SDSC_HEADER_AUTO_DATE(1,0,"pw","Downland","Downland ported to the Sega Master System");
 
+
+void updateScroll(dl_u16 playerX, dl_u16 playerY)
+{
+	if (g_oldPlayerX == 0xffff)
+	{
+		g_oldPlayerX = playerX;
+		g_oldPlayerY = playerY;
+
+		g_scrollX = playerX > 128 ? SCROLL_MAX_X : SCROLL_MIN_X;
+		g_scrollY = playerY > 96 ? SCROLL_MAX_Y : SCROLL_MIN_Y;
+	}
+
+	dl_u16 screenX = playerX - g_scrollX;
+	dl_u16 screenY = playerY - g_scrollY;
+	
+	dl_s16 deltaX = (dl_s16)playerX - (dl_s16)g_oldPlayerX;
+	dl_s16 deltaY = (dl_s16)playerY - (dl_s16)g_oldPlayerY;
+	
+	if (deltaX < 0 && screenX < 100)
+	{
+		g_scrollX += deltaX;
+	}
+	
+	if (deltaX > 0 && screenX > 140)
+	{
+		g_scrollX += deltaX;
+	}
+
+	if (deltaY < 0 && screenY < 60)
+	{
+		g_scrollY += deltaY;
+	}
+	
+	if (deltaY > 0 && screenY > 100)
+	{
+		g_scrollY += deltaY;
+	}
+	
+	if (g_scrollX < SCROLL_MIN_X)
+		g_scrollX = SCROLL_MIN_X;
+	if (g_scrollX > SCROLL_MAX_X)
+		g_scrollX = SCROLL_MAX_X;
+
+	if (g_scrollY < SCROLL_MIN_Y)
+		g_scrollY = SCROLL_MIN_Y;
+	if (g_scrollY > SCROLL_MAX_Y)
+		g_scrollY = SCROLL_MAX_Y;
+	
+	g_oldPlayerX = playerX;
+	g_oldPlayerY = playerY;
+}
+
 dl_u8 tickTock;
 
 void drawChamber(void)
@@ -649,6 +722,8 @@ void drawChamber(void)
 
 	dl_u8 playerX = (playerData->x >> 8) << 1;
 	dl_u8 playerY = (playerData->y >> 8);
+
+	updateScroll(playerX, playerY);
 
 	dl_u16 currentTimer = playerData->roomTimers[playerData->currentRoom->roomNumber];
 
@@ -664,7 +739,7 @@ void drawChamber(void)
 
 		tileIndex = 74 + (playerData->splatFrameNumber * 6);
 
-		SMS_addThreeAdjoiningSprites(playerX, playerY + 7, tileIndex);
+		SMS_addThreeAdjoiningSprites(playerX - g_scrollX, playerY + 7 - g_scrollY, tileIndex);
 
 		break;
 
@@ -686,14 +761,14 @@ void drawChamber(void)
 			tileIndex = 126 + ((g_regenSpriteIndex + REGEN_NUM_FRAMES) << 2);
 		}
 
-		SMS_addTwoAdjoiningSprites(playerX, playerY, tileIndex);
+		SMS_addTwoAdjoiningSprites(playerX - g_scrollX, playerY - g_scrollY, tileIndex);
 
 		break;
 
 	default: 
 		g_playerTileIndex = 34 + (playerData->currentSpriteNumber << 2);
 
-		SMS_addTwoAdjoiningSprites(playerX, playerY, g_playerTileIndex);
+		SMS_addTwoAdjoiningSprites(playerX - g_scrollX, playerY - g_scrollY, g_playerTileIndex);
 	}
 
 	drawDoors();

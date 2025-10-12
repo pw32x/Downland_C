@@ -13,13 +13,14 @@ SMSLIB_INCDIR=$(SMSLIB_BASE)/src
 PSGLIB_INCDIR=$(PSGLIB_BASE)/src
 PEEP_RULES=$(SMSLIB_BASE)/src/peep-rules.txt
 CRT0=$(DEVKITSMS_BASE)/crt0/crt0_sms.rel
-SMSLIB_LIB=$(SMSLIB_BASE)/SMSlib.lib          # Use distributed lib
+SMSLIB_LIB=$(SMSLIB_BASE)/SMSlib_GG.lib          # Use distributed lib
 PSGLIB_LIB=$(PSGLIB_BASE)/PSGlib.lib          # Use distributed lib
 #SMSLIB_LIB=$(SMSLIB_BASE)/src/SMSlib.lib      # Use locally compiled lib
 
 CFLAGS=-mz80 -I$(SMSLIB_INCDIR) -I$(PSGLIB_INCDIR) -I$(GENERATED_DIR) -I$(SOURCE_DIR) -I$(GAME_SRC_DIR) -I$(GAME_ROOMS_SRC_DIR) --peep-file $(PEEP_RULES) \
 		--opt-code-speed --peep-asm \
-		 -DCUSTOM_BACKGROUND_DRAWING -DCUSTOM_TRANSITIONS
+		 -DCUSTOM_BACKGROUND_DRAWING -DCUSTOM_TRANSITIONS \
+		 -D TARGET_GG
 
 LDFLAGS=-mz80 --no-std-crt0 --data-loc 0xC000
 
@@ -83,7 +84,7 @@ OBJS = $(SOURCE_OBJS) $(GENERATED_OBJS) $(GAME_OBJS) $(ROOMS_OBJS) \
        $(GENERATED_BANK5_OBJS) $(GENERATED_BANK6_OBJS) $(GENERATED_BANK7_OBJS) \
        $(GENERATED_SPRITES_OBJS)
 
-all: directories $(OUTPUT_DIR)/$(PROGNAME).sms
+all: directories $(OUTPUT_DIR)/$(PROGNAME).gg
 
 directories:
 	mkdir -p $(SOURCE_OUTPUT_DIR)
@@ -138,7 +139,7 @@ $(OUTPUT_DIR)/$(PROGNAME).ihx: $(OBJS)
 	-Wl-b_BANK5=0x8000 -Wl-b_BANK6=0x8000 -Wl-b_BANK7=0x8000 \
 	$(CRT0) $(SMSLIB_LIB) $(PSGLIB_LIB) $^
 
-$(OUTPUT_DIR)/$(PROGNAME).sms: $(OUTPUT_DIR)/$(PROGNAME).ihx
+$(OUTPUT_DIR)/$(PROGNAME).gg: $(OUTPUT_DIR)/$(PROGNAME).ihx
 	$(IHX2SMS) $< $@
 
 clean:

@@ -21,6 +21,8 @@ extern dl_u8 ballData_fallStateCounter;
 
 void Ball_Init(dl_u8 roomNumber);
 void Ball_Update(void);
+
+// it's up to the platform port to implement this function
 void Ball_Draw(void);
 
 #endif

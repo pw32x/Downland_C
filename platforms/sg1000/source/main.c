@@ -19,9 +19,6 @@
 
 #include "sounds.h"
 
-/* function to print messages to the debug console of emulators */
-void SMS_debugPrintf(const unsigned char *format, ...) __naked __preserves_regs(a,b,c,iyh,iyl);
-
 const dl_u8 roomToBankIndex[] = 
 {
     2, // chambers 0 to 9
@@ -134,6 +131,31 @@ void Sound_StopAll(void)
 {
 }
 
+
+void Ball_Draw(void)
+{
+	if (ballData_enabled)
+	{
+		SG_addSprite((ballData_x >> 8) << 1, 
+					 (ballData_y >> 8) - 1, 
+					 ((dl_s8)ballData_fallStateCounter < 0) << 2,
+					 SG_COLOR_LIGHT_BLUE);
+	}
+}
+
+#define BIRD_TILE_INDEX 8
+
+void Bird_Draw(dl_u16 currentTimer)
+{
+	// draw bird
+	if (birdData_state && currentTimer == 0)
+	{
+		SG_addSprite((birdData_x >> 8) << 1,
+					 (birdData_y >> 8) - 1,
+					 BIRD_TILE_INDEX + (birdData_animationFrame << 2),
+					 SG_COLOR_WHITE);
+	}
+}
 
 #define TRUE 1
 #define FALSE 0
@@ -550,9 +572,7 @@ void main(void)
 	// Turn on the display
 	SG_displayOn();
 	SG_setBackdropColor(SG_COLOR_BLACK);
-	//SG_loadBGPalette(blackPalette);
-	//SG_loadSpritePalette(blackPalette);
-	SG_waitForVBlank ();
+	SG_waitForVBlank();
 
 	SG_initSprites();
 	SG_finalizeSprites();
@@ -562,7 +582,7 @@ void main(void)
 
 	// load tiles for background
 	load16x8SpriteTiles(ball1bpp, 0, 4); // 4 tiles x 8 bytes
-	load16x8SpriteTiles(bird1bpp, 8, 4); // 4 tiles x 8 bytes
+	load16x8SpriteTiles(bird1bpp, BIRD_TILE_INDEX, 4); // 4 tiles x 8 bytes
 	load16x16SpriteTiles(diamond1bpp, 16, 1);  // 4 tiles x 8 bytes
 	load16x16SpriteTiles(door1bpp, 20, 1); // 4 tiles x 8 bytes
 	SG_loadSpritePatterns(drop1bpp, 24, sizeof(drop1bpp)); // 1 tiles x 8 bytes
@@ -632,16 +652,9 @@ void main(void)
 
 		m_drawRoomFunctions[gameData_currentRoom->roomNumber]();
 
-		//SMS_debugPrintf("Test\n");
-
-		//SG_setBackdropColor(SG_COLOR_BLACK);
 		// VBLANK
 		SG_finalizeSprites();
-		SG_waitForVBlank ();
-
-		//extern unsigned char SpriteNextFree;
-		//SMS_debugPrintf("sprites: %d\n", SpriteNextFree);
-
+		SG_waitForVBlank();
 		SG_copySpritestoSAT();
 	}
 }
@@ -651,20 +664,10 @@ void GameRunner_ChangedRoomCallback(const dl_u8 roomNumber, dl_s8 transitionType
 {
 	UNUSED(roomNumber);
 
-	//SMS_debugPrintf("GameRunner_ChangedRoomCallback\n");
-
 	SG_waitForVBlank();
 	SG_initSprites();
 	SG_finalizeSprites();
 	SG_copySpritestoSAT();
-
-	//SMS_debugPrintf("transitionType: %d\n", transitionType);
-	if (transitionType < 0)
-	{
-		//SMS_debugPrintf("downland palette 2\n");
-		//SG_loadBGPalette(downlandPalette);
-		//SG_loadSpritePalette(downlandPalette);
-	}
 }
 
 dl_u8 tickTock;
@@ -689,8 +692,6 @@ void drawChamber(void)
 		tileIndex = 76 + (playerData->splatFrameNumber * 4);
 
 		SG_addSprite(playerX, playerY + 6, tileIndex, SG_COLOR_WHITE);
-		//SG_addThreeAdjoiningSprites(playerX, playerY + 7, tileIndex);
-
 		break;
 
 	case PLAYER_STATE_REGENERATION: 
@@ -711,7 +712,6 @@ void drawChamber(void)
 			tileIndex = 124 + ((g_regenSpriteIndex + REGEN_NUM_FRAMES) << 2);
 		}
 
-		//SG_addTwoAdjoiningSprites(playerX, playerY, tileIndex);
 		SG_addSprite(playerX, playerY - 1, tileIndex, SG_COLOR_WHITE);
 
 		break;
@@ -720,8 +720,6 @@ void drawChamber(void)
 		g_playerTileIndex = 36 + (playerData->currentSpriteNumber << 2);
 
 		SG_addSprite(playerX, playerY - 1, g_playerTileIndex, SG_COLOR_WHITE);
-
-		//SG_addTwoAdjoiningSprites(playerX, playerY, g_playerTileIndex);
 	}
 
 	drawDoors();
@@ -781,13 +779,7 @@ void transition_init(const Room* targetRoom)
 	SG_finalizeSprites();
 	SG_copySpritestoSAT();
 
-	//SG_VRAMmemset(XYtoADDR((0),(0)), 0, 32 * 24 * 2);
-
 	SG_mapROMBank(roomToBankIndex[gameData_transitionRoomNumber]);
-
-	////SMS_debugPrintf("black palette\n");
-	//SG_loadBGPalette(blackPalette);
-	//SG_loadSpritePalette(blackPalette);
 
 	// init the clean background with the target room. 
 	// it'll be revealed at the end of the transition.
@@ -796,7 +788,7 @@ void transition_init(const Room* targetRoom)
 	// setup screen transition
 	gameData_transitionInitialDelay = INITIAL_TRANSITION_DELAY;
 
-	////SMS_debugPrintf("transition_init\n");
+	//SMS_debugPrintf("transition_init\n");
 }
 
 void transition_update(Room* room)
@@ -811,7 +803,7 @@ void transition_update(Room* room)
 		return;
 	}
 
-	////SMS_debugPrintf("transition_update enter game room\n");
+	//SMS_debugPrintf("transition_update enter game room\n");
 	Game_EnterRoom(gameData_transitionRoomNumber);
 }
 
@@ -823,7 +815,6 @@ void wipe_transition_init(const Room* targetRoom)
 	SG_initSprites();
 	SG_finalizeSprites();
 	SG_copySpritestoSAT();
-	//SG_VRAMmemset(XYtoADDR((0),(0)), 0, 32 * 24 * 2);
 
 	SG_mapROMBank(roomToBankIndex[gameData_transitionRoomNumber]);
 

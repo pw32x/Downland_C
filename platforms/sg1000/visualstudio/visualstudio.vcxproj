@@ -203,7 +203,7 @@
     <None Include="..\build\deploy.bat" />
     <None Include="..\build\Makefile" />
     <None Include="..\build\rebuild.bat" />
-    <None Include="..\out\Downland.map" />
+    <None Include="..\out\Downland_sg.map" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

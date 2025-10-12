@@ -260,7 +260,7 @@
     <None Include="..\build\deploy.bat">
       <Filter>build</Filter>
     </None>
-    <None Include="..\out\Downland.map">
+    <None Include="..\out\Downland_sg.map">
       <Filter>build</Filter>
     </None>
   </ItemGroup>

@@ -127,6 +127,8 @@ void Sound_Stop(dl_u8 soundIndex)
 
 void Sound_StopAll(void)
 {
+	for (dl_u8 loop = 0; loop < SOUND_NUM_SOUNDS; loop++)
+		Sound_Stop(loop);
 }
 
 void Ball_Draw(void)
@@ -418,6 +420,7 @@ void updateControls(dl_u8 controllerIndex)
     dl_u8 upDown;
     dl_u8 downDown;
     dl_u8 jumpDown;
+	dl_u8 startDown;
 
     // Check D-Pad
 	if (!controllerIndex)
@@ -437,15 +440,19 @@ void updateControls(dl_u8 controllerIndex)
 		jumpDown = ((KeysStatus & PORT_B_KEY_1) != 0) || ((KeysStatus & PORT_B_KEY_2) != 0);
 	}
 
+	startDown = (KeysStatus & GG_KEY_START) != 0;
+
     joystickState_leftPressed = (!joystickState_leftDown) & leftDown;
     joystickState_rightPressed = (!joystickState_rightDown) & rightDown;
     joystickState_jumpPressed =  (!joystickState_jumpDown) & jumpDown;
+	joystickState_startPressed = (!joystickState_startDown) & startDown;
 
     joystickState_leftDown = leftDown;
     joystickState_rightDown = rightDown;
     joystickState_upDown = upDown;
     joystickState_downDown = downDown;
     joystickState_jumpDown = jumpDown;
+	joystickState_startDown = startDown;
 
 #ifdef DEV_MODE
     dl_u8 debugStateDown = (KeysStatus & PORT_A_KEY_2) != 0;
@@ -583,7 +590,6 @@ void main(void)
 
 		updateControls(controllerIndex);
 
-		/*
 		if (joystickState_startPressed)
 		{
 			gameData_paused = !gameData_paused;
@@ -591,7 +597,6 @@ void main(void)
 			if (gameData_paused)
 				Sound_StopAll();
 		}
-		*/
 
 		// Game Loop
 		SMS_initSprites();

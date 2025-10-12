@@ -198,11 +198,11 @@ void playerStartGameLoop(PlayerData* playerData)
 
 	playerData->facingDirection = PLAYER_FACING_LEFT;
 
-	initPickups(playerData->gamePickups, 
+	initPickups(gameData_pickups, 
 				res_roomPickupPositions,
 				keyPickUpDoorIndexes);
 
-	initDoors(playerData->doorStateData, 
+	initDoors(gameData_doorStateData, 
 			  res_offsetsToDoorsAlreadyActivated);
 }
 
@@ -282,8 +282,7 @@ void Player_StartRegen(PlayerData* playerData)
 }
 
 void Player_Update(PlayerData* playerData, 
-				   const DoorInfoData* doorInfoData,
-				   dl_u8* doorStateData)
+				   const DoorInfoData* doorInfoData)
 {
 	const DoorInfo* doorInfoRunner;
 	dl_u8 testResult;
@@ -825,12 +824,13 @@ void Player_Update(PlayerData* playerData,
 
 	// door touching check
 	doorInfoRunner = doorInfoData->doorInfos;
+
 	for (loop = 0; loop < doorInfoData->drawInfosCount; loop++)
 	{
 		if (GET_HIGH_BYTE(playerData->y) == doorInfoRunner->y &&
 			GET_HIGH_BYTE(playerData->x) == doorInfoRunner->x)
 		{
-			if (doorStateData[doorInfoRunner->globalDoorIndex] & playerData->playerMask)
+			if (gameData_doorStateData[doorInfoRunner->globalDoorIndex] & playerData->playerMask)
 			{
 				// jump to next room
 				Sound_Stop(SOUND_RUN);

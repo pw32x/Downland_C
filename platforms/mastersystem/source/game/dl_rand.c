@@ -1,5 +1,4 @@
 #include "dl_rand.h"
-#include "smslib.h"
 
 static dl_u16 rng16 = 0xACE1;  // seed
 

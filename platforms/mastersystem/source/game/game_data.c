@@ -26,3 +26,6 @@ dl_u8 gameData_string_highScore[SCORE_STRING_SIZE];
 
 dl_u32 gameData_highScore;
 dl_u8 gameData_paused;
+
+RoomPickups gameData_pickups;
+dl_u8 gameData_doorStateData[DOOR_TOTAL_COUNT];

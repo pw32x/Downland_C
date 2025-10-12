@@ -21,6 +21,8 @@ extern dl_u8 birdData_animationFrame;
 
 void Bird_Init(void);
 void Bird_Update(dl_u16 currentRoomTimer);
+
+// it's up to the platform port to implement this function
 void Bird_Draw(dl_u16 currentTimer);
 
 #endif

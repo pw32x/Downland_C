@@ -164,12 +164,3 @@ void Ball_Update(void)
 	}
 }
 
-void Ball_Draw(void)
-{
-	if (ballData_enabled)
-	{
-		SMS_addTwoAdjoiningSprites((ballData_x >> 8) << 1, 
-									ballData_y >> 8, 
-									((dl_s8)ballData_fallStateCounter < 0) << 2);
-	}
-}

@@ -3,6 +3,7 @@
 
 #include "base_types.h"
 #include "base_defines.h"
+#include "door_types.h"
 #include "drops_types.h"
 #include "rooms/rooms.h"
 #include "resource_types.h"
@@ -44,5 +45,8 @@ extern dl_u8 gameData_string_highScore[SCORE_STRING_SIZE];
 
 extern dl_u32 gameData_highScore;
 extern dl_u8 gameData_paused;
+
+extern RoomPickups gameData_pickups;
+extern dl_u8 gameData_doorStateData[DOOR_TOTAL_COUNT];
 
 #endif

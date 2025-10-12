@@ -55,8 +55,6 @@ typedef struct
 	dl_u8 globalAnimationCounter; // drives running, climbing animation
 
 	
-	RoomPickups gamePickups;
-	dl_u8 doorStateData[DOOR_TOTAL_COUNT];
 	dl_u8 gameCompletionCount;
 	const Room* currentRoom;
 

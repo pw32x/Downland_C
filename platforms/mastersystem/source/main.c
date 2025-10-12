@@ -129,6 +129,28 @@ void Sound_StopAll(void)
 {
 }
 
+void Ball_Draw(void)
+{
+	if (ballData_enabled)
+	{
+		SMS_addTwoAdjoiningSprites((ballData_x >> 8) << 1, 
+									ballData_y >> 8, 
+									((dl_s8)ballData_fallStateCounter < 0) << 2);
+	}
+}
+
+#define BIRD_TILE_INDEX 8
+
+void Bird_Draw(dl_u16 currentTimer)
+{
+	// draw bird
+	if (birdData_state && currentTimer == 0)
+	{
+		SMS_addTwoAdjoiningSprites((birdData_x >> 8) << 1,
+									birdData_y >> 8,
+									BIRD_TILE_INDEX + (birdData_animationFrame << 2));
+	}
+}
 
 #define TRUE 1
 #define FALSE 0
@@ -293,7 +315,7 @@ void drawPickups(void)
 {
 	// draw pickups
 	int roomIndex = gameData_currentRoom->roomNumber;
-	pickups = &gameData_currentPlayerData->gamePickups[roomIndex][0];
+	pickups = &gameData_pickups[roomIndex][0];
 	playerMask = gameData_currentPlayerData->playerMask;
 
 	for (int loop = 0; loop < NUM_PICKUPS_PER_ROOM; loop++)
@@ -319,7 +341,7 @@ void drawDoors(void)
 	const DoorInfoData* doorInfoData = &res_roomResources[roomNumber].doorInfoData;
 	const DoorInfo* doorInfoRunner = doorInfoData->doorInfos;
 
-	const dl_u8* doorStateData = gameData_currentPlayerData->doorStateData;
+	const dl_u8* doorStateData = gameData_doorStateData;
 	dl_u8 playerMask = gameData_currentPlayerData->playerMask;
 
 	for (dl_u8 loop = 0; loop < doorInfoData->drawInfosCount; loop++)

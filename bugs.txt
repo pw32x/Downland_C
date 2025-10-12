@@ -22,3 +22,8 @@ Bugs
     
     SS: if you make a door appear and then change rooms, the door will disappear during
         the transition. But it'll work correctly the next time in the room.
+        
+        
+    SMS + SG1000: lives icons are too low compared to the PL1 text
+    
+    SG1000: jump sound doesn't always play from off of ropes. SMS too?

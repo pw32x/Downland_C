@@ -25,8 +25,7 @@ void Player_GameInit(PlayerData* playerData);
 void Player_RoomInit(PlayerData* playerData);
 
 void Player_Update(PlayerData* playerData, 
-				   const DoorInfoData* doorInfoData,
-				   dl_u8* doorStateData);
+				   const DoorInfoData* doorInfoData);
 
 void Player_StartRegen(PlayerData* playerData);
 

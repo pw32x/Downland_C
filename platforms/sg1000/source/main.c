@@ -285,7 +285,7 @@ void drawPickups(void)
 {
 	// draw pickups
 	int roomIndex = gameData_currentRoom->roomNumber;
-	pickups = &gameData_currentPlayerData->gamePickups[roomIndex][0];
+	pickups = &gameData_pickups[roomIndex][0];
 	playerMask = gameData_currentPlayerData->playerMask;
 
 	for (int loop = 0; loop < NUM_PICKUPS_PER_ROOM; loop++)
@@ -313,12 +313,11 @@ void drawDoors(void)
 	const DoorInfoData* doorInfoData = &res_roomResources[roomNumber].doorInfoData;
 	const DoorInfo* doorInfoRunner = doorInfoData->doorInfos;
 
-	const dl_u8* doorStateData = gameData_currentPlayerData->doorStateData;
 	dl_u8 playerMask = gameData_currentPlayerData->playerMask;
 
 	for (dl_u8 loop = 0; loop < doorInfoData->drawInfosCount; loop++)
 	{
-        if ((doorStateData[doorInfoRunner->globalDoorIndex] & playerMask) &&
+        if ((gameData_doorStateData[doorInfoRunner->globalDoorIndex] & playerMask) &&
 			doorInfoRunner->x != 0xff)
 		{
 			dl_u8 xPosition = (dl_u8)(doorInfoRunner->x << 1);

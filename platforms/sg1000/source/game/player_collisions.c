@@ -94,7 +94,7 @@ void Player_PerformCollisions(void)
 
 		for (loop = 0; loop < NUM_PICKUPS_PER_ROOM; loop++)
 		{
-			pickUp = &playerData->gamePickups[roomNumber][loop];
+			pickUp = &gameData_pickups[roomNumber][loop];
 
 			// is pickup active? Pickup state contain state for
 			// both players.
@@ -119,7 +119,7 @@ void Player_PerformCollisions(void)
 
 						doorIndex = pickUp->doorUnlockIndex;
 
-						playerData->doorStateData[doorIndex] |= playerData->playerMask;
+						gameData_doorStateData[doorIndex] |= playerData->playerMask;
 
 						break;
 					}

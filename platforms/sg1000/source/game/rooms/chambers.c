@@ -104,8 +104,7 @@ void chamber_update(Room* room)
 	playerLives = playerData->lives;
 
 	Player_Update(playerData, 
-				  &res_roomResources[room->roomNumber].doorInfoData,
-				  playerData->doorStateData);
+				  &res_roomResources[room->roomNumber].doorInfoData);
 
 	// player lost a life check
 	if (playerData->lives < playerLives ||

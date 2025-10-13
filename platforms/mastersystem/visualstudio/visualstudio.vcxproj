@@ -126,7 +126,6 @@
     <ClCompile Include="..\..\..\..\..\..\SMSDev\devkitSMS-master\PSGlib\src\PSGlib.c" />
     <ClCompile Include="..\..\..\game_8bit\ball.c" />
     <ClCompile Include="..\..\..\game_8bit\bird.c" />
-    <ClCompile Include="..\..\..\game_8bit\checksum_utils.c" />
     <ClCompile Include="..\..\..\game_8bit\dl_rand.c" />
     <ClCompile Include="..\..\..\game_8bit\drops_manager.c" />
     <ClCompile Include="..\..\..\game_8bit\game.c" />
@@ -171,7 +170,6 @@
     <ClInclude Include="..\..\..\game_8bit\base_defines.h" />
     <ClInclude Include="..\..\..\game_8bit\base_types.h" />
     <ClInclude Include="..\..\..\game_8bit\bird.h" />
-    <ClInclude Include="..\..\..\game_8bit\checksum_utils.h" />
     <ClInclude Include="..\..\..\game_8bit\dl_platform.h" />
     <ClInclude Include="..\..\..\game_8bit\dl_rand.h" />
     <ClInclude Include="..\..\..\game_8bit\dl_sound.h" />

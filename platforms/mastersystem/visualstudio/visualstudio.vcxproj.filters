@@ -130,9 +130,6 @@
     <ClCompile Include="..\..\..\game_8bit\bird.c">
       <Filter>Source Files\game</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\game_8bit\checksum_utils.c">
-      <Filter>Source Files\game</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\game_8bit\dl_rand.c">
       <Filter>Source Files\game</Filter>
     </ClCompile>
@@ -211,9 +208,6 @@
       <Filter>Source Files\game</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\game_8bit\bird.h">
-      <Filter>Source Files\game</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\game_8bit\checksum_utils.h">
       <Filter>Source Files\game</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\game_8bit\dl_platform.h">

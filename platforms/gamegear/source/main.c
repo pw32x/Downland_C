@@ -793,6 +793,9 @@ void drawWipeTransition(void)
 
 void drawGetReadyScreen(void)
 {
+	g_scrollX = 0;
+	g_scrollY = 0;
+
 	drawDrops();
 }
 

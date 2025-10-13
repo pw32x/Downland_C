@@ -753,6 +753,9 @@ void drawChamber(void)
 
 void drawTitleScreen(void)
 {
+	g_scrollX = 0;
+	g_scrollY = 0;
+
 	drawDrops();
 
 	dl_u8 x = gameData_numPlayers == 1 ? 32 : 128;
@@ -766,6 +769,26 @@ void drawTransition(void)
 
 void drawWipeTransition(void)
 {
+	if (gameData_transitionInitialDelay == 29)
+    {
+		PlayerData* playerData = gameData_currentPlayerData;
+
+		dl_u16 playerX;
+		dl_u16 playerY;
+
+		if (playerData->lastDoor)
+		{
+			playerX = playerData->lastDoor->xLocationInNextRoom;
+			playerY = playerData->lastDoor->yLocationInNextRoom;
+		}
+		else
+		{
+			playerX = PLAYER_START_X;
+			playerY = PLAYER_START_Y;
+		}
+
+		updateScroll(playerX << 1, playerY);
+    }
 }
 
 void drawGetReadyScreen(void)

@@ -212,6 +212,7 @@ extern unsigned char const playerLives4bpp[640]; // 20 tiles x 32 bytes
 //extern unsigned char const playerLivesRegen4bpp[256]; // 10 tiles x 32 bytes
 extern unsigned char const playerRegen4bpp[1024]; // 40 tiles x 32 bytes
 extern unsigned char const cursor4bpp[32]; // 1 tiles x 32 bytes
+extern unsigned char const characterUIFont4bpp[352]; // 11 tiles x 32 bytes
 
 dl_u16 tileText[22];
 
@@ -519,11 +520,8 @@ void main(void)
 	load16x16SpriteTiles(playerRegen4bpp, 256 + 126, 8); // 32 tiles x 32 bytes
 	load16x8SpriteTiles(cursor4bpp, 256 + 158, 1); // 1 tiles x 32 bytes
 
+	load16x8SpriteTiles(characterUIFont4bpp, 256 + 160, 11); // 16 tiles x 32 bytes
 
-	load16x8SpriteTiles(characterFont4bpp, 256 + 160, 10); // 16 tiles x 32 bytes
-	load16x8SpriteTiles(characterFont4bpp + (33 * 32), 256 + 180, 1); // 16 tiles x 32 bytes
-
-	
 	g_regenSpriteIndex = 0;
 
 	SMS_loadTiles(tileSet4bpp, 0, 6240);
@@ -685,6 +683,10 @@ void drawChamber(void)
 
 	dl_u8 tileIndex;
 
+	SMS_addSprite(170, 160, 160 + (gameData_string_timer[1] << 1));
+	SMS_addSprite(178, 160, 160 + (gameData_string_timer[2] << 1));
+	SMS_addSprite(186, 160, 160 + (gameData_string_timer[3] << 1));
+	SMS_addSprite(194, 160, 160 + (gameData_string_timer[4] << 1));
 
 	// draw player
 	switch (playerData->state)
@@ -746,10 +748,7 @@ void drawChamber(void)
 		drawLives(playerData);
 	}
 
-	SMS_addSprite(170, 160, 160 + (gameData_string_timer[1] << 1));
-	SMS_addSprite(178, 160, 160 + (gameData_string_timer[2] << 1));
-	SMS_addSprite(186, 160, 160 + (gameData_string_timer[3] << 1));
-	SMS_addSprite(194, 160, 160 + (gameData_string_timer[4] << 1));
+
 }
 
 void drawTitleScreen(void)

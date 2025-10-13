@@ -209,7 +209,7 @@ extern unsigned char const moneyBag4bpp[128]; // 4 tiles x 32 bytes
 extern unsigned char const player4bpp[1280]; // 40 tiles x 32 bytes
 extern unsigned char const playerSplat4bpp[384];
 extern unsigned char const playerLives4bpp[640]; // 20 tiles x 32 bytes
-extern unsigned char const playerLivesRegen4bpp[256]; // 10 tiles x 32 bytes
+//extern unsigned char const playerLivesRegen4bpp[256]; // 10 tiles x 32 bytes
 extern unsigned char const playerRegen4bpp[1024]; // 40 tiles x 32 bytes
 extern unsigned char const cursor4bpp[32]; // 1 tiles x 32 bytes
 
@@ -237,22 +237,6 @@ void chamber_draw(dl_u8 roomNumber)
 	const SMSBackgroundData* backgroundData = (const SMSBackgroundData*)res_roomResources[roomNumber].backgroundDrawData;
 	gameData_cleanBackground = (dl_u8*)backgroundData->cleanBackground;
 	SMS_loadTileMap(0, 0, (dl_u8*)backgroundData->tileMap, 32 * 24 * 2);
-
-	if (!gameData_currentPlayerData->playerNumber)
-		drawTileText(res_string_pl1, PLAYERLIVES_TEXT_DRAW_LOCATION);
-	else
-		drawTileText(res_string_pl2, PLAYERLIVES_TEXT_DRAW_LOCATION);
-
-	drawTileText(res_string_chamber, CHAMBER_TEXT_DRAW_LOCATION);
-
-	gameData_string_roomNumber[0] = roomNumber;
-	drawTileText(gameData_string_roomNumber, CHAMBER_NUMBER_TEXT_DRAW_LOCATION);
-
-	PlayerData* playerData = gameData_playerData;
-	convertScoreToString(playerData->score, playerData->scoreString);
-	drawTileText(playerData->scoreString, SCORE_DRAW_LOCATION);
-
-	drawTileText(gameData_string_timer, TIMER_DRAW_LOCATION);
 }
 
 
@@ -307,8 +291,6 @@ void titleScreen_draw(dl_u8 roomNumber)
 
 void updateScore(void)
 {
-	convertScoreToString(gameData_currentPlayerData->score, gameData_currentPlayerData->scoreString);
-	drawTileText(gameData_currentPlayerData->scoreString, SCORE_DRAW_LOCATION);
 }
 
 // moving the dropsDrawRunner to global memory makes drawDrops twice as fast
@@ -392,34 +374,13 @@ void drawDoors(void)
 
 dl_u8 g_playerTileIndex;
 
-void drawUIPlayerLives(const PlayerData* playerData)
+void drawLives(const PlayerData* playerData)
 {
-	dl_u8 x = PLAYERLIVES_ICON_X << 1;
-	dl_u8 y = PLAYERLIVES_ICON_Y;
-
 	dl_u8 tileIndex = 86 + (playerData->currentSpriteNumber << 2);
+	SMS_addTwoAdjoiningSprites(48, 24, tileIndex);
 
-	dl_u8 count = playerData->lives;
-	while (count--)
-	{
-		SMS_addTwoAdjoiningSprites(x - g_scrollX, y - g_scrollY, tileIndex);
-
-		x += (PLAYERLIVES_ICON_SPACING << 1);
-    }
-
-	if (playerData->state == PLAYER_STATE_REGENERATION)
-	{
-		if (playerData->facingDirection)
-		{
-			tileIndex = 160 + (g_regenSpriteIndex << 2);
-		}
-		else
-		{
-			tileIndex = 160 + ((g_regenSpriteIndex + REGEN_NUM_FRAMES) << 2);
-		}
-
-		SMS_addTwoAdjoiningSprites(x - g_scrollX, y - g_scrollY, tileIndex);
-    }
+	SMS_addSprite(64, 24, 180);
+	SMS_addSprite(72, 24, 160 + (playerData->lives << 1));
 }
 
 extern volatile unsigned int KeysStatus;
@@ -482,8 +443,6 @@ void GameRunner_ChangedRoomCallback(const dl_u8 roomNumber, dl_s8 transitionType
 // SMS_VRAMmemcpy((tilefrom)*32,(src),(size))
 void load16x8SpriteTiles(const dl_u8* src, dl_u16 tilefrom, dl_u8 tileWidth)
 {
-	//SMS_loadTiles(src, tilefrom, size); // 4 tiles x 32 bytes
-
 	for (dl_u8 loop = 0; loop < tileWidth; loop++)
 	{
 		SMS_loadTiles(src, tilefrom, 32); // 4 tiles x 32 bytes
@@ -509,8 +468,6 @@ void load16x16SpriteTiles(const dl_u8* src, dl_u16 tilefrom, dl_u8 frames)
 
 void load24x16SpriteTiles(const dl_u8* src, dl_u16 tilefrom, dl_u8 frames)
 {
-	//SMS_loadTiles(src, tilefrom, size); // 4 tiles x 32 bytes
-
 	for (dl_u8 loop = 0; loop < frames; loop++)
 	{
 		SMS_loadTiles(src, tilefrom, 32); // 4 tiles x 32 bytes
@@ -529,7 +486,6 @@ void load24x16SpriteTiles(const dl_u8* src, dl_u16 tilefrom, dl_u8 frames)
 
 void PSGUpdate(void)
 {
-//	PSGFrame();
 	PSGSFXFrame();
 }
 
@@ -550,7 +506,7 @@ void main(void)
 
 	// load tiles for background
 	load16x8SpriteTiles(ball4bpp, 256, 4); // 4 tiles x 32 bytes
-	load16x8SpriteTiles(bird4bpp, 256 + 8, 124); // 4 tiles x 32 bytes
+	load16x8SpriteTiles(bird4bpp, 256 + 8, 4); // 4 tiles x 32 bytes
 	load16x16SpriteTiles(diamond4bpp, 256 + 16, 1);  // 4 tiles x 32 bytes
 	load16x16SpriteTiles(door4bpp, 256 + 20, 1); // 4 tiles x 32 bytes
 	SMS_loadTiles(drop4bpp, 256 + 24, 64); // 2 tiles x 32 bytes
@@ -558,11 +514,15 @@ void main(void)
 	load16x16SpriteTiles(moneyBag4bpp, 256 + 30, 1); // 4 tiles x 32 bytes
 	load16x16SpriteTiles(player4bpp, 256 + 34, 10); // 40 tiles x 32 bytes
 	load24x16SpriteTiles(playerSplat4bpp, 256 + 74, 2); // 12 tiles x 32 bytes
-
+	
 	load16x8SpriteTiles(playerLives4bpp, 256 + 86, 20); // 20 tiles x 32 bytes
 	load16x16SpriteTiles(playerRegen4bpp, 256 + 126, 8); // 32 tiles x 32 bytes
 	load16x8SpriteTiles(cursor4bpp, 256 + 158, 1); // 1 tiles x 32 bytes
-	load16x8SpriteTiles(playerLivesRegen4bpp, 256 + 160, 16); // 16 tiles x 32 bytes
+
+
+	load16x8SpriteTiles(characterFont4bpp, 256 + 160, 10); // 16 tiles x 32 bytes
+	load16x8SpriteTiles(characterFont4bpp + (33 * 32), 256 + 180, 1); // 16 tiles x 32 bytes
+
 	
 	g_regenSpriteIndex = 0;
 
@@ -629,9 +589,6 @@ void main(void)
 		// VBLANK
 		SMS_waitForVBlank ();
 
-		//extern unsigned char SpriteNextFree;
-		//SMS_debugPrintf("sprites: %d\n", SpriteNextFree);
-
 		UNSAFE_SMS_copySpritestoSAT();
 	}
 }
@@ -644,13 +601,10 @@ void GameRunner_ChangedRoomCallback(const dl_u8 roomNumber, dl_s8 transitionType
 
 	UNUSED(roomNumber);
 
-	//SMS_debugPrintf("GameRunner_ChangedRoomCallback\n");
-
 	SMS_waitForVBlank();
 	SMS_initSprites();
 	SMS_copySpritestoSAT();
 
-	//SMS_debugPrintf("transitionType: %d\n", transitionType);
 	if (transitionType < 0)
 	{
 		//SMS_debugPrintf("downland palette 2\n");
@@ -660,7 +614,7 @@ void GameRunner_ChangedRoomCallback(const dl_u8 roomNumber, dl_s8 transitionType
 }
 
 SMS_EMBED_SEGA_ROM_HEADER(9999,0);
-SMS_EMBED_SDSC_HEADER_AUTO_DATE(1,0,"pw","Downland","Downland ported to the Sega Master System");
+SMS_EMBED_SDSC_HEADER_AUTO_DATE(1,0,"pw","Downland","Downland ported to the Sega Game Gear");
 
 
 void updateScroll(dl_u16 playerX, dl_u16 playerY)
@@ -777,6 +731,7 @@ void drawChamber(void)
 
 	if (tickTock)
 	{
+		drawLives(playerData);
 		Ball_Draw();
 		Bird_Draw(currentTimer);
 		drawPickups();
@@ -788,13 +743,13 @@ void drawChamber(void)
 		drawPickups();
 		Bird_Draw(currentTimer);
 		Ball_Draw();
+		drawLives(playerData);
 	}
 
-	drawTileText(gameData_string_timer, TIMER_DRAW_LOCATION);
-	drawTileText(playerData->scoreString, SCORE_DRAW_LOCATION);
-
-	drawUIPlayerLives(playerData);
-
+	SMS_addSprite(170, 160, 160 + (gameData_string_timer[1] << 1));
+	SMS_addSprite(178, 160, 160 + (gameData_string_timer[2] << 1));
+	SMS_addSprite(186, 160, 160 + (gameData_string_timer[3] << 1));
+	SMS_addSprite(194, 160, 160 + (gameData_string_timer[4] << 1));
 }
 
 void drawTitleScreen(void)
@@ -831,8 +786,8 @@ void transition_init(const Room* targetRoom)
 	SMS_mapROMBank(roomToBankIndex[gameData_transitionRoomNumber]);
 
 	////SMS_debugPrintf("black palette\n");
-	//GG_loadBGPalette(blackPalette);
-	//GG_loadSpritePalette(blackPalette);
+	GG_loadBGPalette(blackPalette);
+	GG_loadSpritePalette(blackPalette);
 
 	// init the clean background with the target room. 
 	// it'll be revealed at the end of the transition.

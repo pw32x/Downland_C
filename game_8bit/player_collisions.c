@@ -64,6 +64,7 @@ BOOL dropsManagerCollisionTest(void)
 	return FALSE;
 }
 
+// Implement this on the platform side.
 void updateScore(void);
 
 void Player_PerformCollisions(void)

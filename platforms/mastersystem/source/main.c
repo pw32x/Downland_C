@@ -516,7 +516,7 @@ void main(void)
 
 	// load tiles for background
 	load16x8SpriteTiles(ball4bpp, 256, 4); // 4 tiles x 32 bytes
-	load16x8SpriteTiles(bird4bpp, 256 + 8, 124); // 4 tiles x 32 bytes
+	load16x8SpriteTiles(bird4bpp, 256 + 8, 4); // 4 tiles x 32 bytes
 	load16x16SpriteTiles(diamond4bpp, 256 + 16, 1);  // 4 tiles x 32 bytes
 	load16x16SpriteTiles(door4bpp, 256 + 20, 1); // 4 tiles x 32 bytes
 	SMS_loadTiles(drop4bpp, 256 + 24, 64); // 2 tiles x 32 bytes

@@ -37,53 +37,8 @@
     <ClCompile Include="..\generated\bank3_chamber0\chamber0_cleanBackground.c">
       <Filter>Source Files\generated\bank2_chamber0</Filter>
     </ClCompile>
-    <ClCompile Include="..\generated\bank2_vdp\ball4bpp.c">
-      <Filter>Source Files\generated\bank_vdp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\generated\bank2_vdp\bird4bpp.c">
-      <Filter>Source Files\generated\bank_vdp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\generated\bank2_vdp\characterFont4bpp.c">
-      <Filter>Source Files\generated\bank_vdp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\generated\bank2_vdp\diamond4bpp.c">
-      <Filter>Source Files\generated\bank_vdp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\generated\bank2_vdp\door4bpp.c">
-      <Filter>Source Files\generated\bank_vdp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\generated\bank2_vdp\drop4bpp.c">
-      <Filter>Source Files\generated\bank_vdp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\generated\bank2_vdp\key4bpp.c">
-      <Filter>Source Files\generated\bank_vdp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\generated\bank2_vdp\moneyBag4bpp.c">
-      <Filter>Source Files\generated\bank_vdp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\generated\bank2_vdp\player4bpp.c">
-      <Filter>Source Files\generated\bank_vdp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\generated\bank2_vdp\tileSet4bpp.c">
-      <Filter>Source Files\generated\bank_vdp</Filter>
-    </ClCompile>
     <ClCompile Include="..\generated\resources.c">
       <Filter>Source Files\generated</Filter>
-    </ClCompile>
-    <ClCompile Include="..\generated\bank2_vdp\playerSplat4bpp.c">
-      <Filter>Source Files\generated\bank_vdp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\generated\bank2_vdp\playerLives4bpp.c">
-      <Filter>Source Files\generated\bank_vdp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\generated\bank2_vdp\playerRegen4bpp.c">
-      <Filter>Source Files\generated\bank_vdp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\generated\bank2_vdp\playerLivesRegen4bpp.c">
-      <Filter>Source Files\generated\bank_vdp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\generated\bank2_vdp\cursor4bpp.c">
-      <Filter>Source Files\generated\bank_vdp</Filter>
     </ClCompile>
     <ClCompile Include="..\source\game\game_data.c">
       <Filter>Source Files</Filter>
@@ -141,6 +96,54 @@
     </ClCompile>
     <ClCompile Include="..\..\..\game_8bit\game_data.c">
       <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\sprites\characterUIFont4bpp.c">
+      <Filter>Source Files\generated\bank_vdp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\sprites\characterFont4bpp.c">
+      <Filter>Source Files\generated\bank_vdp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\sprites\cursor4bpp.c">
+      <Filter>Source Files\generated\bank_vdp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\sprites\diamond4bpp.c">
+      <Filter>Source Files\generated\bank_vdp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\sprites\door4bpp.c">
+      <Filter>Source Files\generated\bank_vdp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\sprites\drop4bpp.c">
+      <Filter>Source Files\generated\bank_vdp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\sprites\key4bpp.c">
+      <Filter>Source Files\generated\bank_vdp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\sprites\moneyBag4bpp.c">
+      <Filter>Source Files\generated\bank_vdp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\sprites\player4bpp.c">
+      <Filter>Source Files\generated\bank_vdp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\sprites\playerLives4bpp.c">
+      <Filter>Source Files\generated\bank_vdp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\sprites\playerLivesRegen4bpp.c">
+      <Filter>Source Files\generated\bank_vdp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\sprites\playerRegen4bpp.c">
+      <Filter>Source Files\generated\bank_vdp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\sprites\playerSplat4bpp.c">
+      <Filter>Source Files\generated\bank_vdp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\sprites\tileSet4bpp.c">
+      <Filter>Source Files\generated\bank_vdp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\sprites\ball4bpp.c">
+      <Filter>Source Files\generated\bank_vdp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\sprites\bird4bpp.c">
+      <Filter>Source Files\generated\bank_vdp</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

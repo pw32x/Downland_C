@@ -580,6 +580,44 @@ void saveCharacterFont(const dl_u8* characterFont)
     delete [] destinationFont;
 }
 
+void saveUICharacterFont(const dl_u8* characterFont)
+{
+#define DESTINATION_FONT_HEIGHT 8
+
+    const dl_u8 numCharactersToExport = 11;
+    const dl_u8 charactersToExport[numCharactersToExport] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 33 };
+
+    dl_u16 fontBufferSize = CHARACTER_FONT_WIDTH * DESTINATION_FONT_HEIGHT * numCharactersToExport;
+    dl_u8* destinationFont = new dl_u8[fontBufferSize];
+    memset(destinationFont, 0, fontBufferSize);
+
+    dl_u8* destinationFontRunner = destinationFont;
+
+    for (int characterLoop = 0; characterLoop < numCharactersToExport; characterLoop++)
+    {
+        const dl_u8* characterToExport = characterFont + (charactersToExport[characterLoop] * CHARACTER_FONT_HEIGHT);
+
+        for (int loopy = 0; loopy < CHARACTER_FONT_HEIGHT; loopy++)
+        {
+            dl_u8 characterRow = characterToExport[loopy];
+
+            for (int loopx = 0; loopx < CHARACTER_FONT_WIDTH; loopx++)
+            {
+                dl_u8 value = characterRow & 1;
+                characterRow >>= 1; // next bit
+                destinationFontRunner[((CHARACTER_FONT_WIDTH - 1) - loopx) + (loopy * CHARACTER_FONT_WIDTH)] = value ? value : 4;
+            }
+        }
+
+        destinationFontRunner += CHARACTER_FONT_WIDTH * DESTINATION_FONT_HEIGHT; // destination height
+    }
+
+    saveSpritePlanar(destinationFont, 1, numCharactersToExport, "characterUIFont4bpp");
+
+
+    delete [] destinationFont;
+}
+
 void saveCursor()
 {
     dl_u8 cursor8bpp[8 * 8];
@@ -777,7 +815,7 @@ void saveSprite4bpp(const dl_u8* sprite,
 }
 
 
-void saveSprite4bppClipped(const dl_u8* sprite, 
+void saveLivesSprites4bpp(const dl_u8* sprite, 
                          dl_u8 width, 
                          dl_u8 height, 
                          dl_u8 clipHeight,
@@ -807,6 +845,13 @@ void saveSprite4bppClipped(const dl_u8* sprite,
         // move to next frame
         sprite += spriteFrameSizeInBytes;
         sprite8bppRunner += destinationFrameSize; 
+    }
+
+    // change black pixels to palette index 4
+    for (int loop = 0; loop < bufferSize; loop++)
+    {
+        if (!sprite8bpp[loop])
+            sprite8bpp[loop] = 4;
     }
 
     saveSpritePlanar(sprite8bpp, destinationWidth / 8, (destinationHeight / 8) * numFrames, name.c_str());
@@ -1698,6 +1743,7 @@ int main()
     //saveGeneralData(resources);
 
     saveCharacterFont(resources.characterFont);
+    saveUICharacterFont(resources.characterFont);
 
     saveSprite4bpp(resources.sprites_drops, DROP_SPRITE_WIDTH, DROP_SPRITE_ROWS, DROP_SPRITE_COUNT, "drop4bpp");   
 
@@ -1714,13 +1760,18 @@ int main()
 
     dl_u8* regenSprite = saveRegenSprite(resources.sprites_player);
 
-    saveRegenLivesSprite(regenSprite);
+    //saveRegenLivesSprite(regenSprite);
 
     delete [] regenSprite;
 
 
     saveSplatSprite(resources.sprite_playerSplat);
-    saveSprite4bppClipped(resources.sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYERICON_NUM_SPRITE_ROWS, PLAYER_SPRITE_COUNT, "playerLives4bpp");
+    saveLivesSprites4bpp(resources.sprites_player, 
+                          PLAYER_SPRITE_WIDTH, 
+                          PLAYER_SPRITE_ROWS, 
+                          PLAYERICON_NUM_SPRITE_ROWS, 
+                          PLAYER_SPRITE_COUNT, 
+                          "playerLives4bpp");
 
     /*
     saveTransitionTileset();

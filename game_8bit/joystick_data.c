@@ -9,6 +9,8 @@ dl_u8 joystickState_startDown;
 
 dl_u8 joystickState_leftPressed;
 dl_u8 joystickState_rightPressed;
+dl_u8 joystickState_upPressed;
+dl_u8 joystickState_downPressed;
 dl_u8 joystickState_jumpPressed;
 dl_u8 joystickState_startPressed;
 

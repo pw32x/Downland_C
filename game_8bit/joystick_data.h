@@ -14,6 +14,8 @@ extern dl_u8 joystickState_startDown;
 
 extern dl_u8 joystickState_leftPressed;
 extern dl_u8 joystickState_rightPressed;
+extern dl_u8 joystickState_upPressed;
+extern dl_u8 joystickState_downPressed;
 extern dl_u8 joystickState_jumpPressed;
 extern dl_u8 joystickState_startPressed;
 

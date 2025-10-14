@@ -216,10 +216,8 @@ extern unsigned char const characterUIFont4bpp[352]; // 11 tiles x 32 bytes
 
 dl_u16 tileText[22];
 
-void drawTileText(const dl_u8* text, dl_u16 xyLocation)
+void drawTileTextXY(const dl_u8* text, dl_u16 tilex, dl_u16 tiley)
 {
-    dl_u16 tilex = (xyLocation & 31);
-    dl_u16 tiley = (xyLocation >> 8);
 	dl_u16* tileTextRunner = tileText;
 
     // for each character
@@ -231,6 +229,14 @@ void drawTileText(const dl_u8* text, dl_u16 xyLocation)
     }
 
 	SMS_loadTileMap(tilex, tiley, tileText, (tileTextRunner - tileText) << 1);
+}
+
+void drawTileText(const dl_u8* text, dl_u16 xyLocation)
+{
+    dl_u16 tilex = (xyLocation & 31);
+    dl_u16 tiley = (xyLocation >> 8);
+
+	drawTileTextXY(text, tilex, tiley);
 }
 
 void chamber_draw(dl_u8 roomNumber)
@@ -268,17 +274,19 @@ void titleScreen_draw(dl_u8 roomNumber)
 	drawTileText(res_string_licensedTo, 0xa0a); // 0x0E0A original coco mem location
 	drawTileText(res_string_tandyCorporation, 0xb47); // 0x0F47 original coco mem location
 	drawTileText(res_string_allRightsReserved, 0xc86); // 0x1086 original coco mem location
-	drawTileText(res_string_onePlayer, 0xf05); // 0x1305 original coco mem location
-	drawTileText(res_string_twoPlayer, 0xf11); // 0x1311 original coco mem location
-	drawTileText(res_string_highScore, 0x118b); // 0x158B original coco mem location
-	drawTileText(res_string_playerOne, 0x1406); // 0x1806 original coco mem location
-	drawTileText(res_string_playerTwo, 0x1546); // 0x1946 original coco mem location
+
+	drawTileTextXY(res_string_onePlayer, 11, 14); // 0x1305 original coco mem location
+	drawTileTextXY(res_string_twoPlayer, 11, 15); // 0x1311 original coco mem location
+	drawTileTextXY(res_string_highScore, 6, 17); // 0x158B original coco mem location
+
+	drawTileTextXY(res_string_playerOne, 6, 18); // 0x1806 original coco mem location
+	drawTileTextXY(res_string_playerTwo, 6, 19); // 0x1946 original coco mem location
 
 	convertScoreToString(gameData_playerData[PLAYER_ONE].score, gameData_playerData[PLAYER_ONE].scoreString);
-	drawTileText(gameData_playerData[PLAYER_ONE].scoreString, TITLESCREEN_PLAYERONE_SCORE_LOCATION);
+	drawTileTextXY(gameData_playerData[PLAYER_ONE].scoreString, 18, 18);
 
 	convertScoreToString(gameData_playerData[PLAYER_TWO].score, gameData_playerData[PLAYER_TWO].scoreString);
-	drawTileText(gameData_playerData[PLAYER_TWO].scoreString, TITLESCREEN_PLAYERTWO_SCORE_LOCATION);
+	drawTileTextXY(gameData_playerData[PLAYER_TWO].scoreString, 18, 19);
 
 	if (gameData_playerData[PLAYER_ONE].score > gameData_highScore)
 		gameData_highScore = gameData_playerData[PLAYER_ONE].score;
@@ -287,7 +295,7 @@ void titleScreen_draw(dl_u8 roomNumber)
 
 	convertScoreToString(gameData_highScore, gameData_string_highScore);
 
-	drawTileText(gameData_string_highScore, TITLESCREEN_HIGHSCORE_LOCATION);
+	drawTileTextXY(gameData_string_highScore, 18, 17);
 }
 
 void updateScore(void)
@@ -389,6 +397,8 @@ extern volatile unsigned int PreviousKeysStatus;
 
 void updateControls(dl_u8 controllerIndex)
 {
+	(void)controllerIndex;
+
     dl_u8 leftDown;
     dl_u8 rightDown;
     dl_u8 upDown;
@@ -396,28 +406,21 @@ void updateControls(dl_u8 controllerIndex)
     dl_u8 jumpDown;
 	dl_u8 startDown;
 
-    // Check D-Pad
-	if (!controllerIndex)
-	{
-		leftDown = (KeysStatus & PORT_A_KEY_LEFT) != 0;
-		rightDown = (KeysStatus & PORT_A_KEY_RIGHT) != 0;
-		upDown = (KeysStatus & PORT_A_KEY_UP) != 0;
-		downDown = (KeysStatus & PORT_A_KEY_DOWN) != 0;
-		jumpDown = ((KeysStatus & PORT_A_KEY_1) != 0) || ((KeysStatus & PORT_A_KEY_2) != 0);
-	}
-	else
-	{
-		leftDown = (KeysStatus & PORT_B_KEY_LEFT) != 0;
-		rightDown = (KeysStatus & PORT_B_KEY_RIGHT) != 0;
-		upDown = (KeysStatus & PORT_B_KEY_UP) != 0;
-		downDown = (KeysStatus & PORT_B_KEY_DOWN) != 0;
-		jumpDown = ((KeysStatus & PORT_B_KEY_1) != 0) || ((KeysStatus & PORT_B_KEY_2) != 0);
-	}
+    // use same controls for player 1 and 2
+	leftDown = (KeysStatus & PORT_A_KEY_LEFT) != 0;
+	rightDown = (KeysStatus & PORT_A_KEY_RIGHT) != 0;
+	upDown = (KeysStatus & PORT_A_KEY_UP) != 0;
+	downDown = (KeysStatus & PORT_A_KEY_DOWN) != 0;
+	jumpDown = ((KeysStatus & PORT_A_KEY_1) != 0) || ((KeysStatus & PORT_A_KEY_2) != 0);
 
 	startDown = (KeysStatus & GG_KEY_START) != 0;
 
     joystickState_leftPressed = (!joystickState_leftDown) & leftDown;
     joystickState_rightPressed = (!joystickState_rightDown) & rightDown;
+
+	joystickState_upPressed = (!joystickState_upDown) & upDown;
+	joystickState_downPressed = (!joystickState_downDown) & downDown;
+
     joystickState_jumpPressed =  (!joystickState_jumpDown) & jumpDown;
 	joystickState_startPressed = (!joystickState_startDown) & startDown;
 
@@ -753,14 +756,24 @@ void drawChamber(void)
 
 void drawTitleScreen(void)
 {
-	g_scrollX = 0;
+	if (joystickState_upPressed)
+	{
+		gameData_numPlayers = 1;
+
+	}
+	else if (joystickState_downPressed)
+	{
+		gameData_numPlayers = 2;
+	}
+
+	g_scrollX = -4;
 	g_scrollY = 0;
 
 	drawDrops();
 
-	dl_u8 x = gameData_numPlayers == 1 ? 32 : 128;
+	dl_u8 y = gameData_numPlayers == 1 ? 115 : 123;
 
-	SMS_addSprite(x, 123, 158);
+	SMS_addSprite(83, y, 158);
 }
 
 void drawTransition(void)

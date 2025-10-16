@@ -18,7 +18,7 @@ CRT0=$(DEVKITSMS_BASE)/crt0/crt0_sg.rel
 SGLIB_LIB=$(SGLIB_BASE)/SGLib.lib          # Use distributed lib
 PSGLIB_LIB=$(PSGLIB_BASE)/PSGlib.lib          # Use distributed lib
 
-CFLAGS=-mz80 -I$(SGLIB_INCDIR) -I$(PSGLIB_INCDIR) -I$(GENERATED_DIR) -I$(SOURCE_DIR) -I$(GAME_SRC_DIR) -I$(GAME_ROOMS_SRC_DIR) --peep-file $(PEEP_RULES) --opt-code-speed --peep-asm
+CFLAGS=-mz80 -I$(SGLIB_INCDIR) -I$(PSGLIB_INCDIR) -I$(GENERATED_DIR) -I$(SOURCE_DIR) -I$(GAME_SRC_DIR) -I$(GAME_ROOMS_SRC_DIR) --peep-file $(PEEP_RULES) --opt-code-size --peep-asm
 
 #--opt-code-speed --peep-asm --fomit-frame-pointer --max-allocs-per-node 200000
 
@@ -125,7 +125,7 @@ $(GENERATED_BANK7_OUTPUT_DIR)/%.rel: $(GENERATED_BANK7_DIR)/%.c
 	$(CC) $(CFLAGS) --constseg BANK7 -c $< -o $@ 
 
 $(GENERATED_SPRITES_OUTPUT_DIR)/%.rel: $(GENERATED_SPRITES_DIR)/%.c
-	$(CC) $(CFLAGS) -c $< -o $@ 
+	$(CC) $(CFLAGS) --constseg BANK8 -c $< -o $@ 
 
 $(GAME_OUTPUT_DIR)/%.rel: $(GAME_SRC_DIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -137,6 +137,7 @@ $(OUTPUT_DIR)/$(PROGNAME).ihx: $(OBJS)
 	$(CC) -o $@ $(LDFLAGS) \
 	-Wl-b_BANK2=0x8000 -Wl-b_BANK3=0x8000 -Wl-b_BANK4=0x8000 \
 	-Wl-b_BANK5=0x8000 -Wl-b_BANK6=0x8000 -Wl-b_BANK7=0x8000 \
+	-Wl-b_BANK8=0x8000 \
 	$(CRT0) $(SGLIB_LIB) $(PSGLIB_LIB) $^
 
 $(OUTPUT_DIR)/$(PROGNAME).sms: $(OUTPUT_DIR)/$(PROGNAME).ihx

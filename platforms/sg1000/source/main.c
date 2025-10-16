@@ -37,6 +37,8 @@ const dl_u8 roomToBankIndex[] =
 	7   // get ready screen
 };
 
+#define SPRITE_BANK_NUMBER 8
+
 dl_u8 g_regenSpriteIndex;
 #define REGEN_NUM_FRAMES 4
 
@@ -579,6 +581,8 @@ void main(void)
 	SG_copySpritestoSAT();
 
 	setupTileColors();
+
+	SG_mapROMBank(SPRITE_BANK_NUMBER);
 
 	// load tiles for background
 	load16x8SpriteTiles(ball1bpp, 0, 4); // 4 tiles x 8 bytes

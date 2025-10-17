@@ -624,8 +624,6 @@ void main(void)
     m_drawRoomFunctions[WIPE_TRANSITION_ROOM_INDEX] = drawWipeTransition;
     m_drawRoomFunctions[GET_READY_ROOM_INDEX] = drawGetReadyScreen;
 
-	Game_ChangedRoomCallback = GameRunner_ChangedRoomCallback;
-
     Game_Init();
 
 	dl_u8 controllerIndex = 0;
@@ -661,17 +659,6 @@ void main(void)
 		SG_waitForVBlank();
 		SG_copySpritestoSAT();
 	}
-}
-
-
-void GameRunner_ChangedRoomCallback(const dl_u8 roomNumber, dl_s8 transitionType)
-{
-	UNUSED(roomNumber);
-
-	SG_waitForVBlank();
-	SG_initSprites();
-	SG_finalizeSprites();
-	SG_copySpritestoSAT();
 }
 
 dl_u8 tickTock;

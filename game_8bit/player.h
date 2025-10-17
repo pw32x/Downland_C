@@ -4,6 +4,7 @@
 #include "player_types.h"
 #include "resource_types.h"
 
+#define PLAYER_START_LIVES 3
 
 // all the states are mutually exclusive
 #define PLAYER_STATE_STAND			0

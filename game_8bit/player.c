@@ -12,8 +12,6 @@
 #include "drops_manager.h"
 #include "resources.h"
 
-#define PLAYER_START_LIVES 3
-
 #define PLAYER_REGENERATION_TIME			0x190 // 400
 #define PLAYER_REGENERATION_IMMOBILE_TIME	0x28  // 40
 #define PLAYER_SPLAT_INITIAL_FREEZE_TIME	0xa	  // 10
@@ -353,7 +351,7 @@ void Player_Update(PlayerData* playerData,
 			playerData->jumpAirCounter = 1;
 		}
 	}
-#endif
+
 
 	if (playerData->state == PLAYER_STATE_DEBUG)
 	{
@@ -376,6 +374,7 @@ void Player_Update(PlayerData* playerData,
 			playerData->y += PLAYER_DEBUG_SPEED;
 		}
 	}
+#endif
 
 	if (playerData->state == PLAYER_STATE_REGENERATION)
 	{

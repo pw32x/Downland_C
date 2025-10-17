@@ -18,7 +18,7 @@
 #include "../generated/bank8/sprites.h"
 #include "../generated/bank8/strings.h"
 
-#include "sounds.h"
+#include "sounds/sounds.h"
 
 const dl_u8 roomToBankIndex[] = 
 {
@@ -489,8 +489,10 @@ void load16x16SpriteTiles(const dl_u8* src, dl_u16 tilefrom, dl_u8 frames)
 
 void PSGUpdate(void)
 {
-//	PSGFrame();
+	SG_saveROMBank();
+	SG_mapROMBank(SPRITE_BANK_NUMBER);
 	PSGSFXFrame();
+	SG_restoreROMBank();
 }
 
 const dl_u8 blueTileColors[] = 

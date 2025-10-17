@@ -127,7 +127,6 @@
     <ClCompile Include="..\..\..\..\..\..\SMSDev\devkitSMS-master\SGlib\src\SGlib.c" />
     <ClCompile Include="..\..\..\game_8bit\ball.c" />
     <ClCompile Include="..\..\..\game_8bit\bird.c" />
-    <ClCompile Include="..\..\..\game_8bit\checksum_utils.c" />
     <ClCompile Include="..\..\..\game_8bit\dl_rand.c" />
     <ClCompile Include="..\..\..\game_8bit\drops_manager.c" />
     <ClCompile Include="..\..\..\game_8bit\game.c" />
@@ -163,7 +162,7 @@
     <ClCompile Include="..\generated\sprites\playerSplat1bpp.c" />
     <ClCompile Include="..\generated\sprites\tileSet1bpp.c" />
     <ClCompile Include="..\source\main.c" />
-    <ClCompile Include="..\source\sounds.c" />
+    <ClCompile Include="..\source\sounds\sounds.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\..\SMSDev\devkitSMS-master\PSGlib\src\PSGlib.h" />
@@ -173,7 +172,6 @@
     <ClInclude Include="..\..\..\game_8bit\base_defines.h" />
     <ClInclude Include="..\..\..\game_8bit\base_types.h" />
     <ClInclude Include="..\..\..\game_8bit\bird.h" />
-    <ClInclude Include="..\..\..\game_8bit\checksum_utils.h" />
     <ClInclude Include="..\..\..\game_8bit\dl_platform.h" />
     <ClInclude Include="..\..\..\game_8bit\dl_rand.h" />
     <ClInclude Include="..\..\..\game_8bit\dl_sound.h" />
@@ -197,7 +195,7 @@
     <ClInclude Include="..\generated\resources.h" />
     <ClInclude Include="..\generated\sprites\sprites.h" />
     <ClInclude Include="..\source\custom_background_types.h" />
-    <ClInclude Include="..\source\sounds.h" />
+    <ClInclude Include="..\source\sounds\sounds.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\build\build.bat" />

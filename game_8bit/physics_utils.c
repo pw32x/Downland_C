@@ -58,28 +58,3 @@ dl_u8 testTerrainCollision(dl_u16 x,
 
 	return firstResult | secondResult;
 }
-
-dl_u8 leftPixelData;
-dl_u8 rightPixelData;
-
-void getTerrainValue(dl_u16 x, 
-				     dl_u16 y, 
-				     dl_u16 yOffset, 
-				     const dl_u16* objectCollisionMasks)
-{
-	dl_u8 pixelX = GET_HIGH_BYTE(x);
-	dl_u8 tableIndex = pixelX & 0x3;
-	dl_u8 collectionCheckXOffset = collisionCheckXOffsets[tableIndex]; // offset the x byte position depending on x pixel position
-	dl_u16 objectCollisionMask = objectCollisionMasks[tableIndex]; // different masks for different x pixel positions
-
-	dl_u8 sensorX = pixelX + collectionCheckXOffset;
-	dl_u8 sensorY = GET_HIGH_BYTE(y) + yOffset;
-
-	dl_u16 framebufferPosition = GET_FRAMEBUFFER_LOCATION(sensorX, sensorY);
-
-	leftPixelData = gameData_cleanBackground[framebufferPosition] & GET_HIGH_BYTE(objectCollisionMask);
-	rightPixelData = gameData_cleanBackground[framebufferPosition + 1] & GET_LOW_BYTE(objectCollisionMask);
-
-	if (leftPixelData || rightPixelData)
-		terrainTest(1);
-}

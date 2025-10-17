@@ -15,7 +15,8 @@
 #include "bird.h"
 #include "drops_manager.h"
 #include "resources.h"
-#include "../generated/sprites/sprites.h"
+#include "../generated/bank8/sprites.h"
+#include "../generated/bank8/strings.h"
 
 #include "sounds.h"
 
@@ -204,12 +205,17 @@ void chamber_draw(dl_u8 roomNumber)
 	gameData_cleanBackground = (dl_u8*)backgroundData->cleanBackground;
 	SG_loadTileMap(0, 0, backgroundData->tileMap, 32 * 24);
 
+	SG_saveROMBank();
+	SG_mapROMBank(SPRITE_BANK_NUMBER);
+
 	if (!gameData_currentPlayerData->playerNumber)
 		drawTileText(res_string_pl1, PLAYERLIVES_TEXT_DRAW_LOCATION);
 	else
 		drawTileText(res_string_pl2, PLAYERLIVES_TEXT_DRAW_LOCATION);
 
 	drawTileText(res_string_chamber, CHAMBER_TEXT_DRAW_LOCATION);
+
+	SG_restoreROMBank();
 
 	gameData_string_roomNumber[0] = roomNumber;
 	drawTileText(gameData_string_roomNumber, CHAMBER_NUMBER_TEXT_DRAW_LOCATION);
@@ -231,8 +237,13 @@ void get_ready_room_draw(dl_u8 roomNumber)
 	SG_loadTileMap(0, 0, backgroundData->tileMap, 32 * 24);
 
 	// get ready text
+	SG_saveROMBank();
+	SG_mapROMBank(SPRITE_BANK_NUMBER);
+
 	const dl_u8* getReadyString = gameData_currentPlayerData->playerNumber == PLAYER_ONE ? res_string_getReadyPlayerOne : res_string_getReadyPlayerTwo;
 	drawTileText(getReadyString, 0x0b66);
+
+	SG_restoreROMBank();
 }
 
 void titleScreen_draw(dl_u8 roomNumber)
@@ -240,6 +251,9 @@ void titleScreen_draw(dl_u8 roomNumber)
 	const SMSBackgroundData* backgroundData = (const SMSBackgroundData*)res_roomResources[roomNumber].backgroundDrawData;
 	gameData_cleanBackground = (dl_u8*)backgroundData->cleanBackground;
 	SG_loadTileMap(0, 0, backgroundData->tileMap, 32 * 24);
+
+	SG_saveROMBank();
+	SG_mapROMBank(SPRITE_BANK_NUMBER);
 
 	drawTileText(res_string_downland, 0x03c9 + 64); // 0x07c9 original coco mem location
 	drawTileText(res_string_writtenBy, 0x050a); // 0x090A original coco mem location
@@ -257,7 +271,7 @@ void titleScreen_draw(dl_u8 roomNumber)
 
 	convertScoreToString(gameData_playerData[PLAYER_ONE].score, gameData_playerData[PLAYER_ONE].scoreString);
 	drawTileText(gameData_playerData[PLAYER_ONE].scoreString, TITLESCREEN_PLAYERONE_SCORE_LOCATION);
-
+	 
 	convertScoreToString(gameData_playerData[PLAYER_TWO].score, gameData_playerData[PLAYER_TWO].scoreString);
 	drawTileText(gameData_playerData[PLAYER_TWO].scoreString, TITLESCREEN_PLAYERTWO_SCORE_LOCATION);
 
@@ -269,6 +283,8 @@ void titleScreen_draw(dl_u8 roomNumber)
 	convertScoreToString(gameData_highScore, gameData_string_highScore);
 
 	drawTileText(gameData_string_highScore, TITLESCREEN_HIGHSCORE_LOCATION);
+
+	SG_restoreROMBank();
 }
 
 void updateScore(void)

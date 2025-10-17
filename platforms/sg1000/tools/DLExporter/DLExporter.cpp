@@ -46,7 +46,7 @@ void dl_memcpy(void* destination, const void* source, dl_u16 count)
 
 const char* bankFolderNames[] = 
 {
-    "sprites",
+    "bank8",
     "bank2",
     "bank3",
     "bank4",
@@ -966,17 +966,16 @@ void saveTileSet(std::vector<Tile>& tileSet)
     outFile << oss.str();
 }
 
-void saveResourcesHeader(Resources& resources)
+
+void saveStringsHeader(Resources& resources)
 {
     std::ostringstream oss;
 
-    oss << "#ifndef RESOURCES_HEADER_INCLUDE_H\n";
-    oss << "#define RESOURCES_HEADER_INCLUDE_H\n";
+    oss << "#ifndef STRINGS_HEADER_INCLUDE_H\n";
+    oss << "#define STRINGS_HEADER_INCLUDE_H\n";
     oss << "\n";
 
     oss << "#include \"base_types.h\"\n";
-    oss << "#include \"resource_types.h\"\n";
-    oss << "#include \"custom_background_types.h\"\n";
     oss << "\n";
 
     oss << "extern const dl_u8 res_string_downland[14];\n";
@@ -997,6 +996,66 @@ void saveResourcesHeader(Resources& resources)
     oss << "extern const dl_u8 res_string_getReadyPlayerOne[21];\n";
     oss << "extern const dl_u8 res_string_getReadyPlayerTwo[21];\n";
     oss << "extern const dl_u8 res_string_chamber[8];\n";
+    oss << "\n";
+
+    oss << "\n";
+    oss << "#endif\n";
+
+    std::string bankFolder = g_destinationPath;
+    bankFolder += bankFolderNames[SPRITES_FOLDER_INDEX];
+    bankFolder += "\\";
+
+    std::ofstream outFile(bankFolder + "strings.h");
+    outFile << oss.str();
+}
+
+void saveStringsSource(Resources& resources)
+{
+    std::ostringstream oss;
+
+    oss << "#include \"base_types.h\"\n";
+    oss << "\n";
+
+    saveString(resources.text_downland, "downland", oss);
+    saveString(resources.text_writtenBy, "writtenBy", oss);
+    saveString(resources.text_michaelAichlmayer, "michaelAichlmayer", oss);
+    saveString(resources.text_copyright1983, "copyright1983", oss);
+    saveString(resources.text_spectralAssociates, "spectralAssociates", oss);
+    saveString(resources.text_licensedTo, "licensedTo", oss);
+    saveString(resources.text_tandyCorporation, "tandyCorporation", oss);
+    saveString(resources.text_allRightsReserved, "allRightsReserved", oss);
+    saveString(resources.text_onePlayer, "onePlayer", oss);
+    saveString(resources.text_twoPlayer, "twoPlayer", oss);
+    saveString(resources.text_highScore, "highScore", oss);
+    saveString(resources.text_playerOne, "playerOne", oss);
+    saveString(resources.text_playerTwo, "playerTwo", oss);
+    saveString(resources.text_pl1, "pl1", oss);
+    saveString(resources.text_pl2, "pl2", oss);
+    saveString(resources.text_getReadyPlayerOne, "getReadyPlayerOne", oss);
+    saveString(resources.text_getReadyPlayerTwo, "getReadyPlayerTwo", oss);
+    saveString(resources.text_chamber, "chamber", oss);
+    oss << "\n";
+    oss << "\n";
+
+    std::string bankFolder = g_destinationPath;
+    bankFolder += bankFolderNames[SPRITES_FOLDER_INDEX];
+    bankFolder += "\\";
+
+    std::ofstream outFile(bankFolder + "strings.c");
+    outFile << oss.str();
+}
+
+void saveResourcesHeader(Resources& resources)
+{
+    std::ostringstream oss;
+
+    oss << "#ifndef RESOURCES_HEADER_INCLUDE_H\n";
+    oss << "#define RESOURCES_HEADER_INCLUDE_H\n";
+    oss << "\n";
+
+    oss << "#include \"base_types.h\"\n";
+    oss << "#include \"resource_types.h\"\n";
+    oss << "#include \"custom_background_types.h\"\n";
     oss << "\n";
 
     oss << "extern const PickupPosition res_roomPickupPositions[50];\n";
@@ -1022,27 +1081,6 @@ void saveResourcesSource(Resources& resources)
     oss << "#include \"base_types.h\"\n";
     oss << "#include \"resource_types.h\"\n";
     oss << "#include \"custom_background_types.h\"\n";
-    oss << "\n";
-
-    saveString(resources.text_downland, "downland", oss);
-    saveString(resources.text_writtenBy, "writtenBy", oss);
-    saveString(resources.text_michaelAichlmayer, "michaelAichlmayer", oss);
-    saveString(resources.text_copyright1983, "copyright1983", oss);
-    saveString(resources.text_spectralAssociates, "spectralAssociates", oss);
-    saveString(resources.text_licensedTo, "licensedTo", oss);
-    saveString(resources.text_tandyCorporation, "tandyCorporation", oss);
-    saveString(resources.text_allRightsReserved, "allRightsReserved", oss);
-    saveString(resources.text_onePlayer, "onePlayer", oss);
-    saveString(resources.text_twoPlayer, "twoPlayer", oss);
-    saveString(resources.text_highScore, "highScore", oss);
-    saveString(resources.text_playerOne, "playerOne", oss);
-    saveString(resources.text_playerTwo, "playerTwo", oss);
-    saveString(resources.text_pl1, "pl1", oss);
-    saveString(resources.text_pl2, "pl2", oss);
-    saveString(resources.text_getReadyPlayerOne, "getReadyPlayerOne", oss);
-    saveString(resources.text_getReadyPlayerTwo, "getReadyPlayerTwo", oss);
-    saveString(resources.text_chamber, "chamber", oss);
-    oss << "\n";
     oss << "\n";
 
     // pick up positions
@@ -1350,6 +1388,9 @@ int main()
     saveTileSet(tileSet);
 
     saveTileMapSource(tileMaps);
+
+    saveStringsHeader(resources);
+    saveStringsSource(resources);
 
     saveResourcesHeader(resources);
     saveResourcesSource(resources);

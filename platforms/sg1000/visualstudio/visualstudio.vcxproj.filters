@@ -154,6 +154,9 @@
     <ClCompile Include="..\generated\bank8\strings.c">
       <Filter>Source Files\generated\bank8</Filter>
     </ClCompile>
+    <ClCompile Include="..\generated\bank2\chamber0_backgroundData.c">
+      <Filter>Source Files\generated\bank2_chamber0</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\source\custom_background_types.h">

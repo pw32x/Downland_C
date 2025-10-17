@@ -873,6 +873,35 @@ void saveCleanBackground(const dl_u8* cleanBackground, dl_u8 backgroundIndex)
     outFile << oss.str();        
 }
 
+void saveSMSBackgroundData(dl_u8 backgroundIndex)
+{
+    std::ostringstream oss;
+
+    std::string cleanBackgroundName = roomNames[backgroundIndex];
+    cleanBackgroundName += "_cleanBackground";
+
+    oss << "#include \"base_types.h\"\n";
+    oss << "#include \"custom_background_types.h\"\n";
+    oss << "\n";
+
+    oss << "extern const dl_u8 " << roomNames[backgroundIndex] << "_cleanBackground[" << FRAMEBUFFER_PITCH * FRAMEBUFFER_HEIGHT << "];\n";
+    oss << "extern const dl_u8 " << roomNames[backgroundIndex] << "_tileMap[32 * 24];\n";
+
+    oss << "const SMSBackgroundData " << roomNames[backgroundIndex] << "_customBackgroundData = "
+        << "{ " 
+        << roomNames[backgroundIndex] << "_cleanBackground"
+        << ", "
+        << roomNames[backgroundIndex] << "_tileMap"
+        << " };\n";
+
+    std::string bankFolder = g_destinationPath;
+    bankFolder += bankFolderNames[roomToBankFolderNameIndex[backgroundIndex]];
+    bankFolder += "\\";
+
+    std::ofstream outFile(bankFolder + roomNames[backgroundIndex] + "_backgroundData.c");
+    outFile << oss.str();   
+}
+
 void saveString(const dl_u8* string, const char* name, std::ostringstream& oss)
 {
     const dl_u8* stringRunner = string;
@@ -1156,14 +1185,7 @@ void saveResourcesSource(Resources& resources)
     {
         oss << "extern const dl_u8 " << roomNames[loop] << "_cleanBackground[" << FRAMEBUFFER_PITCH * FRAMEBUFFER_HEIGHT << "];\n";
         oss << "extern const dl_u8 " << roomNames[loop] << "_tileMap[32 * 24];\n";
-
-        oss << "const SMSBackgroundData " << roomNames[loop] << "_customBackgroundData = "
-            << "{ " 
-            << roomNames[loop] << "_cleanBackground"
-            << ", "
-            << roomNames[loop] << "_tileMap"
-            << "};\n";
-
+        oss << "extern const SMSBackgroundData " << roomNames[loop] << "_customBackgroundData;\n";
 
         oss << "\n";
     }
@@ -1346,6 +1368,8 @@ int main()
         TileMap tileMap;
 
         buildTileMap(background8bpp, tileMap, tileSet);
+
+        saveSMSBackgroundData(loop);
 
         tileMaps.push_back(tileMap);
     }

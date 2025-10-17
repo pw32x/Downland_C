@@ -162,9 +162,7 @@
     <ClCompile Include="..\generated\sprites\playerRegen1bpp.c" />
     <ClCompile Include="..\generated\sprites\playerSplat1bpp.c" />
     <ClCompile Include="..\generated\sprites\tileSet1bpp.c" />
-    <ClCompile Include="..\source\game\game_data.c" />
     <ClCompile Include="..\source\main.c" />
-    <ClCompile Include="..\source\SMSlib_debug.c" />
     <ClCompile Include="..\source\sounds.c" />
   </ItemGroup>
   <ItemGroup>

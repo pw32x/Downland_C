@@ -34,9 +34,6 @@
     <ClCompile Include="..\generated\resources.c">
       <Filter>Source Files\generated</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\game\game_data.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\SMSDev\devkitSMS-master\PSGlib\src\PSGlib.c">
       <Filter>SMSLib</Filter>
     </ClCompile>
@@ -51,9 +48,6 @@
     </ClCompile>
     <ClCompile Include="..\generated\bank2\chamber0_cleanBackground.c">
       <Filter>Source Files\generated\bank2_chamber0</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\SMSlib_debug.c">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\generated\sprites\characterFont1bpp.c">
       <Filter>Source Files\generated\bank8</Filter>

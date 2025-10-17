@@ -506,26 +506,20 @@ void setTileColor(dl_u8* tileColors, dl_u16 tileIndex)
 	SG_loadTileColours(tileColors, tileIndex + 512, 8);
 }
 
+dl_u8 whiteTileColors[] = 
+{
+	0xf0, 0xf0, 0xf0, 0xf0, 0xf0, 0xf0, 0xf0, 0xf0
+};
+
+const dl_u8 whiteTileIndexes[10] = { 13, 14, 38, 63, 67, 75, 172, 173, 174, 183 };
+
 void setupTileColors(void)
 {
-
 	setAllTileColors(blueTileColors);
 
-	dl_u8 whiteTileColors[] = 
-	{
-		0xf0, 0xf0, 0xf0, 0xf0, 0xf0, 0xf0, 0xf0, 0xf0
-	};
 
-	setTileColor(whiteTileColors, 13);
-	setTileColor(whiteTileColors, 14);
-	setTileColor(whiteTileColors, 38);
-	setTileColor(whiteTileColors, 63);
-	setTileColor(whiteTileColors, 67);
-	setTileColor(whiteTileColors, 75);
-	setTileColor(whiteTileColors, 172);
-	setTileColor(whiteTileColors, 173);
-	setTileColor(whiteTileColors, 174);
-	setTileColor(whiteTileColors, 183);
+	for (dl_u8 loop = 0; loop < 10; loop++)
+		setTileColor(whiteTileColors, whiteTileIndexes[loop]);
 
 	whiteTileColors[0] = 0x50;
 	setTileColor(whiteTileColors, 139);

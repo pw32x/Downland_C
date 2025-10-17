@@ -2,64 +2,53 @@
 
 #include "base_defines.h"
 
+void convertNumberToString(dl_u32 value, dl_u8* string, dl_u8 length)
+{
+	int loop;
+	dl_u8 index = 0;
+
+	switch (length)
+	{
+	case 8:
+	string[index++] = value / 1000000;
+	value %= 1000000;
+	case 7:
+	string[index++] = value / 100000;
+	value %= 100000;
+	case 6:
+	string[index++] = value / 10000;
+	value %= 10000;
+	case 5:
+	string[index++] = value / 1000;
+	value %= 1000;
+	case 4:
+	string[index++] = value / 100;
+	value %= 100;
+	case 3:
+	string[index++] = value / 10;
+	value %= 10;
+	case 2:
+	string[index++] = (dl_u8)value;
+	}
+
+	length -= 2;
+
+	for (loop = 0; loop < length; loop++)
+	{
+		if (string[loop] == CHAR_0)
+			string[loop] = CHAR_SPACE;
+		else
+			break;
+	}	
+} 
+
+
 void convertTimerToString(dl_u16 timerValue, dl_u8* timerString)
 {
-	static const dl_u16 divisors[5] = { 10000, 1000, 100, 10, 1 };
-
-	const dl_u16* divisorsRunner = divisors;
-	dl_u8* timerStringRunner = timerString;
-
-    dl_u8 i = 5;
-	dl_u8 digit = 0;
-
-    while (i--)
-	{
-        digit = 0;
-        while (timerValue >= *divisorsRunner) 
-		{
-            timerValue -= *divisorsRunner;
-            digit++;
-        }
-
-		divisorsRunner++;
-
-        *timerStringRunner = digit;
-		timerStringRunner++;
-    };
-
-    // strip leading zeros -> spaces
-    for (i = 0; i < 4; i++) 
-	{
-        if (timerString[i] == CHAR_0)
-            timerString[i] = CHAR_SPACE;
-        else
-            break;
-    }
+	convertNumberToString(timerValue, timerString, TIMER_STRING_SIZE);
 }
 
 void convertScoreToString(dl_u32 score, dl_u8* scoreString)
 {
-	int loop;
-
-	scoreString[0] = score / 1000000;
-	score %= 1000000;
-	scoreString[1] = score / 100000;
-	score %= 100000;
-	scoreString[2] = score / 10000;
-	score %= 10000;
-	scoreString[3] = score / 1000;
-	score %= 1000;
-	scoreString[4] = score / 100;
-	score %= 100;
-	scoreString[5] = score / 10;
-	score %= 10;
-	scoreString[6] = (dl_u8)score;
-
-	for (loop = 0; loop < SCORE_STRING_SIZE - 2; loop++)
-	{
-		if (scoreString[loop] == CHAR_0)
-			scoreString[loop] = CHAR_SPACE;
-		else
-			break;
-	}
+	convertNumberToString(score, scoreString, SCORE_STRING_SIZE);
 }

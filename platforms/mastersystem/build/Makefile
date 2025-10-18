@@ -18,8 +18,7 @@ PSGLIB_LIB=$(PSGLIB_BASE)/PSGlib.lib          # Use distributed lib
 #SMSLIB_LIB=$(SMSLIB_BASE)/src/SMSlib.lib      # Use locally compiled lib
 
 CFLAGS=-mz80 -I$(SMSLIB_INCDIR) -I$(PSGLIB_INCDIR) -I$(GENERATED_DIR) -I$(SOURCE_DIR) -I$(GAME_SRC_DIR) -I$(GAME_ROOMS_SRC_DIR) --peep-file $(PEEP_RULES) \
-		--opt-code-speed --peep-asm \
-		 -DCUSTOM_BACKGROUND_DRAWING -DCUSTOM_TRANSITIONS
+		--opt-code-speed --peep-asm 
 
 LDFLAGS=-mz80 --no-std-crt0 --data-loc 0xC000
 

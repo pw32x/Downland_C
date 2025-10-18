@@ -789,18 +789,26 @@ void drawWipeTransition(void)
 		dl_u16 playerX;
 		dl_u16 playerY;
 
-		if (playerData->lastDoor)
+		if (playerData->isDead)
 		{
-			playerX = playerData->lastDoor->xLocationInNextRoom;
+			//SMS_debugPrintf("respawn %d from death\n", playerData->playerNumber);
+			playerX = GET_HIGH_BYTE(playerData->x) << 1;
+			playerY = GET_HIGH_BYTE(playerData->y);
+		}
+		else if (playerData->lastDoor)
+		{
+			//SMS_debugPrintf("last door\n");
+			playerX = playerData->lastDoor->xLocationInNextRoom << 1;
 			playerY = playerData->lastDoor->yLocationInNextRoom;
 		}
 		else
 		{
-			playerX = PLAYER_START_X;
+			//SMS_debugPrintf("player start\n");
+			playerX = PLAYER_START_X << 1;
 			playerY = PLAYER_START_Y;
 		}
 
-		updateScroll(playerX << 1, playerY);
+		updateScroll(playerX, playerY);
     }
 }
 

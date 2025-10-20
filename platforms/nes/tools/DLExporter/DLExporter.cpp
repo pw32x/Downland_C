@@ -150,6 +150,7 @@ void convert1bppImageTo8bppCrtEffectImage(const dl_u8* originalImage,
 }
 
 #define TILE_WIDTH 8
+#define TILE_PITCH 2
 #define TILE_HEIGHT 8
 #define TILE_SIZE (TILE_WIDTH * TILE_HEIGHT)
 
@@ -264,77 +265,92 @@ void save_png_8bpp(const dl_u8* background,
     lodepng_state_cleanup(&state);
 }
 
-void saveTileSetToChr(const TileSet& tileSet)
+dl_u8* writePlanarTile(const dl_u8* tile, int tileHeight, dl_u8* chrBufferRunner)
 {
-    const int _2bppTileWidth = TILE_WIDTH >> 2;
-    const int chrTileCount = 256;
-    const int chrBufferSize = chrTileCount * _2bppTileWidth * TILE_HEIGHT;
+    const dl_u8* tileRunner = tile;
 
-    dl_u8* chrBuffer = new dl_u8[chrBufferSize];
-    memset(chrBuffer, 0, chrBufferSize);
-
-    dl_u8* chrBufferRunner = chrBuffer;
-
-    for (int loop = 0; loop < tileSet.size(); loop++)
+    // low bits first
+    for (int y = 0; y < tileHeight; y++)
     {
-        const dl_u8* tile = tileSet[loop].data();
+        dl_u8 lowBits;
 
-        // low bits first
-        for (int y = 0; y < TILE_HEIGHT; y++)
+        lowBits = ((tileRunner[0] & 0b1) << 7) |
+                  ((tileRunner[1] & 0b1) << 6) |
+                  ((tileRunner[2] & 0b1) << 5) |
+                  ((tileRunner[3] & 0b1) << 4) |
+                  ((tileRunner[4] & 0b1) << 3) |
+                  ((tileRunner[5] & 0b1) << 2) |
+                  ((tileRunner[6] & 0b1) << 1) |
+                   (tileRunner[7] & 0b1);
+
+        tileRunner += 8;
+
+        *chrBufferRunner = lowBits;
+        chrBufferRunner++;
+    }
+
+    // high bits
+    tileRunner = tile;
+
+    for (int y = 0; y < tileHeight; y++)
+    {
+        dl_u8 highBits;
+
+        highBits = ((tileRunner[0] & 0b10) << 7) |
+                   ((tileRunner[1] & 0b10) << 6) |
+                   ((tileRunner[2] & 0b10) << 5) |
+                   ((tileRunner[3] & 0b10) << 4) |
+                   ((tileRunner[4] & 0b10) << 3) |
+                   ((tileRunner[5] & 0b10) << 2) |
+                   ((tileRunner[6] & 0b10) << 1) |
+                    (tileRunner[7] & 0b10);
+
+        tileRunner += 8;
+
+        *chrBufferRunner = highBits;
+        chrBufferRunner++;
+    }
+
+    return chrBufferRunner;
+}
+
+dl_u8* saveTileSetToChr(const TileSet& tileSet, dl_u8* chrBufferRunner)
+{
+    for (const auto& tile : tileSet)
+    {
+        chrBufferRunner = writePlanarTile(tile.data(), TILE_HEIGHT, chrBufferRunner);
+    }
+
+    return chrBufferRunner;
+}
+
+
+dl_u8* saveCharacterFontToChr(const dl_u8* characterFont, dl_u8* chrBufferRunner)
+{
+    for (int characterLoop = 0; characterLoop < CHARACTER_FONT_COUNT; characterLoop++)
+    {
+        for (int loopy = 0; loopy < CHARACTER_FONT_HEIGHT; loopy++)
         {
-            dl_u8 lowBits;
-
-            lowBits = ((tile[0] & 0b1) << 7) |
-                      ((tile[1] & 0b1) << 6) |
-                      ((tile[2] & 0b1) << 5) |
-                      ((tile[3] & 0b1) << 4) |
-                      ((tile[4] & 0b1) << 3) |
-                      ((tile[5] & 0b1) << 2) |
-                      ((tile[6] & 0b1) << 1) |
-                       (tile[7] & 0b1);
-
-            tile += 8;
-
-            *chrBufferRunner = lowBits;
+            // low bits
+            *chrBufferRunner = characterFont[loopy];
             chrBufferRunner++;
         }
 
+        characterFont += CHARACTER_FONT_HEIGHT; // move to next character
+
+        // last row of low bits
+        *chrBufferRunner = 0;
+        chrBufferRunner++;
+
         // high bits
-        tile = tileSet[loop].data();
-
-        for (int y = 0; y < TILE_HEIGHT; y++)
+        for (int loopy = 0; loopy < TILE_HEIGHT; loopy++)
         {
-            dl_u8 highBits;
-
-            highBits = ((tile[0] & 0b10) << 7) |
-                       ((tile[1] & 0b10) << 6) |
-                       ((tile[2] & 0b10) << 5) |
-                       ((tile[3] & 0b10) << 4) |
-                       ((tile[4] & 0b10) << 3) |
-                       ((tile[5] & 0b10) << 2) |
-                       ((tile[6] & 0b10) << 1) |
-                        (tile[7] & 0b10);
-
-            tile += 8;
-
-            *chrBufferRunner = highBits;
-            chrBufferRunner++;
+            *chrBufferRunner = 0;
+            chrBufferRunner++;        
         }
     }
 
-    std::string chrPath = g_resPath + "backgroundTileset.chr";
-    FILE* file;
-    fopen_s(&file, chrPath.c_str(), "w");
-    fwrite(chrBuffer, chrBufferSize, 1, file);
-    fclose(file);
-
-    //save_png_8bpp(tileSetBitmap, 
-    //              exportBitmapWidth,
-    //              exportBitmapHeight,
-    //              g_resPath + "backgroundTileset.png");
-    //
-
-    delete [] chrBuffer;
+    return chrBufferRunner;
 }
 
 void saveTileSetToPng(const TileSet& tileSet)
@@ -849,6 +865,45 @@ int main()
         tileMaps.push_back(tileMap);
     }
 
+    const int _2bppTileWidth = TILE_WIDTH >> 2;
+    const int backgroundChrTileCount = 256;
+    const int spriteChrTileCount = 256;
+    const int chrTileCount = backgroundChrTileCount + spriteChrTileCount;
+    const int chrBufferSize = chrTileCount * _2bppTileWidth * TILE_HEIGHT;
+
+    dl_u8 chrBuffer[chrBufferSize];
+    memset(chrBuffer, 0, sizeof(chrBuffer));
+
+    dl_u8* chrBufferRunner = chrBuffer;
+
+    chrBufferRunner = saveTileSetToChr(tileSet, chrBufferRunner);
+    chrBufferRunner = saveCharacterFontToChr(resources.characterFont, chrBufferRunner);
+
+/*
+    // write remaining background tiles as empty
+    const int remainingTileCount = 256 - tileCount;
+
+    for (int loop = 0; loop < remainingTileCount; loop++)
+    {
+        for (int y = 0; y < TILE_HEIGHT; y++)
+        {
+            dl_u8 lowBits = 0;
+            *chrBufferRunner = lowBits;
+            chrBufferRunner++;
+
+            dl_u8 highBits = 0;
+            *chrBufferRunner = highBits;
+            chrBufferRunner++;
+        }
+    }
+*/
+
+    std::string chrPath = g_resPath + "downlandTileset.chr";
+    FILE* file;
+    fopen_s(&file, chrPath.c_str(), "w");
+    fwrite(chrBuffer, sizeof(chrBuffer), 1, file);
+    fclose(file);
+
     /*
     saveCharacterFont(resources.characterFont);
     saveSprite16(resources.sprites_drops, DROP_SPRITE_WIDTH, DROP_SPRITE_ROWS, DROP_SPRITE_COUNT, "dropTileset");   
@@ -873,9 +928,9 @@ int main()
     saveTransitionTileset();
     */
 
-    saveTileSetToPng(tileSet);
+    //saveTileSetToPng(tileSet);
 
-    saveTileSetToChr(tileSet);
+
 
     /*
     saveTileMapSource(tileMaps);

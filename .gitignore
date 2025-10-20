@@ -463,3 +463,5 @@ platforms/sg1000/downland.rom
 /platforms/gamegear/generated
 platforms/gamegear/downland.rom
 /platforms/gamegear/out
+platforms/nes/res/backgroundTileset.chr
+platforms/nes/res/downland.rom

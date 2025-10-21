@@ -33,7 +33,7 @@ Building
 Since I have no ColecoVision, I've only been able to test in emulator. The game uses the MegaCart format to store the static room collision geometry in rom.
 
 Emultor
-- an emulator (there are very many. I used ColEm https://fms.komkon.org/ColEm/)
+- an emulator (there are very many. I used gearcoleco https://github.com/drhelius/Gearcoleco)
 - the built downland.col as a file 
 - load the rom in the emulator and enjoy
 

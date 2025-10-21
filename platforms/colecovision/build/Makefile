@@ -3,7 +3,7 @@
 PROGNAME?=Downland
 
 #change to your devkitSMS folder
-DEVKITSMS_BASE=../../../../../SMSDev/devkitSMS-master_cv
+DEVKITSMS_BASE=../../../../../SMSDev/devkitSMS-master
 
 CC=sdcc
 IHX2SMS=$(DEVKITSMS_BASE)/makecvmc/Linux/makecvmc

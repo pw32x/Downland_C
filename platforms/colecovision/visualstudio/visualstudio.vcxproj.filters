@@ -1,0 +1,265 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="SMSLib">
+      <UniqueIdentifier>{c9ef1464-5305-434c-8b8a-e75277b516a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="build">
+      <UniqueIdentifier>{b98ae0a7-68ac-4820-8058-322c408645d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\generated">
+      <UniqueIdentifier>{7bd6f1d1-ba38-482c-86e2-a3a602adcd5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\game">
+      <UniqueIdentifier>{1873331b-47a3-4fe6-b40a-50b68907e5c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\game\rooms">
+      <UniqueIdentifier>{e425e5c3-783b-4949-bb20-294c751db6c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\generated\bank2_chamber0">
+      <UniqueIdentifier>{ec4f3279-14f7-411d-b95d-86abbb8713f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\generated\bank8">
+      <UniqueIdentifier>{9db4e271-d493-47bb-8387-6929b6abed1e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\source\main.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\resources.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\SMSDev\devkitSMS-master\PSGlib\src\PSGlib.c">
+      <Filter>SMSLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\bank2\chamber0_tileMap.c">
+      <Filter>Source Files\generated\bank2_chamber0</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\bank2\chamber0_cleanBackground.c">
+      <Filter>Source Files\generated\bank2_chamber0</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\sprites\characterFont1bpp.c">
+      <Filter>Source Files\generated\bank8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\sprites\tileSet1bpp.c">
+      <Filter>Source Files\generated\bank8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\sprites\key1bpp.c">
+      <Filter>Source Files\generated\bank8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\sprites\moneyBag1bpp.c">
+      <Filter>Source Files\generated\bank8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\sprites\player1bpp.c">
+      <Filter>Source Files\generated\bank8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\sprites\playerLives1bpp.c">
+      <Filter>Source Files\generated\bank8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\sprites\playerLivesRegen1bpp.c">
+      <Filter>Source Files\generated\bank8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\sprites\playerSplat1bpp.c">
+      <Filter>Source Files\generated\bank8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\sprites\ball1bpp.c">
+      <Filter>Source Files\generated\bank8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\sprites\bird1bpp.c">
+      <Filter>Source Files\generated\bank8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\sprites\diamond1bpp.c">
+      <Filter>Source Files\generated\bank8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\sprites\door1bpp.c">
+      <Filter>Source Files\generated\bank8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\sprites\drop1bpp.c">
+      <Filter>Source Files\generated\bank8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\sprites\cursor1bpp.c">
+      <Filter>Source Files\generated\bank8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\sprites\playerRegen1bpp.c">
+      <Filter>Source Files\generated\bank8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game_8bit\dl_rand.c">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game_8bit\drops_manager.c">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game_8bit\game.c">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game_8bit\game_data.c">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game_8bit\joystick_data.c">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game_8bit\physics_utils.c">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game_8bit\player.c">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game_8bit\player_collisions.c">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game_8bit\string_utils.c">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game_8bit\ball.c">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game_8bit\bird.c">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game_8bit\rooms\titlescreen.c">
+      <Filter>Source Files\game\rooms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game_8bit\rooms\transitions.c">
+      <Filter>Source Files\game\rooms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game_8bit\rooms\chambers.c">
+      <Filter>Source Files\game\rooms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game_8bit\rooms\getready.c">
+      <Filter>Source Files\game\rooms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game_8bit\rooms\rooms.c">
+      <Filter>Source Files\game\rooms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\bank8\strings.c">
+      <Filter>Source Files\generated\bank8</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\bank2\chamber0_backgroundData.c">
+      <Filter>Source Files\generated\bank2_chamber0</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\sounds\sounds.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\SMSDev\devkitSMS-master_cv\SGlib\src\SGlib.c">
+      <Filter>SMSLib</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\source\custom_background_types.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generated\resources.h">
+      <Filter>Source Files\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\SMSDev\devkitSMS-master\PSGlib\src\PSGlib.h">
+      <Filter>SMSLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generated\sprites\sprites.h">
+      <Filter>Source Files\generated\bank8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game_8bit\dl_rand.h">
+      <Filter>Source Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game_8bit\dl_sound.h">
+      <Filter>Source Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game_8bit\door_types.h">
+      <Filter>Source Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game_8bit\drops_manager.h">
+      <Filter>Source Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game_8bit\drops_types.h">
+      <Filter>Source Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game_8bit\game.h">
+      <Filter>Source Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game_8bit\game_data.h">
+      <Filter>Source Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game_8bit\joystick_data.h">
+      <Filter>Source Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game_8bit\physics_utils.h">
+      <Filter>Source Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game_8bit\pickup_types.h">
+      <Filter>Source Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game_8bit\player.h">
+      <Filter>Source Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game_8bit\player_types.h">
+      <Filter>Source Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game_8bit\resource_types.h">
+      <Filter>Source Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game_8bit\string_utils.h">
+      <Filter>Source Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game_8bit\background_types.h">
+      <Filter>Source Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game_8bit\ball.h">
+      <Filter>Source Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game_8bit\base_defines.h">
+      <Filter>Source Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game_8bit\base_types.h">
+      <Filter>Source Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game_8bit\bird.h">
+      <Filter>Source Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game_8bit\dl_platform.h">
+      <Filter>Source Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game_8bit\rooms\titlescreen.h">
+      <Filter>Source Files\game\rooms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game_8bit\rooms\chambers.h">
+      <Filter>Source Files\game\rooms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game_8bit\rooms\room_types.h">
+      <Filter>Source Files\game\rooms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game_8bit\rooms\rooms.h">
+      <Filter>Source Files\game\rooms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generated\bank8\strings.h">
+      <Filter>Source Files\generated\bank8</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\sounds\sounds.h" />
+    <ClInclude Include="..\..\..\..\..\..\SMSDev\devkitSMS-master_cv\SGlib\src\SGlib.h">
+      <Filter>SMSLib</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\build\Makefile">
+      <Filter>build</Filter>
+    </None>
+    <None Include="..\build\rebuild.bat">
+      <Filter>build</Filter>
+    </None>
+    <None Include="..\build\build.bat">
+      <Filter>build</Filter>
+    </None>
+    <None Include="..\build\clean.bat">
+      <Filter>build</Filter>
+    </None>
+    <None Include="..\build\deploy.bat">
+      <Filter>build</Filter>
+    </None>
+    <None Include="..\out\Downland_sg.map">
+      <Filter>build</Filter>
+    </None>
+  </ItemGroup>
+</Project>

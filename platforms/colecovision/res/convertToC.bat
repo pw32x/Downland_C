@@ -1,0 +1,1 @@
+..\tools\png2c\bin\Debug\net9.0-windows\png2c.exe . ..\generated\bank8

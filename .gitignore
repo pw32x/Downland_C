@@ -466,3 +466,6 @@ platforms/gamegear/downland.rom
 platforms/nes/res/backgroundTileset.chr
 platforms/nes/res/downland.rom
 platforms/nes/res/downlandTileset.chr
+platforms/colecovision/downland.rom
+/platforms/colecovision/generated
+/platforms/colecovision/out

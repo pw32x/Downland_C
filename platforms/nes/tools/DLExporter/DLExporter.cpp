@@ -876,27 +876,18 @@ int main()
 
     dl_u8* chrBufferRunner = chrBuffer;
 
+    // export the background tiles
     chrBufferRunner = saveTileSetToChr(tileSet, chrBufferRunner);
     chrBufferRunner = saveCharacterFontToChr(resources.characterFont, chrBufferRunner);
 
-/*
-    // write remaining background tiles as empty
-    const int remainingTileCount = 256 - tileCount;
+    // start at the sprite tiles location
+    chrBufferRunner = chrBuffer + (sizeof(chrBuffer) / 2);
 
-    for (int loop = 0; loop < remainingTileCount; loop++)
-    {
-        for (int y = 0; y < TILE_HEIGHT; y++)
-        {
-            dl_u8 lowBits = 0;
-            *chrBufferRunner = lowBits;
-            chrBufferRunner++;
+    // export the sprite tiles
+    saveSprite16(resources.sprites_drops, DROP_SPRITE_WIDTH, DROP_SPRITE_ROWS, DROP_SPRITE_COUNT, "dropTileset");   
 
-            dl_u8 highBits = 0;
-            *chrBufferRunner = highBits;
-            chrBufferRunner++;
-        }
-    }
-*/
+    chrBufferRunner = saveTileSetToChr(tileSet, chrBufferRunner);
+
 
     std::string chrPath = g_resPath + "downlandTileset.chr";
     FILE* file;

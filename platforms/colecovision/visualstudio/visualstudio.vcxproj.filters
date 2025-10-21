@@ -145,7 +145,7 @@
     <ClCompile Include="..\source\sounds\sounds.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\SMSDev\devkitSMS-master_cv\SGlib\src\SGlib.c">
+    <ClCompile Include="..\..\..\..\..\..\SMSDev\devkitSMS-master\SMSlib\src\SMSlib.c">
       <Filter>SMSLib</Filter>
     </ClCompile>
   </ItemGroup>
@@ -238,7 +238,7 @@
       <Filter>Source Files\generated\bank8</Filter>
     </ClInclude>
     <ClInclude Include="..\source\sounds\sounds.h" />
-    <ClInclude Include="..\..\..\..\..\..\SMSDev\devkitSMS-master_cv\SGlib\src\SGlib.h">
+    <ClInclude Include="..\..\..\..\..\..\SMSDev\devkitSMS-master\SMSlib\src\SMSlib.h">
       <Filter>SMSLib</Filter>
     </ClInclude>
   </ItemGroup>

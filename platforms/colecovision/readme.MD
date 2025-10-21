@@ -1,8 +1,8 @@
-# Downland_C: SG-1000
+# Downland_C: ColecoVision
 
 ## INTRODUCTION
 
-This is the Sega Master System port of Downland_C.
+This is the ColecoVision port of Downland_C.
 
 ## BUILDING THE GAME
 
@@ -25,24 +25,24 @@ Building
 - build and run the DLExporter solution which will generate assets in the \generated folder
 - run the convertToC.bat in the \res folder
 - run build.bat in the build folder or use the provided Visual Studio solution.
-- the Downland.sms file will be in the out folder 
+- the Downland.col file will be in the out folder 
    
 
 ## RUNNING THE GAME
 
-Since I have no SG-1000, I've only been able to test in emulator. The game uses banking to store the static room collision geometry in rom. If a physical cart is made, it'll have to support banking. 
+Since I have no ColecoVision, I've only been able to test in emulator. The game uses the MegaCart format to store the static room collision geometry in rom.
 
 Emultor
-- an emulator (there are very many. I use Emulicious https://emulicious.net/)
-- the built downland_sg.sms as a file 
+- an emulator (there are very many. I used ColEm https://fms.komkon.org/ColEm/)
+- the built downland.col as a file 
 - load the rom in the emulator and enjoy
 
 ## CONTROLS
 
     The game supports two players. 
     
-    Gamepad     Dpad for Movement
-                1 or 2 for Jump
+    Gamepad     Joystick for Movement
+                Action buttons for Jump
                
 ## GAMEPLAY NOTES
 

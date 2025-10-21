@@ -2,7 +2,7 @@
 
 ## INTRODUCTION
 
-This is the Sega Master System port of Downland_C.
+This is the Sega SG-1000 port of Downland_C.
 
 ## BUILDING THE GAME
 

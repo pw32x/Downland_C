@@ -668,6 +668,65 @@ dl_u8* saveSplatSpriteToChr(const dl_u8* splatSprite, dl_u8* chrBufferRunner)
     return chrBufferRunner;
 }
 
+
+
+dl_u8* saveSprite16ClippedToChr(const dl_u8* sprite, 
+                                dl_u8 width, 
+                                dl_u8 height, 
+                                dl_u8 clipHeight,
+                                dl_u8 numFrames,
+                                dl_u8* chrBufferRunner)
+{
+    dl_u8 spriteFrameSizeInBytes = (width / 8) * height;
+
+    dl_u8 destinationWidth = ((width + 7) / 8) * 8;
+    dl_u8 destinationHeight = ((clipHeight + 7) / 8) * 8;
+    dl_u16 destinationFrameSize = destinationWidth * destinationHeight;
+
+    dl_u16 bufferSize = destinationWidth * destinationHeight * numFrames;
+    dl_u8* sprite8bpp = new dl_u8[bufferSize];
+    memset(sprite8bpp, 0, bufferSize);
+    dl_u8* sprite8bppRunner = sprite8bpp;
+
+
+    for (int frameLoop = 0; frameLoop < numFrames; frameLoop++)
+    {
+        convert1bppImageTo8bppCrtEffectImage(sprite,
+                                             sprite8bppRunner,
+                                             width,
+                                             clipHeight,
+                                             CrtColor::CrtColor_Blue);
+
+        dl_u8 tileWidth = destinationWidth / TILE_WIDTH;
+        dl_u8 tileHeight = destinationHeight / TILE_HEIGHT;
+        
+        for (int tilex = 0; tilex < tileWidth; tilex++)
+        {
+            for (int tiley = 0; tiley < tileHeight; tiley++)    
+            {
+                const dl_u8* tileStart = sprite8bppRunner + ((tilex * TILE_WIDTH) + ((tiley * TILE_HEIGHT) * destinationWidth));
+                chrBufferRunner = writePlanarTile(tileStart, destinationWidth, TILE_HEIGHT, chrBufferRunner);
+                chrBufferRunner = writeEmptyTileToChr(chrBufferRunner);
+            }
+        }
+
+        // move to next frame
+        sprite += spriteFrameSizeInBytes;
+        sprite8bppRunner += destinationFrameSize; 
+    }
+
+    /*
+    save_png_8bpp(sprite8bpp, 
+                  destinationWidth,
+                  destinationHeight * numFrames,
+                  g_resPath + name + ".png");
+    */
+
+    delete [] sprite8bpp;
+
+    return chrBufferRunner;
+}
+
 void saveTileSetToPng(const TileSet& tileSet)
 {
     const int bitmapTileWidth = 16;
@@ -1204,6 +1263,7 @@ int main()
     delete [] regenSprite;
 
     chrBufferRunner = saveSplatSpriteToChr(resources.sprite_playerSplat, chrBufferRunner);
+    chrBufferRunner = saveSprite16ClippedToChr(resources.sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYERICON_NUM_SPRITE_ROWS, PLAYER_SPRITE_COUNT, chrBufferRunner);
 
     std::string chrPath = g_resPath + "downlandTileset.chr";
     FILE* file;

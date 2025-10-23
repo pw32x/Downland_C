@@ -296,14 +296,14 @@ dl_u8* writePlanarTile(const dl_u8* source, int sourceWidth, int tileHeight, dl_
     {
         dl_u8 highBits;
 
-        highBits = ((tileRunner[0] & 0b10) << 7) |
-                   ((tileRunner[1] & 0b10) << 6) |
-                   ((tileRunner[2] & 0b10) << 5) |
-                   ((tileRunner[3] & 0b10) << 4) |
-                   ((tileRunner[4] & 0b10) << 3) |
-                   ((tileRunner[5] & 0b10) << 2) |
-                   ((tileRunner[6] & 0b10) << 1) |
-                    (tileRunner[7] & 0b10);
+        highBits = (((tileRunner[0] & 0b10) >> 1) << 7) |
+                   (((tileRunner[1] & 0b10) >> 1) << 6) |
+                   (((tileRunner[2] & 0b10) >> 1) << 5) |
+                   (((tileRunner[3] & 0b10) >> 1) << 4) |
+                   (((tileRunner[4] & 0b10) >> 1) << 3) |
+                   (((tileRunner[5] & 0b10) >> 1) << 2) |
+                   (((tileRunner[6] & 0b10) >> 1) << 1) |
+                    ((tileRunner[7] & 0b10) >> 1);
 
         tileRunner += sourceWidth;
 
@@ -426,6 +426,15 @@ dl_u8* saveSpriteToChr(const dl_u8* sprite,
         sprite += spriteFrameSizeInBytes;
         sprite8bppRunner += destinationFrameSize; 
     }
+
+    /*
+    save_png_8bpp(sprite8bpp, 
+                  destinationWidth,
+                  destinationHeight * (numFrames * 2),
+                  g_resPath + "sprite.png");
+    */
+
+    delete [] sprite8bpp;
 
     return chrBufferRunner;
 }
@@ -1239,13 +1248,6 @@ int main()
 
     dl_u8* chrBufferRunner = chrBuffer;
 
-    // export the background tiles
-    chrBufferRunner = saveTileSetToChr(tileSet, chrBufferRunner);
-    chrBufferRunner = saveCharacterFontToChr(resources.characterFont, chrBufferRunner);
-
-    // start at the sprite tiles location
-    chrBufferRunner = chrBuffer + (sizeof(chrBuffer) / 2);
-
     // export the sprite tiles
     chrBufferRunner = saveSpriteToChr(resources.sprites_drops, DROP_SPRITE_WIDTH, DROP_SPRITE_ROWS, DROP_SPRITE_COUNT, chrBufferRunner);
 	chrBufferRunner = saveSpriteToChr(resources.sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYER_SPRITE_COUNT, chrBufferRunner);
@@ -1264,6 +1266,15 @@ int main()
 
     chrBufferRunner = saveSplatSpriteToChr(resources.sprite_playerSplat, chrBufferRunner);
     chrBufferRunner = saveSprite16ClippedToChr(resources.sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, PLAYERICON_NUM_SPRITE_ROWS, PLAYER_SPRITE_COUNT, chrBufferRunner);
+
+
+    // start at the sprite tiles location
+    chrBufferRunner = chrBuffer + (sizeof(chrBuffer) / 2);
+
+    // export the background tiles
+    chrBufferRunner = saveTileSetToChr(tileSet, chrBufferRunner);
+    chrBufferRunner = saveCharacterFontToChr(resources.characterFont, chrBufferRunner);
+
 
     std::string chrPath = g_resPath + "downlandTileset.chr";
     FILE* file;

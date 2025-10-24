@@ -1,10 +1,8 @@
 # =========================================
-# NES Hello Makefile (LLVM-MOS)
+# NES Downland Makefile (LLVM-MOS)
 # =========================================
 
-PROJECT := hello
-
-TARGET  := out/$(PROJECT).nes
+PROJECT := Downland
 
 # ---------------------------
 # LLVM-MOS SDK / NES Platform
@@ -27,50 +25,68 @@ CFLAGS := -target mos-nes-nrom \
 # Linker flags
 # ---------------------------
 LDFLAGS := -g -gdwarf-4 -Wall -Wextra -Werror \
-           -Wl,-Map,out/$(PROJECT).map \
+           -Wl,-Map,$(OUTPUT_DIR)/$(PROJECT).map \
            -L$(LLVM_MOS_LIBDIR)
 
 # ---------------------------
 # Source files
 # ---------------------------
-SRC_C   := source/hello.c
-SRC_ASM := source/chr-rom.s
-OBJ_C   := out/hello.o
-OBJ_ASM := out/chr-rom.o
+
+SOURCE_DIR = source
+GENERATED_DIR = generated
+
+OUTPUT_DIR = out
+
+SOURCE_OUTPUT_DIR = $(OUTPUT_DIR)/$(SOURCE_DIR)
+GENERATED_OUTPUT_DIR = $(OUTPUT_DIR)/$(GENERATED_DIR)
+
+TARGET  := $(OUTPUT_DIR)/$(PROJECT).nes
+
+CS				= $(wildcard $(SOURCE_DIR)/*.c)
+CS_ASM          = $(wildcard $(SOURCE_DIR)/*.s)
+GENERATED_CS	= $(wildcard $(GENERATED_DIR)/*.c)
+
+SOURCE_OBJS				= $(patsubst $(SOURCE_DIR)/%.c,$(SOURCE_OUTPUT_DIR)/%.o,$(CS))
+SOURCE_ASM_OBJS			= $(patsubst $(SOURCE_DIR)/%.s,$(SOURCE_OUTPUT_DIR)/%.o,$(CS_ASM))
+GENERATED_OBJS			= $(patsubst $(GENERATED_DIR)/%.c,$(GENERATED_OUTPUT_DIR)/%.o,$(GENERATED_CS))
 
 # The CHR dependency
-CHR_FILE := res/downlandTileset.chr
+CHR_FILE := $(GENERATED_DIR)/downlandTileset.chr
 # ---------------------------
 # PHONY targets
 # ---------------------------
-.PHONY: all clean
+.PHONY: directories all clean
 
 # ---------------------------
 # Default target
 # ---------------------------
-all: $(TARGET)
+all: directories $(TARGET)
+
+directories:
+	mkdir -p $(SOURCE_OUTPUT_DIR)
+	mkdir -p $(GENERATED_OUTPUT_DIR)
 
 # ---------------------------
 # Link ROM
 # ---------------------------
-$(TARGET): $(OBJ_C) $(OBJ_ASM)
-	$(CC) $(CFLAGS) $(OBJ_C) $(OBJ_ASM) $(LDFLAGS) -lneslib -o $@
+$(TARGET): $(SOURCE_OBJS) $(SOURCE_ASM_OBJS)
+	$(CC) $(CFLAGS) $(SOURCE_OBJS) $(SOURCE_ASM_OBJS) $(LDFLAGS) -lneslib -o $@
 
 # ---------------------------
 # Compile C file
 # ---------------------------
-out/%.o: source/%.c
+$(SOURCE_OUTPUT_DIR)/%.o: $(SOURCE_DIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # ---------------------------
 # Assemble ASM file
 # ---------------------------
 # Make chr-rom.s depend on downlandTileset.chr
-out/%.o: source/%.s $(CHR_FILE)
+$(SOURCE_OUTPUT_DIR)/%.o: $(SOURCE_DIR)/%.s $(CHR_FILE)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # ---------------------------
 # Clean
 # ---------------------------
 clean:
-	rm -f $(OBJ_C) $(OBJ_ASM) $(TARGET) out/$(PROJECT).map out/$(PROJECT).nes.elf out/$(PROJECT).mlb
+	rm -f $(SOURCE_OBJS) $(SOURCE_ASM_OBJS) $(TARGET) $(OUTPUT_DIR)/$(PROJECT).map $(OUTPUT_DIR)/$(PROJECT).nes.elf $(OUTPUT_DIR)/$(PROJECT).mlb

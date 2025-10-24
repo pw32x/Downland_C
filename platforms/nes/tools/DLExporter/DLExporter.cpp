@@ -12,7 +12,7 @@
 #include "lodepng.h"
 
 #ifdef _WIN64
-std::string g_resPath = "res\\";
+std::string g_resPath = "generated\\";
 #else
 std::string g_resPath = "res/";
 #endif

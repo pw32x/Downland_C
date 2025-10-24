@@ -6,6 +6,8 @@
 
 #include <neslib.h>
 
+#include "base_types.h"
+
 #define BLACK 0x0f
 #define DK_GY 0x00
 #define LT_GY 0x10

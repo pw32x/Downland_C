@@ -469,3 +469,4 @@ platforms/nes/res/downlandTileset.chr
 platforms/colecovision/downland.rom
 /platforms/colecovision/generated
 /platforms/colecovision/out
+/platforms/nes/out

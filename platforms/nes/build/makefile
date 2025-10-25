@@ -39,6 +39,7 @@ ROOMS_OUTPUT_DIR  = $(OUTPUT_DIR)/$(SOURCE_DIR)/game/rooms
 CFLAGS := -target mos-nes-nrom \
           -Os -g -gdwarf-4 -Wall -Wextra \
           -std=c23 -I. \
+		  -I$(SOURCE_DIR) -I$(GENERATED_DIR) \
 		  -I$(GAME_SRC_DIR) -I$(GAME_ROOMS_SRC_DIR)
 
 # ---------------------------

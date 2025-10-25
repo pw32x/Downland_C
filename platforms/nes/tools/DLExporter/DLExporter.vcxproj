@@ -136,7 +136,6 @@ copy $(OutDir)$(TargetName)$(TargetExt) $(SolutionDir)..\bin\$(TargetName)$(Targ
     <ClCompile Include="..\..\..\..\game\draw_utils.c" />
     <ClCompile Include="..\..\..\..\game\resource_loader_buffer.c" />
     <ClCompile Include="DLExporter.cpp" />
-    <ClCompile Include="lodepng.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\game\base_defines.h" />

@@ -1,4 +1,4 @@
 pushd ..
-make -f build/Makefile 
 make clean -f build/Makefile
+make -f build/Makefile 
 popd

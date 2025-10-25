@@ -1153,7 +1153,7 @@ void saveResourcesSource(Resources& resources)
         oss << "extern const dl_u8 " << roomNames[loop] << "_cleanBackground[" << FRAMEBUFFER_PITCH * FRAMEBUFFER_HEIGHT << "];\n";
         oss << "extern const dl_u16 " << roomNames[loop] << "_tileMap[32 * 24];\n";
 
-        oss << "const SMSBackgroundData " << roomNames[loop] << "_customBackgroundData = "
+        oss << "const BackgroundData " << roomNames[loop] << "_customBackgroundData = "
             << "{ " 
             << roomNames[loop] << "_cleanBackground"
             << ", "

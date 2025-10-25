@@ -122,6 +122,7 @@
     <None Include="..\build\clean.bat" />
     <None Include="..\build\makefile" />
     <None Include="..\build\rebuild.bat" />
+    <None Include="..\out\Downland.map" />
     <None Include="..\source\chr-rom.s" />
   </ItemGroup>
   <ItemGroup>

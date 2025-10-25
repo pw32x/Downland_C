@@ -113,6 +113,9 @@
     <None Include="..\build\clean.bat">
       <Filter>build</Filter>
     </None>
+    <None Include="..\out\Downland.map">
+      <Filter>build</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\generated\resources.h">

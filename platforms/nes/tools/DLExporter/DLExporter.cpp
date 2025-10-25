@@ -746,7 +746,7 @@ void saveTileMapSource(const std::vector<TileMap>& tileMaps)
     oss << "#include \"base_types.h\"\n";
     oss << "\n";
 
-        oss << "const dl_u16 " << roomNames[counter] << "_tileMap[32 * 24] = \n";
+        oss << "const dl_u8 " << roomNames[counter] << "_tileMap[32 * 24] = \n";
         oss << "{\n";
 
         for (int loopy = 0; loopy < TILE_MAP_HEIGHT; loopy++)
@@ -1151,7 +1151,7 @@ void saveResourcesSource(Resources& resources)
     for (int loop = 0; loop < NUM_ROOMS_PLUS_TITLESCREN; loop++)
     {
         oss << "extern const dl_u8 " << roomNames[loop] << "_cleanBackground[" << FRAMEBUFFER_PITCH * FRAMEBUFFER_HEIGHT << "];\n";
-        oss << "extern const dl_u16 " << roomNames[loop] << "_tileMap[32 * 24];\n";
+        oss << "extern const dl_u8 " << roomNames[loop] << "_tileMap[32 * 24];\n";
 
         oss << "const BackgroundData " << roomNames[loop] << "_customBackgroundData = "
             << "{ " 

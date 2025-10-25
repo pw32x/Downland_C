@@ -31,12 +31,6 @@
     <ClCompile Include="..\source\main.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\generated\bank3_chamber0\chamber0_tileMap.c">
-      <Filter>Source Files\generated\bank2_chamber0</Filter>
-    </ClCompile>
-    <ClCompile Include="..\generated\bank3_chamber0\chamber0_cleanBackground.c">
-      <Filter>Source Files\generated\bank2_chamber0</Filter>
-    </ClCompile>
     <ClCompile Include="..\generated\bank2_vdp\ball4bpp.c">
       <Filter>Source Files\generated\bank_vdp</Filter>
     </ClCompile>
@@ -141,6 +135,18 @@
     </ClCompile>
     <ClCompile Include="..\..\..\game_8bit\game_data.c">
       <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\bank2\chamber1_tileMap.c">
+      <Filter>Source Files\generated\bank2_chamber0</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\bank2\chamber0_cleanBackground.c">
+      <Filter>Source Files\generated\bank2_chamber0</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\bank2\chamber0_tileMap.c">
+      <Filter>Source Files\generated\bank2_chamber0</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\bank2\chamber1_cleanBackground.c">
+      <Filter>Source Files\generated\bank2_chamber0</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

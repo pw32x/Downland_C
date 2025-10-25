@@ -140,6 +140,10 @@
     <ClCompile Include="..\..\..\game_8bit\rooms\titlescreen.c" />
     <ClCompile Include="..\..\..\game_8bit\rooms\transitions.c" />
     <ClCompile Include="..\..\..\game_8bit\string_utils.c" />
+    <ClCompile Include="..\generated\bank2\chamber0_cleanBackground.c" />
+    <ClCompile Include="..\generated\bank2\chamber0_tileMap.c" />
+    <ClCompile Include="..\generated\bank2\chamber1_cleanBackground.c" />
+    <ClCompile Include="..\generated\bank2\chamber1_tileMap.c" />
     <ClCompile Include="..\generated\bank2_vdp\ball4bpp.c" />
     <ClCompile Include="..\generated\bank2_vdp\bird4bpp.c" />
     <ClCompile Include="..\generated\bank2_vdp\characterFont4bpp.c" />
@@ -155,8 +159,6 @@
     <ClCompile Include="..\generated\bank2_vdp\playerRegen4bpp.c" />
     <ClCompile Include="..\generated\bank2_vdp\playerSplat4bpp.c" />
     <ClCompile Include="..\generated\bank2_vdp\tileSet4bpp.c" />
-    <ClCompile Include="..\generated\bank3_chamber0\chamber0_cleanBackground.c" />
-    <ClCompile Include="..\generated\bank3_chamber0\chamber0_tileMap.c" />
     <ClCompile Include="..\generated\resources.c" />
     <ClCompile Include="..\source\game\game_data.c" />
     <ClCompile Include="..\source\main.c" />

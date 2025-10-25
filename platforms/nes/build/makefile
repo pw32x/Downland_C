@@ -84,14 +84,17 @@ directories:
 # ---------------------------
 # Link ROM
 # ---------------------------
-$(TARGET): $(SOURCE_OBJS) $(SOURCE_ASM_OBJS) $(GAME_OBJS) $(ROOMS_OBJS)
-	$(CC) $(CFLAGS) $(SOURCE_OBJS) $(SOURCE_ASM_OBJS) $(LDFLAGS) -lneslib -o $@
+$(TARGET): $(SOURCE_OBJS) $(SOURCE_ASM_OBJS) $(GAME_OBJS) $(ROOMS_OBJS) $(GENERATED_OBJS)
+	$(CC) $(CFLAGS) $(SOURCE_OBJS) $(SOURCE_ASM_OBJS) $(LDFLAGS) $(GENERATED_OBJS) -lneslib -o $@
 
 # ---------------------------
 # Compile C file
 # ---------------------------
 $(SOURCE_OUTPUT_DIR)/%.o: $(SOURCE_DIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
+
+$(GENERATED_OUTPUT_DIR)/%.o: $(GENERATED_DIR)/%.c
+	$(CC) $(CFLAGS) -c $< -o $@ 
 
 $(GAME_OUTPUT_DIR)/%.o: $(GAME_SRC_DIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@

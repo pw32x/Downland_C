@@ -36,7 +36,7 @@ ROOMS_OUTPUT_DIR  = $(OUTPUT_DIR)/$(SOURCE_DIR)/game/rooms
 # ---------------------------
 # Compile flags
 # ---------------------------
-CFLAGS := -target mos-nes-nrom \
+CFLAGS := -target mos-nes-unrom \
           -Os -g -gdwarf-4 -Wall -Wextra \
           -std=c23 -I. \
 		  -I$(SOURCE_DIR) -I$(GENERATED_DIR) \
@@ -85,7 +85,7 @@ directories:
 # Link ROM
 # ---------------------------
 $(TARGET): $(SOURCE_OBJS) $(SOURCE_ASM_OBJS) $(GAME_OBJS) $(ROOMS_OBJS) $(GENERATED_OBJS)
-	$(CC) $(CFLAGS) $(SOURCE_OBJS) $(SOURCE_ASM_OBJS) $(LDFLAGS) $(GENERATED_OBJS) -lneslib -o $@
+	$(CC) $(CFLAGS) $(SOURCE_OBJS) $(SOURCE_ASM_OBJS) $(GAME_OBJS) $(ROOMS_OBJS) $(GENERATED_OBJS) $(LDFLAGS)  -lneslib -o $@
 
 # ---------------------------
 # Compile C file
@@ -113,4 +113,9 @@ $(SOURCE_OUTPUT_DIR)/%.o: $(SOURCE_DIR)/%.s $(CHR_FILE)
 # Clean
 # ---------------------------
 clean:
-	rm -f $(SOURCE_OBJS) $(SOURCE_ASM_OBJS) $(TARGET) $(OUTPUT_DIR)/$(PROJECT).map $(OUTPUT_DIR)/$(PROJECT).nes.elf $(OUTPUT_DIR)/$(PROJECT).mlb
+	rm -f $(SOURCE_OUTPUT_DIR)/*.*
+	rm -f $(OUTPUT_DIR)/*.*
+	rm -f $(SOURCE_OUTPUT_DIR)/*.*
+	rm -f $(GENERATED_OUTPUT_DIR)/*.*
+	rm -f $(GAME_OUTPUT_DIR)/*.*
+	rm -f $(ROOMS_OUTPUT_DIR)/*.*

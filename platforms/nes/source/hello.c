@@ -5,13 +5,16 @@
  */
 
 #include <neslib.h>
-
 #include "base_types.h"
+
+#include <stdio.h>
 
 #define BLACK 0x0f
 #define DK_GY 0x00
 #define LT_GY 0x10
 #define WHITE 0x30
+
+extern const dl_u8 chamber0_cleanBackground[6144];
 
 const unsigned char chamber0_tileMap[32 * 24] = 
 {
@@ -89,7 +92,7 @@ int main(void) {
  bank_spr(0);
  bank_bg(1);
 
-
+    printf("%d\n", chamber0_cleanBackground[0]);
 
     const char metasprite2[] = 
     {

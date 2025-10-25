@@ -17,7 +17,7 @@ typedef struct Room
 	void (*update)(struct Room* room);
 } Room;
 
-typedef void (*InitRoomFunctionType)(Room* room);
+typedef void (*InitRoomFunctionType)(const Room* room);
 typedef void (*DrawRoomFunctionType)(dl_u8 roomNumber);
 typedef void (*UpdateRoomFunctionType)(Room* room);
 

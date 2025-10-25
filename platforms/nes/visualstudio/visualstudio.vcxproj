@@ -74,7 +74,7 @@
     <NMakeBuildCommandLine>..\build\build.bat</NMakeBuildCommandLine>
     <NMakeOutput>..\out\downland.nes</NMakeOutput>
     <NMakeCleanCommandLine>..\build\clean.bat</NMakeCleanCommandLine>
-    <NMakeReBuildCommandLine>..\build\rebuilt.bat</NMakeReBuildCommandLine>
+    <NMakeReBuildCommandLine>..\build\rebuild.bat</NMakeReBuildCommandLine>
     <NMakePreprocessorDefinitions>WIN32;_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -94,6 +94,27 @@
   <ItemDefinitionGroup>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\game_8bit\ball.c" />
+    <ClCompile Include="..\..\..\game_8bit\bird.c" />
+    <ClCompile Include="..\..\..\game_8bit\dl_rand.c" />
+    <ClCompile Include="..\..\..\game_8bit\drops_manager.c" />
+    <ClCompile Include="..\..\..\game_8bit\game.c" />
+    <ClCompile Include="..\..\..\game_8bit\game_data.c" />
+    <ClCompile Include="..\..\..\game_8bit\joystick_data.c" />
+    <ClCompile Include="..\..\..\game_8bit\physics_utils.c" />
+    <ClCompile Include="..\..\..\game_8bit\player.c" />
+    <ClCompile Include="..\..\..\game_8bit\player_collisions.c" />
+    <ClCompile Include="..\..\..\game_8bit\rooms\chambers.c" />
+    <ClCompile Include="..\..\..\game_8bit\rooms\getready.c" />
+    <ClCompile Include="..\..\..\game_8bit\rooms\rooms.c" />
+    <ClCompile Include="..\..\..\game_8bit\rooms\titlescreen.c" />
+    <ClCompile Include="..\..\..\game_8bit\rooms\transitions.c" />
+    <ClCompile Include="..\..\..\game_8bit\string_utils.c" />
+    <ClCompile Include="..\generated\bank2\chamber0_cleanBackground.c" />
+    <ClCompile Include="..\generated\bank2\chamber0_tileMap.c" />
+    <ClCompile Include="..\generated\bank2\chamber1_cleanBackground.c" />
+    <ClCompile Include="..\generated\bank2\chamber1_tileMap.c" />
+    <ClCompile Include="..\generated\resources.c" />
     <ClCompile Include="..\source\hello.c" />
   </ItemGroup>
   <ItemGroup>
@@ -102,6 +123,34 @@
     <None Include="..\build\makefile" />
     <None Include="..\build\rebuild.bat" />
     <None Include="..\source\chr-rom.s" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\game_8bit\background_types.h" />
+    <ClInclude Include="..\..\..\game_8bit\ball.h" />
+    <ClInclude Include="..\..\..\game_8bit\base_defines.h" />
+    <ClInclude Include="..\..\..\game_8bit\base_types.h" />
+    <ClInclude Include="..\..\..\game_8bit\bird.h" />
+    <ClInclude Include="..\..\..\game_8bit\dl_platform.h" />
+    <ClInclude Include="..\..\..\game_8bit\dl_rand.h" />
+    <ClInclude Include="..\..\..\game_8bit\dl_sound.h" />
+    <ClInclude Include="..\..\..\game_8bit\door_types.h" />
+    <ClInclude Include="..\..\..\game_8bit\drops_manager.h" />
+    <ClInclude Include="..\..\..\game_8bit\drops_types.h" />
+    <ClInclude Include="..\..\..\game_8bit\game.h" />
+    <ClInclude Include="..\..\..\game_8bit\game_data.h" />
+    <ClInclude Include="..\..\..\game_8bit\joystick_data.h" />
+    <ClInclude Include="..\..\..\game_8bit\physics_utils.h" />
+    <ClInclude Include="..\..\..\game_8bit\pickup_types.h" />
+    <ClInclude Include="..\..\..\game_8bit\player.h" />
+    <ClInclude Include="..\..\..\game_8bit\player_types.h" />
+    <ClInclude Include="..\..\..\game_8bit\resource_types.h" />
+    <ClInclude Include="..\..\..\game_8bit\rooms\chambers.h" />
+    <ClInclude Include="..\..\..\game_8bit\rooms\rooms.h" />
+    <ClInclude Include="..\..\..\game_8bit\rooms\room_types.h" />
+    <ClInclude Include="..\..\..\game_8bit\rooms\titlescreen.h" />
+    <ClInclude Include="..\..\..\game_8bit\string_utils.h" />
+    <ClInclude Include="..\generated\resources.h" />
+    <ClInclude Include="..\source\custom_background_types.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

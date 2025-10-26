@@ -19,14 +19,14 @@
     <Filter Include="Source Files\generated">
       <UniqueIdentifier>{78bafb1a-9907-4aae-a5e8-a7e60ea8ece6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\generated\bank2">
-      <UniqueIdentifier>{7e8dae93-66f9-4489-bdf2-b1051eb10e46}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\game">
       <UniqueIdentifier>{f82ec98a-fb64-4328-9319-db6d03ddf188}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\game\rooms">
       <UniqueIdentifier>{97b1d09e-6625-409e-8131-470396badefd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="llvm-mos">
+      <UniqueIdentifier>{1e7d4dca-ab66-48b1-8e1a-2650ced86edf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -35,18 +35,6 @@
     </ClCompile>
     <ClCompile Include="..\generated\resources.c">
       <Filter>Source Files\generated</Filter>
-    </ClCompile>
-    <ClCompile Include="..\generated\bank2\chamber0_tileMap.c">
-      <Filter>Source Files\generated\bank2</Filter>
-    </ClCompile>
-    <ClCompile Include="..\generated\bank2\chamber1_cleanBackground.c">
-      <Filter>Source Files\generated\bank2</Filter>
-    </ClCompile>
-    <ClCompile Include="..\generated\bank2\chamber1_tileMap.c">
-      <Filter>Source Files\generated\bank2</Filter>
-    </ClCompile>
-    <ClCompile Include="..\generated\bank2\chamber0_cleanBackground.c">
-      <Filter>Source Files\generated\bank2</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\game_8bit\game.c">
       <Filter>Source Files\game</Filter>
@@ -95,6 +83,78 @@
     </ClCompile>
     <ClCompile Include="..\..\..\game_8bit\rooms\titlescreen.c">
       <Filter>Source Files\game\rooms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\chamber1_tileMap.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\chamber8_tileMap.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\chamber9_cleanBackground.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\chamber9_tileMap.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\getReadyScreen_cleanBackground.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\titleScreen_cleanBackground.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\titleScreen_tileMap.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\chamber0_cleanBackground.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\chamber0_tileMap.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\chamber1_cleanBackground.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\chamber1_tileMap.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\chamber2_cleanBackground.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\chamber2_tileMap.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\chamber3_cleanBackground.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\chamber3_tileMap.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\chamber4_cleanBackground.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\chamber4_tileMap.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\chamber5_cleanBackground.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\chamber5_tileMap.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\chamber6_cleanBackground.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\chamber6_tileMap.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\chamber7_cleanBackground.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\chamber7_tileMap.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\chamber8_cleanBackground.c">
+      <Filter>Source Files\generated</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -195,6 +255,18 @@
     </ClInclude>
     <ClInclude Include="..\..\..\game_8bit\rooms\titlescreen.h">
       <Filter>Source Files\game\rooms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\NesDev\llvm-mos-windows\llvm-mos\mos-platform\nes\include\neslib.h">
+      <Filter>llvm-mos</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\NesDev\llvm-mos-windows\llvm-mos\mos-platform\nes\include\nes.h">
+      <Filter>llvm-mos</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\NesDev\llvm-mos-windows\llvm-mos\mos-platform\nes\include\nesdoug.h">
+      <Filter>llvm-mos</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\Incoming\nes\llvm-mos-windows\llvm-mos\mos-platform\nes-unrom\include\mapper.h">
+      <Filter>llvm-mos</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

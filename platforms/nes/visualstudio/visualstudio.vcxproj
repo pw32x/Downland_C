@@ -110,11 +110,31 @@
     <ClCompile Include="..\..\..\game_8bit\rooms\titlescreen.c" />
     <ClCompile Include="..\..\..\game_8bit\rooms\transitions.c" />
     <ClCompile Include="..\..\..\game_8bit\string_utils.c" />
-    <ClCompile Include="..\generated\bank2\chamber0_cleanBackground.c" />
-    <ClCompile Include="..\generated\bank2\chamber0_tileMap.c" />
-    <ClCompile Include="..\generated\bank2\chamber1_cleanBackground.c" />
-    <ClCompile Include="..\generated\bank2\chamber1_tileMap.c" />
+    <ClCompile Include="..\generated\chamber0_cleanBackground.c" />
+    <ClCompile Include="..\generated\chamber0_tileMap.c" />
+    <ClCompile Include="..\generated\chamber1_cleanBackground.c" />
+    <ClCompile Include="..\generated\chamber1_tileMap.c" />
+    <ClCompile Include="..\generated\chamber2_cleanBackground.c" />
+    <ClCompile Include="..\generated\chamber2_tileMap.c" />
+    <ClCompile Include="..\generated\chamber3_cleanBackground.c" />
+    <ClCompile Include="..\generated\chamber3_tileMap.c" />
+    <ClCompile Include="..\generated\chamber4_cleanBackground.c" />
+    <ClCompile Include="..\generated\chamber4_tileMap.c" />
+    <ClCompile Include="..\generated\chamber5_cleanBackground.c" />
+    <ClCompile Include="..\generated\chamber5_tileMap.c" />
+    <ClCompile Include="..\generated\chamber6_cleanBackground.c" />
+    <ClCompile Include="..\generated\chamber6_tileMap.c" />
+    <ClCompile Include="..\generated\chamber7_cleanBackground.c" />
+    <ClCompile Include="..\generated\chamber7_tileMap.c" />
+    <ClCompile Include="..\generated\chamber8_cleanBackground.c" />
+    <ClCompile Include="..\generated\chamber8_tileMap.c" />
+    <ClCompile Include="..\generated\chamber9_cleanBackground.c" />
+    <ClCompile Include="..\generated\chamber9_tileMap.c" />
+    <ClCompile Include="..\generated\getReadyScreen_cleanBackground.c" />
     <ClCompile Include="..\generated\resources.c" />
+    <ClCompile Include="..\generated\titleScreen_cleanBackground.c" />
+    <ClCompile Include="..\generated\titleScreen_tileMap.c" />
+    <ClCompile Include="..\source\chamber1_tileMap.c" />
     <ClCompile Include="..\source\hello.c" />
   </ItemGroup>
   <ItemGroup>
@@ -126,6 +146,10 @@
     <None Include="..\source\chr-rom.s" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\..\Incoming\nes\llvm-mos-windows\llvm-mos\mos-platform\nes-unrom\include\mapper.h" />
+    <ClInclude Include="..\..\..\..\..\..\NesDev\llvm-mos-windows\llvm-mos\mos-platform\nes\include\nes.h" />
+    <ClInclude Include="..\..\..\..\..\..\NesDev\llvm-mos-windows\llvm-mos\mos-platform\nes\include\nesdoug.h" />
+    <ClInclude Include="..\..\..\..\..\..\NesDev\llvm-mos-windows\llvm-mos\mos-platform\nes\include\neslib.h" />
     <ClInclude Include="..\..\..\game_8bit\background_types.h" />
     <ClInclude Include="..\..\..\game_8bit\ball.h" />
     <ClInclude Include="..\..\..\game_8bit\base_defines.h" />

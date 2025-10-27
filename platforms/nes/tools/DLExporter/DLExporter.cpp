@@ -630,7 +630,7 @@ dl_u8* saveSplatSpriteToChr(const dl_u8* splatSprite, dl_u8* chrBufferRunner)
     {
         for (int tiley = 0; tiley < tileHeight; tiley++)    
         {
-            const dl_u8* tileStart = sprite8bpp + ((tilex * TILE_WIDTH) + ((tiley * TILE_HEIGHT) * destinationWidth));
+            const dl_u8* tileStart = secondFrame + ((tilex * TILE_WIDTH) + ((tiley * TILE_HEIGHT) * destinationWidth));
             chrBufferRunner = writePlanarTile(tileStart, destinationWidth, TILE_HEIGHT, chrBufferRunner);
         }
     }

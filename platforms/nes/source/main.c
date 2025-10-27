@@ -607,6 +607,12 @@ int main(void)
 			Game_Update();
 		}
 
+		ppu_wait_nmi(); // wait till beginning of the frame
+		// the sprites are pushed from a buffer to the OAM during nmi
+
+		// clear all sprites from sprite buffer
+		oam_clear();
+
 		m_drawRoomFunctions[gameData_currentRoom->roomNumber]();
 
 		// VBLANK
@@ -621,11 +627,8 @@ int main(void)
 		UNSAFE_SMS_copySpritestoSAT();
 		*/
 
-		ppu_wait_nmi(); // wait till beginning of the frame
-		// the sprites are pushed from a buffer to the OAM during nmi
 
-		// clear all sprites from sprite buffer
-		oam_clear();
+
 
 		//oam_meta_spr(x_position3, y_position, metasprite2);    
 	}

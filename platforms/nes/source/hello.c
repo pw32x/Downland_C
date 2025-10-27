@@ -27,7 +27,7 @@ extern const dl_u8 chamber5_tileMap[32 * 24];
 
 RoomResources resources;
 
-int main(void) 
+int main2(void) 
 {
   static const char text[] = "Hello World!"; // zero terminated c string
 

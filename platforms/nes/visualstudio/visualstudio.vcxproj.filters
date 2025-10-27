@@ -156,6 +156,9 @@
     <ClCompile Include="..\generated\chamber8_cleanBackground.c">
       <Filter>Source Files\generated</Filter>
     </ClCompile>
+    <ClCompile Include="..\source\main.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\source\chr-rom.s">

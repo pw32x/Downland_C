@@ -136,6 +136,7 @@
     <ClCompile Include="..\generated\titleScreen_tileMap.c" />
     <ClCompile Include="..\source\chamber1_tileMap.c" />
     <ClCompile Include="..\source\hello.c" />
+    <ClCompile Include="..\source\main.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\build\build.bat" />

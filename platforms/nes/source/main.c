@@ -418,7 +418,7 @@ void drawUIPlayerLives(const PlayerData* playerData)
 	dl_u8 x = PLAYERLIVES_ICON_X << 1;
 	dl_u8 y = PLAYERLIVES_ICON_Y;
 
-	dl_u8 tileIndex = 0x88 + (playerData->currentSpriteNumber << 2);
+	dl_u8 tileIndex = 0x98 + (playerData->currentSpriteNumber << 2);
 
 	dl_u8 count = playerData->lives;
 	while (count--)

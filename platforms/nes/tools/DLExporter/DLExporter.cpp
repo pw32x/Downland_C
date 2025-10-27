@@ -67,6 +67,23 @@ enum CrtColor
     CrtColor_Orange
 };
 
+const dl_u8 roomToBankNumber[] = 
+{
+    0, // chambers 0 to 9
+    0,
+    1,
+    1,
+    2,
+    2,
+    3,
+    3,
+    4,
+    4,
+    5,  // title screen
+	0,  // transition screen. it doesn't matter what the bank is.
+	0,  // wipe transition screen. it doesn't matter what the bank is.
+	5   // get ready screen
+};
 
 void convert1bppImageTo8bppCrtEffectImage(const dl_u8* originalImage,
                                           dl_u8* destinationImage,
@@ -526,7 +543,7 @@ dl_u8* saveRegenSpriteToChr(const dl_u8* playerSprite, dl_u8** chrBufferRunnerPt
 
 dl_u8* saveRegenLivesSpriteToChr(dl_u8* regenSprite, dl_u8* chrBufferRunner)
 {
-    const int numFrames = NUM_REGEN_FRAMES;
+    const int numFrames = NUM_REGEN_FRAMES * 2;
     const int regenWidth = 16;
     const int regenHeight = 16;
     const int iconImageHeight = 8;
@@ -717,7 +734,7 @@ void saveTileMapSource(const std::vector<TileMap>& tileMaps)
         oss << "#include \"base_types.h\"\n";
         oss << "\n";
 
-        oss << "#pragma clang section text = \".prg_rom_" << (dl_u16)counter << "\" rodata = \".prg_rom_" << (dl_u16)counter << ".rodata\"";
+        oss << "#pragma clang section text = \".prg_rom_" << (dl_u16)roomToBankNumber[counter] << "\" rodata = \".prg_rom_" << (dl_u16)roomToBankNumber[counter] << ".rodata\"";
         oss << "\n";
 
         oss << "const dl_u8 " << roomNames[counter] << "_tileMap[32 * 24] = \n";
@@ -762,7 +779,7 @@ void saveCleanBackground(const dl_u8* cleanBackground, dl_u8 backgroundIndex)
     oss << "#include \"base_types.h\"\n";
     oss << "\n";
 
-    oss << "#pragma clang section text = \".prg_rom_" << (dl_u16)backgroundIndex << "\" rodata = \".prg_rom_" << (dl_u16)backgroundIndex << ".rodata\"";
+    oss << "#pragma clang section text = \".prg_rom_" << (dl_u16)roomToBankNumber[backgroundIndex] << "\" rodata = \".prg_rom_" << (dl_u16)roomToBankNumber[backgroundIndex] << ".rodata\"";
     oss << "\n";
 
     dl_u16 backgroundSize = FRAMEBUFFER_PITCH * FRAMEBUFFER_HEIGHT;

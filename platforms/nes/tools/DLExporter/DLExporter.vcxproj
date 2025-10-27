@@ -147,7 +147,6 @@ copy $(OutDir)$(TargetName)$(TargetExt) $(SolutionDir)..\bin\$(TargetName)$(Targ
     <ClInclude Include="..\..\..\..\game\drops_types.h" />
     <ClInclude Include="..\..\..\..\game\resource_loader_buffer.h" />
     <ClInclude Include="..\..\..\..\game\resource_types.h" />
-    <ClInclude Include="lodepng.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

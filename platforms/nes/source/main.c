@@ -453,37 +453,28 @@ void drawUIPlayerLives(const PlayerData* playerData)
     }
 }
 
-extern volatile unsigned int KeysStatus;
-extern volatile unsigned int PreviousKeysStatus;
-
 void updateControls(dl_u8 controllerIndex)
 {
+
     dl_u8 leftDown = FALSE;
     dl_u8 rightDown = FALSE;
     dl_u8 upDown = FALSE;
     dl_u8 downDown = FALSE;
     dl_u8 jumpDown = FALSE;
 
-	/*
-    // Check D-Pad
-	if (!controllerIndex)
-	{
-		leftDown = (KeysStatus & PORT_A_KEY_LEFT) != 0;
-		rightDown = (KeysStatus & PORT_A_KEY_RIGHT) != 0;
-		upDown = (KeysStatus & PORT_A_KEY_UP) != 0;
-		downDown = (KeysStatus & PORT_A_KEY_DOWN) != 0;
-		jumpDown = ((KeysStatus & PORT_A_KEY_1) != 0) || ((KeysStatus & PORT_A_KEY_2) != 0);
-	}
-	else
-	{
-		leftDown = (KeysStatus & PORT_B_KEY_LEFT) != 0;
-		rightDown = (KeysStatus & PORT_B_KEY_RIGHT) != 0;
-		upDown = (KeysStatus & PORT_B_KEY_UP) != 0;
-		downDown = (KeysStatus & PORT_B_KEY_DOWN) != 0;
-		jumpDown = ((KeysStatus & PORT_B_KEY_1) != 0) || ((KeysStatus & PORT_B_KEY_2) != 0);
-	}
-	*/
+	
+	dl_u8 padState = pad_poll(controllerIndex);
 
+
+    // Check D-Pad
+	leftDown = (padState & PAD_LEFT) != 0;
+	rightDown = (padState & PAD_RIGHT) != 0;
+
+	upDown = (padState & PAD_UP) != 0;
+	downDown = (padState & PAD_DOWN) != 0;
+			
+	//jumpDown = (padState & PAD_A) != 0;//) || ((padState & PAD_B) != 0);
+	
     joystickState_leftPressed = (!joystickState_leftDown) & leftDown;
     joystickState_rightPressed = (!joystickState_rightDown) & rightDown;
     joystickState_jumpPressed =  (!joystickState_jumpDown) & jumpDown;
@@ -495,7 +486,7 @@ void updateControls(dl_u8 controllerIndex)
     joystickState_jumpDown = jumpDown;
 
 #ifdef DEV_MODE
-    dl_u8 debugStateDown = (KeysStatus & PORT_A_KEY_2) != 0;
+    dl_u8 debugStateDown = (padState & PAD_B) != 0;
 
     joystickState_debugStatePressed = !joystickState_debugStateDown & debugStateDown;
     joystickState_debugStateDown = debugStateDown;
@@ -688,14 +679,14 @@ void drawChamber(void)
 	{
 	case PLAYER_STATE_SPLAT: 
 
-		tileIndex = 0x7c + (playerData->splatFrameNumber * 6);
+		tileIndex = 0x8c + (playerData->splatFrameNumber * 6);
 
 		/*
 		SMS_addThreeAdjoiningSprites(playerX, playerY + 7, tileIndex);
 		*/
 
 		updateMetaSprite(tileIndex);
-		oam_meta_spr(playerX, playerY, metasprite);  
+		oam_meta_spr(playerX, playerY + 7, metasprite);  
 
 		break;
 

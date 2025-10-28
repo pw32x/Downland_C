@@ -305,7 +305,7 @@ void drawDrops(void)
     }
 }
 
-const dl_u8 pickUpSprites[] = { 16, 30, 26 };
+const dl_u8 pickUpSprites[] = { 16, 30, 26 }; // diamond, bag, key
 dl_u8 pickupx;
 dl_u8 pickupy;
 const Pickup* pickups;

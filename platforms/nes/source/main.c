@@ -62,8 +62,6 @@ dl_u8 g_regenSpriteIndex;
 
 extern const dl_u8 getReadyScreen_cleanBackground[6144];
 
-//dl_u8 tileMapBuffer[32 * 16];
-
 dl_u8 g_transitionDirection;
 
 typedef void (*DrawRoomFunction)(void);
@@ -158,16 +156,11 @@ void Sound_StopAll(void)
 {
 }
 
+__attribute__((section(".prg_rom_5")))
 void Ball_Draw(void)
 {
 	if (ballData_enabled)
 	{
-		/*
-		SMS_addTwoAdjoiningSprites((ballData_x >> 8) << 1, 
-									ballData_y >> 8, 
-									((dl_s8)ballData_fallStateCounter < 0) << 2);
-		*/
-
 		updateMetaSprite(0x2a + (((dl_s8)ballData_fallStateCounter < 0) << 2));
 		oam_meta_spr((ballData_x >> 8) << 1, (ballData_y >> 8) + SCROLL_SPRITE_OFFSET, metasprite);  
 	}
@@ -175,16 +168,12 @@ void Ball_Draw(void)
 
 #define BIRD_TILE_INDEX 0x32
 
+__attribute__((section(".prg_rom_5")))
 void Bird_Draw(dl_u16 currentTimer)
 {
 	// draw bird
 	if (birdData_state && currentTimer == 0)
 	{
-		/*
-		SMS_addTwoAdjoiningSprites((birdData_x >> 8) << 1,
-									birdData_y >> 8,
-									BIRD_TILE_INDEX + (birdData_animationFrame << 2));
-		*/
 		updateMetaSprite(BIRD_TILE_INDEX + (birdData_animationFrame << 2));
 		oam_meta_spr((birdData_x >> 8) << 1, (birdData_y >> 8) + SCROLL_SPRITE_OFFSET, metasprite);  
 
@@ -215,10 +204,7 @@ void drawTileText(const dl_u8* text, dl_u16 xyLocation)
     }
 
 	multi_vram_buffer_horz(tileText, (tileTextRunner - tileText), NTADR_A(tilex, tiley));
-	  
-	/*
-	SMS_loadTileMap(tilex, tiley, tileText, (tileTextRunner - tileText) << 1);
-	*/
+
 }
 
 //__attribute__((section(".prg_rom_0")))
@@ -226,10 +212,6 @@ void chamber_draw(dl_u8 roomNumber)
 {
 	const BackgroundData* backgroundData = (const BackgroundData*)res_roomResources[roomNumber].backgroundDrawData;
 	gameData_cleanBackground = (dl_u8*)backgroundData->cleanBackground;
-
-	/*
-	SMS_loadTileMap(0, 0, (dl_u8*)backgroundData->tileMap, 32 * 24 * 2);
-	*/
 
 	ppu_off(); // screen off
 
@@ -256,48 +238,29 @@ void chamber_draw(dl_u8 roomNumber)
 	drawTileText(gameData_string_timer, TIMER_DRAW_LOCATION);
 }
 
-__attribute__((section(".prg_rom_5")))
+//__attribute__((section(".prg_rom_5")))
 void get_ready_room_draw(dl_u8 roomNumber)
 {
-	/*
 	(void)roomNumber;
 
 	const BackgroundData* backgroundData = (const BackgroundData*)res_roomResources[TITLESCREEN_ROOM_INDEX].backgroundDrawData;
 	gameData_cleanBackground = (dl_u8*)getReadyScreen_cleanBackground;
 
-
-	//SMS_loadTileMap(0, 0, (dl_u8*)backgroundData->tileMap, 32 * 24 * 2);
-
-
-
-	//ppu_off(); // screen off
-	//vram_write((dl_u8*)backgroundData->tileMap, 32 * 24);
-	//ppu_on_all(); //	turn on screen
-
 	// get ready text
 	const dl_u8* getReadyString = gameData_currentPlayerData->playerNumber == PLAYER_ONE ? res_string_getReadyPlayerOne : res_string_getReadyPlayerTwo;
 	drawTileText(getReadyString, 0x0b66);
-	*/
 }
 
 //#pragma clang section text = ".prg_rom_0" rodata = ".prg_rom_0.rodata"
 //__attribute__((section(".prg_rom_whatever")))
-__attribute__((section(".prg_rom_5")))
+//__attribute__((section(".prg_rom_5")))
 void titleScreen_draw(dl_u8 roomNumber)
 {
 
-	//const BackgroundData* backgroundData = (const BackgroundData*)res_roomResources[roomNumber].backgroundDrawData;
-	//gameData_cleanBackground = (dl_u8*)backgroundData->cleanBackground;
+	const BackgroundData* backgroundData = (const BackgroundData*)res_roomResources[roomNumber].backgroundDrawData;
+	gameData_cleanBackground = (dl_u8*)backgroundData->cleanBackground;
 
 	/*
-	SMS_loadTileMap(0, 0, (dl_u8*)backgroundData->tileMap, 32 * 24 * 2);
-	*/
-
-	/*
-	//ppu_off(); // screen off
-	//vram_write((dl_u8*)backgroundData->tileMap, 32 * 24);
-	//ppu_on_all(); //	turn on screen
-
 	drawTileText(res_string_downland, 0x03c9 + 64); // 0x07c9 original coco mem location
 	drawTileText(res_string_writtenBy, 0x050a); // 0x090A original coco mem location
 	drawTileText(res_string_michaelAichlmayer, 0x647); // 0x0A47 original coco mem location
@@ -326,8 +289,7 @@ void titleScreen_draw(dl_u8 roomNumber)
 	convertScoreToString(gameData_highScore, gameData_string_highScore);
 
 	drawTileText(gameData_string_highScore, TITLESCREEN_HIGHSCORE_LOCATION);
-	*/
-
+*/
 }
 
 void updateScore(void)
@@ -339,6 +301,7 @@ void updateScore(void)
 // moving the dropsDrawRunner to global memory makes drawDrops twice as fast
 const Drop* dropsDrawRunner;
 
+__attribute__((section(".prg_rom_5")))
 void drawDrops(void)
 {
     // draw drops
@@ -350,12 +313,6 @@ void drawDrops(void)
         if ((dl_s8)dropsDrawRunner->wiggleTimer < 0 || // wiggling
             dropsDrawRunner->wiggleTimer > 1)   // falling
         {
-			/*
-			SMS_addSprite((dropsDrawRunner->x << 1), 
-						  (dropsDrawRunner->y >> 8), 
-						  24);
-			*/
-
 			oam_spr((dropsDrawRunner->x << 1), (dropsDrawRunner->y >> 8) + SCROLL_SPRITE_OFFSET, 0, 0);
         }
 
@@ -431,6 +388,7 @@ void drawDoors(void)
 
 dl_u8 g_playerTileIndex;
 
+__attribute__((section(".prg_rom_5")))
 void drawUIPlayerLives(const PlayerData* playerData)
 {
 	dl_u8 x = PLAYERLIVES_ICON_X << 1;
@@ -441,10 +399,6 @@ void drawUIPlayerLives(const PlayerData* playerData)
 	dl_u8 count = playerData->lives;
 	while (count--)
 	{
-		/*
-		SMS_addTwoAdjoiningSprites(x, y, tileIndex);
-		*/
-
 		updateMetaSprite(tileIndex);
 		oam_meta_spr(x, y + SCROLL_SPRITE_OFFSET, metasprite);  
 
@@ -464,10 +418,6 @@ void drawUIPlayerLives(const PlayerData* playerData)
 
 		updateMetaSprite(tileIndex);
 		oam_meta_spr(x, y + SCROLL_SPRITE_OFFSET, metasprite);  
-
-		/*
-		SMS_addTwoAdjoiningSprites(x, y, tileIndex);
-		*/
     }
 }
 
@@ -773,29 +723,37 @@ void drawChamber(void)
 
 	if (tickTock)
 	{
+		set_prg_bank(5);
 		Ball_Draw();
 		Bird_Draw(currentTimer);
-		drawPickups();
 		drawDrops();
+		drawUIPlayerLives(playerData);
+		set_prg_bank(roomToBankIndex[gameData_transitionRoomNumber]);
+		drawPickups();
 	}
 	else
 	{
-		drawDrops();
 		drawPickups();
+		set_prg_bank(5);
+		drawDrops();
 		Bird_Draw(currentTimer);
 		Ball_Draw();
+		drawUIPlayerLives(playerData);
+		set_prg_bank(roomToBankIndex[gameData_transitionRoomNumber]);
 	}
 
 	drawTileText(gameData_string_timer, TIMER_DRAW_LOCATION);
 	drawTileText(playerData->scoreString, SCORE_DRAW_LOCATION);
-	drawUIPlayerLives(playerData);
+
+
+	
 }
 
 void drawTitleScreen(void)
 {
-	//drawDrops();
-	//dl_u8 x = gameData_numPlayers == 1 ? 32 : 128;
-	//oam_spr(x, 154, 0x4a, 0);
+	drawDrops();
+	dl_u8 x = gameData_numPlayers == 1 ? 32 : 128;
+	oam_spr(x, 154, 0x4a, 0);
 }
 
 void drawTransition(void)

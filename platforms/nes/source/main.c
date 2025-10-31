@@ -21,6 +21,8 @@
 
 //#include "sounds.h"
 
+#define SCROLL_SPRITE_OFFSET 16
+
 const dl_u8 roomToBankIndex[] = 
 {
     0, // chambers 0 to 9
@@ -167,7 +169,7 @@ void Ball_Draw(void)
 		*/
 
 		updateMetaSprite(0x2a + (((dl_s8)ballData_fallStateCounter < 0) << 2));
-		oam_meta_spr((ballData_x >> 8) << 1, ballData_y >> 8, metasprite);  
+		oam_meta_spr((ballData_x >> 8) << 1, (ballData_y >> 8) + SCROLL_SPRITE_OFFSET, metasprite);  
 	}
 }
 
@@ -184,7 +186,7 @@ void Bird_Draw(dl_u16 currentTimer)
 									BIRD_TILE_INDEX + (birdData_animationFrame << 2));
 		*/
 		updateMetaSprite(BIRD_TILE_INDEX + (birdData_animationFrame << 2));
-		oam_meta_spr((birdData_x >> 8) << 1, birdData_y >> 8, metasprite);  
+		oam_meta_spr((birdData_x >> 8) << 1, (birdData_y >> 8) + SCROLL_SPRITE_OFFSET, metasprite);  
 
 	}
 }
@@ -257,14 +259,15 @@ void chamber_draw(dl_u8 roomNumber)
 __attribute__((section(".prg_rom_5")))
 void get_ready_room_draw(dl_u8 roomNumber)
 {
+	/*
 	(void)roomNumber;
 
 	const BackgroundData* backgroundData = (const BackgroundData*)res_roomResources[TITLESCREEN_ROOM_INDEX].backgroundDrawData;
 	gameData_cleanBackground = (dl_u8*)getReadyScreen_cleanBackground;
 
-	/*
-	SMS_loadTileMap(0, 0, (dl_u8*)backgroundData->tileMap, 32 * 24 * 2);
-	*/
+
+	//SMS_loadTileMap(0, 0, (dl_u8*)backgroundData->tileMap, 32 * 24 * 2);
+
 
 
 	//ppu_off(); // screen off
@@ -274,6 +277,7 @@ void get_ready_room_draw(dl_u8 roomNumber)
 	// get ready text
 	const dl_u8* getReadyString = gameData_currentPlayerData->playerNumber == PLAYER_ONE ? res_string_getReadyPlayerOne : res_string_getReadyPlayerTwo;
 	drawTileText(getReadyString, 0x0b66);
+	*/
 }
 
 //#pragma clang section text = ".prg_rom_0" rodata = ".prg_rom_0.rodata"
@@ -352,7 +356,7 @@ void drawDrops(void)
 						  24);
 			*/
 
-			oam_spr((dropsDrawRunner->x << 1), (dropsDrawRunner->y >> 8), 0, 0);
+			oam_spr((dropsDrawRunner->x << 1), (dropsDrawRunner->y >> 8) + SCROLL_SPRITE_OFFSET, 0, 0);
         }
 
         dropsDrawRunner++;
@@ -386,7 +390,7 @@ void drawPickups(void)
 			*/
 
 			updateMetaSprite(tileIndex);
-			oam_meta_spr(pickupx, pickupy, metasprite);  
+			oam_meta_spr(pickupx, pickupy + SCROLL_SPRITE_OFFSET, metasprite);  
 		}
 
 		pickups++;
@@ -418,7 +422,7 @@ void drawDoors(void)
 			*/
 
 			updateMetaSprite(0x46);
-			oam_meta_spr(xPosition, doorInfoRunner->y, metasprite);  
+			oam_meta_spr(xPosition, doorInfoRunner->y + SCROLL_SPRITE_OFFSET, metasprite);  
 		}
 
 		doorInfoRunner++;
@@ -442,7 +446,7 @@ void drawUIPlayerLives(const PlayerData* playerData)
 		*/
 
 		updateMetaSprite(tileIndex);
-		oam_meta_spr(x, y, metasprite);  
+		oam_meta_spr(x, y + SCROLL_SPRITE_OFFSET, metasprite);  
 
 		x += (PLAYERLIVES_ICON_SPACING << 1);
     }
@@ -459,7 +463,7 @@ void drawUIPlayerLives(const PlayerData* playerData)
 		}
 
 		updateMetaSprite(tileIndex);
-		oam_meta_spr(x, y, metasprite);  
+		oam_meta_spr(x, y + SCROLL_SPRITE_OFFSET, metasprite);  
 
 		/*
 		SMS_addTwoAdjoiningSprites(x, y, tileIndex);
@@ -543,7 +547,7 @@ int main(void)
 	oam_size(1);
 	bank_spr(0);
 	bank_bg(1);
-	scroll(0, 208);
+	scroll(0, 240 - (SCROLL_SPRITE_OFFSET + 1));
 	ppu_on_all(); //	turn on screen
 
 	set_vram_buffer();
@@ -705,6 +709,8 @@ void drawChamber(void)
 
 	dl_u8 tileIndex;
 
+	playerY += SCROLL_SPRITE_OFFSET;
+
 
 	// draw player
 	switch (playerData->state)
@@ -789,7 +795,7 @@ void drawTitleScreen(void)
 {
 	//drawDrops();
 	//dl_u8 x = gameData_numPlayers == 1 ? 32 : 128;
-	//oam_spr(x, 123, 0x4a, 0);
+	//oam_spr(x, 154, 0x4a, 0);
 }
 
 void drawTransition(void)

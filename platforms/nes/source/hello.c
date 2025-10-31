@@ -42,6 +42,8 @@ int main2(void)
   ppu_off(); // screen off
 
  vram_adr(NAMETABLE_A);
+ set_prg_bank(2);
+
  vram_write(chamber5_tileMap, 32 * 24);
 
   // load the palettes

@@ -232,7 +232,7 @@ void chamber_draw(dl_u8 roomNumber)
 	ppu_off(); // screen off
 
 	vram_adr(NTADR_A(0, 0));
-	vram_fill(1, 32 * 28);
+	vram_fill(0, 32 * 28);
 	vram_adr(NTADR_A(0, 0));
 	vram_write((dl_u8*)backgroundData->tileMap, 32 * 24);
 	ppu_on_all(); //	turn on screen
@@ -247,13 +247,11 @@ void chamber_draw(dl_u8 roomNumber)
 
 	gameData_string_roomNumber[0] = roomNumber;
 	drawTileText(gameData_string_roomNumber, CHAMBER_NUMBER_TEXT_DRAW_LOCATION);
-	/*
+	
 	PlayerData* playerData = gameData_playerData;
 	convertScoreToString(playerData->score, playerData->scoreString);
 	drawTileText(playerData->scoreString, SCORE_DRAW_LOCATION);
-
-	//drawTileText(gameData_string_timer, TIMER_DRAW_LOCATION);
-	*/
+	drawTileText(gameData_string_timer, TIMER_DRAW_LOCATION);
 }
 
 __attribute__((section(".prg_rom_5")))
@@ -488,7 +486,7 @@ dl_u8 jumpDown = FALSE;
 	upDown = (padState & PAD_UP) != 0;
 	downDown = (padState & PAD_DOWN) != 0;
 			
-	jumpDown = (padState & PAD_A) != 0;//) || ((padState & PAD_B) != 0);
+	jumpDown = ((padState & PAD_A) != 0) || ((padState & PAD_B) != 0);
 	
     joystickState_leftPressed = (!joystickState_leftDown) & leftDown;
     joystickState_rightPressed = (!joystickState_rightDown) & rightDown;
@@ -545,7 +543,7 @@ int main(void)
 	oam_size(1);
 	bank_spr(0);
 	bank_bg(1);
-	scroll(0, 0); // 208);
+	scroll(0, 208);
 	ppu_on_all(); //	turn on screen
 
 	set_vram_buffer();
@@ -783,7 +781,7 @@ void drawChamber(void)
 	}
 
 	drawTileText(gameData_string_timer, TIMER_DRAW_LOCATION);
-	//drawTileText(playerData->scoreString, SCORE_DRAW_LOCATION);
+	drawTileText(playerData->scoreString, SCORE_DRAW_LOCATION);
 	drawUIPlayerLives(playerData);
 }
 

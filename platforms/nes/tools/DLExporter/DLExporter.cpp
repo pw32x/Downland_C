@@ -178,7 +178,7 @@ using TileSet = std::vector<Tile>;
 #define TILE_MAP_HEIGHT (FRAMEBUFFER_HEIGHT / 8)
 #define TILE_MAP_SIZE (TILE_MAP_WIDTH * TILE_MAP_HEIGHT)
 
-using TileMap = std::vector<dl_u16>;
+using TileMap = std::vector<dl_u8>;
 
 void extractTile(const dl_u8* background, dl_u8 startX, dl_u8 startY, Tile& tile)
 {
@@ -191,10 +191,10 @@ void extractTile(const dl_u8* background, dl_u8 startX, dl_u8 startY, Tile& tile
     }
 }
 
-dl_u16 appendTileToTileSet(const Tile& tile, TileSet& tileSet)
+dl_u8 appendTileToTileSet(const Tile& tile, TileSet& tileSet)
 {
     // if the tile already exists, just return the existing index
-    dl_u16 tileSetIndex = 0;
+    dl_u8 tileSetIndex = 0;
     bool found = false;
     for (auto& tileSetTile : tileSet)
     {
@@ -209,7 +209,7 @@ dl_u16 appendTileToTileSet(const Tile& tile, TileSet& tileSet)
 
     if (!found)
     {
-        tileSetIndex = static_cast<dl_u16>(tileSet.size());
+        tileSetIndex = static_cast<dl_u8>(tileSet.size());
         tileSet.push_back(tile);
     }
 
@@ -228,7 +228,7 @@ void buildTileMap(const dl_u8* background, TileMap& tileMap, TileSet& tileSet)
             Tile tile;
             extractTile(background, startX, startY, tile);
 
-            dl_u16 tileIndex = appendTileToTileSet(tile, tileSet);
+            dl_u8 tileIndex = appendTileToTileSet(tile, tileSet);
 
             tileMap.push_back(tileIndex);
         }
@@ -1198,6 +1198,20 @@ void createFolder(std::string& folder)
     }
 }
 
+void drawTileText(const dl_u8* text, dl_u8* tileMap, dl_u16 framebufferPosition)
+{
+    dl_u16 tilex = (framebufferPosition & 31);
+    dl_u16 tiley = (framebufferPosition >> 8);
+
+    // for each character
+    while (*text != 0xff)
+    {
+		tileMap[tilex + (tiley * TILE_MAP_WIDTH)] = *text + 195; // text tiles offset in vdp
+		tilex++;
+		text++;
+    }
+}
+
 int main()
 {
     Resources resources;
@@ -1233,7 +1247,7 @@ int main()
 
         if (loop == TITLESCREEN_ROOM_INDEX)
         {
-	        // title screen text
+	        // title screen text for collisions
 	        drawText(resources.text_downland, resources.characterFont, background, 0x03c9); // 0x07c9 original coco mem location
 	        drawText(resources.text_writtenBy, resources.characterFont, background, 0x050a); // 0x090A original coco mem location
 	        drawText(resources.text_michaelAichlmayer, resources.characterFont, background, 0x647); // 0x0A47 original coco mem location
@@ -1253,6 +1267,24 @@ int main()
         TileMap tileMap;
 
         buildTileMap(background8bpp, tileMap, tileSet);
+
+        if (loop == TITLESCREEN_ROOM_INDEX)
+        {
+	        // title screen text
+	        drawTileText(resources.text_downland, tileMap.data(), 0x03c9); // 0x07c9 original coco mem location
+	        drawTileText(resources.text_writtenBy, tileMap.data(), 0x050a); // 0x090A original coco mem location
+	        drawTileText(resources.text_michaelAichlmayer, tileMap.data(), 0x647); // 0x0A47 original coco mem location
+	        drawTileText(resources.text_copyright1983, tileMap.data(), 0x789); // 0x0B89 original coco mem location
+	        drawTileText(resources.text_spectralAssociates, tileMap.data(), 0x8c6); // 0x0CC6 original coco mem location
+	        drawTileText(resources.text_licensedTo, tileMap.data(), 0xa0a); // 0x0E0A original coco mem location
+	        drawTileText(resources.text_tandyCorporation, tileMap.data(), 0xb47); // 0x0F47 original coco mem location
+	        drawTileText(resources.text_allRightsReserved, tileMap.data(), 0xc86); // 0x1086 original coco mem location
+	        drawTileText(resources.text_onePlayer, tileMap.data(), 0xf05); // 0x1305 original coco mem location
+	        drawTileText(resources.text_twoPlayer, tileMap.data(), 0xf11); // 0x1311 original coco mem location
+	        drawTileText(resources.text_highScore, tileMap.data(), 0x118b); // 0x158B original coco mem location
+	        drawTileText(resources.text_playerOne, tileMap.data(), 0x1406); // 0x1806 original coco mem location
+	        drawTileText(resources.text_playerTwo, tileMap.data(), 0x1546); // 0x1946 original coco mem location
+        }
 
         tileMaps.push_back(tileMap);
     }

@@ -368,10 +368,6 @@ void drawPickups(void)
 			pickupx = (pickups->x) << 1;
 			pickupy = pickups->y;
 
-			/*
-			SMS_addTwoAdjoiningSprites(pickupx, pickupy, tileIndex);
-			*/
-
 			updateMetaSprite(tileIndex);
 			oam_meta_spr(pickupx, pickupy + SCROLL_SPRITE_OFFSET, metasprite);  
 		}
@@ -399,10 +395,6 @@ void drawDoors(void)
 
 			// adjust the door position, as per the original game.
 			xPosition += (xPosition > 80 ? 14 : -8);
-
-			/*
-			SMS_addTwoAdjoiningSprites(xPosition, doorInfoRunner->y, 20);
-			*/
 
 			updateMetaSprite(0x46);
 			oam_meta_spr(xPosition, doorInfoRunner->y + SCROLL_SPRITE_OFFSET, metasprite);  
@@ -451,32 +443,29 @@ void drawUIPlayerLives(const PlayerData* playerData)
 
 void updateControls(dl_u8 controllerIndex)
 {
-	dl_u8 leftDown = FALSE;
-dl_u8 rightDown = FALSE;
-dl_u8 upDown = FALSE;
-dl_u8 downDown = FALSE;
-dl_u8 jumpDown = FALSE;
 	dl_u8 padState = pad_poll(controllerIndex);
 
-
     // Check D-Pad
-	leftDown = (padState & PAD_LEFT) != 0;
-	rightDown = (padState & PAD_RIGHT) != 0;
+	dl_u8 leftDown = (padState & PAD_LEFT) != 0;
+	dl_u8 rightDown = (padState & PAD_RIGHT) != 0;
 
-	upDown = (padState & PAD_UP) != 0;
-	downDown = (padState & PAD_DOWN) != 0;
+	dl_u8 upDown = (padState & PAD_UP) != 0;
+	dl_u8 downDown = (padState & PAD_DOWN) != 0;
 			
-	jumpDown = ((padState & PAD_A) != 0) || ((padState & PAD_B) != 0);
-	
+	dl_u8 jumpDown = ((padState & PAD_A) != 0) || ((padState & PAD_B) != 0);
+	dl_u8 startDown = (padState & PAD_START) != 0;
+
     joystickState_leftPressed = (!joystickState_leftDown) & leftDown;
     joystickState_rightPressed = (!joystickState_rightDown) & rightDown;
     joystickState_jumpPressed =  (!joystickState_jumpDown) & jumpDown;
+	joystickState_startPressed = (!joystickState_startDown) & startDown;
 
     joystickState_leftDown = leftDown;
     joystickState_rightDown = rightDown;
     joystickState_upDown = upDown;
     joystickState_downDown = downDown;
     joystickState_jumpDown = jumpDown;
+	joystickState_startDown = startDown;
 
 #ifdef DEV_MODE
     dl_u8 debugStateDown = (padState & PAD_B) != 0;
@@ -528,22 +517,6 @@ int main(void)
 
 	set_vram_buffer();
 
-	/*
-	// Clear VRAM
-
-	SMS_VRAMmemsetW(0, 0x0000, 16384);
-	SMS_setSpriteMode(SPRITEMODE_TALL);
-
-	// Turn on the display
-	SMS_displayOn();
-	SMS_loadBGPalette(blackPalette);
-	SMS_loadSpritePalette(blackPalette);
-	SMS_waitForVBlank ();
-
-	SMS_initSprites();
-	SMS_copySpritestoSAT();
-	*/
-
 	g_regenSpriteIndex = 0;
 
 	// room draw setup
@@ -568,10 +541,6 @@ int main(void)
 
 	dl_u8 controllerIndex = 0;
 
-	/*
-	SMS_setFrameInterruptHandler(PSGUpdate);
-	*/
-
   char y_position = 0x40; // all share same Y, which increases every frame
   char x_position = 0x88;
   char x_position2 = 0xa0;
@@ -593,7 +562,6 @@ int main(void)
 
 		updateControls(controllerIndex);
 
-		/*
 		if (joystickState_startPressed)
 		{
 			gameData_paused = !gameData_paused;
@@ -601,12 +569,8 @@ int main(void)
 			if (gameData_paused)
 				Sound_StopAll();
 		}
-		*/
 
 		// Game Loop
-		/*
-		SMS_initSprites();
-		*/
 
 		if (!gameData_paused)
 		{
@@ -803,27 +767,12 @@ void transition_init(const Room* targetRoom)
     oam_clear();
 	set_prg_bank(roomToBankIndex[gameData_transitionRoomNumber]);
 
-	/*
-	SMS_waitForVBlank();
-	SMS_initSprites();
-	SMS_copySpritestoSAT();
-	SMS_VRAMmemset(XYtoADDR((0),(0)), 0, 32 * 24 * 2);
-
-	SMS_mapROMBank(roomToBankIndex[gameData_transitionRoomNumber]);
-	*/
-
-	////SMS_debugPrintf("black palette\n");
-	//SMS_loadBGPalette(blackPalette);
-	//SMS_loadSpritePalette(blackPalette);
-
 	// init the clean background with the target room. 
 	// it'll be revealed at the end of the transition.
 	targetRoom->draw(gameData_transitionRoomNumber);
 
 	// setup screen transition
 	gameData_transitionInitialDelay = INITIAL_TRANSITION_DELAY;
-
-	////SMS_debugPrintf("transition_init\n");
 }
 
 void transition_update(Room* room)
@@ -838,7 +787,6 @@ void transition_update(Room* room)
 		return;
 	}
 
-	////SMS_debugPrintf("transition_update enter game room\n");
 	Game_EnterRoom(gameData_transitionRoomNumber);
 }
 
@@ -850,16 +798,6 @@ void wipe_transition_init(const Room* targetRoom)
     oam_clear();
 	set_prg_bank(roomToBankIndex[gameData_transitionRoomNumber]);
 
-	/*
-
-	SMS_waitForVBlank();
-	SMS_initSprites();
-	SMS_copySpritestoSAT();
-	SMS_VRAMmemset(XYtoADDR((0),(0)), 0, 32 * 24 * 2);
-
-	SMS_mapROMBank(roomToBankIndex[gameData_transitionRoomNumber]);
-	*/
-
 	// setup screen transition
 	gameData_transitionInitialDelay = INITIAL_TRANSITION_DELAY;
 	gameData_transitionCurrentLine = 0;
@@ -867,8 +805,6 @@ void wipe_transition_init(const Room* targetRoom)
 
 	const PlayerData* playerData = gameData_currentPlayerData;
 	g_transitionDirection = playerData->lastDoor->xLocationInNextRoom < 50;
-
-	//SMS_debugPrintf("transition_init\n");
 }
 
 void wipe_transition_update(Room* room)
@@ -879,7 +815,6 @@ void wipe_transition_update(Room* room)
 	if (gameData_transitionInitialDelay)
 	{
 		gameData_transitionInitialDelay--;
-		//SMS_debugPrintf("transition_update delay\n");
 		return;
 	}
 

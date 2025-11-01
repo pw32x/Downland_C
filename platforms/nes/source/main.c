@@ -249,11 +249,18 @@ void get_ready_room_draw(dl_u8 roomNumber)
 
 
 	ppu_off(); // screen off
-	//vram_adr(NTADR_A(0, 0));
-	//vram_fill(0, 32 * 28);
+
+
 	vram_adr(NTADR_A(0, 0));
 	vram_write((dl_u8*)backgroundData->tileMap, 32 * 24);
 
+	// we're reusing the title screen, so clear out the
+	// title screen text.
+	for (int loop = 3; loop < 22; loop++)
+	{
+		vram_adr(NTADR_A(4, loop));
+		vram_fill(0, 24);
+	}
 
 	// get ready text
 	const dl_u8* getReadyString = gameData_currentPlayerData->playerNumber == PLAYER_ONE ? res_string_getReadyPlayerOne : res_string_getReadyPlayerTwo;
@@ -292,7 +299,7 @@ void titleScreen_draw(dl_u8 roomNumber)
 	drawTileText(res_string_playerTwo, 0x1546); // 0x1946 original coco mem location
 	*/
 
-	/*
+
 	convertScoreToString(gameData_playerData[PLAYER_ONE].score, gameData_playerData[PLAYER_ONE].scoreString);
 	drawTileText(gameData_playerData[PLAYER_ONE].scoreString, TITLESCREEN_PLAYERONE_SCORE_LOCATION);
 
@@ -307,14 +314,14 @@ void titleScreen_draw(dl_u8 roomNumber)
 	convertScoreToString(gameData_highScore, gameData_string_highScore);
 
 	drawTileText(gameData_string_highScore, TITLESCREEN_HIGHSCORE_LOCATION);
-	*/
+
 	ppu_on_all(); //	turn on screen
 }
 
 void updateScore(void)
 {
-	//convertScoreToString(gameData_currentPlayerData->score, gameData_currentPlayerData->scoreString);
-	//drawTileText(gameData_currentPlayerData->scoreString, SCORE_DRAW_LOCATION);
+	convertScoreToString(gameData_currentPlayerData->score, gameData_currentPlayerData->scoreString);
+	drawTileText(gameData_currentPlayerData->scoreString, SCORE_DRAW_LOCATION);
 }
 
 // moving the dropsDrawRunner to global memory makes drawDrops twice as fast

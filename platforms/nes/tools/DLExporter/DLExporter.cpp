@@ -1080,6 +1080,9 @@ void saveResourcesSource(Resources& resources)
         oss << "extern const dl_u8 " << roomNames[loop] << "_cleanBackground[" << FRAMEBUFFER_PITCH * FRAMEBUFFER_HEIGHT << "];\n";
         oss << "extern const dl_u8 " << roomNames[loop] << "_tileMap[32 * 24];\n";
 
+        //oss << "#pragma clang section text = \".prg_rom_" << (dl_u16)roomToBankNumber[counter] << "\" rodata = \".prg_rom_" << (dl_u16)roomToBankNumber[counter] << ".rodata\"";
+
+        oss << "__attribute__((section(\".prg_rom_" << (dl_u16)roomToBankNumber[loop] << "\")))\n";
         oss << "const BackgroundData " << roomNames[loop] << "_customBackgroundData = "
             << "{ " 
             << roomNames[loop] << "_cleanBackground"
@@ -1102,6 +1105,7 @@ void saveResourcesSource(Resources& resources)
 
         const DropSpawnPositions& dropSpawnPositions = resources.roomResources[loop].dropSpawnPositions;
 
+        oss << "__attribute__((section(\".prg_rom_" << (dl_u16)roomToBankNumber[loop] << "\")))\n";
         oss << "const DropSpawnArea " << dropSpawnPositionsName << "_array[" << (dl_u16)dropSpawnPositions.spawnAreasCount << "] = \n";  
         oss << "{\n";
         for (int innerLoop = 0; innerLoop < dropSpawnPositions.spawnAreasCount; innerLoop++)

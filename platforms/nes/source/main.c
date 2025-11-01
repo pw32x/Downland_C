@@ -207,7 +207,6 @@ void drawTileText(const dl_u8* text, dl_u16 xyLocation)
 
 }
 
-//__attribute__((section(".prg_rom_0")))
 void chamber_draw(dl_u8 roomNumber)
 {
 	const BackgroundData* backgroundData = (const BackgroundData*)res_roomResources[roomNumber].backgroundDrawData;
@@ -238,7 +237,6 @@ void chamber_draw(dl_u8 roomNumber)
 	drawTileText(gameData_string_timer, TIMER_DRAW_LOCATION);
 }
 
-//__attribute__((section(".prg_rom_5")))
 void get_ready_room_draw(dl_u8 roomNumber)
 {
 	(void)roomNumber;
@@ -268,9 +266,6 @@ void get_ready_room_draw(dl_u8 roomNumber)
 	ppu_on_all(); //	turn on screen
 }
 
-//#pragma clang section text = ".prg_rom_0" rodata = ".prg_rom_0.rodata"
-//__attribute__((section(".prg_rom_whatever")))
-//__attribute__((section(".prg_rom_5")))
 void titleScreen_draw(dl_u8 roomNumber)
 {
 
@@ -485,13 +480,6 @@ void PSGUpdate(void)
 	//PSGSFXFrame();
 }
 
-extern const dl_u8 chamber0_tileMap[32 * 24];
-extern const dl_u8 chamber1_tileMap[32 * 24];
-extern const dl_u8 chamber2_tileMap[32 * 24];
-extern const dl_u8 chamber3_tileMap[32 * 24];
-extern const dl_u8 chamber4_tileMap[32 * 24];
-extern const dl_u8 chamber5_tileMap[32 * 24];
-
 static const char palette[16] = 
 {
     0x0f, 0x11, 0x27, 0x30 // black, gray, lt gray, white
@@ -501,10 +489,6 @@ int main(void)
 {
 	ppu_off(); // screen off
 	vram_adr(NAMETABLE_A);
-	//vram_write(chamber5_tileMap, 32 * 24);
-
-	//set_prg_bank(2);
-	//vram_write(chamber5_tileMap, 32 * 24);
 
 	// load the palettes
 	pal_bg(palette);
@@ -540,11 +524,6 @@ int main(void)
     Game_Init();
 
 	dl_u8 controllerIndex = 0;
-
-  char y_position = 0x40; // all share same Y, which increases every frame
-  char x_position = 0x88;
-  char x_position2 = 0xa0;
-  char x_position3 = 0xc0;
 
     const char metasprite2[] = 
     {
@@ -583,25 +562,7 @@ int main(void)
 		// clear all sprites from sprite buffer
 		oam_clear();
 
-		m_drawRoomFunctions[gameData_currentRoom->roomNumber]();
-
-		//vram_adr(NTADR_A(0, 0));
-		// VBLANK
-		/*
-		SMS_waitForVBlank ();
-		*/
-
-		//extern unsigned char SpriteNextFree;
-		//SMS_debugPrintf("sprites: %d\n", SpriteNextFree);
-
-		/*
-		UNSAFE_SMS_copySpritestoSAT();
-		*/
-
-
-
-
-		//oam_meta_spr(x_position3, y_position, metasprite2);    
+		m_drawRoomFunctions[gameData_currentRoom->roomNumber]();		
 	}
 
 	return 0;
@@ -628,9 +589,6 @@ void GameRunner_ChangedRoomCallback(const dl_u8 roomNumber, dl_s8 transitionType
 	}
 	*/
 }
-
-//SMS_EMBED_SEGA_ROM_HEADER(9999,0);
-//SMS_EMBED_SDSC_HEADER_AUTO_DATE(1,0,"pw","Downland","Downland ported to the Sega Master System");
 
 dl_u8 tickTock;
 
@@ -659,10 +617,6 @@ void drawChamber(void)
 
 		tileIndex = 0x8c + (playerData->splatFrameNumber * 6);
 
-		/*
-		SMS_addThreeAdjoiningSprites(playerX, playerY + 7, tileIndex);
-		*/
-
 		updateMetaSprite(tileIndex);
 		oam_meta_spr(playerX, playerY + 7, metasprite);  
 
@@ -686,10 +640,6 @@ void drawChamber(void)
 			tileIndex = 0x4c + ((g_regenSpriteIndex + REGEN_NUM_FRAMES) << 2);
 		}
 
-		/*
-		SMS_addTwoAdjoiningSprites(playerX, playerY, tileIndex);
-		*/
-
 		updateMetaSprite(tileIndex);
 		oam_meta_spr(playerX, playerY, metasprite);  
 
@@ -697,11 +647,6 @@ void drawChamber(void)
 
 	default: 
 		g_playerTileIndex = 0x2 + (playerData->currentSpriteNumber << 2);
-
-		/*
-		SMS_addTwoAdjoiningSprites(playerX, playerY, g_playerTileIndex);
-		*/
-
 
 		updateMetaSprite(g_playerTileIndex);
 		oam_meta_spr(playerX, playerY, metasprite);  
@@ -783,7 +728,6 @@ void transition_update(Room* room)
 	if (gameData_transitionInitialDelay)
 	{
 		gameData_transitionInitialDelay--;
-		////SMS_debugPrintf("transition_update delay\n");
 		return;
 	}
 

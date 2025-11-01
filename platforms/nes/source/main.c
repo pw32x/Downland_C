@@ -243,12 +243,22 @@ void get_ready_room_draw(dl_u8 roomNumber)
 {
 	(void)roomNumber;
 
+
 	const BackgroundData* backgroundData = (const BackgroundData*)res_roomResources[TITLESCREEN_ROOM_INDEX].backgroundDrawData;
 	gameData_cleanBackground = (dl_u8*)getReadyScreen_cleanBackground;
+
+
+	ppu_off(); // screen off
+	//vram_adr(NTADR_A(0, 0));
+	//vram_fill(0, 32 * 28);
+	vram_adr(NTADR_A(0, 0));
+	vram_write((dl_u8*)backgroundData->tileMap, 32 * 24);
+
 
 	// get ready text
 	const dl_u8* getReadyString = gameData_currentPlayerData->playerNumber == PLAYER_ONE ? res_string_getReadyPlayerOne : res_string_getReadyPlayerTwo;
 	drawTileText(getReadyString, 0x0b66);
+	ppu_on_all(); //	turn on screen
 }
 
 //#pragma clang section text = ".prg_rom_0" rodata = ".prg_rom_0.rodata"
@@ -259,6 +269,12 @@ void titleScreen_draw(dl_u8 roomNumber)
 
 	const BackgroundData* backgroundData = (const BackgroundData*)res_roomResources[roomNumber].backgroundDrawData;
 	gameData_cleanBackground = (dl_u8*)backgroundData->cleanBackground;
+
+	ppu_off(); // screen off
+	//vram_adr(NTADR_A(0, 0));
+	//vram_fill(0, 32 * 28);
+	vram_adr(NTADR_A(0, 0));
+	vram_write((dl_u8*)backgroundData->tileMap, 32 * 24);
 
 	/*
 	drawTileText(res_string_downland, 0x03c9 + 64); // 0x07c9 original coco mem location
@@ -274,7 +290,9 @@ void titleScreen_draw(dl_u8 roomNumber)
 	drawTileText(res_string_highScore, 0x118b); // 0x158B original coco mem location
 	drawTileText(res_string_playerOne, 0x1406); // 0x1806 original coco mem location
 	drawTileText(res_string_playerTwo, 0x1546); // 0x1946 original coco mem location
+	*/
 
+	/*
 	convertScoreToString(gameData_playerData[PLAYER_ONE].score, gameData_playerData[PLAYER_ONE].scoreString);
 	drawTileText(gameData_playerData[PLAYER_ONE].scoreString, TITLESCREEN_PLAYERONE_SCORE_LOCATION);
 
@@ -289,7 +307,8 @@ void titleScreen_draw(dl_u8 roomNumber)
 	convertScoreToString(gameData_highScore, gameData_string_highScore);
 
 	drawTileText(gameData_string_highScore, TITLESCREEN_HIGHSCORE_LOCATION);
-*/
+	*/
+	ppu_on_all(); //	turn on screen
 }
 
 void updateScore(void)
@@ -753,7 +772,7 @@ void drawTitleScreen(void)
 {
 	drawDrops();
 	dl_u8 x = gameData_numPlayers == 1 ? 32 : 128;
-	oam_spr(x, 154, 0x4a, 0);
+	oam_spr(x, 123 + SCROLL_SPRITE_OFFSET, 0x4a, 0);
 }
 
 void drawTransition(void)

@@ -30,9 +30,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\source\hello.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\generated\resources.c">
       <Filter>Source Files\generated</Filter>
     </ClCompile>

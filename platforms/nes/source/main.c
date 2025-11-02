@@ -64,14 +64,32 @@ extern const dl_u8 getReadyScreen_cleanBackground[6144];
 
 dl_u8 g_transitionDirection;
 
-typedef void (*DrawRoomFunction)(void);
-DrawRoomFunction m_drawRoomFunctions[NUM_ROOMS_AND_ALL];
-
 void drawChamber(void);
 void drawTitleScreen(void);
 void drawTransition(void);
 void drawWipeTransition(void);
 void drawGetReadyScreen(void);
+
+typedef void (*DrawRoomFunction)(void);
+const DrawRoomFunction m_drawRoomFunctions[NUM_ROOMS_AND_ALL] =
+{
+    drawChamber,
+    drawChamber,
+    drawChamber,
+    drawChamber,
+    drawChamber,
+    drawChamber,
+    drawChamber,
+    drawChamber,
+    drawChamber,
+    drawChamber,
+    drawTitleScreen,
+    drawTransition,
+    drawWipeTransition,
+    drawGetReadyScreen
+};
+
+
 
 void dl_memset(void* source, dl_u8 value, dl_u16 count)
 {
@@ -144,6 +162,7 @@ void Sound_Play(dl_u8 soundIndex, dl_u8 loop)
 
 void Sound_Stop(dl_u8 soundIndex)
 {
+	(void)soundIndex;
 	/*
 	if (isLooped[soundIndex] && isPlaying[soundIndex])
 		PSGSFXStop();
@@ -192,8 +211,6 @@ void drawTileText(const dl_u8* text, dl_u16 xyLocation)
     dl_u16 tiley = (xyLocation >> 8);
 	dl_u8* tileTextRunner = tileText;
 
-	dl_u8 counter = 0;
-
     // for each character
     while (*text != 0xff)
     {
@@ -212,15 +229,14 @@ void chamber_draw(dl_u8 roomNumber)
 	const BackgroundData* backgroundData = (const BackgroundData*)res_roomResources[roomNumber].backgroundDrawData;
 	gameData_cleanBackground = (dl_u8*)backgroundData->cleanBackground;
 
-	ppu_off(); // screen off
+	//ppu_off(); // screen off
 
-	vram_adr(NTADR_A(0, 0));
-	vram_fill(0, 32 * 28);
-	vram_adr(NTADR_A(0, 0));
-	vram_write((dl_u8*)backgroundData->tileMap, 32 * 24);
-	ppu_on_all(); //	turn on screen
+	//vram_adr(NTADR_A(0, 0));
+	//vram_fill(0, 32 * 28);
+	//vram_adr(NTADR_A(0, 0));
+	//vram_write((dl_u8*)backgroundData->tileMap, 32 * 24);
 
-
+	/*
 	if (!gameData_currentPlayerData->playerNumber)
 		drawTileText(res_string_pl1, PLAYERLIVES_TEXT_DRAW_LOCATION);
 	else
@@ -235,6 +251,7 @@ void chamber_draw(dl_u8 roomNumber)
 	convertScoreToString(playerData->score, playerData->scoreString);
 	drawTileText(playerData->scoreString, SCORE_DRAW_LOCATION);
 	drawTileText(gameData_string_timer, TIMER_DRAW_LOCATION);
+	*/
 }
 
 void get_ready_room_draw(dl_u8 roomNumber)
@@ -247,8 +264,6 @@ void get_ready_room_draw(dl_u8 roomNumber)
 
 
 	ppu_off(); // screen off
-
-
 	vram_adr(NTADR_A(0, 0));
 	vram_write((dl_u8*)backgroundData->tileMap, 32 * 24);
 
@@ -294,7 +309,7 @@ void titleScreen_draw(dl_u8 roomNumber)
 	drawTileText(res_string_playerTwo, 0x1546); // 0x1946 original coco mem location
 	*/
 
-
+	/*
 	convertScoreToString(gameData_playerData[PLAYER_ONE].score, gameData_playerData[PLAYER_ONE].scoreString);
 	drawTileText(gameData_playerData[PLAYER_ONE].scoreString, TITLESCREEN_PLAYERONE_SCORE_LOCATION);
 
@@ -309,7 +324,7 @@ void titleScreen_draw(dl_u8 roomNumber)
 	convertScoreToString(gameData_highScore, gameData_string_highScore);
 
 	drawTileText(gameData_string_highScore, TITLESCREEN_HIGHSCORE_LOCATION);
-
+	*/
 	ppu_on_all(); //	turn on screen
 }
 
@@ -420,14 +435,7 @@ void drawUIPlayerLives(const PlayerData* playerData)
 
 	if (playerData->state == PLAYER_STATE_REGENERATION)
 	{
-		if (playerData->facingDirection)
-		{
-			tileIndex = 0x6c + (g_regenSpriteIndex << 2);
-		}
-		else
-		{
-			tileIndex = 0x6c + ((g_regenSpriteIndex + REGEN_NUM_FRAMES) << 2);
-		}
+		tileIndex = 0x6c + ((g_regenSpriteIndex + (REGEN_NUM_FRAMES * playerData->facingDirection)) << 2);
 
 		updateMetaSprite(tileIndex);
 		oam_meta_spr(x, y + SCROLL_SPRITE_OFFSET, metasprite);  
@@ -465,14 +473,14 @@ void updateControls(dl_u8 controllerIndex)
 #ifdef DEV_MODE
     dl_u8 debugStateDown = (padState & PAD_B) != 0;
 
-    joystickState_debugStatePressed = !joystickState_debugStateDown & debugStateDown;
+    joystickState_debugStatePressed = (!joystickState_debugStateDown) & debugStateDown;
     joystickState_debugStateDown = debugStateDown;
 #endif
 }
 
 
 
-void GameRunner_ChangedRoomCallback(const dl_u8 roomNumber, dl_s8 transitionType);
+//void GameRunner_ChangedRoomCallback(const dl_u8 roomNumber, dl_s8 transitionType);
 
 
 void PSGUpdate(void)
@@ -480,7 +488,7 @@ void PSGUpdate(void)
 	//PSGSFXFrame();
 }
 
-static const char palette[16] = 
+const char palette[16] = 
 {
     0x0f, 0x11, 0x27, 0x30 // black, gray, lt gray, white
 };
@@ -497,6 +505,7 @@ int main(void)
 	bank_spr(0);
 	bank_bg(1);
 	scroll(0, 240 - (SCROLL_SPRITE_OFFSET + 1));
+	vram_fill(0, 32 * 28);
 	ppu_on_all(); //	turn on screen
 
 	set_vram_buffer();
@@ -504,33 +513,13 @@ int main(void)
 	g_regenSpriteIndex = 0;
 
 	// room draw setup
-    m_drawRoomFunctions[0] = drawChamber;
-    m_drawRoomFunctions[1] = drawChamber;
-    m_drawRoomFunctions[2] = drawChamber;
-    m_drawRoomFunctions[3] = drawChamber;
-    m_drawRoomFunctions[4] = drawChamber;
-    m_drawRoomFunctions[5] = drawChamber;
-    m_drawRoomFunctions[6] = drawChamber;
-    m_drawRoomFunctions[7] = drawChamber;
-    m_drawRoomFunctions[8] = drawChamber;
-    m_drawRoomFunctions[9] = drawChamber;
-    m_drawRoomFunctions[TITLESCREEN_ROOM_INDEX] = drawTitleScreen;
-    m_drawRoomFunctions[TRANSITION_ROOM_INDEX] = drawTransition;
-    m_drawRoomFunctions[WIPE_TRANSITION_ROOM_INDEX] = drawWipeTransition;
-    m_drawRoomFunctions[GET_READY_ROOM_INDEX] = drawGetReadyScreen;
 
-	Game_ChangedRoomCallback = GameRunner_ChangedRoomCallback;
+
+	//Game_ChangedRoomCallback = GameRunner_ChangedRoomCallback;
 
     Game_Init();
 
 	dl_u8 controllerIndex = 0;
-
-    const char metasprite2[] = 
-    {
-        0, 0, 0x02, 0, 
-        8, 0, 0x04, 0,  
-        128
-    };
 
 	for(;;) 
 	{ 
@@ -569,9 +558,9 @@ int main(void)
 }
 
 
-void GameRunner_ChangedRoomCallback(const dl_u8 roomNumber, dl_s8 transitionType)
-{
-	UNUSED(roomNumber);
+//void GameRunner_ChangedRoomCallback(const dl_u8 roomNumber, dl_s8 transitionType)
+//{
+	//UNUSED(roomNumber);
 
 	//SMS_debugPrintf("GameRunner_ChangedRoomCallback\n");
 
@@ -588,7 +577,7 @@ void GameRunner_ChangedRoomCallback(const dl_u8 roomNumber, dl_s8 transitionType
 		SMS_loadSpritePalette(downlandPalette);
 	}
 	*/
-}
+//}
 
 dl_u8 tickTock;
 
@@ -751,6 +740,12 @@ void wipe_transition_init(const Room* targetRoom)
 	g_transitionDirection = playerData->lastDoor->xLocationInNextRoom < 50;
 }
 
+#define TILE_LINE_LENGTH 24
+dl_u8 backgroundLine[TILE_LINE_LENGTH];
+dl_u8 borderLine[TILE_LINE_LENGTH] = { 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18 };
+
+
+
 void wipe_transition_update(Room* room)
 {
 	UNUSED(room);
@@ -777,22 +772,18 @@ void wipe_transition_update(Room* room)
 
 	dl_u8 currentColumn = g_transitionDirection ? gameData_transitionCurrentLine : 31 - gameData_transitionCurrentLine;
 	dl_s8 offset = g_transitionDirection ? 1 : -1;
-	dl_u16 flip = 0;//g_transitionDirection ? TILE_FLIPPED_X : 0;
 
 	const BackgroundData* backgroundData = (const BackgroundData*)res_roomResources[gameData_transitionRoomNumber].backgroundDrawData;
 	for (dl_u8 loop = 0; loop < 24; loop++)
 	{
-		/*
-		SMS_setTileatXY(currentColumn, 
-						loop, 
-						backgroundData->tileMap[currentColumn + (loop << 5)]);
-		*/
-		if (currentColumn > 0 && currentColumn < 30)
-		{
-			/*
-			SMS_setTileatXY(currentColumn + offset, loop, 18 | flip);
-			*/
-		}
+		backgroundLine[loop] = backgroundData->tileMap[currentColumn + (loop << 5)];
+	}
+
+	multi_vram_buffer_vert(backgroundLine, TILE_LINE_LENGTH, NTADR_A(currentColumn, 0));
+
+	if (currentColumn > 0 && currentColumn < 30)
+	{
+		multi_vram_buffer_vert(borderLine, TILE_LINE_LENGTH, NTADR_A(currentColumn + offset, 0));
 	}
 
 	gameData_transitionCurrentLine++;

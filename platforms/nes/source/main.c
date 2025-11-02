@@ -320,9 +320,8 @@ void titleScreen_draw(dl_u8 roomNumber)
 	else if (gameData_playerData[PLAYER_TWO].score > gameData_highScore)
 		gameData_highScore = gameData_playerData[PLAYER_TWO].score;
 
-	//convertScoreToString(gameData_highScore, gameData_string_highScore);
-
-	//drawTileText(gameData_string_highScore, TITLESCREEN_HIGHSCORE_LOCATION);
+	convertScoreToString(gameData_highScore, gameData_string_highScore);
+	drawTileText(gameData_string_highScore, TITLESCREEN_HIGHSCORE_LOCATION);
 
 	ppu_on_all(); //	turn on screen
 }
@@ -696,8 +695,8 @@ void drawGetReadyScreen(void)
 
 void transition_init(const Room* targetRoom)
 {
-    ppu_wait_nmi();
-    oam_clear();
+    //ppu_wait_nmi();
+    //oam_clear();
 	set_prg_bank(roomToBankIndex[gameData_transitionRoomNumber]);
 
 	// init the clean background with the target room. 
@@ -726,8 +725,8 @@ void wipe_transition_init(const Room* targetRoom)
 {
 	UNUSED(targetRoom);
 
-    ppu_wait_nmi();
-    oam_clear();
+    //ppu_wait_nmi();
+    //oam_clear();
 	set_prg_bank(roomToBankIndex[gameData_transitionRoomNumber]);
 
 	// setup screen transition

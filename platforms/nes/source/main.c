@@ -236,7 +236,7 @@ void chamber_draw(dl_u8 roomNumber)
 	//vram_adr(NTADR_A(0, 0));
 	//vram_write((dl_u8*)backgroundData->tileMap, 32 * 24);
 
-	/*
+
 	if (!gameData_currentPlayerData->playerNumber)
 		drawTileText(res_string_pl1, PLAYERLIVES_TEXT_DRAW_LOCATION);
 	else
@@ -251,7 +251,6 @@ void chamber_draw(dl_u8 roomNumber)
 	convertScoreToString(playerData->score, playerData->scoreString);
 	drawTileText(playerData->scoreString, SCORE_DRAW_LOCATION);
 	drawTileText(gameData_string_timer, TIMER_DRAW_LOCATION);
-	*/
 }
 
 void get_ready_room_draw(dl_u8 roomNumber)
@@ -309,7 +308,7 @@ void titleScreen_draw(dl_u8 roomNumber)
 	drawTileText(res_string_playerTwo, 0x1546); // 0x1946 original coco mem location
 	*/
 
-	/*
+
 	convertScoreToString(gameData_playerData[PLAYER_ONE].score, gameData_playerData[PLAYER_ONE].scoreString);
 	drawTileText(gameData_playerData[PLAYER_ONE].scoreString, TITLESCREEN_PLAYERONE_SCORE_LOCATION);
 
@@ -321,10 +320,10 @@ void titleScreen_draw(dl_u8 roomNumber)
 	else if (gameData_playerData[PLAYER_TWO].score > gameData_highScore)
 		gameData_highScore = gameData_playerData[PLAYER_TWO].score;
 
-	convertScoreToString(gameData_highScore, gameData_string_highScore);
+	//convertScoreToString(gameData_highScore, gameData_string_highScore);
 
-	drawTileText(gameData_string_highScore, TITLESCREEN_HIGHSCORE_LOCATION);
-	*/
+	//drawTileText(gameData_string_highScore, TITLESCREEN_HIGHSCORE_LOCATION);
+
 	ppu_on_all(); //	turn on screen
 }
 
@@ -742,7 +741,7 @@ void wipe_transition_init(const Room* targetRoom)
 
 #define TILE_LINE_LENGTH 24
 dl_u8 backgroundLine[TILE_LINE_LENGTH];
-dl_u8 borderLine[TILE_LINE_LENGTH] = { 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18 };
+dl_u8 borderLine[TILE_LINE_LENGTH];
 
 
 
@@ -774,16 +773,23 @@ void wipe_transition_update(Room* room)
 	dl_s8 offset = g_transitionDirection ? 1 : -1;
 
 	const BackgroundData* backgroundData = (const BackgroundData*)res_roomResources[gameData_transitionRoomNumber].backgroundDrawData;
+	const dl_u8* tilemapRunner = &backgroundData->tileMap[currentColumn];
+
 	for (dl_u8 loop = 0; loop < 24; loop++)
 	{
-		backgroundLine[loop] = backgroundData->tileMap[currentColumn + (loop << 5)];
+		backgroundLine[loop] = *tilemapRunner;
+		borderLine[loop] = 18;
+		tilemapRunner += 32;
 	}
 
-	multi_vram_buffer_vert(backgroundLine, TILE_LINE_LENGTH, NTADR_A(currentColumn, 0));
+	dl_u16 addr = NTADR_A(currentColumn, 0);
+
+	multi_vram_buffer_vert(backgroundLine, TILE_LINE_LENGTH, addr);
 
 	if (currentColumn > 0 && currentColumn < 30)
 	{
-		multi_vram_buffer_vert(borderLine, TILE_LINE_LENGTH, NTADR_A(currentColumn + offset, 0));
+		addr += offset;
+		multi_vram_buffer_vert(borderLine, TILE_LINE_LENGTH, addr);
 	}
 
 	gameData_transitionCurrentLine++;

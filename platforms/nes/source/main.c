@@ -360,6 +360,7 @@ dl_u8 pickupy;
 const Pickup* pickups;
 dl_u8 playerMask;
 
+__attribute__((section(".prg_rom_5")))
 void drawPickups(void)
 {
 	// draw pickups
@@ -383,7 +384,7 @@ void drawPickups(void)
 		pickups++;
 	}
 }
-
+__attribute__((noinline, section(".prg_rom_5")))
 void drawDoors(void)
 {
 	// draw doors
@@ -576,21 +577,14 @@ int main(void)
 	}
 	*/
 //}
-
-dl_u8 tickTock;
-
-void drawChamber(void)
+__attribute__((noinline, section(".prg_rom_5")))
+void drawPlayer()
 {
-
 
 	PlayerData* playerData = gameData_currentPlayerData;
 
 	dl_u8 playerX = (playerData->x >> 8) << 1;
 	dl_u8 playerY = (playerData->y >> 8);
-
-	dl_u16 currentTimer = playerData->roomTimers[playerData->currentRoom->roomNumber];
-
-
 
 	dl_u8 tileIndex;
 
@@ -638,37 +632,44 @@ void drawChamber(void)
 		updateMetaSprite(g_playerTileIndex);
 		oam_meta_spr(playerX, playerY, metasprite);  
 	}
+}
+
+dl_u8 tickTock;
+
+void drawChamber(void)
+{
+	set_prg_bank(5);
+
+	drawPlayer();
 
 	drawDoors();
 
 	tickTock = !tickTock;
 
+	PlayerData* playerData = gameData_currentPlayerData;
+	dl_u16 currentTimer = playerData->roomTimers[playerData->currentRoom->roomNumber];
+
 	if (tickTock)
 	{
-		set_prg_bank(5);
 		Ball_Draw();
 		Bird_Draw(currentTimer);
 		drawDrops();
 		drawUIPlayerLives(playerData);
-		set_prg_bank(roomToBankIndex[gameData_transitionRoomNumber]);
 		drawPickups();
 	}
 	else
 	{
 		drawPickups();
-		set_prg_bank(5);
 		drawDrops();
 		Bird_Draw(currentTimer);
 		Ball_Draw();
 		drawUIPlayerLives(playerData);
-		set_prg_bank(roomToBankIndex[gameData_transitionRoomNumber]);
 	}
 
 	drawTileText(gameData_string_timer, TIMER_DRAW_LOCATION);
 	drawTileText(playerData->scoreString, SCORE_DRAW_LOCATION);
 
-
-	
+	set_prg_bank(roomToBankIndex[gameData_transitionRoomNumber]);	
 }
 
 void drawTitleScreen(void)

@@ -205,6 +205,7 @@ void Bird_Draw(dl_u16 currentTimer)
 
 dl_u8 tileText[22];
 
+__attribute__((section(".prg_rom_5")))
 void drawTileText(const dl_u8* text, dl_u16 xyLocation)
 {
     dl_u16 tilex = (xyLocation & 31);
@@ -224,19 +225,9 @@ void drawTileText(const dl_u8* text, dl_u16 xyLocation)
 
 }
 
+__attribute__((section(".prg_rom_5")))
 void chamber_draw(dl_u8 roomNumber)
 {
-	const BackgroundData* backgroundData = (const BackgroundData*)res_roomResources[roomNumber].backgroundDrawData;
-	gameData_cleanBackground = (dl_u8*)backgroundData->cleanBackground;
-
-	//ppu_off(); // screen off
-
-	//vram_adr(NTADR_A(0, 0));
-	//vram_fill(0, 32 * 28);
-	//vram_adr(NTADR_A(0, 0));
-	//vram_write((dl_u8*)backgroundData->tileMap, 32 * 24);
-
-
 	if (!gameData_currentPlayerData->playerNumber)
 		drawTileText(res_string_pl1, PLAYERLIVES_TEXT_DRAW_LOCATION);
 	else
@@ -253,18 +244,10 @@ void chamber_draw(dl_u8 roomNumber)
 	drawTileText(gameData_string_timer, TIMER_DRAW_LOCATION);
 }
 
+__attribute__((section(".prg_rom_5")))
 void get_ready_room_draw(dl_u8 roomNumber)
 {
 	(void)roomNumber;
-
-
-	const BackgroundData* backgroundData = (const BackgroundData*)res_roomResources[TITLESCREEN_ROOM_INDEX].backgroundDrawData;
-	gameData_cleanBackground = (dl_u8*)getReadyScreen_cleanBackground;
-
-
-	ppu_off(); // screen off
-	vram_adr(NTADR_A(0, 0));
-	vram_write((dl_u8*)backgroundData->tileMap, 32 * 24);
 
 	// we're reusing the title screen, so clear out the
 	// title screen text.
@@ -277,21 +260,12 @@ void get_ready_room_draw(dl_u8 roomNumber)
 	// get ready text
 	const dl_u8* getReadyString = gameData_currentPlayerData->playerNumber == PLAYER_ONE ? res_string_getReadyPlayerOne : res_string_getReadyPlayerTwo;
 	drawTileText(getReadyString, 0x0b66);
-	ppu_on_all(); //	turn on screen
+
 }
 
+__attribute__((section(".prg_rom_5")))
 void titleScreen_draw(dl_u8 roomNumber)
 {
-
-	const BackgroundData* backgroundData = (const BackgroundData*)res_roomResources[roomNumber].backgroundDrawData;
-	gameData_cleanBackground = (dl_u8*)backgroundData->cleanBackground;
-
-	ppu_off(); // screen off
-	//vram_adr(NTADR_A(0, 0));
-	//vram_fill(0, 32 * 28);
-	vram_adr(NTADR_A(0, 0));
-	vram_write((dl_u8*)backgroundData->tileMap, 32 * 24);
-
 	/*
 	drawTileText(res_string_downland, 0x03c9 + 64); // 0x07c9 original coco mem location
 	drawTileText(res_string_writtenBy, 0x050a); // 0x090A original coco mem location
@@ -308,7 +282,6 @@ void titleScreen_draw(dl_u8 roomNumber)
 	drawTileText(res_string_playerTwo, 0x1546); // 0x1946 original coco mem location
 	*/
 
-
 	convertScoreToString(gameData_playerData[PLAYER_ONE].score, gameData_playerData[PLAYER_ONE].scoreString);
 	drawTileText(gameData_playerData[PLAYER_ONE].scoreString, TITLESCREEN_PLAYERONE_SCORE_LOCATION);
 
@@ -322,14 +295,15 @@ void titleScreen_draw(dl_u8 roomNumber)
 
 	convertScoreToString(gameData_highScore, gameData_string_highScore);
 	drawTileText(gameData_string_highScore, TITLESCREEN_HIGHSCORE_LOCATION);
-
-	ppu_on_all(); //	turn on screen
 }
 
 void updateScore(void)
 {
 	convertScoreToString(gameData_currentPlayerData->score, gameData_currentPlayerData->scoreString);
+
+	set_prg_bank(5);
 	drawTileText(gameData_currentPlayerData->scoreString, SCORE_DRAW_LOCATION);
+	set_prg_bank(roomToBankIndex[gameData_transitionRoomNumber]);
 }
 
 // moving the dropsDrawRunner to global memory makes drawDrops twice as fast
@@ -442,7 +416,7 @@ void drawUIPlayerLives(const PlayerData* playerData)
 }
 
 
-
+__attribute__((section(".prg_rom_5")))
 void updateControls(dl_u8 controllerIndex)
 {
 	dl_u8 padState = pad_poll(controllerIndex);
@@ -527,7 +501,9 @@ int main(void)
             controllerIndex = gameData_currentPlayerData->playerNumber;
         }
 
+		set_prg_bank(5);
 		updateControls(controllerIndex);
+		set_prg_bank(roomToBankIndex[gameData_transitionRoomNumber]);
 
 		if (joystickState_startPressed)
 		{
@@ -550,7 +526,9 @@ int main(void)
 		// clear all sprites from sprite buffer
 		oam_clear();
 
+		set_prg_bank(5);
 		m_drawRoomFunctions[gameData_currentRoom->roomNumber]();		
+		set_prg_bank(roomToBankIndex[gameData_transitionRoomNumber]);
 	}
 
 	return 0;
@@ -635,11 +613,9 @@ void drawPlayer()
 }
 
 dl_u8 tickTock;
-
+__attribute__((noinline, section(".prg_rom_5")))
 void drawChamber(void)
 {
-	set_prg_bank(5);
-
 	drawPlayer();
 
 	drawDoors();
@@ -668,10 +644,8 @@ void drawChamber(void)
 
 	drawTileText(gameData_string_timer, TIMER_DRAW_LOCATION);
 	drawTileText(playerData->scoreString, SCORE_DRAW_LOCATION);
-
-	set_prg_bank(roomToBankIndex[gameData_transitionRoomNumber]);	
 }
-
+__attribute__((noinline, section(".prg_rom_5")))
 void drawTitleScreen(void)
 {
 	drawDrops();
@@ -679,14 +653,17 @@ void drawTitleScreen(void)
 	oam_spr(x, 123 + SCROLL_SPRITE_OFFSET, 0x4a, 0);
 }
 
+__attribute__((noinline, section(".prg_rom_5")))
 void drawTransition(void)
 {
 }
 
+__attribute__((noinline, section(".prg_rom_5")))
 void drawWipeTransition(void)
 {
 }
 
+__attribute__((noinline, section(".prg_rom_5")))
 void drawGetReadyScreen(void)
 {
 	drawDrops();
@@ -696,13 +673,27 @@ void drawGetReadyScreen(void)
 
 void transition_init(const Room* targetRoom)
 {
-    //ppu_wait_nmi();
-    //oam_clear();
 	set_prg_bank(roomToBankIndex[gameData_transitionRoomNumber]);
+	const BackgroundData* backgroundData = (const BackgroundData*)res_roomResources[TITLESCREEN_ROOM_INDEX].backgroundDrawData;
+
+	if (gameData_transitionRoomNumber == GET_READY_ROOM_INDEX)
+		gameData_cleanBackground = (dl_u8*)getReadyScreen_cleanBackground;
+	else 
+		gameData_cleanBackground = (dl_u8*)backgroundData->cleanBackground;
+
+	ppu_off(); // screen off
+	vram_adr(NTADR_A(0, 0));
+	vram_write((dl_u8*)backgroundData->tileMap, 32 * 24);
+
+	set_prg_bank(5);
 
 	// init the clean background with the target room. 
 	// it'll be revealed at the end of the transition.
 	targetRoom->draw(gameData_transitionRoomNumber);
+
+	ppu_on_all(); //	turn on screen
+
+	set_prg_bank(roomToBankIndex[gameData_transitionRoomNumber]);
 
 	// setup screen transition
 	gameData_transitionInitialDelay = INITIAL_TRANSITION_DELAY;
@@ -726,8 +717,6 @@ void wipe_transition_init(const Room* targetRoom)
 {
 	UNUSED(targetRoom);
 
-    //ppu_wait_nmi();
-    //oam_clear();
 	set_prg_bank(roomToBankIndex[gameData_transitionRoomNumber]);
 
 	// setup screen transition
@@ -797,8 +786,15 @@ void wipe_transition_update(Room* room)
 	// we're done
 	if (gameData_transitionCurrentLine == 32)
 	{
+		const BackgroundData* backgroundData = (const BackgroundData*)res_roomResources[gameData_transitionRoomNumber].backgroundDrawData;
+		gameData_cleanBackground = (dl_u8*)backgroundData->cleanBackground;
+
+		set_prg_bank(5);
+
 		const Room* transitionRoom = g_rooms[gameData_transitionRoomNumber];
 		transitionRoom->draw(gameData_transitionRoomNumber);
+
+		set_prg_bank(roomToBankIndex[gameData_transitionRoomNumber]);
 
 		Game_EnterRoom(gameData_transitionRoomNumber);
 	}

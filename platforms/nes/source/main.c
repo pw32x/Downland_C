@@ -102,6 +102,9 @@ void dl_memset(void* source, dl_u8 value, dl_u16 count)
 	}
 }
 
+enum { SFX_JUMP, SFX_DING, SFX_NOISE };
+extern const char sounds_data[];
+
 /*
 const dl_u8* sounds[SOUND_NUM_SOUNDS] = 
 {
@@ -146,6 +149,8 @@ void Sound_Play(dl_u8 soundIndex, dl_u8 loop)
 {
 	(void)soundIndex;
 	(void)loop;
+
+	sfx_play(SFX_JUMP, 0);
 	/*
 	if (loop)
 	{
@@ -455,12 +460,6 @@ void updateControls(dl_u8 controllerIndex)
 
 //void GameRunner_ChangedRoomCallback(const dl_u8 roomNumber, dl_s8 transitionType);
 
-
-void PSGUpdate(void)
-{
-	//PSGSFXFrame();
-}
-
 const char palette[16] = 
 {
     0x0f, 0x11, 0x27, 0x30 // black, gray, lt gray, white
@@ -468,6 +467,7 @@ const char palette[16] =
 
 int main(void)
 {
+	sounds_init(sounds_data);
 	ppu_off(); // screen off
 	vram_adr(NAMETABLE_A);
 
@@ -731,8 +731,6 @@ void wipe_transition_init(const Room* targetRoom)
 #define TILE_LINE_LENGTH 24
 dl_u8 backgroundLine[TILE_LINE_LENGTH];
 dl_u8 borderLine[TILE_LINE_LENGTH];
-
-
 
 void wipe_transition_update(Room* room)
 {

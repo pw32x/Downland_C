@@ -144,6 +144,8 @@
     <None Include="..\build\rebuild.bat" />
     <None Include="..\out\Downland.map" />
     <None Include="..\source\chr-rom.s" />
+    <None Include="..\source\music.s" />
+    <None Include="..\source\SoundFx.s" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\..\..\Incoming\nes\llvm-mos-windows\llvm-mos\mos-platform\nes-unrom\include\mapper.h" />

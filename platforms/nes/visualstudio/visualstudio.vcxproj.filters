@@ -176,6 +176,12 @@
     <None Include="..\out\Downland.map">
       <Filter>build</Filter>
     </None>
+    <None Include="..\source\SoundFx.s">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\source\music.s">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\generated\resources.h">

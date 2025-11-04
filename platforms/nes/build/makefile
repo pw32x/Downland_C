@@ -85,7 +85,7 @@ directories:
 # Link ROM
 # ---------------------------
 $(TARGET): $(SOURCE_OBJS) $(SOURCE_ASM_OBJS) $(GAME_OBJS) $(ROOMS_OBJS) $(GENERATED_OBJS)
-	$(CC) $(CFLAGS) $(SOURCE_OBJS) $(SOURCE_ASM_OBJS) $(GAME_OBJS) $(ROOMS_OBJS) $(GENERATED_OBJS) $(LDFLAGS)  -lneslib -lnesdoug -o $@
+	$(CC) $(CFLAGS) $(SOURCE_OBJS) $(SOURCE_ASM_OBJS) $(GAME_OBJS) $(ROOMS_OBJS) $(GENERATED_OBJS) $(LDFLAGS)  -lneslib -lnesdoug -lfamitone2 -o $@
 
 # ---------------------------
 # Compile C file

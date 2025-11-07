@@ -1,0 +1,7 @@
+Make looping effect in Famitracker
+save
+export as text
+use text2data <filename.txt> -ca65 -ntsc to produce .s file
+
+
+    ft2-text2data.exe NullMusic.txt -ca64 -ntsc

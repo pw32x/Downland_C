@@ -1,0 +1,1 @@
+ft2-text2data.exe LoopingEffects.txt -ca64 -ntsc

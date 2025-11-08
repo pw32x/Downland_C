@@ -90,7 +90,6 @@ const DrawRoomFunction m_drawRoomFunctions[NUM_ROOMS_AND_ALL] =
 };
 
 
-
 void dl_memset(void* source, dl_u8 value, dl_u16 count)
 {
 	dl_u8* src = (dl_u8*)source;
@@ -102,22 +101,8 @@ void dl_memset(void* source, dl_u8 value, dl_u16 count)
 	}
 }
 
-enum { SFX_JUMP, SFX_DING, SFX_NOISE };
-extern const char sounds_data[];
-
-/*
-const dl_u8* sounds[SOUND_NUM_SOUNDS] = 
-{
-	jump_psg, // SOUND_JUMP				
-	land_psg, // SOUND_LAND				
-	transition_psg, // SOUND_SCREEN_TRANSITION	
-	splat_psg, // SOUND_SPLAT				
-	pickup_psg, // SOUND_PICKUP			
-	run_psg, // SOUND_RUN				
-	climb_up_psg, // SOUND_CLIMB_UP			
-	climb_down_psg, // SOUND_CLIMB_DOWN		
-};
-
+extern const char looping_effects_data[];
+extern const char sound_effects_data[];
 
 dl_u8 isPlaying[SOUND_NUM_SOUNDS];
 
@@ -133,51 +118,37 @@ const dl_u8 isLooped[SOUND_NUM_SOUNDS] =
 	TRUE, // SOUND_CLIMB_DOWN		
 };
 
-const dl_u8 channels[SOUND_NUM_SOUNDS] = 
-{
-	SFX_CHANNEL2,
-	SFX_CHANNELS2AND3,
-	SFX_CHANNEL2,
-	SFX_CHANNELS2AND3,
-	SFX_CHANNEL2,
-	SFX_CHANNELS2AND3,
-	SFX_CHANNELS2AND3,
-	SFX_CHANNELS2AND3,
-};
-*/
+
 void Sound_Play(dl_u8 soundIndex, dl_u8 loop)
 {
-	(void)soundIndex;
-	(void)loop;
-
-	sfx_play(SFX_JUMP, 0);
-	/*
 	if (loop)
 	{
 		if (isPlaying[soundIndex])
 			return;
 
-		PSGSFXPlayLoop(sounds[soundIndex], channels[soundIndex]);
+		music_play(soundIndex - SOUND_RUN);
+
 		isPlaying[soundIndex] = TRUE;
 	}
 	else
-		PSGSFXPlay(sounds[soundIndex], channels[soundIndex]);
-		*/
+	{
+		sfx_play(soundIndex, 0);
+	}
 }
 
 void Sound_Stop(dl_u8 soundIndex)
 {
 	(void)soundIndex;
-	/*
+
 	if (isLooped[soundIndex] && isPlaying[soundIndex])
-		PSGSFXStop();
+		music_stop();
 
 	isPlaying[soundIndex] = FALSE;
-	*/
 }
 
 void Sound_StopAll(void)
 {
+	music_stop();
 }
 
 __attribute__((section(".prg_rom_5")))
@@ -467,9 +438,12 @@ const char palette[16] =
 
 int main(void)
 {
-	sounds_init(sounds_data);
+	music_init(looping_effects_data);
+	sounds_init(sound_effects_data);
+
 	ppu_off(); // screen off
 	vram_adr(NAMETABLE_A);
+
 
 	// load the palettes
 	pal_bg(palette);
@@ -496,6 +470,8 @@ int main(void)
 
 	for(;;) 
 	{ 
+		//set_music_speed(4);
+
         if (gameData_currentPlayerData != NULL)
         {
             controllerIndex = gameData_currentPlayerData->playerNumber;

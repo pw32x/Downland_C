@@ -242,21 +242,7 @@ void get_ready_room_draw(dl_u8 roomNumber)
 __attribute__((section(".prg_rom_5")))
 void titleScreen_draw(dl_u8 roomNumber)
 {
-	/*
-	drawTileText(res_string_downland, 0x03c9 + 64); // 0x07c9 original coco mem location
-	drawTileText(res_string_writtenBy, 0x050a); // 0x090A original coco mem location
-	drawTileText(res_string_michaelAichlmayer, 0x647); // 0x0A47 original coco mem location
-	drawTileText(res_string_copyright1983, 0x789); // 0x0B89 original coco mem location
-	drawTileText(res_string_spectralAssociates, 0x8c6); // 0x0CC6 original coco mem location
-	drawTileText(res_string_licensedTo, 0xa0a); // 0x0E0A original coco mem location
-	drawTileText(res_string_tandyCorporation, 0xb47); // 0x0F47 original coco mem location
-	drawTileText(res_string_allRightsReserved, 0xc86); // 0x1086 original coco mem location
-	drawTileText(res_string_onePlayer, 0xf05); // 0x1305 original coco mem location
-	drawTileText(res_string_twoPlayer, 0xf11); // 0x1311 original coco mem location
-	drawTileText(res_string_highScore, 0x118b); // 0x158B original coco mem location
-	drawTileText(res_string_playerOne, 0x1406); // 0x1806 original coco mem location
-	drawTileText(res_string_playerTwo, 0x1546); // 0x1946 original coco mem location
-	*/
+	(void)roomNumber;
 
 	convertScoreToString(gameData_playerData[PLAYER_ONE].score, gameData_playerData[PLAYER_ONE].scoreString);
 	drawTileText(gameData_playerData[PLAYER_ONE].scoreString, TITLESCREEN_PLAYERONE_SCORE_LOCATION);

@@ -370,7 +370,14 @@ void drawUIPlayerLives(const PlayerData* playerData)
 
 	if (playerData->state == PLAYER_STATE_REGENERATION)
 	{
-		tileIndex = 0x6c + ((g_regenSpriteIndex + (REGEN_NUM_FRAMES * playerData->facingDirection)) << 2);
+		if (playerData->facingDirection)
+		{
+			tileIndex = 0x6c + (g_regenSpriteIndex << 2);
+		}
+		else
+		{
+			tileIndex = 0x6c + ((g_regenSpriteIndex + REGEN_NUM_FRAMES) << 2);
+		}
 
 		updateMetaSprite(tileIndex);
 		oam_meta_spr(x, y + SCROLL_SPRITE_OFFSET, metasprite);  

@@ -1,0 +1,12 @@
+
+create effect in Famitracker
+each effect is a song in the file
+save the file
+export the file as nsf
+use ft2-nsf2data from the llvm-mos sdk to produce .s file
+
+    ft2-nsf2data <filename.nsf> -ca65 -ntsc
+    ft2-nsf2data.exe SoundEffects.nsf -ca64 -ntsc
+    
+the standard nsf2data.exe tool doesn't produce assembly compatible with llvm-mos without converting
+the @ symbols to .L

@@ -1,7 +1,12 @@
-Make looping effect in Famitracker
-save
-export as text
-use text2data <filename.txt> -ca65 -ntsc to produce .s file
 
+create looping effect in Famitracker
+each effect is a song in the file
+save the file
+export the file as text
+use ft2-text2data from the llvm-mos sdk to produce an .s file
 
+    ft2-text2data <filename.txt> -ca65 -ntsc
     ft2-text2data.exe NullMusic.txt -ca64 -ntsc
+    
+the standard text2data.exe tool doesn't produce assembly compatible with llvm-mos without converting
+the @ symbols to .L    

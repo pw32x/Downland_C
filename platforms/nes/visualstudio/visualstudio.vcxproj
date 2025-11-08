@@ -144,7 +144,9 @@
     <None Include="..\build\rebuild.bat" />
     <None Include="..\out\Downland.map" />
     <None Include="..\source\chr-rom.s" />
+    <None Include="..\source\LoopingEffects.s" />
     <None Include="..\source\music.s" />
+    <None Include="..\source\SoundEffects.s" />
     <None Include="..\source\SoundFx.s" />
   </ItemGroup>
   <ItemGroup>

@@ -1,4 +1,9 @@
-.section .rodata.sounds_data,"a",@progbits
-.globl sounds_data
-sounds_data:
-  .include "SoundFx.s"
+.section .rodata.looping_effects_data,"a",@progbits
+.globl looping_effects_data
+looping_effects_data:
+  .include "LoopingEffects.s"
+
+.section .rodata.sound_effects_data,"a",@progbits
+.globl sound_effects_data
+sound_effects_data:
+  .include "SoundEffects.s"

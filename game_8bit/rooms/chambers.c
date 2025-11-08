@@ -52,7 +52,9 @@ void updateTimerText(void)
 
 void chamber_draw(dl_u8 roomNumber);
 
-
+#ifdef NES
+__attribute__((section(".prg_rom_5")))
+#endif
 
 void chamber_init(const Room* room)
 {

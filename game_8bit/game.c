@@ -68,6 +68,11 @@ void Game_Update(void)
 	gameData_currentRoom->update((struct Room*)gameData_currentRoom);
 }
 
+#ifdef NES
+extern const dl_u8 roomToBankIndex[13] ;
+void set_prg_bank(dl_u8 bankNumber);
+#endif
+
 void Game_EnterRoom(dl_u8 roomNumber)
 {
 	gameData_currentRoom = g_rooms[roomNumber];
@@ -75,7 +80,15 @@ void Game_EnterRoom(dl_u8 roomNumber)
 	if (gameData_currentPlayerData != NULL)
 		gameData_currentPlayerData->currentRoom = gameData_currentRoom;
 
+#ifdef NES
+	set_prg_bank(5);
+#endif
+
 	gameData_currentRoom->init(gameData_currentRoom);
+
+#ifdef NES
+	set_prg_bank(roomToBankIndex[roomNumber]);
+#endif
 
 	if (Game_ChangedRoomCallback != NULL)
 		Game_ChangedRoomCallback(roomNumber, -1);
@@ -107,7 +120,16 @@ void Game_WipeTransitionToRoom(dl_u8 roomNumber)
 		gameData_currentPlayerData->currentRoom = gameData_currentRoom;
 
 	gameData_currentRoom = g_rooms[WIPE_TRANSITION_ROOM_INDEX];
+
+#ifdef NES
+	set_prg_bank(5);
+#endif
+
 	gameData_currentRoom->init(g_rooms[roomNumber]);
+
+#ifdef NES
+	set_prg_bank(roomToBankIndex[roomNumber]);
+#endif
 
 	if (Game_ChangedRoomCallback != NULL)
 		Game_ChangedRoomCallback(roomNumber, WIPE_TRANSITION_ROOM_INDEX);

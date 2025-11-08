@@ -10,7 +10,9 @@
 #include "resources.h"
 
 void titleScreen_draw(dl_u8 roomNumber);
-
+#ifdef NES
+__attribute__((section(".prg_rom_5")))
+#endif
 void titleScreen_init(const Room* room)
 {
 	dl_u8 roomNumber = room->roomNumber;

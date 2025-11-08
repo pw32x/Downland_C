@@ -10,6 +10,9 @@
 
 void get_ready_room_draw(dl_u8 roomNumber);
 
+#ifdef NES
+__attribute__((section(".prg_rom_5")))
+#endif
 void get_ready_room_init(const Room* room)
 {
 	UNUSED(room);

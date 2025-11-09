@@ -20,7 +20,10 @@ The project is based on the original Downland, version 1.1. This version was a l
 - Sega 32X
 - Sega Genesis
 - Sega Master System
+- Sega Game Gear
 - Sega SG-1000
+- ColecoVision
+- Nintendo Entertainment System
 - GameBoy Advance
 - Playdate
 - 3DO

@@ -64,29 +64,29 @@ extern const dl_u8 getReadyScreen_cleanBackground[6144];
 
 dl_u8 g_transitionDirection;
 
-void drawChamber(void);
-void drawTitleScreen(void);
-void drawTransition(void);
-void drawWipeTransition(void);
-void drawGetReadyScreen(void);
+void drawFrame_chamber(void);
+void drawFrame_titleScreen(void);
+void drawFrame_transition(void);
+void drawFrame_wipeTransition(void);
+void drawFrame_getReadyScreen(void);
 
 typedef void (*DrawRoomFunction)(void);
-const DrawRoomFunction m_drawRoomFunctions[NUM_ROOMS_AND_ALL] =
+const DrawRoomFunction m_drawFrameFunctions[NUM_ROOMS_AND_ALL] =
 {
-    drawChamber,
-    drawChamber,
-    drawChamber,
-    drawChamber,
-    drawChamber,
-    drawChamber,
-    drawChamber,
-    drawChamber,
-    drawChamber,
-    drawChamber,
-    drawTitleScreen,
-    drawTransition,
-    drawWipeTransition,
-    drawGetReadyScreen
+    drawFrame_chamber,
+    drawFrame_chamber,
+    drawFrame_chamber,
+    drawFrame_chamber,
+    drawFrame_chamber,
+    drawFrame_chamber,
+    drawFrame_chamber,
+    drawFrame_chamber,
+    drawFrame_chamber,
+    drawFrame_chamber,
+    drawFrame_titleScreen,
+    drawFrame_transition,
+    drawFrame_wipeTransition,
+    drawFrame_getReadyScreen
 };
 
 
@@ -138,8 +138,6 @@ void Sound_Play(dl_u8 soundIndex, dl_u8 loop)
 
 void Sound_Stop(dl_u8 soundIndex)
 {
-	(void)soundIndex;
-
 	if (isLooped[soundIndex] && isPlaying[soundIndex])
 		music_stop();
 
@@ -236,7 +234,6 @@ void get_ready_room_draw(dl_u8 roomNumber)
 	// get ready text
 	const dl_u8* getReadyString = gameData_currentPlayerData->playerNumber == PLAYER_ONE ? res_string_getReadyPlayerOne : res_string_getReadyPlayerTwo;
 	drawTileText(getReadyString, 0x0b66);
-
 }
 
 __attribute__((section(".prg_rom_5")))
@@ -496,34 +493,13 @@ int main(void)
 		oam_clear();
 
 		set_prg_bank(5);
-		m_drawRoomFunctions[gameData_currentRoom->roomNumber]();		
+		m_drawFrameFunctions[gameData_currentRoom->roomNumber]();		
 		set_prg_bank(roomToBankIndex[gameData_transitionRoomNumber]);
 	}
 
 	return 0;
 }
 
-
-//void GameRunner_ChangedRoomCallback(const dl_u8 roomNumber, dl_s8 transitionType)
-//{
-	//UNUSED(roomNumber);
-
-	//SMS_debugPrintf("GameRunner_ChangedRoomCallback\n");
-
-	/*
-	SMS_waitForVBlank();
-	SMS_initSprites();
-	SMS_copySpritestoSAT();
-
-	//SMS_debugPrintf("transitionType: %d\n", transitionType);
-	if (transitionType < 0)
-	{
-		//SMS_debugPrintf("downland palette 2\n");
-		SMS_loadBGPalette(downlandPalette);
-		SMS_loadSpritePalette(downlandPalette);
-	}
-	*/
-//}
 __attribute__((noinline, section(".prg_rom_5")))
 void drawPlayer()
 {
@@ -583,7 +559,7 @@ void drawPlayer()
 
 dl_u8 tickTock;
 __attribute__((noinline, section(".prg_rom_5")))
-void drawChamber(void)
+void drawFrame_chamber(void)
 {
 	drawPlayer();
 
@@ -615,7 +591,7 @@ void drawChamber(void)
 	drawTileText(playerData->scoreString, SCORE_DRAW_LOCATION);
 }
 __attribute__((noinline, section(".prg_rom_5")))
-void drawTitleScreen(void)
+void drawFrame_titleScreen(void)
 {
 	drawDrops();
 	dl_u8 x = gameData_numPlayers == 1 ? 32 : 128;
@@ -623,17 +599,17 @@ void drawTitleScreen(void)
 }
 
 __attribute__((noinline, section(".prg_rom_5")))
-void drawTransition(void)
+void drawFrame_transition(void)
 {
 }
 
 __attribute__((noinline, section(".prg_rom_5")))
-void drawWipeTransition(void)
+void drawFrame_wipeTransition(void)
 {
 }
 
 __attribute__((noinline, section(".prg_rom_5")))
-void drawGetReadyScreen(void)
+void drawFrame_getReadyScreen(void)
 {
 	drawDrops();
 }
@@ -642,6 +618,7 @@ void drawGetReadyScreen(void)
 
 void transition_init(const Room* targetRoom)
 {
+	ppu_wait_nmi();
 	set_prg_bank(roomToBankIndex[gameData_transitionRoomNumber]);
 	const BackgroundData* backgroundData = (const BackgroundData*)res_roomResources[TITLESCREEN_ROOM_INDEX].backgroundDrawData;
 
@@ -684,6 +661,7 @@ void transition_update(Room* room)
 
 void wipe_transition_init(const Room* targetRoom)
 {
+	ppu_wait_nmi();
 	UNUSED(targetRoom);
 
 	set_prg_bank(roomToBankIndex[gameData_transitionRoomNumber]);

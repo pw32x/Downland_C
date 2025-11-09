@@ -10,21 +10,19 @@ LoopingEffects_music_data:
 
 .Linstruments:
 	.byte $30 ;instrument $00
-	.word .Lenv1,.Lenv0,.Lenv3
+	.word .Lenv1,.Lenv0,.Lenv0
 	.byte $00
 	.byte $30 ;instrument $01
-	.word .Lenv1,.Lenv2,.Lenv3
+	.word .Lenv1,.Lenv2,.Lenv0
 	.byte $00
 
 .Lsamples:
 .Lenv0:
 	.byte $c0,$00,$00
 .Lenv1:
-	.byte $cf,$cc,$c5,$c2,$c1,$c0,$00,$05
+	.byte $cf,$c5,$c1,$c0,$00,$03
 .Lenv2:
 	.byte $b6,$b0,$af,$ae,$00,$03
-.Lenv3:
-	.byte $a7,$80,$80,$80,$00,$03
 
 
 ; run
@@ -48,7 +46,7 @@ LoopingEffects_music_data:
 .Lsong0ch2:
 .Lsong0ch2loop:
 .Lref2:
-	.byte $8f
+	.byte $80,$4a,$00,$83,$44,$00,$83
 	.byte $fd
 	.word .Lsong0ch2loop
 
@@ -56,7 +54,7 @@ LoopingEffects_music_data:
 .Lsong0ch3:
 .Lsong0ch3loop:
 .Lref3:
-	.byte $80,$04,$00,$83,$20,$00,$83
+	.byte $8f
 	.byte $fd
 	.word .Lsong0ch3loop
 
@@ -82,7 +80,7 @@ LoopingEffects_music_data:
 .Lsong1ch1:
 .Lsong1ch1loop:
 .Lref6:
-	.byte $80,$2c,$00,$30,$00,$2c,$00,$30,$00
+	.byte $82,$2c,$00,$30,$00,$2c,$00,$30,$00
 	.byte $fd
 	.word .Lsong1ch1loop
 
@@ -124,7 +122,7 @@ LoopingEffects_music_data:
 .Lsong2ch1:
 .Lsong2ch1loop:
 .Lref11:
-	.byte $80,$30,$00,$2c,$00,$30,$00,$2c,$00
+	.byte $82,$30,$00,$2c,$00,$30,$00,$2c,$00
 	.byte $fd
 	.word .Lsong2ch1loop
 

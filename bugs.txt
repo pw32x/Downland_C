@@ -9,11 +9,16 @@ Bugs
 
     DC: walking against the wall makes sound
 
+    SMS + SG1000: lives icons are too low compared to the PL1 text
+    
+    SG1000: jump sound doesn't always play from off of ropes. SMS/GG too?
 
     PC_new: GameRenderer wipe transitions clear the screen to black first for some reason when
         it shouldn't.
 
     PC_classic: Downland_C original renderer doesn't draw the right side of the splat sprite properly
+
+
     
    
     SS: sound driver causes sounds issues 
@@ -24,6 +29,3 @@ Bugs
         the transition. But it'll work correctly the next time in the room.
         
         
-    SMS + SG1000: lives icons are too low compared to the PL1 text
-    
-    SG1000: jump sound doesn't always play from off of ropes. SMS too?

@@ -1038,7 +1038,7 @@ dl_u8 Player_HasCollision(PlayerData* playerData, dl_u8* framebuffer, dl_u8* cle
 		debugDrawBox((sensorX + 1) << 1, sensorY, 4 << 1, 14, 0xff0000ff);
 	else
 		debugDrawBox((sensorX + 2) << 1, sensorY, 4 << 1, 14, 0xff0000ff);
-
+	*/
 	currentSprite = playerData->currentSprite + 3; // start one line down
 	cleanBackgroundRunner = &cleanBackground[location];
 	collisionTestBufferRunner = collisionTestBuffer;
@@ -1056,7 +1056,7 @@ dl_u8 Player_HasCollision(PlayerData* playerData, dl_u8* framebuffer, dl_u8* cle
 		collisionTestBufferRunner += 3;
 		currentSprite += 3 * 3;
 	}
-	*/
+
 	return FALSE;
 }
 

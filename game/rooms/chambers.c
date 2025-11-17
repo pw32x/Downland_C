@@ -142,10 +142,10 @@ void chamber_init(Room* room, GameData* gameData, const Resources* resources)
 	Bird_Init(&gameData->birdData, roomNumber, resources);
 	Player_RoomInit(playerData, resources);
 
-	drawText(resources->text_pl1, 
-			 resources->characterFont, 
-			 gameData->framebuffer, 
-			 PLAYERLIVES_TEXT_DRAW_LOCATION);
+	if (!gameData->currentPlayerData->playerNumber)
+		drawText(resources->text_pl1, resources->characterFont, gameData->framebuffer, PLAYERLIVES_TEXT_DRAW_LOCATION);
+	else
+		drawText(resources->text_pl2, resources->characterFont, gameData->framebuffer, PLAYERLIVES_TEXT_DRAW_LOCATION);
 
 	drawText(resources->text_chamber, 
 			 resources->characterFont, 

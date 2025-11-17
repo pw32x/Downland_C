@@ -277,7 +277,7 @@ void GameRenderer::roomChanged(const GameData* gameData,
                                                        FRAMEBUFFER_HEIGHT,
                                                        CrtColor::Blue);
 
-        memset(m_framebuffer, 0, FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT * sizeof(dl_u32));
+        //memset(m_framebuffer, 0, FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT * sizeof(dl_u32));
     }
 }
 

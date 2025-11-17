@@ -293,7 +293,12 @@ private:
 
         // draw text
 	    drawText(m_gameData.string_timer, TIMER_DRAW_LOCATION);
-	    drawText(m_resources->text_pl1, PLAYERLIVES_TEXT_DRAW_LOCATION);
+
+        if (!m_gameData.currentPlayerData->playerNumber)
+	        drawText(m_resources->text_pl1, PLAYERLIVES_TEXT_DRAW_LOCATION);
+        else 
+            drawText(m_resources->text_pl2, PLAYERLIVES_TEXT_DRAW_LOCATION);
+
 	    drawText(m_resources->text_chamber, CHAMBER_TEXT_DRAW_LOCATION);
 	    drawText(m_gameData.string_roomNumber, CHAMBER_NUMBER_TEXT_DRAW_LOCATION);
 	    drawText(playerData->scoreString, SCORE_DRAW_LOCATION);        

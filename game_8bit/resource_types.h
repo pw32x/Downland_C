@@ -3,7 +3,6 @@
 
 #include "base_types.h"
 #include "base_defines.h"
-#include "background_types.h"
 #include "pickup_types.h"
 #include "door_types.h"
 #include "drops_types.h"

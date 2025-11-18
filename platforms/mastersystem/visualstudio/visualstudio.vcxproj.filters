@@ -201,9 +201,6 @@
     <ClInclude Include="..\..\..\game_8bit\string_utils.h">
       <Filter>Source Files\game</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\game_8bit\background_types.h">
-      <Filter>Source Files\game</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\game_8bit\ball.h">
       <Filter>Source Files\game</Filter>
     </ClInclude>

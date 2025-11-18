@@ -6,22 +6,6 @@
 #define START_AT_TITLESCREEN
 //#define DISABLE_ENEMIES
 
-#if defined(DL_PLATFORM_3DO)
-#define DL_PACKED __packed
-#else
-#define DL_PACKED
-#endif
-
-#if !defined(TARGET_PLAYDATE) && !defined(TARGET_SIMULATOR)
-#ifdef _WIN32
-#define _WINDOWS
-#endif
-
-#ifdef _WIN64
-#define _WINDOWS
-#endif
-#endif
-
 #define TARGET_FPS 60
 
 #define DOWNLAND_ROM_SIZE 8192

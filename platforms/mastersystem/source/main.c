@@ -366,7 +366,7 @@ dl_u8 g_playerTileIndex;
 void drawUIPlayerLives(const PlayerData* playerData)
 {
 	dl_u8 x = PLAYERLIVES_ICON_X << 1;
-	dl_u8 y = PLAYERLIVES_ICON_Y;
+	dl_u8 y = PLAYERLIVES_ICON_Y - 2;
 
 	dl_u8 tileIndex = 86 + (playerData->currentSpriteNumber << 2);
 

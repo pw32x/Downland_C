@@ -650,7 +650,12 @@ void drawChamber(GameData* gameData, const Resources* resources)
 
     // draw text
 	drawUIText(gameData->string_timer, TIMER_DRAW_LOCATION);
-	drawUIText(resources->text_pl1, PLAYERLIVES_TEXT_DRAW_LOCATION);
+
+	if (!gameData->currentPlayerData->playerNumber)
+		drawUIText(resources->text_pl1, PLAYERLIVES_TEXT_DRAW_LOCATION);
+	else
+		drawUIText(resources->text_pl2, PLAYERLIVES_TEXT_DRAW_LOCATION);
+
 	drawUIText(resources->text_chamber, CHAMBER_TEXT_DRAW_LOCATION);
 	drawUIText(gameData->string_roomNumber, CHAMBER_NUMBER_TEXT_DRAW_LOCATION);
 	drawUIText(playerData->scoreString, SCORE_DRAW_LOCATION);  

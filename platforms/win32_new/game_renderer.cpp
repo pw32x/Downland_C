@@ -425,7 +425,7 @@ void GameRenderer::drawChamber(const GameData* gameData, dl_u32* framebuffer)
 	drawText(framebuffer,
                 FRAMEBUFFER_WIDTH,
                 FRAMEBUFFER_HEIGHT,
-                m_resources->text_pl1, 
+                !gameData->currentPlayerData->playerNumber ? m_resources->text_pl1 : m_resources->text_pl2, 
 			    &m_characterFont, 
                 PLAYERLIVES_TEXT_DRAW_LOCATION);
 

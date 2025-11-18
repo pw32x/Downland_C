@@ -19,9 +19,13 @@ AudioSample* g_sounds[SOUND_NUM_SOUNDS];
 
 SamplePlayer* g_samplePlayers[SOUND_NUM_SOUNDS];
 
+
 void Sound_Play(dl_u8 soundIndex, dl_u8 loop)
 {
-	g_pd->sound->sampleplayer->setPaused(g_samplePlayers[loop], false);
+	if (loop && g_pd->sound->sampleplayer->isPlaying(g_samplePlayers[soundIndex]))
+		return;
+
+	g_pd->sound->sampleplayer->setPaused(g_samplePlayers[soundIndex], false);
 	g_pd->sound->sampleplayer->play(g_samplePlayers[soundIndex], !loop, 1.0f);
 }
 

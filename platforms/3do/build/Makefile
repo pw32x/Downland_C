@@ -6,6 +6,17 @@ BANNER     = banner.png
 OUTDIR     = out
 ISONAME    = $(OUTDIR)/iso/$(NAME).iso
 
+CC = ${TDO_DEVKIT_PATH}/bin/compiler/win/armcc.exe
+CCPP = ${TDO_DEVKIT_PATH}/bin/compiler/win/armcpp.exe
+ARMLINK = ${TDO_DEVKIT_PATH}/bin/compiler/win/armlink.exe
+MODBIN = ${TDO_DEVKIT_PATH}/bin/tools/win/modbin.exe
+_3DOISO = ${TDO_DEVKIT_PATH}/bin/tools/win/3doiso.exe
+_3DOENCRYPT = ${TDO_DEVKIT_PATH}/bin/tools/win/3doencrypt.exe
+
+
+
+
+
 ## Flag definitions ##
 ifeq ($(DEBUG),1)
 OPT      = -O0
@@ -95,12 +106,12 @@ outdir: $(OUTDIR)/.touched $(OUTDIR)/src/.touched $(OUTDIR)/game/.touched $(OUTD
 objs: outdir $(OBJS)
 
 $(LAUNCHME): objs
-	armlink -o $@ $(LDFLAGS) $(STARTUP) $(LIBS) $(OBJS)
+	$(ARMLINK) -o $@ $(LDFLAGS) $(STARTUP) $(LIBS) $(OBJS)
 
 launchme: $(LAUNCHME)
 
 modbin:
-	modbin --name="$(NAME)" --time --stack=$(STACKSIZE) "$(LAUNCHME)" "$(LAUNCHME)"
+	$(MODBIN) --name="$(NAME)" --time --stack=$(STACKSIZE) "$(LAUNCHME)" "$(LAUNCHME)"
 
 banner:
 	3it to-banner -o "$(FILESYSTEM)/BannerScreen" "$(BANNER)"
@@ -112,31 +123,31 @@ $(OUTDIR)/iso/.touched:
 isodir: $(OUTDIR)/iso/.touched
 
 iso: isodir
-	3doiso -in "$(FILESYSTEM)" -out "$(ISONAME)"
+	$(_3DOISO) -in "$(FILESYSTEM)" -out "$(ISONAME)"
 
 encrypt-iso: $(ISONAME)
-	3DOEncrypt genromtags "$(ISONAME)"
+	$(_3DOENCRYPT) genromtags "$(ISONAME)"
 
 $(OUTDIR)/src/%.s.o: src/%.s
 	armasm $(INCFLAGS) $(DEFFLAGS) $(ASFLAGS) $< -o $@
 
 $(OUTDIR)/src/%.c.o: src/%.c
-	armcc $(INCFLAGS) $(DEFFLAGS) $(CFLAGS) -M $< -o $@ > $(@:.o=.d)
-	armcc $(INCFLAGS) $(DEFFLAGS) $(CFLAGS) -c $< -o $@
+	$(CC) $(INCFLAGS) $(DEFFLAGS) $(CFLAGS) -M $< -o $@ > $(@:.o=.d)
+	$(CC) $(INCFLAGS) $(DEFFLAGS) $(CFLAGS) -c $< -o $@
 
 $(OUTDIR)/src/%.cpp.o: src/%.cpp
-	armcpp $(INCFLAGS) $(DEFFLAGS) $(CXXFLAGS) -M $< -o $@ > $(@:.o=.d)
-	armcpp $(INCFLAGS) $(DEFFLAGS) $(CXXFLAGS) -c $< -o $@
+	$(CCPP) $(INCFLAGS) $(DEFFLAGS) $(CXXFLAGS) -M $< -o $@ > $(@:.o=.d)
+	$(CCPP) $(INCFLAGS) $(DEFFLAGS) $(CXXFLAGS) -c $< -o $@
 
 $(OUTDIR)/game/%.c.o: ../../game/%.c
 	@mkdir -p $(dir $@)
-	armcc $(INCFLAGS) $(DEFFLAGS) $(CFLAGS) -M $< -o $@ > $(@:.o=.d)
-	armcc $(INCFLAGS) $(DEFFLAGS) $(CFLAGS) -c $< -o $@
+	$(CC) $(INCFLAGS) $(DEFFLAGS) $(CFLAGS) -M $< -o $@ > $(@:.o=.d)
+	$(CC) $(INCFLAGS) $(DEFFLAGS) $(CFLAGS) -c $< -o $@
 
 $(OUTDIR)/game/rooms/%.c.o: ../../game/rooms/%.c
 	@mkdir -p $(dir $@)
-	armcc $(INCFLAGS) $(DEFFLAGS) $(CFLAGS) -M $< -o $@ > $(@:.o=.d)
-	armcc $(INCFLAGS) $(DEFFLAGS) $(CFLAGS) -c $< -o $@
+	$(CC) $(INCFLAGS) $(DEFFLAGS) $(CFLAGS) -M $< -o $@ > $(@:.o=.d)
+	$(CC) $(INCFLAGS) $(DEFFLAGS) $(CFLAGS) -c $< -o $@
 
 clean:
 	rm -rvf "$(OUTDIR)" "iso" $(LAUNCHME)

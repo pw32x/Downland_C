@@ -64,9 +64,9 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <NMakeBuildCommandLine>build.bat</NMakeBuildCommandLine>
-    <NMakeCleanCommandLine>clean.bat</NMakeCleanCommandLine>
-    <NMakeReBuildCommandLine>rebuild.bat</NMakeReBuildCommandLine>
+    <NMakeBuildCommandLine>..\build\build.bat</NMakeBuildCommandLine>
+    <NMakeCleanCommandLine>..\build\clean.bat</NMakeCleanCommandLine>
+    <NMakeReBuildCommandLine>..\build\rebuild.bat</NMakeReBuildCommandLine>
     <NMakePreprocessorDefinitions>_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

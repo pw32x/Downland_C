@@ -352,7 +352,7 @@ __attribute__((section(".prg_rom_5")))
 void drawUIPlayerLives(const PlayerData* playerData)
 {
 	dl_u8 x = PLAYERLIVES_ICON_X << 1;
-	dl_u8 y = PLAYERLIVES_ICON_Y;
+	dl_u8 y = PLAYERLIVES_ICON_Y - 2;
 
 	dl_u8 tileIndex = 0x98 + (playerData->currentSpriteNumber << 2);
 

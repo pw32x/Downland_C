@@ -139,7 +139,11 @@ void custom_chamber_draw(dl_u8 roomNumber, GameData* gameData, const Resources* 
 	// init background and text
 	g_originalRoomDrawFunctions[roomNumber](roomNumber, gameData, resources);
 
-	drawTileText(resources->text_pl1, PLAYERLIVES_TEXT_DRAW_LOCATION);
+	if (!gameData->currentPlayerData->playerNumber)
+		drawTileText(resources->text_pl1, PLAYERLIVES_TEXT_DRAW_LOCATION);
+	else
+		drawTileText(resources->text_pl2, PLAYERLIVES_TEXT_DRAW_LOCATION);
+
 	drawTileText(resources->text_chamber, CHAMBER_TEXT_DRAW_LOCATION);
 	drawTileText(gameData->string_roomNumber, CHAMBER_NUMBER_TEXT_DRAW_LOCATION);
 

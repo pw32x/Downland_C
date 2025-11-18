@@ -4,28 +4,6 @@
 
 void convertTimerToString(dl_u16 timerValue, dl_u8* timerString)
 {
-	static const dl_u16 divisors[5] = { 10000, 1000, 100, 10, 1 };
-
-	const dl_u16* divisorsRunner = divisors;
-	dl_u8* timerStringRunner = timerString;
-
-    dl_u8 i = 5;
-
-    do
-	{
-        dl_u8 digit = 0;
-        while (timerValue >= *divisorsRunner) 
-		{
-            timerValue -= *divisorsRunner;
-            digit++;
-        }
-
-		divisorsRunner++;
-
-        *timerStringRunner = digit;
-		timerStringRunner++;
-    } while (--i);
-
 	int loop;
 
 	timerString[0] = timerValue / 10000;

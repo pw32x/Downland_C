@@ -441,7 +441,7 @@ void Player_Update(PlayerData* playerData,
 	}
 	*/
 	
-
+	dl_u8 requestRunSound = FALSE;
 
 
 	if (playerData->state == PLAYER_STATE_DEBUG)
@@ -551,7 +551,7 @@ void Player_Update(PlayerData* playerData,
 			{
 				if (!playerData->speedx)
 				{
-					Sound_Play(SOUND_RUN, TRUE);
+					requestRunSound = TRUE;
 				}
 
 				playerData->speedx = PLAYER_RUN_SPEED_LEFT;
@@ -561,7 +561,7 @@ void Player_Update(PlayerData* playerData,
 			{
 				if (!playerData->speedx)
 				{
-					Sound_Play(SOUND_RUN, TRUE);
+					requestRunSound = TRUE;
 				}
 
 				playerData->speedx = PLAYER_RUN_SPEED_RIGHT;
@@ -898,6 +898,7 @@ void Player_Update(PlayerData* playerData,
 			playerData->speedx = 0;
 			playerData->state = PLAYER_STATE_STAND;
 			Sound_Stop(SOUND_RUN);
+			requestRunSound = FALSE;
 			playerData->currentFrameNumber = PLAYER_RUN_FRAME_0_STAND;
 		}
 		else if (playerData->state == PLAYER_STATE_JUMP)
@@ -912,6 +913,9 @@ void Player_Update(PlayerData* playerData,
 			Sound_Stop(SOUND_JUMP);
 		}
 	}
+
+	if (requestRunSound)
+		Sound_Play(SOUND_RUN, TRUE);
 
 	// from the frame number, get the actual sprite to use
 	playerData->currentSpriteNumber = computeSpriteNumber(playerData->facingDirection, playerData->currentFrameNumber);

@@ -152,16 +152,17 @@ static void loadDoorInfoDataPositions(const dl_u8* fileBuffer,
 #define HEIGHT 10      // Number of rows
 #define SHIFT_COUNT 3  // Number of shifted versions
 
+#define NUM_BIT_SHIFTS 4
+
 // assume two bytes per row
 static dl_u8* buildBitShiftedSprites(const dl_u8* spriteData, 
 									 dl_u8 spriteCount, 
 									 dl_u8 rowCount, 
 									 dl_u8 bytesPerRow)
 {
-#define DESTINATION_BYTES_PER_ROW	3
-#define NUM_BIT_SHIFTS 4
+	const dl_u8 destinationBytesPerRow = 3;
 
-	dl_u16 bitShiftedSpriteBufferSize = spriteCount * rowCount * DESTINATION_BYTES_PER_ROW * NUM_BIT_SHIFTS;
+	dl_u16 bitShiftedSpriteBufferSize = spriteCount * rowCount * destinationBytesPerRow * NUM_BIT_SHIFTS;
 	dl_u8* bitShiftedSprites = (dl_u8*)dl_alloc(bitShiftedSpriteBufferSize);
 	dl_u8* bitShiftedSpritesRunner = bitShiftedSprites;
 
@@ -186,7 +187,7 @@ static dl_u8* buildBitShiftedSprites(const dl_u8* spriteData,
 				bitShiftedSpritesRunner[2] = (dl_u8)workBuffer;
 
 				spriteDataRunner += bytesPerRow;
-				bitShiftedSpritesRunner += DESTINATION_BYTES_PER_ROW;
+				bitShiftedSpritesRunner += destinationBytesPerRow;
 			}
 		}
 	}
@@ -194,6 +195,45 @@ static dl_u8* buildBitShiftedSprites(const dl_u8* spriteData,
 	return bitShiftedSprites;
 }
 
+static dl_u8* buildBitShiftedSprites24(const dl_u8* spriteData, 
+									   dl_u8 spriteCount, 
+									   dl_u8 rowCount, 
+									   dl_u8 bytesPerRow)
+{									  
+	const dl_u8 destinationBytesPerRow = 4;
+	dl_u16 bitShiftedSpriteBufferSize = spriteCount * rowCount * destinationBytesPerRow * NUM_BIT_SHIFTS; 
+	dl_u8* bitShiftedSprites = (dl_u8*)dl_alloc(bitShiftedSpriteBufferSize);
+	dl_u8* bitShiftedSpritesRunner = bitShiftedSprites;
+
+	dl_u32 workBuffer;
+	int loop;
+	int shiftAmount;
+	const dl_u8* spriteDataRunner;
+	int rowLoop;
+
+	for (loop = 0; loop < spriteCount; loop++)
+	{
+		for (shiftAmount = 0; shiftAmount < NUM_BIT_SHIFTS; shiftAmount++)
+		{
+			spriteDataRunner = spriteData + (loop * rowCount * bytesPerRow);
+
+			for (rowLoop = 0; rowLoop < rowCount; rowLoop++)
+			{
+				workBuffer = spriteDataRunner[0] << 24 | spriteDataRunner[1] << 16 | spriteDataRunner[2] << 8;
+				workBuffer >>= (shiftAmount * 2);
+				bitShiftedSpritesRunner[0] = (dl_u8)(workBuffer >> 24);
+				bitShiftedSpritesRunner[1] = (dl_u8)(workBuffer >> 16);
+				bitShiftedSpritesRunner[2] = (dl_u8)(workBuffer >> 8);
+				bitShiftedSpritesRunner[3] = (dl_u8)workBuffer;
+
+				spriteDataRunner += bytesPerRow;
+				bitShiftedSpritesRunner += destinationBytesPerRow;
+			}
+		}
+	}
+
+	return bitShiftedSprites;
+}
 
 dl_u8 ResourceLoaderBuffer_Init(const dl_u8* fileBuffer, 
 							    dl_u32 fileBufferSize, 
@@ -247,7 +287,7 @@ dl_u8 ResourceLoaderBuffer_Init(const dl_u8* fileBuffer,
 	// in the original game, the player splat sprite and the door
 	// are loaded, bitshifted, and drawn on demand. Here we just 
 	// pre-build them because megs of ram. 
-	resources->bitShiftedSprites_playerSplat = buildBitShiftedSprites(resources->sprite_playerSplat, PLAYER_SPLAT_SPRITE_COUNT, PLAYER_SPLAT_SPRITE_ROWS, PLAYER_SPLAT_SPRITE_BYTES_PER_ROW);
+	resources->bitShiftedSprites_playerSplat = buildBitShiftedSprites24(resources->sprite_playerSplat, PLAYER_SPLAT_SPRITE_COUNT, PLAYER_SPLAT_SPRITE_ROWS, PLAYER_SPLAT_SPRITE_BYTES_PER_ROW);
 	resources->bitShiftedSprites_door = buildBitShiftedSprites(resources->sprite_door, DOOR_SPRITE_COUNT, DOOR_SPRITE_ROWS, DOOR_SPRITE_BYTES_PER_ROW);
 
 	resources->pickupSprites[0] = resources->sprite_diamond;

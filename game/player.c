@@ -127,9 +127,9 @@ void playerKill(PlayerData* playerData, dl_u8* framebuffer, dl_u8* cleanBackgrou
 		splatSprite = getBitShiftedSprite(playerData->bitShiftedSplatSprite, 
 										  0,
 										  x & 3, 
-										  PLAYER_SPLAT_SPRITE_FRAME_SIZE);
+										  PLAYER_SPLAT_SPRITE_ROWS * 4);
 
-		drawSprite_24PixelsWide(splatSprite, 
+		drawSprite_32PixelsWide(splatSprite, 
 								x, 
 								y + 7, // draw the sprite to the ground
 								PLAYER_SPLAT_SPRITE_ROWS, 

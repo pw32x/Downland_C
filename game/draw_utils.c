@@ -102,6 +102,41 @@ void drawSprite_24PixelsWide(const dl_u8* spriteData,
     }
 }
 
+void drawSprite_32PixelsWide(const dl_u8* spriteData, 
+                             dl_u8 x, 
+                             dl_u8 y, 
+                             dl_u8 numLines,
+                             dl_u8* framebuffer)
+{
+    framebuffer += (x / 4) + (y * FRAMEBUFFER_PITCH);
+
+    // for each character
+    while (numLines--)
+    {
+        // first byte
+        *framebuffer |= *spriteData;
+        framebuffer++;
+        spriteData++;
+
+        // second byte
+        *framebuffer |= *spriteData;
+        framebuffer++;
+        spriteData++;
+
+        // third byte
+        *framebuffer |= *spriteData;
+        framebuffer++;
+        spriteData++;
+
+        // fourth byte
+        *framebuffer |= *spriteData;
+        spriteData++;
+
+        // move framebuffer to next row
+        framebuffer += (FRAMEBUFFER_PITCH - 3); // go down one row in the frame buffer for the next line.
+    }
+}
+
 void drawSprite_24PixelsWide_noblend(const dl_u8* spriteData, 
 									 dl_u8 x, 
 									 dl_u8 y, 

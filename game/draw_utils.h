@@ -17,6 +17,7 @@ void drawText(const dl_u8* text, const dl_u8* characterFont, dl_u8* framebuffer,
 void drawSprite_16PixelsWide(const dl_u8* spriteData, dl_u8 x, dl_u8 y, dl_u8 numLines, dl_u8* framebuffer);
 void drawSprite_24PixelsWide(const dl_u8* spriteData, dl_u8 x, dl_u8 y, dl_u8 numLines, dl_u8* framebuffer);
 void drawSprite_24PixelsWide_noblend(const dl_u8* spriteData, dl_u8 x, dl_u8 y, dl_u8 numLines, dl_u8* framebuffer);
+void drawSprite_32PixelsWide(const dl_u8* spriteData, dl_u8 x, dl_u8 y, dl_u8 numLines, dl_u8* framebuffer);
 
 void drawSprite_24PixelsWide_static(const dl_u8* spriteData, dl_u8 x, dl_u8 y, dl_u8 numLines, dl_u8* framebuffer);
 void drawSprite_16PixelsWide_static_IntoSpriteBuffer(const dl_u8* sourceSprite, dl_u8 numLines, dl_u8* destinationSprite);

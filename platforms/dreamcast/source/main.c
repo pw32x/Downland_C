@@ -309,6 +309,7 @@ int main(int argc, char **argv)
     sounds[SOUND_RUN] = snd_sfx_load("/rd/run_hq.wav");
     sounds[SOUND_CLIMB_UP] = snd_sfx_load("/rd/climb_up_hq.wav");
     sounds[SOUND_CLIMB_DOWN] = snd_sfx_load("/rd/climb_down_hq.wav");
+    sounds[SOUND_JUMP] = snd_sfx_load("/rd/jump_hq.wav");
 
     for (int loop = 0; loop < SOUND_NUM_SOUNDS; loop++)
         playing[loop] = FALSE;

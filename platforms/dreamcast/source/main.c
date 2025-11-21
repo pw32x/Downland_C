@@ -301,6 +301,8 @@ int main(int argc, char **argv)
     assert(romFoundAndLoaded);
 
     // Load wav files found in romdisk
+    // We're loading some sounds multiple times because for some
+    // reason the sounds are corrupted when loaded the first time.
     sounds[SOUND_JUMP] = snd_sfx_load("/rd/jump_hq.wav");
     sounds[SOUND_LAND] = snd_sfx_load("/rd/land_hq.wav");
     sounds[SOUND_SCREEN_TRANSITION] = snd_sfx_load("/rd/transition_hq.wav");

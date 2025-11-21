@@ -1,38 +1,14 @@
         
 Bugs
-
-    DONE PC_new: GameRenderer wipe transitions clear the screen to black first for some reason when
-        it shouldn't.
-
-    DONE ALL: PL1 is shown on the top left when player 2 is playing instead of PL2
-
-    DONE SMS + SG1000: lives icons are too low compared to the PL1 text
     
-    NAH SG1000: jump sound doesn't always play from off of ropes. SMS/GG too?
+    SG1000: jump sound doesn't always play from off of ropes. SMS/GG too?
 
-    NAH SS: sound driver causes sounds issues 
+    SS: sound driver causes sounds issues 
         - sometimes a sound doesn't not play
         - sometimes a looping sound doesn't stop
     
-    NAH SS: if you make a door appear and then change rooms, the door will disappear during
+    SS: if you make a door appear and then change rooms, the door will disappear during
         the transition. But it'll work correctly the next time in the room.
-
-    DONE PC_classic: Downland_C original renderer doesn't draw the right side of the splat sprite properly
-        it's because the bitshifted sprite function assumes that it's 16 pixels wide so only does
-        the first 2/3s of the sprite. needs a custom bitshifted sprite function, and probably a custom
-        drawing routine for it.
-
-
-    DONE DC: no jump sound or static sound
-
-    DONE DC: walking against the wall makes sound
-
-
-    DC: Pick up sound too loud?
-
-
-
-
     
    
 

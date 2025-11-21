@@ -333,6 +333,7 @@ void Player_Update(PlayerData* playerData,
 	dl_u8 ropeX;
 	dl_u16 location;
 	const DoorInfo* doorInfoRunner;
+	dl_u8 requestRunSound;
 
 	playerData->globalAnimationCounter++;
 
@@ -441,7 +442,7 @@ void Player_Update(PlayerData* playerData,
 	}
 	*/
 	
-	dl_u8 requestRunSound = FALSE;
+	requestRunSound = FALSE;
 
 
 	if (playerData->state == PLAYER_STATE_DEBUG)

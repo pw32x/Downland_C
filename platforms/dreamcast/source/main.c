@@ -304,6 +304,7 @@ int main(int argc, char **argv)
     sounds[SOUND_JUMP] = snd_sfx_load("/rd/jump_hq.wav");
     sounds[SOUND_LAND] = snd_sfx_load("/rd/land_hq.wav");
     sounds[SOUND_SCREEN_TRANSITION] = snd_sfx_load("/rd/transition_hq.wav");
+    sounds[SOUND_SCREEN_TRANSITION] = snd_sfx_load("/rd/transition_hq.wav");
     sounds[SOUND_SPLAT] = snd_sfx_load("/rd/splat_hq.wav");
     sounds[SOUND_PICKUP] = snd_sfx_load("/rd/pickup_hq.wav");
     sounds[SOUND_RUN] = snd_sfx_load("/rd/run_hq.wav");

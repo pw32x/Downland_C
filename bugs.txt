@@ -1,8 +1,6 @@
         
 Bugs
     
-    SG1000: jump sound doesn't always play from off of ropes. SMS/GG too?
-
     SS: sound driver causes sounds issues 
         - sometimes a sound doesn't not play
         - sometimes a looping sound doesn't stop

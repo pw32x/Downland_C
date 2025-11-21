@@ -584,9 +584,9 @@ void Player_Update(PlayerData* playerData,
 				playerData->jumpAirCounter = PLAYER_JUMP_AIR_COUNT;
 				playerData->state = PLAYER_STATE_JUMP;
 				playerData->currentFrameNumber = PLAYER_RUN_FRAME_2_JUMP;
-				Sound_Play(SOUND_JUMP, FALSE);
 				Sound_Stop(SOUND_CLIMB_UP);
 				Sound_Stop(SOUND_CLIMB_DOWN);
+				Sound_Play(SOUND_JUMP, FALSE);
 				playerData->ignoreRopesCounter = 20;
 			}
 			else if (joystickState_rightDown)
@@ -598,9 +598,9 @@ void Player_Update(PlayerData* playerData,
 				playerData->jumpAirCounter = PLAYER_JUMP_AIR_COUNT;
 				playerData->state = PLAYER_STATE_JUMP;
 				playerData->currentFrameNumber = PLAYER_RUN_FRAME_2_JUMP;
-				Sound_Play(SOUND_JUMP, FALSE);
 				Sound_Stop(SOUND_CLIMB_UP);
 				Sound_Stop(SOUND_CLIMB_DOWN);
+				Sound_Play(SOUND_JUMP, FALSE);
 				playerData->ignoreRopesCounter = 20;
 			}
 

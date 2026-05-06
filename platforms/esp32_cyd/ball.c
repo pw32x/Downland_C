@@ -4,9 +4,8 @@
 #include "physics_utils.h"
 
 
-
-#define BALL_START_X 0x55 // 101
-#define BALL_START_Y 0x74 // 86
+#define BALL_START_X 0x65 // 101
+#define BALL_START_Y 0x74 // 116
 
 #define BALL_WALL_SENSOR_YOFFSET	5
 

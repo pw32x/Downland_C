@@ -472,3 +472,4 @@ platforms/colecovision/downland.rom
 /platforms/nes/out
 /platforms/nes/generated
 platforms/nes/downland.rom
+/platforms/esp32_cyd/__vm

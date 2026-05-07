@@ -291,25 +291,54 @@ void updateFPS()
 
 void updateTouchControls(dl_u8 playerIndex, JoystickState* joystickState)
 {
-    bool leftDown = false;// (state->buttons & CONT_DPAD_LEFT) || (state->joyx < -64);
-    bool rightDown = false;//(state->buttons & CONT_DPAD_RIGHT) || (state->joyx > 64);
-    bool upDown = false;//(state->buttons & CONT_DPAD_UP) || (state->joyy < -64);
-    bool downDown = false;//(state->buttons & CONT_DPAD_DOWN) || (state->joyy > 64);
-    bool jumpDown = false;//state->buttons & CONT_A;
-
     bool touched = /*ts.tirqTouched() &&*/ ts.touched();
-    String displayText = "";
+    //String displayText = "";
     bool tapped = false;
 
     if (!g_oldTouched && touched)
     {
-        tapPoint = ts.getPoint();
         tapped = true;
-        mapTouchPointToScreenPoint(tapPoint, screenPointX, screenPointY);
-        printTouchToSerial(tapPoint);
+        //printTouchToSerial(tapPoint);
     }
 
-    jumpDown = tapped;
+    tapPoint = ts.getPoint();
+    mapTouchPointToScreenPoint(tapPoint, screenPointX, screenPointY);
+
+    bool leftDown = false;
+    bool rightDown = false;
+    bool upDown = false;
+    bool downDown = false;
+    bool jumpDown = false;
+
+    if (touched)
+    {
+        if (tapped && screenPointX < 60)
+        {
+            jumpDown = true;
+            leftDown = true;
+        }
+        else if (tapped && screenPointX > 260)
+        {
+            jumpDown = true;
+            rightDown = true;
+        }
+        else if (screenPointY < 60)
+        {
+            upDown = true;
+        }
+        else if (screenPointY > 180)
+        {
+            downDown = true;
+        }
+        else if (screenPointX < 160)
+        {
+            leftDown = true;
+        }
+        else
+        {
+            rightDown = true;
+        }
+    }
 
     joystickState->leftPressed = !joystickState->leftDown & leftDown;
     joystickState->rightPressed = !joystickState->rightDown & rightDown;
@@ -421,6 +450,7 @@ void loop()
     if (!gameData.paused)
     {
         Game_Update(&gameData, &resources);
+        //Game_Update(&gameData, &resources);
         //Serial.println("game_update");
     }
 
@@ -432,6 +462,8 @@ void loop()
     tft.pushImageDMA(32, 24, 256, 192, crtFramebuffer);
     tft.dmaWait();
     tft.endWrite(); 
+
+    //tft.drawLine(160, 0, 160, 240, TFT_WHITE);
 
     //updateFPS();
 }

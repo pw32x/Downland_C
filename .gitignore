@@ -476,3 +476,4 @@ platforms/nes/downland.rom
 platforms/esp32_cyd/esp32_cyd.sln
 platforms/esp32_cyd/esp32_cyd.vcxproj
 platforms/esp32_cyd/esp32_cyd.vcxproj.filters
+platforms/cdi/gamedata/downland.rom

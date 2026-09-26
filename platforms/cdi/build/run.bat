@@ -1,0 +1,1 @@
+%CDIEMU_PATH% -disc ..\out\disk\DOWNLAND.CDI -start -playcdi -term uart

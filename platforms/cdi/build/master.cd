@@ -1,0 +1,27 @@
+options: -s
+
+define
+	album		"Downland"
+	publisher	"PW"
+	preparer	"PW"
+
+	volume	"Downland"	in	"OUT/DISK/DOWNLAND.CDI"
+
+	copyright	file	Copyright	from "GAMEDATA/COPYRGHT.TXT"
+	abstract	file	Abstract	from "GAMEDATA/ABSTRACT.TXT"
+	biblio		file	Biblio		from "GAMEDATA/BIBLIOGR.TXT"
+	message							from "GAMEDATA/MESSAGE.TXT"
+
+	application file	Downland     from "OUT/DOWNLAND"
+
+	yellow		file	DownlandRom from "GAMEDATA/DOWNLAND.ROM"
+                                             
+
+{
+	"COPYRGHT.TXT"	owner 0.0 protection 0x111	from	Copyright
+	"ABSTRACT.TXT"	owner 0.0 protection 0x111	from	Abstract
+	"BIBLIOGR.TXT"	owner 0.0 protection 0x111	from	Biblio
+	"CDI_DOWNLAND"  owner 0.0 protection 0x555	from	Downland
+	"DOWNLAND.ROM"  owner 0.0 protection 0x111  from    DownlandRom
+}
+

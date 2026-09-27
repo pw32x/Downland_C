@@ -142,6 +142,7 @@ void chamber_init(Room* room, GameData* gameData, const Resources* resources)
 	Bird_Init(&gameData->birdData, roomNumber, resources);
 	Player_RoomInit(playerData, resources);
 
+	
 	if (!gameData->currentPlayerData->playerNumber)
 		drawText(resources->text_pl1, resources->characterFont, gameData->framebuffer, PLAYERLIVES_TEXT_DRAW_LOCATION);
 	else
@@ -175,13 +176,16 @@ void chamber_update(Room* room, GameData* gameData, const Resources* resources)
 	dl_u8 playerLives;
 	PlayerData* temp;
 
+#ifndef DISABLE_INTERNAL_DRAWING
 	// in the original rom, pickups are indeed drawn every frame
 	// otherwise, falling drops will erase them
+
 	drawPickups(playerData->gamePickups[room->roomNumber], 
 				gameData->currentPlayerData->playerMask,
 				resources, 
 				gameData->framebuffer);
-
+	
+#endif
 	if (playerData->state != PLAYER_STATE_REGENERATION)
 	{
 		updateTimers(playerData->currentRoom->roomNumber, playerData->roomTimers);
@@ -276,7 +280,9 @@ void chamber_update(Room* room, GameData* gameData, const Resources* resources)
 	Bird_Update(&gameData->birdData, currentTimer, gameData->framebuffer, gameData->cleanBackground);
 #endif
 
+#ifndef DISABLE_INTERNAL_DRAWING
 	if (Player_HasCollision(playerData, gameData->framebuffer, gameData->cleanBackground))
+#endif
 	{
 		// compute collisions
 		// pick up item or die
@@ -286,6 +292,7 @@ void chamber_update(Room* room, GameData* gameData, const Resources* resources)
 	convertTimerToString(currentTimer,
 						 gameData->string_timer);
 
+#ifndef DISABLE_INTERNAL_DRAWING
 	drawText(gameData->string_timer, 
 			 resources->characterFont, 
 			 gameData->framebuffer, 
@@ -297,6 +304,7 @@ void chamber_update(Room* room, GameData* gameData, const Resources* resources)
 					gameData->framebuffer,
 					gameData->cleanBackground,
 					playerData->regenerationCounter > 0);
+#endif
 }
 
 // All the chambers are the same, but this makes it easier

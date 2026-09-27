@@ -113,6 +113,7 @@ void playerKill(PlayerData* playerData, dl_u8* framebuffer, dl_u8* cleanBackgrou
 		Sound_Play(SOUND_SPLAT, FALSE);
 		playerData->cantMoveCounter = PLAYER_SPLAT_WAIT_TIME;
 
+#ifndef DISABLE_INTERNAL_DRAWING
 		x = GET_HIGH_BYTE(playerData->x);
 		y = GET_HIGH_BYTE(playerData->y);
 
@@ -128,14 +129,14 @@ void playerKill(PlayerData* playerData, dl_u8* framebuffer, dl_u8* cleanBackgrou
 										  0,
 										  x & 3, 
 										  PLAYER_SPLAT_SPRITE_ROWS * 4);
-
+		
 		drawSprite_32PixelsWide(splatSprite, 
 								x, 
 								y + 7, // draw the sprite to the ground
 								PLAYER_SPLAT_SPRITE_ROWS, 
 								framebuffer);
-
-
+		
+#endif
 	}
 	else
 	{
@@ -355,6 +356,7 @@ void Player_Update(PlayerData* playerData,
 		{
 			playerData->splatFrameNumber = 1;
 
+#ifndef DISABLE_INTERNAL_DRAWING
 			x = GET_HIGH_BYTE(playerData->x);
 			y = GET_HIGH_BYTE(playerData->y);
 
@@ -365,6 +367,7 @@ void Player_Update(PlayerData* playerData,
 											12, 
 											framebuffer, 
 											cleanBackground);
+#endif
 		}
 
 		if (playerData->cantMoveCounter)
@@ -412,6 +415,7 @@ void Player_Update(PlayerData* playerData,
 	}
 #endif
 
+#ifndef DISABLE_INTERNAL_DRAWING
 	if (playerData->state == PLAYER_STATE_REGENERATION)
 	{
 		eraseSprite_24PixelsWide_simple(GET_HIGH_BYTE(playerData->x),
@@ -429,6 +433,7 @@ void Player_Update(PlayerData* playerData,
 								 framebuffer, 
 								 cleanBackground);
 	}
+#endif
 
 	/*
 	// to test the regeneration effect
@@ -920,7 +925,8 @@ void Player_Update(PlayerData* playerData,
 
 	// from the frame number, get the actual sprite to use
 	playerData->currentSpriteNumber = computeSpriteNumber(playerData->facingDirection, playerData->currentFrameNumber);
-
+	
+#ifndef DISABLE_INTERNAL_DRAWING
 	// get the sprite for the current horizontal bit the player is on
 	playerData->currentSprite = getBitShiftedSprite(playerData->bitShiftedSprites, 
 												    playerData->currentSpriteNumber,
@@ -957,7 +963,7 @@ void Player_Update(PlayerData* playerData,
 									   PLAYER_SPRITE_ROWS, 
 									   framebuffer);
 	}
-
+#endif
 	// door touching check
 	doorInfoRunner = doorInfoData->doorInfos;
 	for (loop = 0; loop < doorInfoData->drawInfosCount; loop++)
@@ -1149,12 +1155,14 @@ void Player_PerformCollisions(struct GameData* gameDataStruct,
 
 			Sound_Play(SOUND_PICKUP, FALSE);
 
+#ifndef DISABLE_INTERNAL_DRAWING
 			eraseSprite_16PixelsWide(resources->pickupSprites[pickUp->type],
 									 pickUp->x, 
 									 pickUp->y, 
 									 PICKUPS_NUM_SPRITE_ROWS,
 									 gameData->framebuffer,
 									 gameData->cleanBackground);
+#endif
 
 			switch (pickUp->type)
 			{
@@ -1212,10 +1220,12 @@ void Player_PerformCollisions(struct GameData* gameDataStruct,
 			// update score and string
 			convertScoreToString(playerData->score, playerData->scoreString);
 
+			/*
 			drawText(playerData->scoreString, 
 					 resources->characterFont, 
 					 gameData->framebuffer, 
 					 SCORE_DRAW_LOCATION);
+					 */
 		}
 	}
 

@@ -7,6 +7,7 @@ void drawDoor(const DoorInfo* doorInfo,
 			  dl_u8* cleanBackground,
 			  dl_u8 drawOnFramebuffer)
 {
+#ifndef DISABLE_INTERNAL_DRAWING
 	const dl_u8* doorSprite;
 
 	// draw the door. 
@@ -18,6 +19,7 @@ void drawDoor(const DoorInfo* doorInfo,
 		x += 7;
 	else
 		x -= 4;
+
 
 	doorSprite = getBitShiftedSprite(bitShiftedDoorSprites, 
 									 0,
@@ -32,12 +34,13 @@ void drawDoor(const DoorInfo* doorInfo,
 								DOOR_SPRITE_ROWS, 
 								framebuffer);
 	}
-
+	
 	drawSprite_24PixelsWide(doorSprite, 
 							x, 
 							y, 
 							DOOR_SPRITE_ROWS, 
 							cleanBackground);
+#endif
 
 }
 

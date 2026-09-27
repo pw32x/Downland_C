@@ -70,6 +70,5 @@ void handleVideoSignal(int sigCode)
 	{
 		frameDone = 1;
 		frameTick++;
-		dc_ssig(videoPath, SIG_BLANK, 0);
 	}
 }

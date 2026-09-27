@@ -3,6 +3,7 @@
 #include "graphics.h"
 
 u_int frameDone = 0;
+u_int frameTick = 0;
 
 u_char* activeVideoBuffer;
 u_char* drawVideoBuffer;
@@ -65,8 +66,10 @@ void initGraphics()
 
 void handleVideoSignal(int sigCode)
 {
-	if (sigCode == SIG_BLANK) 
+	if (sigCode == SIG_BLANK)
 	{
 		frameDone = 1;
+		frameTick++;
+		dc_ssig(videoPath, SIG_BLANK, 0);
 	}
 }

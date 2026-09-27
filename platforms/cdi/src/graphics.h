@@ -9,5 +9,6 @@
 
 extern u_char* drawVideoBuffer;
 extern unsigned int frameDone;
+extern unsigned int frameTick;
 
 #endif

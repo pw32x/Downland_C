@@ -353,6 +353,8 @@ void GameRunner_Init(GameData* gameData, const Resources* resources)
 {
 	dl_u32 cursorSpriteRaw;
 
+	log("GameRunner_Init start\n");
+
 	g_cleanBackground = (dl_u8*)malloc(FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT);
 
 	cursorSpriteRaw = 0xffffffff;
@@ -407,9 +409,15 @@ void GameRunner_Init(GameData* gameData, const Resources* resources)
 	Game_TransitionDone = GameRunner_TransitionDone;
 
 
+	log("GameRunner_Init 1\n");
+
 	initEraseList();
 
+	log("GameRunner_Init 2\n");
+
 	Game_Init(gameData, resources);
+
+	log("GameRunner_Init end\n");
 }
 
 void GameRunner_ChangedRoomCallback(const GameData* gameData, 
@@ -453,6 +461,7 @@ void GameRunner_ChangedRoomCallback(const GameData* gameData,
 void GameRunner_Update(GameData* gameData, const Resources* resources)
 {
 	Game_Update(gameData, resources);
+	//Game_Update(gameData, resources);
 }
 
 void GameRunner_Draw(GameData* gameData, const Resources* resources)
@@ -502,58 +511,54 @@ static void drawSprite(dl_u16 x,
 				       const GameSprite* gameSprite, 
 				       dl_u8 appendToEraseList)
 {
-	const dl_u8* spriteData = gameSprite->spriteData + (gameSprite->sizePerFrame * frameIndex);
-	dl_u8* frameBuffer = BUFFER_START;
-	dl_u16 loopy;
-	int offsetY;
-	dl_u16 loopx;
+
+	dl_u32 loopx;
+	dl_u32 loopy;
 	dl_u8 pixel;
+	dl_u32 frameWidth = gameSprite->frameWidth;
+	dl_u32 frameHeight = gameSprite->frameHeight;
+	const dl_u8* spriteDataRunner;
+	dl_u8* frameBufferRunner;
 
-	x += SCREEN_OFFSET_X;
-	y += SCREEN_OFFSET_Y;	
+	spriteDataRunner = gameSprite->spriteData + (gameSprite->sizePerFrame * frameIndex);
+	frameBufferRunner = BUFFER_START + (x + SCREEN_OFFSET_X) + ((y + SCREEN_OFFSET_Y) * SCREEN_WIDTH);
 
-	for (loopy = 0; loopy < gameSprite->frameHeight; loopy++)
+	for (loopy = 0; loopy < frameHeight; loopy++)
 	{
-		offsetY = (y + loopy) * SCREEN_WIDTH;
-
-		for (loopx = 0; loopx < gameSprite->frameWidth; loopx++)
+		for (loopx = 0; loopx < frameWidth; loopx++)
 		{
-			pixel = *spriteData;
-
+			pixel = *spriteDataRunner;
+			
 			if (pixel)
-				frameBuffer[(x + loopx) + offsetY] = pixel;
+				*frameBufferRunner = pixel;
 
-			spriteData++;
+			frameBufferRunner++;
+			spriteDataRunner++;
 		}
+
+		frameBufferRunner += (SCREEN_WIDTH - frameWidth);
 	}
 
 	if (appendToEraseList)
 		addToEraseList(x, y, gameSprite);
 }
 
-
 void eraseSprite(dl_u16 x, 
 				 dl_u16 y, 
 				 dl_u8 width,
 				 dl_u8 height)
 {
-	unsigned char* frameBuffer = BUFFER_START;
-	const dl_u8* cleanBackgroundRunner = g_cleanBackground;
 	dl_u16 loopx;
 	dl_u16 loopy;
-	int frameBufferOffsetY;
-	dl_u16 cleanBackgroundOffsetY;
-
+	const dl_u8* cleanBackgroundRunner = g_cleanBackground + (x + (y * FRAMEBUFFER_WIDTH));
+	dl_u8* frameBufferRunner = BUFFER_START + (x + SCREEN_OFFSET_X) + ((y + SCREEN_OFFSET_Y) * SCREEN_WIDTH);
 
 	for (loopy = 0; loopy < height; loopy++)
 	{
-		frameBufferOffsetY = (y + loopy) * SCREEN_WIDTH;
-		cleanBackgroundOffsetY = (y + loopy - SCREEN_OFFSET_Y) * FRAMEBUFFER_WIDTH;
+		memcpy(frameBufferRunner, cleanBackgroundRunner, width);
 
-		for (loopx = 0; loopx < width; loopx++)
-		{
-			frameBuffer[(x + loopx) + frameBufferOffsetY] = cleanBackgroundRunner[(x + loopx - SCREEN_OFFSET_X) + cleanBackgroundOffsetY];
-		}
+		cleanBackgroundRunner += FRAMEBUFFER_WIDTH;
+		frameBufferRunner += SCREEN_WIDTH;
 	}
 }
 
@@ -769,7 +774,13 @@ void drawTitleScreen(GameData* gameData, const Resources* resources)
 void drawCleanBackground(const GameData* gameData, 
 						 const Resources* resources)
 {
+	dl_u16 loop;
+	dl_u16 destinationOffset;
+	dl_u8* videoBufferRunner;
+	dl_u8* cleanBackgroundRunner;
 	dl_u32 offset = SCREEN_OFFSET_X + (SCREEN_OFFSET_Y * SCREEN_WIDTH);
+
+	//log("drawCleanBackground 1\n");
 
 	convert1bppImageTo8bppCrtEffect(gameData->cleanBackground, 
 										  g_cleanBackground,
@@ -778,25 +789,33 @@ void drawCleanBackground(const GameData* gameData,
 										  FRAMEBUFFER_WIDTH,
 										  4);
 
-	convert1bppImageTo8bppCrtEffect(gameData->cleanBackground, 
-										  BUFFER_START + offset,
-										  FRAMEBUFFER_WIDTH,
-										  FRAMEBUFFER_HEIGHT,
-										  SCREEN_WIDTH,
-										  0);
+	//log("drawCleanBackground 2\n");
+	videoBufferRunner = BUFFER_START + offset;
+	cleanBackgroundRunner = g_cleanBackground;
+	for (loop = 0; loop < FRAMEBUFFER_HEIGHT; loop++)
+	{
+		memcpy(videoBufferRunner, cleanBackgroundRunner, FRAMEBUFFER_WIDTH);
+		videoBufferRunner += SCREEN_WIDTH;
+		cleanBackgroundRunner += FRAMEBUFFER_WIDTH;
+	}
 
 	swapVideoBuffers();
 
-	convert1bppImageTo8bppCrtEffect(gameData->cleanBackground, 
-										  BUFFER_START + offset,
-										  FRAMEBUFFER_WIDTH,
-										  FRAMEBUFFER_HEIGHT,
-										  SCREEN_WIDTH,
-										  0);
+	videoBufferRunner = BUFFER_START + offset;
+	cleanBackgroundRunner = g_cleanBackground;
+	for (loop = 0; loop < FRAMEBUFFER_HEIGHT; loop++)
+	{
+		memcpy(videoBufferRunner, cleanBackgroundRunner, FRAMEBUFFER_WIDTH);
+		videoBufferRunner += SCREEN_WIDTH;
+		cleanBackgroundRunner += FRAMEBUFFER_WIDTH;
+	}
 
+	//log("drawCleanBackground 3\n");
 	swapVideoBuffers();
 
 	initEraseList();
+
+	log("drawCleanBackground end\n");
 }
 
 void drawTransition(GameData* gameData, const Resources* resources)
@@ -836,11 +855,7 @@ void drawTransitionLines(const GameData* gameData)
 
 		for (loop = 0; loop < 6; loop++)
 		{
-			for (innerLoop = 0; innerLoop < 128; innerLoop++)
-			{
-				_32XFramebuffer[innerLoop] = cleanBackground16[innerLoop];
-			}
-
+			memcpy(_32XFramebuffer, cleanBackground16, 256);
 			_32XFramebuffer += (32 * (SCREEN_WIDTH >> 1));
 			cleanBackground16 += (32 * 128);
 		}
@@ -855,11 +870,7 @@ void drawTransitionLines(const GameData* gameData)
 
 	for (loop = 0; loop < 6; loop++)
 	{
-		for (innerLoop = 0; innerLoop < 128; innerLoop++)
-		{
-			_32XFramebuffer[innerLoop] = 0x0101;
-		}
-
+		memset(_32XFramebuffer, 0x01, 256);
 		_32XFramebuffer += (32 * (SCREEN_WIDTH >> 1));
 	}
 }
@@ -888,7 +899,7 @@ void drawWipeTransition(GameData* gameData, const Resources* resources)
 	drawTransitionLines(gameData);
 	
 	// wait counter
-	counter = 400;
+	counter = 4;
 	while (counter) 
 	{
 		counter--;

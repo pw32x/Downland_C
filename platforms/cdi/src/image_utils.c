@@ -7,104 +7,91 @@ void convert1bppImageTo8bppCrtEffect(const dl_u8* originalImage,
                                            dl_u16 destinationWidth,
                                            dl_u8 blackIndex)
 {
-    #define BLACK  blackIndex
-    #define BLUE   0x01
-    #define ORANGE 0x02
-    #define WHITE  0x03
+    #define RAW_BLACK  0
+    #define RAW_BLUE   1
+    #define RAW_ORANGE 2
+    #define RAW_WHITE  3
 
-    dl_u8 rowBuffer[320];
+    static dl_u8 pairTable[256][4];
+    static int pairTableInitialized = 0;
+
+    dl_u8 pairColors[160];
     const dl_u8 bytesPerRow = width / 8;
-    dl_u8 pairToColor[4];
-    dl_u8 pairs[4];
-    int x;
+    const dl_u16 numPairs = width / 2;
+
     int y;
     int yOffset;
     int byteX;
-    dl_u8 bits;
-
-    int baseX;
     int i;
-
-    dl_u8 left;
-    dl_u8 right;
-    dl_u8 pixel3;
-    dl_u8 pixel0;
+    const dl_u8* p;
+    register dl_u8 cur;
+    register dl_u8 outLeft;
+    register dl_u8 outRight;
+    register dl_u8 prevRight;
+    register dl_u8 l;
+    register dl_u8 r;
     dl_u16* destRow;
 
-
-    // Lookup for 2-bit pairs ? color
-    // bits: 00=BLACK, 01=BLUE, 10=ORANGE, 11=WHITE
-    pairToColor[0] = BLACK;
-    pairToColor[1] = BLUE;
-    pairToColor[2] = ORANGE;
-    pairToColor[3] = WHITE;
+    if (!pairTableInitialized)
+    {
+        int b;
+        for (b = 0; b < 256; ++b)
+        {
+            pairTable[b][0] = (dl_u8)((b >> 6) & 0x3);
+            pairTable[b][1] = (dl_u8)((b >> 4) & 0x3);
+            pairTable[b][2] = (dl_u8)((b >> 2) & 0x3);
+            pairTable[b][3] = (dl_u8)((b >> 0) & 0x3);
+        }
+        pairTableInitialized = 1;
+    }
 
     for (y = 0; y < height; ++y)
     {
         yOffset = y * destinationWidth;
 
-        // Decode + CRT effect in one pass
-        // Process per byte of input (8 bits = 4 pairs)
+        // Decode: one table lookup per source byte gives all 4 raw pair values
         for (byteX = 0; byteX < bytesPerRow; ++byteX)
         {
-            bits = originalImage[y * bytesPerRow + byteX];
-
-            // Extract four 2-bit pairs, MSB first
-            // Pair 0: bits 7,6
-            // Pair 1: bits 5,4
-            // Pair 2: bits 3,2
-            // Pair 3: bits 1,0
-
-            pairs[0] = (bits >> 6) & 0x3;
-            pairs[1] = (bits >> 4) & 0x3;
-            pairs[2] = (bits >> 2) & 0x3;
-            pairs[3] = (bits >> 0) & 0x3;
-
-            // Decode colors (each pair repeated twice)
-            baseX = byteX * 8;
-            for (i = 0; i < 4; ++i)
-            {
-                dl_u8 color = pairToColor[pairs[i]];
-                rowBuffer[baseX + i * 2]     = color;
-                rowBuffer[baseX + i * 2 + 1] = color;
-            }
+            p = pairTable[originalImage[y * bytesPerRow + byteX]];
+            i = byteX * 4;
+            pairColors[i]     = p[0];
+            pairColors[i + 1] = p[1];
+            pairColors[i + 2] = p[2];
+            pairColors[i + 3] = p[3];
         }
 
-        // Apply CRT artifact effect in one pass
-        // Note: safe to process full width - 2 because we check bounds in condition
-        for (x = 0; x < width; x += 2)
-        {
-            left  = rowBuffer[x];
-            right = rowBuffer[x + 1];
-
-            if (right == BLUE && x < width - 2)
-            {
-                pixel3 = rowBuffer[x + 2];
-                if (pixel3 == ORANGE || pixel3 == WHITE)
-                {
-                    left  = BLACK;
-                    right = WHITE;
-                }
-            }
-            else if (left == ORANGE && x >= 2)
-            {
-                pixel0 = rowBuffer[x - 1];
-                if (pixel0 == BLUE || pixel0 == WHITE)
-                {
-                    left  = WHITE;
-                    right = BLACK;
-                }
-            }
-
-            rowBuffer[x]     = left;
-            rowBuffer[x + 1] = right;
-        }
-
-        // Write output with 16-bit stores
+        // Fused CRT-artifact effect + output write, single pass over pairs.
+        // prevRight tracks the already-transformed right value of pair i-1,
+        // matching the original's in-place left-to-right chaining, while the
+        // lookahead to pair i+1 uses its untouched raw value (not yet visited).
         destRow = (dl_u16*)(destinationImage + yOffset);
-        for (x = 0; x < width; x += 2)
+        prevRight = RAW_BLACK; // never read at i==0 (guarded below); set to silence uninitialized-use warnings
+
+        for (i = 0; i < numPairs; ++i)
         {
-            destRow[x / 2] = (rowBuffer[x] << 8) | rowBuffer[x + 1];
+            cur = pairColors[i];
+            outLeft = cur;
+            outRight = cur;
+
+            if (cur == RAW_BLUE && i + 1 < numPairs &&
+                (pairColors[i + 1] == RAW_ORANGE || pairColors[i + 1] == RAW_WHITE))
+            {
+                outLeft  = RAW_BLACK;
+                outRight = RAW_WHITE;
+            }
+            else if (cur == RAW_ORANGE && i > 0 &&
+                     (prevRight == RAW_BLUE || prevRight == RAW_WHITE))
+            {
+                outLeft  = RAW_WHITE;
+                outRight = RAW_BLACK;
+            }
+
+            prevRight = outRight;
+
+            l = outLeft  ? outLeft  : blackIndex;
+            r = outRight ? outRight : blackIndex;
+
+            destRow[i] = (dl_u16)((l << 8) | r);
         }
     }
 }

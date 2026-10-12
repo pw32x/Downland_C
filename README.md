@@ -8,7 +8,7 @@ Information about Downland can be found here: https://www.cocopedia.com/wiki/ind
 
 This project, **Downland_C**, is a port of the original game to the C programming language. The basis of this port is from the **Downland_RE** project, found here: https://github.com/pw32x/Downland_RE.
 
-Downland_C is intended to be a faithful reproduction of the game's graphics, physics, and gameplay. While it is not 100% accurate, it should be very close. 
+Downland_C is intended to be a faithful reproduction of the game's graphics, physics, and gameplay that can best fit on the target platform. While it is not 100% accurate, it should be very close or as close as possible. 
 
 The project is based on the original Downland, version 1.1. This version was a later release to support the Tandy Color Computer 3.
 
@@ -28,6 +28,7 @@ The project is based on the original Downland, version 1.1. This version was a l
 - Playdate
 - 3DO
 - ESP32 Cheap Yellow Display (Experimental and slooooow)
+- NABU Network computer
   
 
 ## RUNNING THE GAME

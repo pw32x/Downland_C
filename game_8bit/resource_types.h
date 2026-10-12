@@ -6,6 +6,7 @@
 #include "pickup_types.h"
 #include "door_types.h"
 #include "drops_types.h"
+#include "background_types.h"
 
 typedef struct
 {

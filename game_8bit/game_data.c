@@ -1,6 +1,10 @@
 #include "game_data.h"
 
+#ifdef ENABLE_CLEAN_BACKGROUND_DRAW
+dl_u8 gameData_cleanBackground[FRAMEBUFFER_SIZE_IN_BYTES];
+#else
 dl_u8* gameData_cleanBackground; // the game background without UI or objects. Used for terrain collision detection.
+#endif
 
 // objects
 PlayerData gameData_playerData[NUM_PLAYERS];

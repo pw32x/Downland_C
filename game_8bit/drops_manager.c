@@ -3,6 +3,7 @@
 #include "base_defines.h"
 #include "dl_rand.h"
 #include "game_data.h"
+#include "draw_utils.h"
 
 #define DROP_FALL_SPEED 0x200
 #define DROP_WIGGLE_START_TIME 0xa8 // wiggle timer starts at 168 which signed is -40. The value is decremented
@@ -27,16 +28,6 @@ const dl_u8 drop_CollisionMasks[4] =
     0x03, // 00000011b
 };
 
-// depending on the x position, chose 
-// of these to get at the corresponding
-// two bits you want to activate.
-const dl_u8 pixelMasks[4] = 
-{
-	0xc0, // 11000000b,
-	0x30, // 00110000b,
-	0x0C, // 00001100b,
-	0x03  // 00000011b,
-};
 
 void DropsManager_Init(const DropSpawnPositions* dropSpawnPositions, dl_u8 roomNumber, dl_u8 gameCompletionCount)
 {

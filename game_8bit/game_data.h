@@ -18,8 +18,14 @@
 #define PLAYER_TWO	1
 
 // contains the global state of the game
+//
 
-extern dl_u8* gameData_cleanBackground; // the game background without UI or objects. Used for terrain collision detection.
+// the game background without UI or objects. Used for terrain collision detection.
+#ifdef ENABLE_CLEAN_BACKGROUND_DRAW
+extern dl_u8 gameData_cleanBackground[FRAMEBUFFER_SIZE_IN_BYTES]; 
+#else
+extern dl_u8* gameData_cleanBackground; 
+#endif
 
 // objects
 extern PlayerData gameData_playerData[NUM_PLAYERS];

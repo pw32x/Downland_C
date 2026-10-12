@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <ProjectGuid>{490D3EDD-8897-9A08-1D87-6F03935FDECF}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <NMakeBuildCommandLine>..\..\build\build.bat</NMakeBuildCommandLine>
+    <NMakeCleanCommandLine>..\..\build\clean.bat</NMakeCleanCommandLine>
+    <NMakeReBuildCommandLine>..\..\build\rebuild.bat</NMakeReBuildCommandLine>
+    <NMakePreprocessorDefinitions>_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <NMakeBuildCommandLine>..\build\build.bat</NMakeBuildCommandLine>
+    <NMakeCleanCommandLine>..\build\clean.bat</NMakeCleanCommandLine>
+    <NMakeReBuildCommandLine>..\build\rebuild.bat</NMakeReBuildCommandLine>
+    <NMakePreprocessorDefinitions>WIN32;_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+    <NMakeOutput>..\out\Downland.nabu</NMakeOutput>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <NMakeBuildCommandLine>..\build\build.bat</NMakeBuildCommandLine>
+    <NMakeCleanCommandLine>..\build\clean.bat</NMakeCleanCommandLine>
+    <NMakeReBuildCommandLine>..\build\rebuild.bat</NMakeReBuildCommandLine>
+    <NMakePreprocessorDefinitions>WIN32;NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <NMakeBuildCommandLine>..\..\build\build.bat</NMakeBuildCommandLine>
+    <NMakeCleanCommandLine>..\..\build\clean.bat</NMakeCleanCommandLine>
+    <NMakeReBuildCommandLine>..\..\build\rebuild.bat</NMakeReBuildCommandLine>
+    <NMakePreprocessorDefinitions>NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\game_8bit\background_types.h" />
+    <ClInclude Include="..\..\..\game_8bit\ball.h" />
+    <ClInclude Include="..\..\..\game_8bit\base_defines.h" />
+    <ClInclude Include="..\..\..\game_8bit\base_types.h" />
+    <ClInclude Include="..\..\..\game_8bit\bird.h" />
+    <ClInclude Include="..\..\..\game_8bit\dl_platform.h" />
+    <ClInclude Include="..\..\..\game_8bit\dl_rand.h" />
+    <ClInclude Include="..\..\..\game_8bit\dl_sound.h" />
+    <ClInclude Include="..\..\..\game_8bit\door_types.h" />
+    <ClInclude Include="..\..\..\game_8bit\draw_utils.h" />
+    <ClInclude Include="..\..\..\game_8bit\drops_manager.h" />
+    <ClInclude Include="..\..\..\game_8bit\drops_types.h" />
+    <ClInclude Include="..\..\..\game_8bit\game.h" />
+    <ClInclude Include="..\..\..\game_8bit\game_data.h" />
+    <ClInclude Include="..\..\..\game_8bit\joystick_data.h" />
+    <ClInclude Include="..\..\..\game_8bit\physics_utils.h" />
+    <ClInclude Include="..\..\..\game_8bit\pickup_types.h" />
+    <ClInclude Include="..\..\..\game_8bit\player.h" />
+    <ClInclude Include="..\..\..\game_8bit\player_types.h" />
+    <ClInclude Include="..\..\..\game_8bit\resource_types.h" />
+    <ClInclude Include="..\..\..\game_8bit\rooms\chambers.h" />
+    <ClInclude Include="..\..\..\game_8bit\rooms\rooms.h" />
+    <ClInclude Include="..\..\..\game_8bit\rooms\room_types.h" />
+    <ClInclude Include="..\..\..\game_8bit\rooms\titlescreen.h" />
+    <ClInclude Include="..\..\..\game_8bit\string_utils.h" />
+    <ClInclude Include="..\generated\resources.h" />
+    <ClInclude Include="..\generated\sprites.h" />
+    <ClInclude Include="..\generated\strings.h" />
+    <ClInclude Include="..\source\nabu_lib.h" />
+    <ClInclude Include="..\source\sound\nabu_sound.h" />
+    <ClInclude Include="..\source\sound\sound_data.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\game_8bit\ball.c" />
+    <ClCompile Include="..\..\..\game_8bit\bird.c" />
+    <ClCompile Include="..\..\..\game_8bit\dl_rand.c" />
+    <ClCompile Include="..\..\..\game_8bit\draw_utils.c" />
+    <ClCompile Include="..\..\..\game_8bit\drops_manager.c" />
+    <ClCompile Include="..\..\..\game_8bit\game.c" />
+    <ClCompile Include="..\..\..\game_8bit\game_data.c" />
+    <ClCompile Include="..\..\..\game_8bit\joystick_data.c" />
+    <ClCompile Include="..\..\..\game_8bit\physics_utils.c" />
+    <ClCompile Include="..\..\..\game_8bit\player.c" />
+    <ClCompile Include="..\..\..\game_8bit\player_collisions.c" />
+    <ClCompile Include="..\..\..\game_8bit\rooms\chambers.c" />
+    <ClCompile Include="..\..\..\game_8bit\rooms\getready.c" />
+    <ClCompile Include="..\..\..\game_8bit\rooms\rooms.c" />
+    <ClCompile Include="..\..\..\game_8bit\rooms\titlescreen.c" />
+    <ClCompile Include="..\..\..\game_8bit\rooms\transitions.c" />
+    <ClCompile Include="..\..\..\game_8bit\string_utils.c" />
+    <ClCompile Include="..\generated\ball1bpp.c" />
+    <ClCompile Include="..\generated\bird1bpp.c" />
+    <ClCompile Include="..\generated\chamber0_backgroundDrawData.c" />
+    <ClCompile Include="..\generated\chamber0_tileMap.c" />
+    <ClCompile Include="..\generated\chamber1_backgroundDrawData.c" />
+    <ClCompile Include="..\generated\chamber1_tileMap.c" />
+    <ClCompile Include="..\generated\chamber2_backgroundDrawData.c" />
+    <ClCompile Include="..\generated\chamber2_tileMap.c" />
+    <ClCompile Include="..\generated\chamber3_backgroundDrawData.c" />
+    <ClCompile Include="..\generated\chamber3_tileMap.c" />
+    <ClCompile Include="..\generated\chamber4_backgroundDrawData.c" />
+    <ClCompile Include="..\generated\chamber4_tileMap.c" />
+    <ClCompile Include="..\generated\chamber5_backgroundDrawData.c" />
+    <ClCompile Include="..\generated\chamber5_tileMap.c" />
+    <ClCompile Include="..\generated\chamber6_backgroundDrawData.c" />
+    <ClCompile Include="..\generated\chamber6_tileMap.c" />
+    <ClCompile Include="..\generated\chamber7_backgroundDrawData.c" />
+    <ClCompile Include="..\generated\chamber7_tileMap.c" />
+    <ClCompile Include="..\generated\chamber8_backgroundDrawData.c" />
+    <ClCompile Include="..\generated\chamber8_tileMap.c" />
+    <ClCompile Include="..\generated\chamber9_backgroundDrawData.c" />
+    <ClCompile Include="..\generated\chamber9_tileMap.c" />
+    <ClCompile Include="..\generated\characterFont1bpp.c" />
+    <ClCompile Include="..\generated\cursor1bpp.c" />
+    <ClCompile Include="..\generated\diamond1bpp.c" />
+    <ClCompile Include="..\generated\door1bpp.c" />
+    <ClCompile Include="..\generated\drop1bpp.c" />
+    <ClCompile Include="..\generated\getReadyScreen_backgroundDrawData.c" />
+    <ClCompile Include="..\generated\key1bpp.c" />
+    <ClCompile Include="..\generated\moneyBag1bpp.c" />
+    <ClCompile Include="..\generated\player1bpp.c" />
+    <ClCompile Include="..\generated\playerLives1bpp.c" />
+    <ClCompile Include="..\generated\playerLivesRegen1bpp.c" />
+    <ClCompile Include="..\generated\playerRegen1bpp.c" />
+    <ClCompile Include="..\generated\playerSplat1bpp.c" />
+    <ClCompile Include="..\generated\resources.c" />
+    <ClCompile Include="..\generated\strings.c" />
+    <ClCompile Include="..\generated\tileSet1bpp.c" />
+    <ClCompile Include="..\generated\titleScreen_backgroundDrawData.c" />
+    <ClCompile Include="..\generated\titleScreen_tileMap.c" />
+    <ClCompile Include="..\source\main.c" />
+    <ClCompile Include="..\source\nabu_lib.c" />
+    <ClCompile Include="..\source\sound\nabu_sound.c" />
+    <ClCompile Include="..\source\sound\psgdac.c" />
+    <ClCompile Include="..\source\sound\sound_data.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\build\build.bat" />
+    <None Include="..\build\clean.bat" />
+    <None Include="..\build\Makefile" />
+    <None Include="..\build\rebuild.bat" />
+    <None Include="..\build\run-marduk-direct.bat" />
+    <None Include="..\build\run-marduk-src.bat" />
+    <None Include="..\build\run-marduk.bat" />
+    <None Include="..\build\run.bat" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

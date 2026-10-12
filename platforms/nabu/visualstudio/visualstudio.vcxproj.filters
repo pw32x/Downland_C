@@ -1,0 +1,341 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="build">
+      <UniqueIdentifier>{9618a7c7-e377-4a54-ba54-60a830e68caf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="game">
+      <UniqueIdentifier>{7c4dc51c-77d7-4c05-aa25-cbad9fe89592}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\generated">
+      <UniqueIdentifier>{56cdca5c-84f4-4735-b2d6-1531cad8a74b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="game\rooms">
+      <UniqueIdentifier>{3785f365-e583-458d-8b24-2a891f6d121a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\sound">
+      <UniqueIdentifier>{02cb35be-7a9d-4bdc-92c0-980fb30c21ba}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\generated\resources.h">
+      <Filter>Source Files\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\nabu_lib.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game_8bit\dl_rand.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game_8bit\dl_sound.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game_8bit\door_types.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game_8bit\draw_utils.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game_8bit\drops_manager.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game_8bit\drops_types.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game_8bit\game.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game_8bit\game_data.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game_8bit\joystick_data.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game_8bit\physics_utils.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game_8bit\pickup_types.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game_8bit\player.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game_8bit\player_types.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game_8bit\resource_types.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game_8bit\string_utils.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game_8bit\background_types.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game_8bit\ball.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game_8bit\base_defines.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game_8bit\base_types.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game_8bit\bird.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game_8bit\dl_platform.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game_8bit\rooms\room_types.h">
+      <Filter>game\rooms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game_8bit\rooms\rooms.h">
+      <Filter>game\rooms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game_8bit\rooms\titlescreen.h">
+      <Filter>game\rooms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\game_8bit\rooms\chambers.h">
+      <Filter>game\rooms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generated\sprites.h">
+      <Filter>Source Files\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\generated\strings.h">
+      <Filter>Source Files\generated</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\sound\sound_data.h">
+      <Filter>Source Files\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\sound\nabu_sound.h">
+      <Filter>Source Files\sound</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\source\main.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\resources.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\nabu_lib.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game_8bit\draw_utils.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game_8bit\drops_manager.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game_8bit\game.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game_8bit\game_data.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game_8bit\joystick_data.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game_8bit\physics_utils.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game_8bit\player.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game_8bit\player_collisions.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game_8bit\string_utils.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game_8bit\ball.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game_8bit\bird.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game_8bit\dl_rand.c">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game_8bit\rooms\rooms.c">
+      <Filter>game\rooms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game_8bit\rooms\titlescreen.c">
+      <Filter>game\rooms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game_8bit\rooms\transitions.c">
+      <Filter>game\rooms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game_8bit\rooms\chambers.c">
+      <Filter>game\rooms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\game_8bit\rooms\getready.c">
+      <Filter>game\rooms</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\strings.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\tileSet1bpp.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\titleScreen_backgroundDrawData.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\titleScreen_tileMap.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\ball1bpp.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\bird1bpp.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\chamber0_backgroundDrawData.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\chamber0_tileMap.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\chamber1_backgroundDrawData.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\chamber1_tileMap.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\chamber2_backgroundDrawData.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\chamber2_tileMap.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\chamber3_backgroundDrawData.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\chamber3_tileMap.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\chamber4_backgroundDrawData.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\chamber4_tileMap.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\chamber5_backgroundDrawData.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\chamber5_tileMap.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\chamber6_backgroundDrawData.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\chamber6_tileMap.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\chamber7_backgroundDrawData.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\chamber7_tileMap.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\chamber8_backgroundDrawData.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\chamber8_tileMap.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\chamber9_backgroundDrawData.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\chamber9_tileMap.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\characterFont1bpp.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\cursor1bpp.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\diamond1bpp.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\door1bpp.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\drop1bpp.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\getReadyScreen_backgroundDrawData.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\key1bpp.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\moneyBag1bpp.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\player1bpp.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\playerLives1bpp.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\playerLivesRegen1bpp.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\playerRegen1bpp.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\generated\playerSplat1bpp.c">
+      <Filter>Source Files\generated</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\sound\sound_data.c">
+      <Filter>Source Files\sound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\sound\nabu_sound.c">
+      <Filter>Source Files\sound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\sound\psgdac.c">
+      <Filter>Source Files\sound</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\build\Makefile">
+      <Filter>build</Filter>
+    </None>
+    <None Include="..\build\rebuild.bat">
+      <Filter>build</Filter>
+    </None>
+    <None Include="..\build\run.bat">
+      <Filter>build</Filter>
+    </None>
+    <None Include="..\build\run-marduk.bat">
+      <Filter>build</Filter>
+    </None>
+    <None Include="..\build\run-marduk-direct.bat">
+      <Filter>build</Filter>
+    </None>
+    <None Include="..\build\run-marduk-src.bat">
+      <Filter>build</Filter>
+    </None>
+    <None Include="..\build\build.bat">
+      <Filter>build</Filter>
+    </None>
+    <None Include="..\build\clean.bat">
+      <Filter>build</Filter>
+    </None>
+  </ItemGroup>
+</Project>

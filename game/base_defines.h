@@ -4,7 +4,10 @@
 //#define DEV_MODE
 //#define SHOW_DEBUG_TEXT
 #define START_AT_TITLESCREEN
+#define STARTING_ROOM_NUMBER 0
 //#define DISABLE_ENEMIES
+
+//#define DISABLE_INTERNAL_DRAWING // disables the drawing into the framebuffer
 
 #if defined(DL_PLATFORM_3DO)
 #define DL_PACKED __packed

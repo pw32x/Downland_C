@@ -42,4 +42,13 @@ dl_u8 Player_HasCollision(PlayerData* playerData, dl_u8* framebuffer, dl_u8* cle
 void Player_PerformCollisions(struct GameData* gameData, const Resources* resources);
 
 void Player_CompleteGameLoop(PlayerData* playerData, const Resources* resource);
+
+
+
+typedef void (*Player_TriggerPickupCallbackType)(const Pickup* pickup);
+extern Player_TriggerPickupCallbackType Player_TriggerPickup;
+
+typedef void (*Player_TriggerDoorIsVisibleCallbackType)(const DoorInfo* doorInfo);
+extern Player_TriggerDoorIsVisibleCallbackType Player_TriggerDoorIsVisible;
+
 #endif

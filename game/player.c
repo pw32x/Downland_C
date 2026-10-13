@@ -91,6 +91,12 @@ dl_u16 ropeCollisionMasks[4] =
     0x0c00, // 0000110000000000b
 };
 
+void Player_TriggerPickupDoNothing(const Pickup* pickup) {}
+Player_TriggerPickupCallbackType Player_TriggerPickup = Player_TriggerPickupDoNothing;
+
+void Player_TriggerDoorIsVisibleDoNothing(const DoorInfo* doorInfo) {}
+Player_TriggerDoorIsVisibleCallbackType Player_TriggerDoorIsVisible = Player_TriggerDoorIsVisibleDoNothing;
+
 void playerKill(PlayerData* playerData, dl_u8* framebuffer, dl_u8* cleanBackground)
 {
 	dl_u8 x;
@@ -1134,6 +1140,8 @@ void Player_PerformCollisions(struct GameData* gameDataStruct,
 	GameData* gameData = (GameData*) gameDataStruct;
 	PlayerData* playerData = gameData->currentPlayerData;
 
+	dl_u16 currentTimer = playerData->roomTimers[playerData->currentRoom->roomNumber];
+
 	if (playerData->isDead)
 		return;
 
@@ -1194,6 +1202,8 @@ void Player_PerformCollisions(struct GameData* gameDataStruct,
 										gameData->framebuffer, 
 										gameData->cleanBackground,
 										TRUE ); //draw on framebuffer
+
+								Player_TriggerDoorIsVisible(doorInfoRunner);
 							}
 						}
 
@@ -1220,12 +1230,14 @@ void Player_PerformCollisions(struct GameData* gameDataStruct,
 			// update score and string
 			convertScoreToString(playerData->score, playerData->scoreString);
 
-			/*
+			Player_TriggerPickup(pickUp);
+
+#ifndef DISABLE_INTERNAL_DRAWING
 			drawText(playerData->scoreString, 
 					 resources->characterFont, 
 					 gameData->framebuffer, 
 					 SCORE_DRAW_LOCATION);
-					 */
+#endif
 		}
 	}
 
@@ -1264,6 +1276,7 @@ void Player_PerformCollisions(struct GameData* gameDataStruct,
 	birdData = &gameData->birdData;
 
 	if (birdData->state == BIRD_ACTIVE &&
+		currentTimer == 0 &&
 		objectCollisionTest(playerData, 
 							GET_HIGH_BYTE(birdData->x) + 1,
 							GET_HIGH_BYTE(birdData->y),

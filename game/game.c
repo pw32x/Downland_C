@@ -42,7 +42,7 @@ void Game_Init(struct GameData* gameData, const Resources* resources)
 	gameData->currentPlayerData = &gameData->playerData[PLAYER_ONE];
 	gameData->otherPlayerData = NULL;
 	Player_GameInit(gameData->currentPlayerData, resources);
-	Game_TransitionToRoom(gameData, 0 /*roomNumber*/, resources);
+	Game_TransitionToRoom(gameData, STARTING_ROOM_NUMBER /*roomNumber*/, resources);
 #endif
 }
 

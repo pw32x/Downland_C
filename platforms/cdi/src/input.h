@@ -1,3 +1,5 @@
+// Simplified input code based on Nobelia.
+
 #ifndef __INPUT_H__
 #define	__INPUT_H__
 
@@ -13,7 +15,9 @@
 void initInput();
 void closeInput();
 
-unsigned short readInput1();
-unsigned short readInput2();
+extern int mousex;
+extern int mousey;
+
+unsigned short readInput();
 
 #endif

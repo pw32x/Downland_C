@@ -103,7 +103,7 @@ static dl_u8 loadRom(dl_u8* fileBuffer)
 
 dl_u16 updateControls(int controllerIndex, JoystickState* joystickState)
 {
-	dl_u16 buttonState = controllerIndex ? readInput2() : readInput1();
+	dl_u16 buttonState = readInput();
 
     // Check D-Pad
     dl_u8 leftDown = (buttonState & I_LEFT) != 0;

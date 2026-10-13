@@ -1,4 +1,3 @@
-# Configuration, name, folders
 NAME    = Downland
 OUTPUT  = out
 GAMEDATA = gamedata
@@ -7,10 +6,7 @@ GAME     = ../../game
 ROOMS    = $(GAME)/rooms
 DISK     = $(OUTPUT)/disk
 
-# COMPILER AND LIBRARY LOCATIONS
-# Normalize to forward slashes: recipe lines that need a real shell (line
-# continuations, redirection) route through /bin/sh, which treats a
-# backslash as an escape character and mangles Windows-style paths.
+# tool locations
 CDISDK = $(subst \,/,$(CDI_SDK_PATH))
 OS9C   = $(CDISDK)/dos/bin
 OS68K  = $(CDISDK)/OS9/68000
@@ -23,14 +19,14 @@ ANSIDEFS = $(CDISDK)/SRC/DEFS
 DOSBOX = $(subst \,/,$(CDI_DOSBOX_PATH))/DOSBox.exe
 MASTERTOOLS = $(CDISDK)/TOOLS/Master
 
-# COMPILER CONFIGURATION
+# compiler flags and settings
 CC       = $(OS9C)/xcc.exe
-CCFLAGS  = -tp=68K,sc -v=$(CDEF) -v=$(GAME) -v=$(ROOMS) -r -cq
+CCFLAGS  = -tp=68K,sc -v=$(CDEF) -v=$(GAME) -v=$(ROOMS) -r -cq -dDISABLE_INTERNAL_DRAWING
 ASFLAGS  = -O=0 -S -R=$(OUTPUT) -T=$(OUTPUT) -TO=osk -TP=68kI
 LD       = $(OS9C)/l68
 FIXMOD   = $(OS9C)/fixmod
 
-# Helpers for turning LDPARAM into a one-token-per-line linker response file
+# helpers for turning LDPARAM into a one-token-per-line linker response file
 empty :=
 space := $(empty) $(empty)
 define newline
@@ -38,17 +34,20 @@ define newline
 
 endef
 
-# FILES TO COMPILE
+# sources
 SOURCES      = $(wildcard $(SRC)/*.c)
+ASM_SOURCES  = $(wildcard $(SRC)/*.a) # .a files not .asm because reasons
 GAME_SOURCES = $(wildcard $(GAME)/*.c)
 ROOM_SOURCES = $(wildcard $(ROOMS)/*.c)
 
+# objects
 SRC_OBJS  = $(patsubst $(SRC)/%.c,$(OUTPUT)/%.r,$(SOURCES))
+ASM_OBJS  = $(patsubst $(SRC)/%.a,$(OUTPUT)/%.r,$(ASM_SOURCES))
 GAME_OBJS = $(patsubst $(GAME)/%.c,$(OUTPUT)/game/%.r,$(GAME_SOURCES))
 ROOM_OBJS = $(patsubst $(ROOMS)/%.c,$(OUTPUT)/game/rooms/%.r,$(ROOM_SOURCES))
-OBJS      = $(SRC_OBJS) $(GAME_OBJS) $(ROOM_OBJS)
+OBJS      = $(SRC_OBJS) $(ASM_OBJS) $(GAME_OBJS) $(ROOM_OBJS)
 
-# LINKER CONFIGURATION
+# linker setup
 LDPARAM = -a -n=cdi_$(NAME) -o=$(OUTPUT)/$(NAME) \
           $(CLIB)/cstart.r \
           $(OBJS) \
@@ -61,7 +60,7 @@ LDPARAM = -a -n=cdi_$(NAME) -o=$(OUTPUT)/$(NAME) \
           -l=$(CLIB)/usr.l \
           -l=$(XCLIB)/os_csl.l
 
-# BUILD TARGETS
+# build targets
 cd: link
 	mkdir -p $(DISK)
 	$(DOSBOX) -c "mount c ." -c "mount d $(MASTERTOOLS)" -c "c:" \
@@ -78,15 +77,16 @@ link: $(OBJS)
 	$(LD) -z=./$(OUTPUT)/link.txt
 	$(FIXMOD) -uo=0.0 $(OUTPUT)/$(NAME)
 
-# COMPILE C SOURCE FILES
-# log.c calls printf() directly, which needs K&R-compatible codegen (-bc) to
-# resolve against the CD-i clib.l's plain "printf" symbol instead of the
-# ANSI-glue "__ansi_printf" symbol that clib.l doesn't provide. -bc is scoped
-# to this one file so the rest of the project keeps the default compile mode.
+
+# compile log.c which needs -bc to call printf() directly
 $(OUTPUT)/log.r: $(SRC)/log.c
 	$(CC) -eas=$(OUTPUT) $(CCFLAGS) -bc -v=$(ANSIDEFS) -O=2 $<
 
+# regular .c files
 $(OUTPUT)/%.r: $(SRC)/%.c
+	$(CC) -eas=$(OUTPUT) $(CCFLAGS) -O=2 $<
+
+$(ASM_OBJS): $(OUTPUT)/%.r: $(SRC)/%.a
 	$(CC) -eas=$(OUTPUT) $(CCFLAGS) -O=2 $<
 
 $(OUTPUT)/game/%.r: $(GAME)/%.c | $(OUTPUT)/game
@@ -95,17 +95,13 @@ $(OUTPUT)/game/%.r: $(GAME)/%.c | $(OUTPUT)/game
 $(OUTPUT)/game/rooms/%.r: $(ROOMS)/%.c | $(OUTPUT)/game/rooms
 	$(CC) -eas=$(OUTPUT)/game/rooms $(CCFLAGS) -O=2 $<
 
-# OUTPUT DIRECTORIES
+# setup output directories
 $(OUTPUT)/game:
 	mkdir -p $@
 
 $(OUTPUT)/game/rooms:
 	mkdir -p $@
 
-# CLEAN
+# clean
 clean:
 	-rm -rf $(OUTPUT)/*
-
-purge:
-	-rm -f $(OUTPUT)/cm*
-	-rm -f $(OUTPUT)/*.tmp

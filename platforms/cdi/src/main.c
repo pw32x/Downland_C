@@ -167,6 +167,8 @@ int main(int argc, 	char* argv[])
 	dl_u8 controllerIndex = 0;
 	dl_u16 buttonState;
 
+	initSystem();
+
     if (loadRom(g_downlandRomFileBuffer) &&
         checksumCheckBigEndian(g_downlandRomFileBuffer, DOWNLAND_ROM_FILE_SIZE) &&
         ResourceLoaderBuffer_Init(g_downlandRomFileBuffer, DOWNLAND_ROM_FILE_SIZE, &resources))
@@ -176,8 +178,6 @@ int main(int argc, 	char* argv[])
 
     if (!romFoundAndLoaded)
         return exit(-1);
-
-	initSystem();
 	
 	memset(&gameData, 0, sizeof(GameData));
 

@@ -1,10 +1,12 @@
 #include "sdl_sound.h"
 
 #include <format>
+#include <stdexcept>
+#include <string>
 
 // Sound handling based on SDL3 examples.
 
-void __cdecl SDL_Sound_AudioStreamCallback(void *userdata, 
+void SDL_Sound_AudioStreamCallback(void *userdata, 
                                            SDL_AudioStream *stream, 
                                            int additional_amount, 
                                            int total_amount)

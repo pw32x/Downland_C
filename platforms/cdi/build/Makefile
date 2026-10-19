@@ -116,7 +116,7 @@ $(OUTPUT)/game/rooms/%.r: $(ROOMS)/%.c | $(OUTPUT)/game/rooms
 $(OUTPUT)/draw_erase:
 	mkdir -p $@
 
-$(OUTPUT)/cd_hw:
+$(OUTPUT)/cdi_hw:
 	mkdir -p $@
 
 $(OUTPUT)/game:

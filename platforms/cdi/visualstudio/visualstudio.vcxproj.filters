@@ -5,14 +5,6 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
     <Filter Include="game">
       <UniqueIdentifier>{d0fb0349-022b-43b3-a846-c4f56a3d6391}</UniqueIdentifier>
     </Filter>
@@ -24,6 +16,9 @@
     </Filter>
     <Filter Include="Source Files\cdi_hw">
       <UniqueIdentifier>{cb62944f-2521-48bc-8670-b53bd12e780d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\draw_erase">
+      <UniqueIdentifier>{b01e1f72-3562-4a17-807e-db0d5b4c1a1f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -120,25 +115,46 @@
     <ClInclude Include="..\src\log.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\audio.h">
-      <Filter>Source Files\cdi_hw</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\graphics.h">
-      <Filter>Source Files\cdi_hw</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\input.h">
-      <Filter>Source Files\cdi_hw</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\video.h">
-      <Filter>Source Files\cdi_hw</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\game_runner.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\image_utils.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\dc.h">
+    <ClInclude Include="..\src\game_runner_types.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\draw_erase\erase_system.h">
+      <Filter>Source Files\draw_erase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\draw_erase\erase_sprite_asm.h">
+      <Filter>Source Files\draw_erase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\draw_erase\erase_sprite_utils.h">
+      <Filter>Source Files\draw_erase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\build_resource_utils.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\draw_erase\draw_value.h">
+      <Filter>Source Files\draw_erase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\draw_sprite_utils.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\cdi_hw\graphics.h">
+      <Filter>Source Files\cdi_hw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\cdi_hw\input.h">
+      <Filter>Source Files\cdi_hw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\cdi_hw\video.h">
+      <Filter>Source Files\cdi_hw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\cdi_hw\audio.h">
+      <Filter>Source Files\cdi_hw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\cdi_hw\dc.h">
       <Filter>Source Files\cdi_hw</Filter>
     </ClInclude>
   </ItemGroup>
@@ -203,23 +219,38 @@
     <ClCompile Include="..\src\log.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\audio.c">
-      <Filter>Source Files\cdi_hw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\graphics.c">
-      <Filter>Source Files\cdi_hw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\input.c">
-      <Filter>Source Files\cdi_hw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\video.c">
-      <Filter>Source Files\cdi_hw</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\game_runner.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\image_utils.c">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\build_resource_utils.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\draw_erase\erase_sprite_utils.c">
+      <Filter>Source Files\draw_erase</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\draw_erase\erase_system.c">
+      <Filter>Source Files\draw_erase</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\draw_erase\draw_value.c">
+      <Filter>Source Files\draw_erase</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\draw_sprite_utils.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cdi_hw\input.c">
+      <Filter>Source Files\cdi_hw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cdi_hw\video.c">
+      <Filter>Source Files\cdi_hw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cdi_hw\audio.c">
+      <Filter>Source Files\cdi_hw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\cdi_hw\graphics.c">
+      <Filter>Source Files\cdi_hw</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -246,5 +277,13 @@
     <Text Include="..\build\link.txt">
       <Filter>build</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="..\src\draw_erase\erase_sprite_asm.a">
+      <Filter>Source Files\draw_erase</Filter>
+    </Library>
+    <Library Include="..\src\draw_sprite.a">
+      <Filter>Source Files</Filter>
+    </Library>
   </ItemGroup>
 </Project>

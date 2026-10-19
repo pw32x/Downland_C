@@ -2,6 +2,8 @@ NAME    = Downland
 OUTPUT  = out
 GAMEDATA = gamedata
 SRC      = src
+DRAW_ERASE = $(SRC)/draw_erase
+CDI_HW = $(SRC)/cdi_hw
 GAME     = ../../game
 ROOMS    = $(GAME)/rooms
 DISK     = $(OUTPUT)/disk
@@ -21,7 +23,7 @@ MASTERTOOLS = $(CDISDK)/TOOLS/Master
 
 # compiler flags and settings
 CC       = $(OS9C)/xcc.exe
-CCFLAGS  = -tp=68K,sc -v=$(CDEF) -v=$(GAME) -v=$(ROOMS) -r -cq -dDISABLE_INTERNAL_DRAWING
+CCFLAGS  = -tp=68K,sc -v=$(CDEF) -v=$(SRC) -v=$(GAME) -v=$(ROOMS) -r -cq -dDISABLE_INTERNAL_DRAWING
 ASFLAGS  = -O=0 -S -R=$(OUTPUT) -T=$(OUTPUT) -TO=osk -TP=68kI
 LD       = $(OS9C)/l68
 FIXMOD   = $(OS9C)/fixmod
@@ -37,15 +39,21 @@ endef
 # sources
 SOURCES      = $(wildcard $(SRC)/*.c)
 ASM_SOURCES  = $(wildcard $(SRC)/*.a) # .a files not .asm because reasons
+DRAW_ERASE_SOURCES     = $(wildcard $(DRAW_ERASE)/*.c)
+DRAW_ERASE_ASM_SOURCES = $(wildcard $(DRAW_ERASE)/*.a)
+CDI_HW_SOURCES = $(wildcard $(CDI_HW)/*.c)
 GAME_SOURCES = $(wildcard $(GAME)/*.c)
 ROOM_SOURCES = $(wildcard $(ROOMS)/*.c)
 
 # objects
 SRC_OBJS  = $(patsubst $(SRC)/%.c,$(OUTPUT)/%.r,$(SOURCES))
 ASM_OBJS  = $(patsubst $(SRC)/%.a,$(OUTPUT)/%.r,$(ASM_SOURCES))
+DRAW_ERASE_OBJS     = $(patsubst $(DRAW_ERASE)/%.c,$(OUTPUT)/draw_erase/%.r,$(DRAW_ERASE_SOURCES))
+DRAW_ERASE_ASM_OBJS = $(patsubst $(DRAW_ERASE)/%.a,$(OUTPUT)/draw_erase/%.r,$(DRAW_ERASE_ASM_SOURCES))
+CDI_HW_OBJS = $(patsubst $(CDI_HW)/%.c,$(OUTPUT)/cdi_hw/%.r,$(CDI_HW_SOURCES))
 GAME_OBJS = $(patsubst $(GAME)/%.c,$(OUTPUT)/game/%.r,$(GAME_SOURCES))
 ROOM_OBJS = $(patsubst $(ROOMS)/%.c,$(OUTPUT)/game/rooms/%.r,$(ROOM_SOURCES))
-OBJS      = $(SRC_OBJS) $(ASM_OBJS) $(GAME_OBJS) $(ROOM_OBJS)
+OBJS      = $(SRC_OBJS) $(ASM_OBJS) $(DRAW_ERASE_OBJS) $(DRAW_ERASE_ASM_OBJS) $(CDI_HW_OBJS) $(GAME_OBJS) $(ROOM_OBJS)
 
 # linker setup
 LDPARAM = -a -n=cdi_$(NAME) -o=$(OUTPUT)/$(NAME) \
@@ -89,6 +97,15 @@ $(OUTPUT)/%.r: $(SRC)/%.c
 $(ASM_OBJS): $(OUTPUT)/%.r: $(SRC)/%.a
 	$(CC) -eas=$(OUTPUT) $(CCFLAGS) -O=2 $<
 
+$(DRAW_ERASE_OBJS): $(OUTPUT)/draw_erase/%.r: $(DRAW_ERASE)/%.c | $(OUTPUT)/draw_erase
+	$(CC) -eas=$(OUTPUT)/draw_erase $(CCFLAGS) -O=2 $<
+
+$(DRAW_ERASE_ASM_OBJS): $(OUTPUT)/draw_erase/%.r: $(DRAW_ERASE)/%.a | $(OUTPUT)/draw_erase
+	$(CC) -eas=$(OUTPUT)/draw_erase $(CCFLAGS) -O=2 $<
+
+$(CDI_HW_OBJS): $(OUTPUT)/cdi_hw/%.r: $(CDI_HW)/%.c | $(OUTPUT)/cdi_hw
+	$(CC) -eas=$(OUTPUT)/cdi_hw $(CCFLAGS) -O=2 $<
+
 $(OUTPUT)/game/%.r: $(GAME)/%.c | $(OUTPUT)/game
 	$(CC) -eas=$(OUTPUT)/game $(CCFLAGS) -O=2 $<
 
@@ -96,6 +113,12 @@ $(OUTPUT)/game/rooms/%.r: $(ROOMS)/%.c | $(OUTPUT)/game/rooms
 	$(CC) -eas=$(OUTPUT)/game/rooms $(CCFLAGS) -O=2 $<
 
 # setup output directories
+$(OUTPUT)/draw_erase:
+	mkdir -p $@
+
+$(OUTPUT)/cd_hw:
+	mkdir -p $@
+
 $(OUTPUT)/game:
 	mkdir -p $@
 

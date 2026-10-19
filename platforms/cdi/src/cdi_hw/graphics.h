@@ -1,3 +1,4 @@
+// Adapted from the Nobelia project (https://github.com/TwBurn/Nobelia)
 #ifndef __GRAPHICS_H__
 #define	__GRAPHICS_H__
 
@@ -10,5 +11,6 @@
 extern u_char* drawVideoBuffer;
 extern unsigned int frameDone;
 extern unsigned int frameTick;
+extern long g_asmDrawHeight;
 
 #endif

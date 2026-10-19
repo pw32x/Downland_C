@@ -1,3 +1,4 @@
+// Adapted from the Nobelia project (https://github.com/TwBurn/Nobelia)
 #include <strings.h>
 #include <csd.h>
 #include <sysio.h>

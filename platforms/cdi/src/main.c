@@ -6,9 +6,9 @@
 #include <stdio.h>
 #include <setsys.h>
 #include "log.h"
-#include "video.h"
-#include "graphics.h"
-#include "input.h"
+#include "cdi_hw/video.h"
+#include "cdi_hw/graphics.h"
+#include "cdi_hw/input.h"
 
 #include "base_types.h"
 #include "game.h"

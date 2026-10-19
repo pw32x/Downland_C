@@ -1,9 +1,13 @@
+// Adapted from the Nobelia project (https://github.com/TwBurn/Nobelia)
 #include <ucm.h>
 #include <memory.h>
 #include "graphics.h"
 
 u_int frameDone = 0;
 u_int frameTick = 0;
+
+// common variable used by the assembly draw functions for row count.
+long g_asmDrawHeight = 0;
 
 u_char* activeVideoBuffer;
 u_char* drawVideoBuffer;

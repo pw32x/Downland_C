@@ -1,3 +1,4 @@
+// Adapted from the Nobelia project (https://github.com/TwBurn/Nobelia)
 #ifndef __VIDEO_H__
 #define	__VIDEO_H__
 

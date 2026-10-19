@@ -1,3 +1,4 @@
+// Adapted from the Nobelia project (https://github.com/TwBurn/Nobelia)
 #ifndef __AUDIO_H__
 #define	__AUDIO_H__
 

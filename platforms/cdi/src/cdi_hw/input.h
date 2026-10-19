@@ -1,4 +1,4 @@
-// Simplified input code based on Nobelia.
+// Adapted from the Nobelia project (https://github.com/TwBurn/Nobelia)
 
 #ifndef __INPUT_H__
 #define	__INPUT_H__

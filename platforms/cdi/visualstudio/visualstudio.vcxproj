@@ -133,7 +133,6 @@
     <ClInclude Include="..\src\draw_erase\erase_sprite_utils.h" />
     <ClInclude Include="..\src\draw_erase\erase_system.h" />
     <ClInclude Include="..\src\game_runner.h" />
-    <ClInclude Include="..\src\game_runner_types.h" />
     <ClInclude Include="..\src\image_utils.h" />
     <ClInclude Include="..\src\log.h" />
   </ItemGroup>

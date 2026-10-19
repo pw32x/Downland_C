@@ -121,9 +121,6 @@
     <ClInclude Include="..\src\image_utils.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\game_runner_types.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\draw_erase\erase_system.h">
       <Filter>Source Files\draw_erase</Filter>
     </ClInclude>

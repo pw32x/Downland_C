@@ -6,10 +6,15 @@
 //#include <string.h>
 //#include <stdlib.h>
 
-#include "video.h"
-#include "graphics.h"
+#include "cdi_hw/video.h"
+#include "cdi_hw/graphics.h"
+#include "draw_sprite_utils.h"
+#include "draw_erase/erase_sprite_utils.h"
+#include "draw_erase/erase_system.h"
+#include "draw_erase/draw_value.h"
+#include "build_resource_utils.h"
 
-// project headers		
+// project headers
 #include "image_utils.h"
 
 // game headers
@@ -17,14 +22,7 @@
 #include "draw_utils.h"
 #include "rooms/chambers.h"
 
-typedef struct
-{
-	dl_u8* spriteData;
-	dl_u8 frameWidth;
-	dl_u8 frameHeight;
-	dl_u16 sizePerFrame;
-} GameSprite;
-
+// CD-i converted sprites
 GameSprite playerSprite;
 GameSprite dropsSprite;
 GameSprite cursorSprite;
@@ -44,75 +42,28 @@ const GameSprite* g_pickUpSprites[3];
 
 dl_u8* g_cleanBackground;
 
-#define SCREEN_OFFSET_X 64
-#define SCREEN_OFFSET_Y 24
-
-
-void eraseSprite(dl_u16 x, dl_u16 y, dl_u8 width, dl_u8 height);
+// when the pickups are first drawn, save the clean background area 
+// underneath them. we'll be making them part of the clean background
+// instead of other ports where the pickups are drawn every frames 
+// because the CD-i can't draw all the sprites fast enough.
+// When a pickup is, uh, picked up, it's erased and replaced with its
+// background snapshot.
 
 typedef struct
 {
-	dl_u16 x;
-	dl_u16 y;
-	const GameSprite* gameSprite;
-} EraseEntry;
+	dl_u8 valid;
+	const Pickup* pickup;
+	dl_u8 pixels[PICKUPS_NUM_SPRITE_WIDTH * PICKUPS_NUM_SPRITE_ROWS];
+} PickupBackgroundSnapshot;
 
-#define NUM_OBJECTS 48
-EraseEntry g_eraseList0[NUM_OBJECTS];
-EraseEntry g_eraseList1[NUM_OBJECTS];
+PickupBackgroundSnapshot g_pickupBackgroundSnapshots[NUM_PICKUPS_PER_ROOM];
 
-dl_u8 g_eraseList0Count;
-dl_u8 g_eraseList1Count;
 
-EraseEntry* g_currentEraseList;
-dl_u8* g_currentEraseListCount;
+#define NUM_REGEN_FRAMES 4
+dl_u8 g_regenFrameCounter = 0;
 
-void initEraseList()
-{
-	g_eraseList0Count = 0;
-	g_eraseList1Count = 0;
-
-	g_currentEraseList = g_eraseList0;
-	g_currentEraseListCount = &g_eraseList0Count;
-}
-
-void addToEraseList(dl_u16 x, dl_u16 y, const GameSprite* gameSprite)
-{
-	EraseEntry* currentEntry = &g_currentEraseList[(*g_currentEraseListCount)];
-	currentEntry->x = x;
-	currentEntry->y = y;
-	currentEntry->gameSprite = gameSprite;
-	(*g_currentEraseListCount)++;
-}
-
-void processEraseList()
-{
-	dl_u8 loop;
-	EraseEntry* eraseListRunner;
-
-	if (g_currentEraseList == g_eraseList0)
-	{
-		g_currentEraseList = g_eraseList1;
-		g_currentEraseListCount = &g_eraseList1Count;
-	}
-	else
-	{
-		g_currentEraseList = g_eraseList0;
-		g_currentEraseListCount = &g_eraseList0Count;
-	}	
-
-	eraseListRunner = g_currentEraseList;
-	for (loop = 0; loop < (*g_currentEraseListCount); loop++)
-	{
-		eraseSprite(eraseListRunner->x, 
-					eraseListRunner->y,
-					eraseListRunner->gameSprite->frameWidth,
-					eraseListRunner->gameSprite->frameHeight);
-		eraseListRunner++;
-	}
-
-	(*g_currentEraseListCount) = 0;
-}
+const DoorInfo* g_queuedDoorInfo;
+dl_u8 g_drawDoorFrameCount;
 
 typedef void (*DrawRoomFunction)(GameData* gameData, const Resources* resources);
 DrawRoomFunction m_drawRoomFunctions[NUM_ROOMS_AND_ALL];
@@ -123,237 +74,19 @@ void drawTransition(GameData* gameData, const Resources* resources);
 void drawWipeTransition(GameData* gameData, const Resources* resources);
 void drawGetReadyScreen(GameData* gameData, const Resources* resources);
 
-// character font
-// player icons
-// sound
-// scrolling
-
-//m_characterFont(resources->characterFont, 8, 7, 39),
-
-void buildSpriteResource(GameSprite* gameSprite,
-						 const dl_u8* originalSprite, 
-						 dl_u8 frameWidth, 
-						 dl_u8 frameHeight, 
-						 dl_u8 spriteCount)
-{
-	dl_u16 spriteDataSize = frameWidth * frameHeight * spriteCount;
-	dl_u8* spriteData = (dl_u8*)malloc(spriteDataSize);
-	dl_u8* spriteDataRunner;
-	const dl_u8* originalSpriteRunner;
-	dl_u16 sizePerOriginalSpriteFrame;
-	dl_u8 loop;
-
-	memset(spriteData, 0, sizeof(spriteDataSize));
-
-	gameSprite->spriteData = spriteData;
-	gameSprite->frameWidth = frameWidth;
-	gameSprite->frameHeight = frameHeight;
-	gameSprite->sizePerFrame = frameWidth * frameHeight;
-
-	spriteDataRunner = spriteData;
-	originalSpriteRunner = originalSprite;
-
-	sizePerOriginalSpriteFrame = (frameWidth / 8) * frameHeight;
-
-	for (loop = 0; loop < spriteCount; loop++)
-    {
-		convert1bppImageTo8bppCrtEffect(originalSpriteRunner,
-											  spriteDataRunner,
-											  frameWidth,
-											  frameHeight,
-											  frameWidth,
-											  0);
-
-		spriteDataRunner += gameSprite->sizePerFrame;
-		originalSpriteRunner += sizePerOriginalSpriteFrame;
-	}
-}
-
-void buildTextResource(GameSprite* gameSprite,
-					   const dl_u8* originalSprite, 
-					   dl_u8 frameWidth, 
-					   dl_u8 frameHeight, 
-					   dl_u8 spriteCount)
-{
-	dl_u16 spriteDataSize = frameWidth * frameHeight * spriteCount;
-	dl_u8* spriteData = (dl_u8*)malloc(spriteDataSize);
-	dl_u8* spriteDataRunner;
-	const dl_u8* originalSpriteRunner;
-	dl_u16 sizePerOriginalSpriteFrame;
-	int loop;
-	int loop2;
-	dl_u16 frameSize;
-
-	memset(spriteData, 0, sizeof(spriteDataSize));
-
-	gameSprite->spriteData = spriteData;
-	gameSprite->frameWidth = frameWidth;
-	gameSprite->frameHeight = frameHeight;
-	gameSprite->sizePerFrame = frameWidth * frameHeight;
-
-	spriteDataRunner = spriteData;
-	originalSpriteRunner = originalSprite;
-
-	sizePerOriginalSpriteFrame = (frameWidth / 8) * frameHeight;
-
-	for (loop = 0; loop < spriteCount; loop++)
-    {
-		convert1bppImageTo8bppCrtEffect(originalSpriteRunner,
-											  spriteDataRunner,
-											  frameWidth,
-											  frameHeight,
-											  frameWidth,
-											  4);
-
-		frameSize = frameWidth * frameHeight;
-		for (loop2 = 0; loop2 < frameSize; loop2++)
-		{
-			if (spriteDataRunner[loop2] == 0)
-				spriteDataRunner[loop2] = 4;
-			if (spriteDataRunner[loop2] == 3)
-				spriteDataRunner[loop2] = 1;
-		}
-
-		spriteDataRunner += gameSprite->sizePerFrame;
-		originalSpriteRunner += sizePerOriginalSpriteFrame;
-	}
-}
-
-
-void buildPlayerIconResource(GameSprite* gameSprite,
-							 const dl_u8* originalSprite, 
-							 dl_u8 frameWidth, 
-							 dl_u8 frameHeight, 
-							 dl_u8 clipHeight,
-							 dl_u8 spriteCount)
-{
-	dl_u16 spriteDataSize = frameWidth * frameHeight * spriteCount;
-	dl_u8* spriteData = (dl_u8*)malloc(spriteDataSize);
-	dl_u8* spriteDataRunner;
-	const dl_u8* originalSpriteRunner;
-	dl_u16 sizePerOriginalSpriteFrame;
-	int loop;
-	int loop2;
-	dl_u16 frameSize;		
-
-	memset(spriteData, 0, sizeof(spriteDataSize));
-
-	gameSprite->spriteData = spriteData;
-	gameSprite->frameWidth = frameWidth;
-	gameSprite->frameHeight = clipHeight;
-	gameSprite->sizePerFrame = frameWidth * frameHeight;
-
-	spriteDataRunner = spriteData;
-	originalSpriteRunner = originalSprite;
-
-	sizePerOriginalSpriteFrame = (frameWidth / 8) * frameHeight;
-
-	for (loop = 0; loop < spriteCount; loop++)
-    {
-		convert1bppImageTo8bppCrtEffect(originalSpriteRunner,
-											  spriteDataRunner,
-											  frameWidth,
-											  frameHeight,
-											  frameWidth,
-											  4);
-
-		frameSize = frameWidth * frameHeight;
-		for (loop2 = 0; loop2 < frameSize; loop2++)
-		{
-			if (spriteDataRunner[loop2] == 0)
-				spriteDataRunner[loop2] = 4;
-		}
-
-		spriteDataRunner += gameSprite->sizePerFrame;
-		originalSpriteRunner += sizePerOriginalSpriteFrame;
-	}
-}
-
-void buildEmptySpriteResource(GameSprite* gameSprite,
-							  dl_u8 frameWidth, 
-							  dl_u8 frameHeight, 
-							  dl_u8 spriteCount)
-{
-	dl_u16 spriteDataSize;
-
-	gameSprite->frameWidth = frameWidth;
-	gameSprite->frameHeight = frameHeight;
-	gameSprite->sizePerFrame = frameWidth * frameHeight;
-
-	spriteDataSize = frameWidth * frameHeight * spriteCount;
-	gameSprite->spriteData = (dl_u8*)malloc(spriteDataSize);
-}
-
-void updateRegenSprite(const Resources* resources, dl_u8 currentPlayerSpriteNumber)
-{
-	const dl_u16 bufferSize = (PLAYER_SPRITE_WIDTH / 8) * PLAYER_SPRITE_ROWS;
-	dl_u8 regenBuffer[(PLAYER_SPRITE_WIDTH / 8) * PLAYER_SPRITE_ROWS];
-	const dl_u8* originalSprite;
-
-    memset(regenBuffer, 0, bufferSize);
-
-    originalSprite = resources->sprites_player;
-    originalSprite += currentPlayerSpriteNumber * bufferSize;
-
-    drawSprite_16PixelsWide_static_IntoSpriteBuffer(originalSprite, 
-													PLAYER_SPRITE_ROWS,
-													regenBuffer);
-
-	convert1bppImageTo8bppCrtEffect(regenBuffer,
-										  regenSprite.spriteData,
-										  PLAYER_SPRITE_WIDTH,
-										  PLAYER_SPRITE_ROWS,
-										  PLAYER_SPRITE_WIDTH,
-										  0);
-
-}
-
-
-void GameRunner_ChangedRoomCallback(const GameData* gameData, dl_u8 roomNumber, dl_s8 transitionType);
+//void GameRunner_ChangedRoomCallback(const GameData* gameData, dl_u8 roomNumber, dl_s8 transitionType);
 void GameRunner_TransitionDone(const GameData* gameData, dl_u8 roomNumber, dl_s8 transitionType);
 
-#define SPLAT_FRAME_COUNT 2
-
-void buildSplatSpriteResource(const Resources* resources)
-{
-	dl_u16 spriteDataSize;
-	dl_u8* spriteDataRunner;
-	dl_u8 loop;
-
-	splatSprite.frameWidth = PLAYER_SPLAT_SPRITE_WIDTH;
-	splatSprite.frameHeight = PLAYER_SPLAT_SPRITE_ROWS;
-	splatSprite.sizePerFrame = PLAYER_SPLAT_SPRITE_WIDTH * PLAYER_SPLAT_SPRITE_ROWS;
-
-	spriteDataSize = splatSprite.sizePerFrame * SPLAT_FRAME_COUNT;
-	splatSprite.spriteData = (dl_u8*)malloc(spriteDataSize);
-
-	spriteDataRunner = splatSprite.spriteData;
-
-	for (loop = 0; loop < SPLAT_FRAME_COUNT; loop++)
-	{
-		convert1bppImageTo8bppCrtEffect(resources->sprite_playerSplat,
-											  spriteDataRunner,
-											  splatSprite.frameWidth,
-											  splatSprite.frameHeight,
-											  splatSprite.frameWidth,
-											  0);
-
-		spriteDataRunner += splatSprite.sizePerFrame;
-	}
-
-	spriteDataRunner = splatSprite.spriteData + splatSprite.sizePerFrame;
-
-	for (loop = 0; loop < 5 * splatSprite.frameWidth; loop++)
-	{
-		spriteDataRunner[loop] = 0;
-	}
-}
+void Player_TriggerPickupErase(const Pickup* pickup);
+void Player_TriggerDoorIsVisibleDrawDoor(const DoorInfo* doorInfo);
+void savePickupBackgrounds(const PlayerData* playerData, dl_u8 roomNumber, const dl_u8* buffer);
+void restorePickupBackground(const Pickup* pickup);
 
 void GameRunner_Init(GameData* gameData, const Resources* resources)
 {
 	dl_u32 cursorSpriteRaw;
 
-	log("GameRunner_Init start\n");
+	//log("GameRunner_Init start\n");
 
 	g_cleanBackground = (dl_u8*)malloc(FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT);
 
@@ -369,7 +102,7 @@ void GameRunner_Init(GameData* gameData, const Resources* resources)
 	buildSpriteResource(&diamondSprite, resources->sprite_diamond, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1);
 	buildSpriteResource(&moneyBagSprite, resources->sprite_moneyBag, PICKUPS_NUM_SPRITE_WIDTH, PICKUPS_NUM_SPRITE_ROWS, 1);
 	buildSpriteResource(&doorSprite, resources->sprite_door, DOOR_SPRITE_WIDTH, DOOR_SPRITE_ROWS, 1);
-	buildEmptySpriteResource(&regenSprite, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, 1);
+	buildRegenSprites(&regenSprite, resources->sprites_player, PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_ROWS, NUM_REGEN_FRAMES);
 	buildTextResource(&characterFont, resources->characterFont, 8, 7, 39);
 
 	playerIconSprite.spriteData = playerSprite.spriteData;
@@ -405,63 +138,50 @@ void GameRunner_Init(GameData* gameData, const Resources* resources)
     m_drawRoomFunctions[WIPE_TRANSITION_ROOM_INDEX] = drawWipeTransition;
     m_drawRoomFunctions[GET_READY_ROOM_INDEX] = drawGetReadyScreen;
 
-	// Game_ChangedRoomCallback = GameRunner_ChangedRoomCallback;
+	//Game_ChangedRoomCallback = GameRunner_ChangedRoomCallback;
 	Game_TransitionDone = GameRunner_TransitionDone;
 
+	Player_TriggerPickup = Player_TriggerPickupErase;
+	Player_TriggerDoorIsVisible = Player_TriggerDoorIsVisibleDrawDoor;
 
-	log("GameRunner_Init 1\n");
+	g_queuedDoorInfo = NULL;
+	g_drawDoorFrameCount = 0;
+
+	//log("GameRunner_Init 1\n");
 
 	initEraseList();
 
-	log("GameRunner_Init 2\n");
+	//log("GameRunner_Init 2\n");
 
 	Game_Init(gameData, resources);
 
-	log("GameRunner_Init end\n");
+	//log("GameRunner_Init end\n");
 }
 
+void drawStaticText(const GameData* gameData, 
+					const Resources* resources,
+					dl_u8* cleanBackground)
+{
+	if (!gameData->currentPlayerData->playerNumber)
+		drawUIText256(resources->text_pl1, _1BPP_LOCATION_TO_256(PLAYERLIVES_TEXT_DRAW_LOCATION), &characterFont, cleanBackground);
+	else
+		drawUIText256(resources->text_pl2, _1BPP_LOCATION_TO_256(PLAYERLIVES_TEXT_DRAW_LOCATION), &characterFont, cleanBackground);
+	
+	drawUIText256(resources->text_chamber, _1BPP_LOCATION_TO_256(CHAMBER_TEXT_DRAW_LOCATION), &characterFont, cleanBackground);
+	drawUIText256(gameData->string_roomNumber, _1BPP_LOCATION_TO_256(CHAMBER_NUMBER_TEXT_DRAW_LOCATION), &characterFont, cleanBackground);
+}
+
+/*
 void GameRunner_ChangedRoomCallback(const GameData* gameData, 
 									dl_u8 roomNumber, 
 									dl_s8 transitionType)
 {
-	/*
-	g_oldPlayerX = 0xffff;
-	g_oldPlayerY = 0xffff;
-
-	dl_u32 mode = MODE_1 | BG1_ON | BG2_ON | OBJ_ENABLE | OBJ_1D_MAP;
-
-	if (roomNumber == WIPE_TRANSITION_ROOM_INDEX || 
-		roomNumber == TRANSITION_ROOM_INDEX)
-	{
-		g_transitionCounter = TRANSITION_BLACK_SCREEN;
-	}
-	else
-	{
-		g_transitionCounter = TRANSITION_OFF;
-	}
-
-	if (roomNumber != TITLESCREEN_ROOM_INDEX &&
-		roomNumber != GET_READY_ROOM_INDEX)
-	{
-		// turn on the UI hud
-		mode |= BG0_ON;
-	}
-	else
-	{
-		g_scrollX = 7;
-		g_scrollY = 13;
-	}
-
-	SetMode(mode);
-	*/
 }
-
-
+*/
 
 void GameRunner_Update(GameData* gameData, const Resources* resources)
 {
 	Game_Update(gameData, resources);
-	//Game_Update(gameData, resources);
 }
 
 void GameRunner_Draw(GameData* gameData, const Resources* resources)
@@ -469,97 +189,6 @@ void GameRunner_Draw(GameData* gameData, const Resources* resources)
 	processEraseList();
 
 	m_drawRoomFunctions[gameData->currentRoom->roomNumber](gameData, resources);
-}
-
-#define BUFFER_POS(x, y) (x + ((y << 8) + (y << 7)))
-static void drawSpriteTrans(const dl_u8* spriteData, dl_u16 x, dl_u16 y, dl_u8* videoBuffer)
-{
-	register u_char* dst = videoBuffer + BUFFER_POS(x, y);
-	register u_char tmp;
-	register int loop;
-	
-	for (loop = 0; loop < 16; loop++) 
-	{
-		tmp = *spriteData++; if (tmp) { *dst = tmp; } dst++;
-		tmp = *spriteData++; if (tmp) { *dst = tmp; } dst++;
-		tmp = *spriteData++; if (tmp) { *dst = tmp; } dst++;
-		tmp = *spriteData++; if (tmp) { *dst = tmp; } dst++;
-
-		tmp = *spriteData++; if (tmp) { *dst = tmp; } dst++;
-		tmp = *spriteData++; if (tmp) { *dst = tmp; } dst++;
-		tmp = *spriteData++; if (tmp) { *dst = tmp; } dst++;
-		tmp = *spriteData++; if (tmp) { *dst = tmp; } dst++;
-
-		tmp = *spriteData++; if (tmp) { *dst = tmp; } dst++;
-		tmp = *spriteData++; if (tmp) { *dst = tmp; } dst++;
-		tmp = *spriteData++; if (tmp) { *dst = tmp; } dst++;
-		tmp = *spriteData++; if (tmp) { *dst = tmp; } dst++;
-
-		tmp = *spriteData++; if (tmp) { *dst = tmp; } dst++;
-		tmp = *spriteData++; if (tmp) { *dst = tmp; } dst++;
-		tmp = *spriteData++; if (tmp) { *dst = tmp; } dst++;
-		tmp = *spriteData++; if (tmp) { *dst = tmp; } dst++;
-
-		dst += SCREEN_WIDTH - 16;
-	}
-}
-
-// draw sprite, affected by scrolling
-static void drawSprite(dl_u16 x, 
-				       dl_u16 y, 
-				       dl_u8 frameIndex, 
-				       const GameSprite* gameSprite, 
-				       dl_u8 appendToEraseList)
-{
-
-	dl_u32 loopx;
-	dl_u32 loopy;
-	dl_u8 pixel;
-	dl_u32 frameWidth = gameSprite->frameWidth;
-	dl_u32 frameHeight = gameSprite->frameHeight;
-	const dl_u8* spriteDataRunner;
-	dl_u8* frameBufferRunner;
-
-	spriteDataRunner = gameSprite->spriteData + (gameSprite->sizePerFrame * frameIndex);
-	frameBufferRunner = BUFFER_START + (x + SCREEN_OFFSET_X) + ((y + SCREEN_OFFSET_Y) * SCREEN_WIDTH);
-
-	for (loopy = 0; loopy < frameHeight; loopy++)
-	{
-		for (loopx = 0; loopx < frameWidth; loopx++)
-		{
-			pixel = *spriteDataRunner;
-			
-			if (pixel)
-				*frameBufferRunner = pixel;
-
-			frameBufferRunner++;
-			spriteDataRunner++;
-		}
-
-		frameBufferRunner += (SCREEN_WIDTH - frameWidth);
-	}
-
-	if (appendToEraseList)
-		addToEraseList(x, y, gameSprite);
-}
-
-void eraseSprite(dl_u16 x, 
-				 dl_u16 y, 
-				 dl_u8 width,
-				 dl_u8 height)
-{
-	dl_u16 loopx;
-	dl_u16 loopy;
-	const dl_u8* cleanBackgroundRunner = g_cleanBackground + (x + (y * FRAMEBUFFER_WIDTH));
-	dl_u8* frameBufferRunner = BUFFER_START + (x + SCREEN_OFFSET_X) + ((y + SCREEN_OFFSET_Y) * SCREEN_WIDTH);
-
-	for (loopy = 0; loopy < height; loopy++)
-	{
-		memcpy(frameBufferRunner, cleanBackgroundRunner, width);
-
-		cleanBackgroundRunner += FRAMEBUFFER_WIDTH;
-		frameBufferRunner += SCREEN_WIDTH;
-	}
 }
 
 void drawDrops(const GameData* gameData)
@@ -573,30 +202,17 @@ void drawDrops(const GameData* gameData)
         if ((dl_s8)dropsRunner->wiggleTimer < 0 || // wiggling
             dropsRunner->wiggleTimer > 1)   // falling
         {
-			drawSprite((dropsRunner->x << 1), 
-					   (dropsRunner->y >> 8), 
+			drawSpriteDrop((dropsRunner->x << 1),
+					   (dropsRunner->y >> 8),
 					   0,
-					   &dropsSprite,
-					   TRUE);
+					   &dropsSprite);
         }
 
         dropsRunner++;
     }
 }
 
-void drawUIText(const dl_u8* text, dl_u16 xyLocation)
-{
-    dl_u16 x = ((xyLocation % 32) * 8);
-    dl_u16 y = (xyLocation / 32);
-
-    // for each character
-    while (*text != 0xff)
-    {
-        drawSprite(x, y, *text, &characterFont, FALSE);
-        text++;
-        x += 8;
-    }
-}
+dl_u8 eraseRegenSprite = 0;
 
 void drawUIPlayerLives(const PlayerData* playerData)
 {
@@ -606,24 +222,52 @@ void drawUIPlayerLives(const PlayerData* playerData)
 
     for (loop = 0; loop < playerData->lives; loop++)
 	{
-        drawSprite(x << 1, 
-				   y, 
+        drawSprite16Opaque(x << 1,
+				   y,
 				   playerData->currentSpriteNumber,
-				   &playerIconSprite,
-				   TRUE);
+				   &playerIconSprite);
 
 		x += PLAYERLIVES_ICON_SPACING;
     }
 
 	if (playerData->state == PLAYER_STATE_REGENERATION)
 	{
-        drawSprite(x << 1, 
-                   y, 
-				   0,
-				   &playerIconSpriteRegen,
-				   TRUE);		
+        drawSprite16Opaque(x << 1,
+                   y,
+				   g_regenFrameCounter + (playerData->facingDirection ? 0 : NUM_REGEN_FRAMES),
+				   &playerIconSpriteRegen);
+
+		eraseRegenSprite = 2;
     }
+	else if (eraseRegenSprite)
+	{
+		eraseRegenSprite--;
+		addToEraseList(x << 1,
+					   y,
+					   playerIconSpriteRegen.frameHeight,
+					   eraseSprite16);
+	}
 }
+
+void drawAppearingDoor(const DoorInfo* doorInfo)
+{
+	int xPosition = doorInfo->x;
+	// adjust the door position, as per the original game.
+	if (xPosition > 40) 
+		xPosition += 7;
+	else
+		xPosition -= 4;
+
+	drawSprite16(xPosition << 1,
+				doorInfo->y,
+				0,
+				&doorSprite,
+				 FALSE);
+}
+
+dl_u8 pickupDrawIndex = 0;
+
+//#define DRAW_ALL_PICKUPS
 
 void drawChamber(GameData* gameData, const Resources* resources)
 {
@@ -633,16 +277,26 @@ void drawChamber(GameData* gameData, const Resources* resources)
 
 	dl_u16 currentTimer = playerData->roomTimers[playerData->currentRoom->roomNumber];
 
+	const Pickup* pickup;
 	const Pickup* pickups;
     int loop;
 
 	const BallData* ballData;
 	const BirdData* birdData;
 
-	// draw doors
     int roomNumber;
-	const DoorInfoData* doorInfoData;
-	const DoorInfo* doorInfoRunner;
+
+
+	// draw queued door
+	if (g_queuedDoorInfo && !g_drawDoorFrameCount)
+	{
+		drawAppearingDoor(g_queuedDoorInfo);
+		g_queuedDoorInfo = NULL;
+	}
+	else
+	{
+		g_drawDoorFrameCount--;
+	}
 
 	drawDrops(gameData);
 
@@ -651,11 +305,11 @@ void drawChamber(GameData* gameData, const Resources* resources)
     {
         ballData = &gameData->ballData;
 
-		drawSprite((ballData->x >> 8) << 1,
+		drawSprite16((ballData->x >> 8) << 1,
 				   ballData->y >> 8,
 				   (dl_s8)ballData->fallStateCounter < 0,
 				   &ballSprite,
-				   TRUE);
+					 TRUE);
     }
 
     // draw bird
@@ -663,62 +317,96 @@ void drawChamber(GameData* gameData, const Resources* resources)
     {
         birdData = &gameData->birdData;
 
-		drawSprite((birdData->x >> 8) << 1,
+		drawSprite16((birdData->x >> 8) << 1,
 				   birdData->y >> 8,
 				   birdData->animationFrame,
 				   &birdSprite,
-				   TRUE);
+					 TRUE);
     }
+
 
 	// draw player
     switch (playerData->state)
     {
-    case PLAYER_STATE_SPLAT: 
-        drawSprite(playerX,
+    case PLAYER_STATE_SPLAT:
+        drawSprite24(playerX,
                    playerY + 7,
                    playerData->splatFrameNumber,
-				   &splatSprite,
-				   TRUE);
+				   &splatSprite);
         break;
     case PLAYER_STATE_REGENERATION: 
 
-        if (!gameData->paused)
-        {
-			updateRegenSprite(resources, playerData->currentSpriteNumber);
-        }
+		g_regenFrameCounter = (g_regenFrameCounter + 1) & 3;
 
-        drawSprite(playerX,
+        drawSprite16(playerX,
                    playerY,
-                   0,
+                   g_regenFrameCounter + (playerData->facingDirection ? 0 : NUM_REGEN_FRAMES),
 				   &regenSprite,
-				   TRUE);
+					 TRUE);
         break;
     default: 
-        drawSprite(playerX,
+        drawSprite16(playerX,
                    playerY,
                    playerData->currentSpriteNumber,
 				   &playerSprite,
-				   TRUE);
+					 TRUE);
     }
 
-	// draw pickups
-    pickups = playerData->gamePickups[gameData->currentRoom->roomNumber];
-    for (loop = 0; loop < NUM_PICKUPS_PER_ROOM; loop++)
-    {
-		if ((pickups->state & playerData->playerMask))
-		{
-			drawSprite(pickups->x << 1,
-					   pickups->y,
-					   0,
-					   g_pickUpSprites[pickups->type],
-					   TRUE);
-        }
+    // draw text
+	drawUIText384(gameData->string_timer, _1BPP_LOCATION_TO_384(TIMER_DRAW_LOCATION), &characterFont);
+	drawUIText384(playerData->scoreString, _1BPP_LOCATION_TO_384(SCORE_DRAW_LOCATION), &characterFont);  
 
-        pickups++;
-    }
+	drawUIPlayerLives(playerData);
+
+	//log("%d, %d, %d\n", mousey, mousey, mousey);
+
+}
+
+void Player_TriggerPickupErase(const Pickup* pickup)
+{
+	restorePickupBackground(pickup);
+
+	addToEraseList(pickup->x << 1,
+				   pickup->y,
+				   g_pickUpSprites[pickup->type]->frameHeight,
+				   eraseSprite16);
+
+	addToOtherEraseList(pickup->x << 1,
+						pickup->y,
+						g_pickUpSprites[pickup->type]->frameHeight,
+						eraseSprite16);
+}
+
+
+
+void Player_TriggerDoorIsVisibleDrawDoor(const DoorInfo* doorInfo)
+{
+	drawAppearingDoor(doorInfo);
+
+	g_queuedDoorInfo = doorInfo;
+	g_drawDoorFrameCount = 1;
+}
+
+void drawTitleScreen(GameData* gameData, const Resources* resources)
+{
+	drawDrops(gameData);
+
+	drawSprite8(gameData->numPlayers == 1 ? 32 : 128,
+			   123,
+			   0,
+			   &cursorSprite);
+}
+
+void drawDoors(const PlayerData* playerData, 
+			   const Resources* resources, 
+			   dl_u8 roomNumber,
+			   dl_u8* buffer)
+{
+	const DoorInfoData* doorInfoData;
+	const DoorInfo* doorInfoRunner;
+	dl_u8 loop;
 
 	// draw doors
-    roomNumber = gameData->currentRoom->roomNumber;
 	doorInfoData = &resources->roomResources[roomNumber].doorInfoData;
 	doorInfoRunner = doorInfoData->doorInfos;
 
@@ -734,41 +422,98 @@ void drawChamber(GameData* gameData, const Resources* resources)
 			else
 				xPosition -= 4;
 
-			drawSprite(xPosition << 1,
-					   doorInfoRunner->y,
-					   0,
-					   &doorSprite,
-					   TRUE);
+			drawSprite16x16_256(xPosition << 1,
+						doorInfoRunner->y,
+						0,
+						&doorSprite,
+							buffer);
 		}
 
 		doorInfoRunner++;
 	}
-
-    // draw text
-	drawUIText(gameData->string_timer, TIMER_DRAW_LOCATION);
-
-	if (!gameData->currentPlayerData->playerNumber)
-		drawUIText(resources->text_pl1, PLAYERLIVES_TEXT_DRAW_LOCATION);
-	else
-		drawUIText(resources->text_pl2, PLAYERLIVES_TEXT_DRAW_LOCATION);
-
-	drawUIText(resources->text_chamber, CHAMBER_TEXT_DRAW_LOCATION);
-	drawUIText(gameData->string_roomNumber, CHAMBER_NUMBER_TEXT_DRAW_LOCATION);
-	drawUIText(playerData->scoreString, SCORE_DRAW_LOCATION);  
-
-	drawUIPlayerLives(playerData);
 }
 
-
-void drawTitleScreen(GameData* gameData, const Resources* resources)
+void savePickupBackgrounds(const PlayerData* playerData,
+                            dl_u8 roomNumber,
+                            const dl_u8* buffer)
 {
-	drawDrops(gameData);
+	const Pickup* pickups = playerData->gamePickups[roomNumber];
+	dl_u8 loop;
 
-	drawSprite(gameData->numPlayers == 1 ? 32 : 128,
-			   123,
-			   0,
-			   &cursorSprite,
-			   TRUE);
+	for (loop = 0; loop < NUM_PICKUPS_PER_ROOM; loop++)
+	{
+		if ((pickups->state & playerData->playerMask))
+		{
+			const dl_u8* src = buffer + (pickups->x << 1) + (pickups->y * FRAMEBUFFER_WIDTH);
+			dl_u8* dst = g_pickupBackgroundSnapshots[loop].pixels;
+			dl_u8 row;
+
+			g_pickupBackgroundSnapshots[loop].valid = 1;
+			g_pickupBackgroundSnapshots[loop].pickup = pickups;
+
+			for (row = 0; row < PICKUPS_NUM_SPRITE_ROWS; row++)
+			{
+				memcpy(dst, src, PICKUPS_NUM_SPRITE_WIDTH);
+				src += FRAMEBUFFER_WIDTH;
+				dst += PICKUPS_NUM_SPRITE_WIDTH;
+			}
+		}
+		else
+		{
+			g_pickupBackgroundSnapshots[loop].valid = 0;
+		}
+
+		pickups++;
+	}
+}
+
+void restorePickupBackground(const Pickup* pickup)
+{
+	dl_u8 loop;
+
+	for (loop = 0; loop < NUM_PICKUPS_PER_ROOM; loop++)
+	{
+		if (g_pickupBackgroundSnapshots[loop].valid &&
+			g_pickupBackgroundSnapshots[loop].pickup == pickup)
+		{
+			const dl_u8* src = g_pickupBackgroundSnapshots[loop].pixels;
+			dl_u8* dst = g_cleanBackground + (pickup->x << 1) + (pickup->y * FRAMEBUFFER_WIDTH);
+			dl_u8 row;
+
+			for (row = 0; row < PICKUPS_NUM_SPRITE_ROWS; row++)
+			{
+				memcpy(dst, src, PICKUPS_NUM_SPRITE_WIDTH);
+				dst += FRAMEBUFFER_WIDTH;
+				src += PICKUPS_NUM_SPRITE_WIDTH;
+			}
+
+			g_pickupBackgroundSnapshots[loop].valid = 0; // defensive: no double-restore
+			break;
+		}
+	}
+}
+
+void drawPickupsStatic(const PlayerData* playerData,
+					   dl_u8 roomNumber,
+					   dl_u8* buffer)
+{
+	const Pickup* pickups;
+	dl_u8 loop;
+
+    pickups = playerData->gamePickups[roomNumber];
+    for (loop = 0; loop < NUM_PICKUPS_PER_ROOM; loop++)
+    {
+		if ((pickups->state & playerData->playerMask))
+		{
+			drawSprite16x10_256(pickups->x << 1,
+					     pickups->y,
+					     0,
+					     g_pickUpSprites[pickups->type],
+					     buffer);
+        }
+
+        pickups++;
+    }
 }
 
 void drawCleanBackground(const GameData* gameData, 
@@ -788,6 +533,16 @@ void drawCleanBackground(const GameData* gameData,
 										  FRAMEBUFFER_HEIGHT,
 										  FRAMEBUFFER_WIDTH,
 										  4);
+
+	//log("%d, %d, %d\n", 0, gameData->transitionRoomNumber, 0);
+
+	if (gameData->transitionRoomNumber < NUM_ROOMS)
+	{
+		drawStaticText(gameData, resources, g_cleanBackground);
+		drawDoors(gameData->playerData, resources, gameData->transitionRoomNumber, g_cleanBackground);
+		savePickupBackgrounds(gameData->playerData, gameData->transitionRoomNumber, g_cleanBackground);
+		drawPickupsStatic(gameData->playerData, gameData->transitionRoomNumber, g_cleanBackground);
+	}
 
 	//log("drawCleanBackground 2\n");
 	videoBufferRunner = BUFFER_START + offset;
@@ -828,8 +583,6 @@ void drawTransition(GameData* gameData, const Resources* resources)
 }
 
 dl_u8 g_oldTransitionCurrentLine;
-
-
 
 void drawTransitionLines(const GameData* gameData)
 {
@@ -889,6 +642,16 @@ void drawWipeTransition(GameData* gameData, const Resources* resources)
 											  FRAMEBUFFER_HEIGHT,
 											  FRAMEBUFFER_WIDTH,
 											  4);
+
+		//log("%d, %d, %d\n", 0, gameData->transitionRoomNumber, 0);
+
+		if (gameData->transitionRoomNumber < NUM_ROOMS)
+		{
+			drawStaticText(gameData, resources, g_cleanBackground);
+			drawDoors(gameData->playerData, resources, gameData->transitionRoomNumber, g_cleanBackground);
+			savePickupBackgrounds(gameData->playerData, gameData->transitionRoomNumber, g_cleanBackground);
+			drawPickupsStatic(gameData->playerData, gameData->transitionRoomNumber, g_cleanBackground);
+		}
 	}
 
 	if (gameData->transitionInitialDelay)

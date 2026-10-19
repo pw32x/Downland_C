@@ -1,6 +1,5 @@
 #include "draw_value.h"
 #include "../cdi_hw/graphics.h"
-#include "draw_sprite_utils.h"
 
 // small blocky 3x5 retro digit font
 static const dl_u8 g_digitsFont[10][5] = 

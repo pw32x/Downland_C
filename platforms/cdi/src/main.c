@@ -5,7 +5,6 @@
 #include <memory.h>
 #include <stdio.h>
 #include <setsys.h>
-#include "log.h"
 #include "cdi_hw/video.h"
 #include "cdi_hw/graphics.h"
 #include "cdi_hw/input.h"
@@ -150,12 +149,12 @@ void setPalette()
 {
     u_int paletteData[6];
 
-    paletteData[0] = cp_cbnk(0);                     /* select bank 0 (covers indices 0-63) */
-    paletteData[1] = cp_clut(0, 0, 0, 0);            /* 0: black */
-    paletteData[2] = cp_clut(1, 0, 64, 200);         /* 1: blue */
-    paletteData[3] = cp_clut(2, 255, 128, 0);        /* 2: orange */
-    paletteData[4] = cp_clut(3, 255, 255, 255);      /* 3: white */
-	paletteData[5] = cp_clut(4, 0, 0, 0);			 /* 4: black */
+    paletteData[0] = cp_cbnk(0);                     // select bank 0 (covers indices 0-63)
+    paletteData[1] = cp_clut(0, 0, 0, 0);            // 0: black
+    paletteData[2] = cp_clut(1, 0, 64, 200);         // 1: blue
+    paletteData[3] = cp_clut(2, 255, 128, 0);        // 2: orange
+    paletteData[4] = cp_clut(3, 255, 255, 255);      // 3: white
+	paletteData[5] = cp_clut(4, 0, 0, 0);			 // 4: black
 
     dc_wrfct(videoPath, fctA, FCT_PAL_START, 6, paletteData);
 	dc_wrfct(videoPath, fctB, FCT_PAL_START, 6, paletteData);
@@ -191,7 +190,7 @@ int main(int argc, 	char* argv[])
 	{
 		if (!frameDone) 
 		{
-			continue; /* Wait for SIG_BLANK */
+			continue; // Wait for SIG_BLANK
 		}
 
 		frameDone = 0;

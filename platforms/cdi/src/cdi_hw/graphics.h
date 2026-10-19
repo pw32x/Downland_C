@@ -11,6 +11,5 @@
 extern u_char* drawVideoBuffer;
 extern unsigned int frameDone;
 extern unsigned int frameTick;
-extern long g_asmDrawHeight;
 
 #endif

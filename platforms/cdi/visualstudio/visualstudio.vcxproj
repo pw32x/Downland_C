@@ -128,7 +128,11 @@
     <ClInclude Include="..\src\cdi_hw\input.h" />
     <ClInclude Include="..\src\cdi_hw\video.h" />
     <ClInclude Include="..\src\draw_erase\draw_value.h" />
-    <ClInclude Include="..\src\draw_sprite_utils.h" />
+    <ClInclude Include="..\src\game_sprite_type.h" />
+    <ClInclude Include="..\src\draw_erase\draw_sprite_384.h" />
+    <ClInclude Include="..\src\draw_erase\draw_sprite_256.h" />
+    <ClInclude Include="..\src\draw_erase\draw_sprite_384_asm.h" />
+    <ClInclude Include="..\src\draw_erase\draw_sprite_256_asm.h" />
     <ClInclude Include="..\src\draw_erase\erase_sprite_asm.h" />
     <ClInclude Include="..\src\draw_erase\erase_sprite_utils.h" />
     <ClInclude Include="..\src\draw_erase\erase_system.h" />
@@ -161,7 +165,8 @@
     <ClCompile Include="..\src\cdi_hw\input.c" />
     <ClCompile Include="..\src\cdi_hw\video.c" />
     <ClCompile Include="..\src\draw_erase\draw_value.c" />
-    <ClCompile Include="..\src\draw_sprite_utils.c" />
+    <ClCompile Include="..\src\draw_erase\draw_sprite_384.c" />
+    <ClCompile Include="..\src\draw_erase\draw_sprite_256.c" />
     <ClCompile Include="..\src\draw_erase\erase_sprite_utils.c" />
     <ClCompile Include="..\src\draw_erase\erase_system.c" />
     <ClCompile Include="..\src\game_runner.c" />
@@ -181,7 +186,8 @@
     <Text Include="..\build\link.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Library Include="..\src\draw_sprite.a" />
+    <Library Include="..\src\draw_erase\draw_sprite_384_asm.a" />
+    <Library Include="..\src\draw_erase\draw_sprite_256_asm.a" />
     <Library Include="..\src\draw_erase\erase_sprite_asm.a" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

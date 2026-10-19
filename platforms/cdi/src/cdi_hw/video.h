@@ -12,6 +12,12 @@
 #define SCREEN_WIDTH 384
 #define SCREEN_HEIGHT 280
 #define SCREEN_SIZE (SCREEN_WIDTH * SCREEN_HEIGHT)
+
+#define SCREEN_OFFSET_X 64
+#define SCREEN_OFFSET_Y 24
+
+
+
 #define VBUFFER_SIZE 108544 /* First full block after SCREEN_WIDTH * SCREEN_HEIGHT */
 
 extern int videoPath;

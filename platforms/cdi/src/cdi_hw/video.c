@@ -11,20 +11,6 @@ u_int fctBuffer[FCT_SIZE];
 u_int lineSkip;
 u_int pixelStart;
 
-u_int *lctAddress (int plane, int lctid)
-{
-	int lctDummy, lnkInstr;
-	lctDummy = dc_crlct(videoPath, plane, 2, 0);
-	/* link this dummy LCT to line 1 of our parameter LCT */
-	dc_llnk(videoPath, lctDummy, 1, lctid, 1);
-	/* read the link instruction written by dc_llnk */
-	lnkInstr = dc_rdli(videoPath, lctDummy, 1, 7);
-	/* delete the dummy LCT */
-	dc_dllct(videoPath, lctDummy);
-	/* the address is in the lower 24 bits of the link instr */
-	return (u_int*) (lnkInstr & 0x00ffffff);
-}
-
 int initFCT(int plane, int size)
 {
 	int fct = dc_crfct(videoPath, plane, size, 0);

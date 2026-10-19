@@ -1,14 +1,10 @@
 #include "game_runner.h"
 
-
-
-// std headers
-//#include <string.h>
-//#include <stdlib.h>
-
+// platform headers
 #include "cdi_hw/video.h"
 #include "cdi_hw/graphics.h"
-#include "draw_sprite_utils.h"
+#include "draw_erase/draw_sprite_384.h"
+#include "draw_erase/draw_sprite_256.h"
 #include "draw_erase/erase_sprite_utils.h"
 #include "draw_erase/erase_system.h"
 #include "draw_erase/draw_value.h"
@@ -163,12 +159,12 @@ void drawStaticText(const GameData* gameData,
 					dl_u8* cleanBackground)
 {
 	if (!gameData->currentPlayerData->playerNumber)
-		drawUIText256(resources->text_pl1, _1BPP_LOCATION_TO_256(PLAYERLIVES_TEXT_DRAW_LOCATION), &characterFont, cleanBackground);
+		drawUIText_256(resources->text_pl1, _1BPP_LOCATION_TO_256(PLAYERLIVES_TEXT_DRAW_LOCATION), &characterFont, cleanBackground);
 	else
-		drawUIText256(resources->text_pl2, _1BPP_LOCATION_TO_256(PLAYERLIVES_TEXT_DRAW_LOCATION), &characterFont, cleanBackground);
+		drawUIText_256(resources->text_pl2, _1BPP_LOCATION_TO_256(PLAYERLIVES_TEXT_DRAW_LOCATION), &characterFont, cleanBackground);
 	
-	drawUIText256(resources->text_chamber, _1BPP_LOCATION_TO_256(CHAMBER_TEXT_DRAW_LOCATION), &characterFont, cleanBackground);
-	drawUIText256(gameData->string_roomNumber, _1BPP_LOCATION_TO_256(CHAMBER_NUMBER_TEXT_DRAW_LOCATION), &characterFont, cleanBackground);
+	drawUIText_256(resources->text_chamber, _1BPP_LOCATION_TO_256(CHAMBER_TEXT_DRAW_LOCATION), &characterFont, cleanBackground);
+	drawUIText_256(gameData->string_roomNumber, _1BPP_LOCATION_TO_256(CHAMBER_NUMBER_TEXT_DRAW_LOCATION), &characterFont, cleanBackground);
 }
 
 /*
@@ -202,10 +198,10 @@ void drawDrops(const GameData* gameData)
         if ((dl_s8)dropsRunner->wiggleTimer < 0 || // wiggling
             dropsRunner->wiggleTimer > 1)   // falling
         {
-			drawSpriteDrop((dropsRunner->x << 1),
-					   (dropsRunner->y >> 8),
-					   0,
-					   &dropsSprite);
+			drawSpriteDrop_384((dropsRunner->x << 1),
+						   (dropsRunner->y >> 8),
+						   0,
+						   &dropsSprite);
         }
 
         dropsRunner++;
@@ -222,20 +218,20 @@ void drawUIPlayerLives(const PlayerData* playerData)
 
     for (loop = 0; loop < playerData->lives; loop++)
 	{
-        drawSprite16Opaque(x << 1,
-				   y,
-				   playerData->currentSpriteNumber,
-				   &playerIconSprite);
+        drawSprite16Opaque_384(x << 1,
+					   y,
+					   playerData->currentSpriteNumber,
+					   &playerIconSprite);
 
 		x += PLAYERLIVES_ICON_SPACING;
     }
 
 	if (playerData->state == PLAYER_STATE_REGENERATION)
 	{
-        drawSprite16Opaque(x << 1,
-                   y,
-				   g_regenFrameCounter + (playerData->facingDirection ? 0 : NUM_REGEN_FRAMES),
-				   &playerIconSpriteRegen);
+        drawSprite16Opaque_384(x << 1,
+                       y,
+					   g_regenFrameCounter + (playerData->facingDirection ? 0 : NUM_REGEN_FRAMES),
+					   &playerIconSpriteRegen);
 
 		eraseRegenSprite = 2;
     }
@@ -258,16 +254,12 @@ void drawAppearingDoor(const DoorInfo* doorInfo)
 	else
 		xPosition -= 4;
 
-	drawSprite16(xPosition << 1,
-				doorInfo->y,
-				0,
-				&doorSprite,
-				 FALSE);
+	drawSprite16_384(xPosition << 1,
+					doorInfo->y,
+					0,
+					&doorSprite,
+					 FALSE);
 }
-
-dl_u8 pickupDrawIndex = 0;
-
-//#define DRAW_ALL_PICKUPS
 
 void drawChamber(GameData* gameData, const Resources* resources)
 {
@@ -305,11 +297,11 @@ void drawChamber(GameData* gameData, const Resources* resources)
     {
         ballData = &gameData->ballData;
 
-		drawSprite16((ballData->x >> 8) << 1,
-				   ballData->y >> 8,
-				   (dl_s8)ballData->fallStateCounter < 0,
-				   &ballSprite,
-					 TRUE);
+		drawSprite16_384((ballData->x >> 8) << 1,
+					   ballData->y >> 8,
+					   (dl_s8)ballData->fallStateCounter < 0,
+					   &ballSprite,
+						 TRUE);
     }
 
     // draw bird
@@ -317,11 +309,11 @@ void drawChamber(GameData* gameData, const Resources* resources)
     {
         birdData = &gameData->birdData;
 
-		drawSprite16((birdData->x >> 8) << 1,
-				   birdData->y >> 8,
-				   birdData->animationFrame,
-				   &birdSprite,
-					 TRUE);
+		drawSprite16_384((birdData->x >> 8) << 1,
+					   birdData->y >> 8,
+					   birdData->animationFrame,
+					   &birdSprite,
+						 TRUE);
     }
 
 
@@ -329,32 +321,32 @@ void drawChamber(GameData* gameData, const Resources* resources)
     switch (playerData->state)
     {
     case PLAYER_STATE_SPLAT:
-        drawSprite24(playerX,
-                   playerY + 7,
-                   playerData->splatFrameNumber,
-				   &splatSprite);
+        drawSprite24_384(playerX,
+                       playerY + 7,
+                       playerData->splatFrameNumber,
+					   &splatSprite);
         break;
     case PLAYER_STATE_REGENERATION: 
 
 		g_regenFrameCounter = (g_regenFrameCounter + 1) & 3;
 
-        drawSprite16(playerX,
-                   playerY,
-                   g_regenFrameCounter + (playerData->facingDirection ? 0 : NUM_REGEN_FRAMES),
-				   &regenSprite,
-					 TRUE);
+        drawSprite16_384(playerX,
+                       playerY,
+                       g_regenFrameCounter + (playerData->facingDirection ? 0 : NUM_REGEN_FRAMES),
+					   &regenSprite,
+						 TRUE);
         break;
     default: 
-        drawSprite16(playerX,
-                   playerY,
-                   playerData->currentSpriteNumber,
-				   &playerSprite,
-					 TRUE);
+        drawSprite16_384(playerX,
+                       playerY,
+                       playerData->currentSpriteNumber,
+					   &playerSprite,
+						 TRUE);
     }
 
     // draw text
-	drawUIText384(gameData->string_timer, _1BPP_LOCATION_TO_384(TIMER_DRAW_LOCATION), &characterFont);
-	drawUIText384(playerData->scoreString, _1BPP_LOCATION_TO_384(SCORE_DRAW_LOCATION), &characterFont);  
+	drawUIText_384(gameData->string_timer, _1BPP_LOCATION_TO_384(TIMER_DRAW_LOCATION), &characterFont);
+	drawUIText_384(playerData->scoreString, _1BPP_LOCATION_TO_384(SCORE_DRAW_LOCATION), &characterFont);  
 
 	drawUIPlayerLives(playerData);
 
@@ -391,10 +383,10 @@ void drawTitleScreen(GameData* gameData, const Resources* resources)
 {
 	drawDrops(gameData);
 
-	drawSprite8(gameData->numPlayers == 1 ? 32 : 128,
-			   123,
-			   0,
-			   &cursorSprite);
+	drawSprite8_384(gameData->numPlayers == 1 ? 32 : 128,
+				   123,
+				   0,
+				   &cursorSprite);
 }
 
 void drawDoors(const PlayerData* playerData, 

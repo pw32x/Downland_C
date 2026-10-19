@@ -6,9 +6,6 @@
 u_int frameDone = 0;
 u_int frameTick = 0;
 
-// common variable used by the assembly draw functions for row count.
-long g_asmDrawHeight = 0;
-
 u_char* activeVideoBuffer;
 u_char* drawVideoBuffer;
 

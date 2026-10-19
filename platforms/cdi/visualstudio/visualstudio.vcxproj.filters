@@ -136,8 +136,20 @@
     <ClInclude Include="..\src\draw_erase\draw_value.h">
       <Filter>Source Files\draw_erase</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\draw_sprite_utils.h">
+    <ClInclude Include="..\src\game_sprite_type.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\draw_erase\draw_sprite_384.h">
+      <Filter>Source Files\draw_erase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\draw_erase\draw_sprite_256.h">
+      <Filter>Source Files\draw_erase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\draw_erase\draw_sprite_384_asm.h">
+      <Filter>Source Files\draw_erase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\draw_erase\draw_sprite_256_asm.h">
+      <Filter>Source Files\draw_erase</Filter>
     </ClInclude>
     <ClInclude Include="..\src\cdi_hw\graphics.h">
       <Filter>Source Files\cdi_hw</Filter>
@@ -234,8 +246,11 @@
     <ClCompile Include="..\src\draw_erase\draw_value.c">
       <Filter>Source Files\draw_erase</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\draw_sprite_utils.c">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\src\draw_erase\draw_sprite_384.c">
+      <Filter>Source Files\draw_erase</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\draw_erase\draw_sprite_256.c">
+      <Filter>Source Files\draw_erase</Filter>
     </ClCompile>
     <ClCompile Include="..\src\cdi_hw\input.c">
       <Filter>Source Files\cdi_hw</Filter>
@@ -279,8 +294,11 @@
     <Library Include="..\src\draw_erase\erase_sprite_asm.a">
       <Filter>Source Files\draw_erase</Filter>
     </Library>
-    <Library Include="..\src\draw_sprite.a">
-      <Filter>Source Files</Filter>
+    <Library Include="..\src\draw_erase\draw_sprite_384_asm.a">
+      <Filter>Source Files\draw_erase</Filter>
+    </Library>
+    <Library Include="..\src\draw_erase\draw_sprite_256_asm.a">
+      <Filter>Source Files\draw_erase</Filter>
     </Library>
   </ItemGroup>
 </Project>

@@ -1,8 +1,10 @@
-# Downland_C: NABU PC
+# Downland_C: NABU PC (TCP Version)
 
 ## INTRODUCTION
 
 This is the NABU PC port of Downland_C. (https://en.wikipedia.org/wiki/NABU_Network)
+
+This is a proof of concept version of the game that supports two simultaneous players. It's buggy, and players can't really interact but hey, networking!
 
 ## BUILDING THE GAME
 

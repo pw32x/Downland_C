@@ -28,7 +28,7 @@ The project is based on the original Downland, version 1.1. This version was a l
 - Playdate
 - 3DO
 - ESP32 Cheap Yellow Display (Experimental and slooooow)
-- NABU Network computer
+- NABU Network computer (and TCP network prototype)
   
 
 ## RUNNING THE GAME

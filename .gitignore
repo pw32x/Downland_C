@@ -493,3 +493,6 @@ platforms/tvos/gamedata/*.ccc
 /platforms/nabu/generated
 /platforms/nabu/out
 platforms/nabu/downland.rom
+platforms/nabu_tcp/downland.rom
+/platforms/nabu_tcp/generated
+/platforms/nabu_tcp/out

@@ -1,0 +1,1 @@
+py nabu_mixed_server.py 127.0.0.1 6666

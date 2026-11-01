@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36401.2 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "png2c", "png2c.csproj", "{DE026DE9-79DB-47C9-9119-A412FD1E6F59}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DE026DE9-79DB-47C9-9119-A412FD1E6F59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE026DE9-79DB-47C9-9119-A412FD1E6F59}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE026DE9-79DB-47C9-9119-A412FD1E6F59}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE026DE9-79DB-47C9-9119-A412FD1E6F59}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A99E125E-4B7C-412C-A721-D7DB6B7D7C83}
+	EndGlobalSection
+EndGlobal

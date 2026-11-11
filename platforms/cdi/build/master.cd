@@ -16,6 +16,8 @@ define
 
 	yellow		file	DownlandRom from "GAMEDATA/DOWNLAND.ROM"
                                              
+	green       file    GameRtf     from record data in channel 0 from
+										 "GAMEDATA/SFX.BIN"                                             
 
 {
 	"COPYRGHT.TXT"	owner 0.0 protection 0x111	from	Copyright
@@ -23,5 +25,6 @@ define
 	"BIBLIOGR.TXT"	owner 0.0 protection 0x111	from	Biblio
 	"CDI_DOWNLAND"  owner 0.0 protection 0x555	from	Downland
 	"DOWNLAND.ROM"  owner 0.0 protection 0x111  from    DownlandRom
+	"GAME.RTF"      owner 0.0 protection 0x111  from    GameRtf	
 }
 

@@ -5,6 +5,7 @@
 #include <memory.h>
 #include <stdio.h>
 #include <setsys.h>
+#include "audio.h"
 #include "cdi_hw/video.h"
 #include "cdi_hw/graphics.h"
 #include "cdi_hw/input.h"
@@ -46,19 +47,9 @@ void dl_memcpy(void* destination, const void* source, dl_u16 count)
 	memcpy(destination, source, count);
 }
 
-void Sound_Play(dl_u8 soundIndex, dl_u8 loop)
-{
-
-}
-void Sound_Stop(dl_u8 soundIndex)
-{
-
-}
-
-int intHandler(int sigCode)
+dl_s32 intHandler(dl_s32 sigCode)
 {
 	handleVideoSignal(sigCode);
-	handleAudioSignal(sigCode);
 }
 
 void initSystem()
@@ -83,8 +74,8 @@ dl_u8 g_downlandRomFileBuffer[DOWNLAND_ROM_FILE_SIZE];
 
 static dl_u8 loadRom(dl_u8* fileBuffer)
 {
-	int bytesRead = 0;
-	int file = 0;
+	dl_s32 bytesRead = 0;
+	dl_s32 file = 0;
 
 	file = open("DOWNLAND.ROM", READ_);
 	if (file < 0)
@@ -100,7 +91,30 @@ static dl_u8 loadRom(dl_u8* fileBuffer)
 	return 1;
 }
 
-dl_u16 updateControls(int controllerIndex, JoystickState* joystickState)
+static dl_u8 loadSoundEffectsFile()
+{
+	dl_s32 bytesRead;
+	dl_s32 file;
+
+	file = open("GAME.RTF", READ_);
+
+	if (file < 0)
+	{
+		return 0;
+	}
+
+	bytesRead = loadSoundEffects(file);
+	close(file);
+
+	if (bytesRead <= 0)
+	{
+		return 0;
+	}
+
+	return 1;
+}
+
+dl_u16 updateControls(dl_u8 controllerIndex, JoystickState* joystickState)
 {
 	dl_u16 buttonState = readInput();
 
@@ -134,7 +148,7 @@ dl_u16 updateControls(int controllerIndex, JoystickState* joystickState)
     joystickState->startDown = startDown;
 
 #ifdef DEV_MODE
-    bool debugStateDown = (buttonState & SEGA_CTRL_B);
+    dl_u8 debugStateDown = (buttonState & SEGA_CTRL_B);
 
     joystickState->debugStatePressed = !joystickState->debugStateDown & debugStateDown;
     joystickState->debugStateReleased = joystickState->debugStatePressed & !debugStateDown;
@@ -147,7 +161,7 @@ dl_u16 updateControls(int controllerIndex, JoystickState* joystickState)
 
 void setPalette()
 {
-    u_int paletteData[6];
+    dl_u32 paletteData[6];
 
     paletteData[0] = cp_cbnk(0);                     // select bank 0 (covers indices 0-63)
     paletteData[1] = cp_clut(0, 0, 0, 0);            // 0: black
@@ -177,7 +191,9 @@ int main(int argc, 	char* argv[])
 
     if (!romFoundAndLoaded)
         return exit(-1);
-	
+
+	loadSoundEffectsFile();
+
 	memset(&gameData, 0, sizeof(GameData));
 
 	setPalette();

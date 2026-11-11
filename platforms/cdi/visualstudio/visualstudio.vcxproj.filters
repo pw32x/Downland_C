@@ -160,11 +160,11 @@
     <ClInclude Include="..\src\cdi_hw\video.h">
       <Filter>Source Files\cdi_hw</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\cdi_hw\audio.h">
-      <Filter>Source Files\cdi_hw</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\cdi_hw\dc.h">
       <Filter>Source Files\cdi_hw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\audio.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -258,11 +258,11 @@
     <ClCompile Include="..\src\cdi_hw\video.c">
       <Filter>Source Files\cdi_hw</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\cdi_hw\audio.c">
-      <Filter>Source Files\cdi_hw</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\cdi_hw\graphics.c">
       <Filter>Source Files\cdi_hw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\audio.c">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -284,11 +284,6 @@
     <None Include="..\build\Makefile">
       <Filter>build</Filter>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="..\build\link.txt">
-      <Filter>build</Filter>
-    </Text>
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\src\draw_erase\erase_sprite_asm.a">

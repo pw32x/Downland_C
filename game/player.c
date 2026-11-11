@@ -713,16 +713,17 @@ void Player_Update(PlayerData* playerData,
 		}
 		else if (joystickState->upDown)
 		{
-			if (!playerData->speedy)
+			if (TOUCHES_VINE(testResult))
 			{
-				Sound_Play(SOUND_CLIMB_UP, TRUE);
+				if (!playerData->speedy)
+				{
+					Sound_Play(SOUND_CLIMB_UP, TRUE);
+				}
+
+				playerData->speedy = PLAYER_CLIMB_UP_SPEED;
+				playerData->currentFrameNumber = ((playerData->globalAnimationCounter >> 3) & 0x1) + 4;
 			}
-
-			playerData->speedy = PLAYER_CLIMB_UP_SPEED;
-
-			playerData->currentFrameNumber = ((playerData->globalAnimationCounter >> 3) & 0x1) + 4;
-
-			if (!TOUCHES_VINE(testResult))
+			else
 			{
 				playerData->speedy = 0;
 				playerData->currentFrameNumber = PLAYER_CLIMB_FRAME_0;
@@ -733,15 +734,14 @@ void Player_Update(PlayerData* playerData,
 		}	
 		else if (joystickState->downDown)
 		{
-			if (!playerData->speedy)
-			{
-				Sound_Play(SOUND_CLIMB_DOWN, TRUE);
-			}
-
 			playerData->speedy = PLAYER_CLIMB_DOWN_SPEED;
 			playerData->currentFrameNumber = ((playerData->globalAnimationCounter >> 3) & 0x1) + 4;
 
-			if (!TOUCHES_VINE(testResult))
+			if (TOUCHES_VINE(testResult))
+			{
+				Sound_Play(SOUND_CLIMB_DOWN, TRUE);
+			}
+			else
 			{
 				playerData->state = PLAYER_STATE_FALL;
 				Sound_Stop(SOUND_CLIMB_DOWN);
